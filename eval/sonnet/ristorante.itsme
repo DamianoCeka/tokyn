@@ -1,0 +1,30 @@
+def controlla_disponibilita(data: str, persone: int) -> str:
+    """Controlla se per una data (formato AAAA-MM-GG) ci sono abbastanza posti liberi per il numero di persone indicato."""
+    tavoli = json_parse(read_file("tavoli.json"))
+    liberi = tavoli.get(data, 0)
+    if liberi >= persone:
+        return f"Disponibile: {liberi} posti liberi il {data}."
+    return f"Non disponibile: il {data} restano solo {liberi} posti."
+
+def prenota(nome: str, data: str, persone: int) -> str:
+    """Registra una prenotazione a nome del cliente per la data e il numero di persone indicati."""
+    append_file("prenotazioni.txt", f"{nome};{data};{persone}\n")
+    return f"Prenotazione registrata per {nome}, {persone} persone, il {data}."
+
+agent Assistente:
+    model: "claude"
+    instructions: """Sei l'assistente di prenotazione di un ristorante. Parla in italiano, in modo cordiale e breve.
+Chiedi nome, data e numero di persone se mancano. Prima di prenotare usa controlla_disponibilita,
+poi usa prenota solo se c'e posto."""
+    tools: [controlla_disponibilita, prenota]
+    memory: True
+
+main:
+    print("Benvenuto! Scrivi 'esci' per terminare.")
+    for turno in range(20):
+        testo = input("Tu: ")
+        if testo.strip().lower() == "esci":
+            break
+        risposta = Assistente.ask(testo)
+        print(f"Assistente: {risposta}")
+    print("Arrivederci!")

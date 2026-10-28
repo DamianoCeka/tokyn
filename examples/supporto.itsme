@@ -1,0 +1,47 @@
+# Supporto clienti: classifica una richiesta e, se serve, prenota un appuntamento.
+
+type Ticket:
+    categoria: "tecnico" | "commerciale" | "altro"
+    urgente: bool "True se il cliente è bloccato e non può lavorare"
+    riassunto: str "una frase che riassume il problema"
+
+FAQ = {
+    "password": "Puoi reimpostarla da Impostazioni > Sicurezza.",
+    "fattura": "Le fatture sono nella sezione Documenti.",
+}
+
+def cerca_faq(domanda: str) -> str:
+    """Cerca una risposta nelle FAQ aziendali a partire da una parola chiave."""
+    for chiave, risposta in FAQ.items():
+        if chiave in domanda.lower():
+            return risposta
+    return "Nessuna FAQ trovata."
+
+def prenota_appuntamento(email: str, giorno: str) -> str:
+    """Prenota una chiamata con un operatore. giorno è nel formato AAAA-MM-GG."""
+    append_file("appuntamenti.txt", f"{giorno};{email}\n")
+    return f"Appuntamento confermato per {giorno}."
+
+agent Smistatore:
+    model: "claude-haiku"
+    instructions: "Classifica la richiesta del cliente."
+    output: Ticket
+
+agent Supporto:
+    model: "claude"
+    instructions: """
+        Sei l'assistente clienti. Rispondi in italiano, in modo breve.
+        Usa cerca_faq prima di rispondere. Se il problema è urgente,
+        proponi un appuntamento con prenota_appuntamento.
+    """
+    tools: [cerca_faq, prenota_appuntamento]
+    memory: True
+
+main:
+    messaggio = input("Scrivi la tua richiesta: ")
+    ticket = Smistatore.ask(messaggio)
+    print(f"Categoria: {ticket.categoria} | urgente: {ticket.urgente}")
+
+    if ticket.categoria == "tecnico" and ticket.urgente:
+        print("Ti passo subito al supporto prioritario.")
+    print(Supporto.ask(messaggio))

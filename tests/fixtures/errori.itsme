@@ -1,0 +1,26 @@
+type Ticket:
+    categoria: "tecnico" | "commerciale"
+    urgente: boolean
+
+def cerca_faq(domanda):
+    return "ok"
+
+agent Supporto:
+    model: "claude"
+    instruction: "Aiuta il cliente."
+    tools: [cerca_faq, prenota_appuntameto]
+    output: Tiket
+
+agent Smistatore:
+    instructions: "Classifica."
+    output: Ticket
+
+main:
+    t = Smistatore.ask("ciao")
+    if t.categria == "tecnico":
+        print(risposta)
+    if t.categoria == "tecnco":
+        pass
+    risposta = Supporto.run("ciao", true)
+    totale = "Totale: " + 5
+    Smistatore = 3

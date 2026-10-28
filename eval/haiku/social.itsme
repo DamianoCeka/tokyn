@@ -1,0 +1,36 @@
+type Verdetto:
+    approvato: bool "True se il post può essere pubblicato così com'è"
+    problemi: list[str] "elenco dei problemi trovati, vuoto se non ce ne sono"
+    testo_finale: str "testo del post corretto e pronto da pubblicare"
+
+agent Ricercatore:
+    model: "claude"
+    instructions: "Raccogli le caratteristiche principali e i punti di forza di un nuovo mouse da gaming. Rispondi in italiano, in punti brevi."
+
+agent Copywriter:
+    model: "claude"
+    instructions: "Scrivi un post Instagram in italiano, accattivante e breve, con emoji e hashtag, basandoti sui dati ricevuti."
+
+agent Coordinatore:
+    model: "claude"
+    instructions: "Coordina la creazione di un post Instagram per un nuovo mouse da gaming. Prima usa Ricercatore per raccogliere le informazioni, poi usa Copywriter per scrivere il post. Restituisci solo il testo finale del post."
+    tools: [Ricercatore, Copywriter]
+    max_steps: 10
+
+agent Revisore:
+    model: "claude"
+    instructions: "Controlla il post Instagram ricevuto: deve essere in italiano corretto, non promettere cose false, avere un tono coerente e stare sotto i 2200 caratteri. Rispondi con il verdetto richiesto."
+    output: Verdetto
+
+main:
+    post = Coordinatore.ask("Crea un post Instagram per il nuovo mouse da gaming.")
+    verdetto = Revisore.ask(post)
+    if verdetto.approvato:
+        print("Post approvato:")
+        print(verdetto.testo_finale)
+    else:
+        print("Post non approvato. Problemi:")
+        for problema in verdetto.problemi:
+            print(f"- {problema}")
+        print("Versione corretta:")
+        print(verdetto.testo_finale)

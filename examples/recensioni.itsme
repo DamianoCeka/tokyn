@@ -1,0 +1,24 @@
+# Analizza un file di recensioni e segnala quelle negative.
+
+type Recensione:
+    sentimento: "positivo" | "neutro" | "negativo"
+    punteggio: int "da 1 a 5"
+    riassunto: str "massimo 12 parole"
+
+agent Analista:
+    model: "claude-haiku"
+    instructions: "Analizza la recensione di un cliente."
+    output: Recensione
+
+main:
+    testi = read_file("examples/recensioni.txt").split("\n")
+    negative = []
+    for testo in testi:
+        if not testo.strip():
+            continue
+        r = Analista.ask(testo)
+        if r.sentimento == "negativo":
+            negative.append(r)
+            print(f"⚠️  {r.punteggio}/5 — {r.riassunto}")
+    print(f"Recensioni negative: {len(negative)} su {len(testi)}")
+    write_file("negative.json", json_dump(negative))

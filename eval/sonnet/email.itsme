@@ -1,0 +1,27 @@
+type Classificazione:
+    categoria: "lavoro" | "personale" | "spam"
+    priorita: int "da 1 (minima) a 5 (massima)"
+    riassunto: str "riassunto in una sola riga"
+
+agent Classificatore:
+    model: "claude-haiku"
+    instructions: "Classifica l'email ricevuta: categoria (lavoro, personale o spam), priorita da 1 a 5 e un riassunto di una riga."
+    output: Classificazione
+
+main:
+    righe = read_file("emails.txt").split("\n")
+    risultati = []
+    for riga in righe:
+        if not riga.strip():
+            continue
+        r = Classificatore.ask(riga)
+        risultati.append(r)
+
+    print("Email non spam, dalla priorita piu alta alla piu bassa:")
+    for p in range(5, 0, -1):
+        for r in risultati:
+            if r.categoria != "spam" and r.priorita == p:
+                print(f"[{r.priorita}] ({r.categoria}) {r.riassunto}")
+
+    write_file("riepilogo.json", json_dump(risultati))
+    print(f"Salvate {len(risultati)} email in riepilogo.json")

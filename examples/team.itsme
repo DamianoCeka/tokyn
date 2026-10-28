@@ -1,0 +1,33 @@
+# Più agenti che collaborano: un coordinatore delega a due specialisti.
+
+type Piano:
+    titolo: str
+    passi: list[str]
+    durata_giorni: int
+
+agent Ricercatore:
+    model: "claude-haiku"
+    instructions: "Raccogli fatti utili e verificabili sul tema richiesto. Rispondi con un elenco puntato."
+
+agent Pianificatore:
+    model: "claude"
+    instructions: "Trasforma le informazioni ricevute in un piano pratico, con passi brevi."
+    output: Piano
+
+agent Coordinatore:
+    model: "claude"
+    instructions: """
+        Coordini un piccolo team. Per ogni richiesta:
+        1. chiedi a Ricercatore le informazioni;
+        2. riassumi il risultato in tre frasi per l'utente.
+    """
+    tools: [Ricercatore]
+
+main:
+    tema = "lanciare un torneo Valorant online per la community"
+    print(Coordinatore.ask(tema))
+
+    piano = Pianificatore.ask(tema)
+    print(f"\n{piano.titolo} ({piano.durata_giorni} giorni)")
+    for i, passo in enumerate(piano.passi):
+        print(f"{i + 1}. {passo}")
