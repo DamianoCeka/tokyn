@@ -6,7 +6,8 @@ Valori attesi, ricalcolati qui dal log: richieste in 20 ore (nessuna dalle 02 al
 
 Passa se risultato.json ha richieste_per_ora uguale a quella attesa (chiavi "HH", nessuna ora in più o in meno), errori
 uguale a quello atteso (nessun codice in più o in meno), ip_top uguale ai 3 IP attesi nell'ordine giusto e un commento
-(stringa di almeno 30 caratteri e al massimo 4 frasi).
+sul traffico: stringa di almeno 30 caratteri e al massimo 4 frasi, che parla del traffico (richieste, accessi, picco,
+errori o un numero) e non è un messaggio d'errore lasciato al posto del commento quando la chiamata a Claude fallisce.
 """
 
 import re
@@ -15,7 +16,7 @@ from collections import Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
-from comune import esegui, esito, numero
+from comune import esegui, esito, norm, numero
 
 QUI = Path(__file__).resolve().parent
 RIGA = re.compile(r'^(\S+) \S+ \S+ \[[^:]+:(\d\d):\d\d:\d\d [^\]]+\] "[^"]*" (\d{3}) \S+$')
@@ -61,8 +62,16 @@ dettagli.append(f"ip_top giusti e in ordine: {top_ok} (attesi {IP_TOP}, scritti 
 
 commento = dati.get("commento")
 frasi = len(re.findall(r"[.!?]+(?=\s|$)", commento.strip())) if isinstance(commento, str) else 0
-commento_ok = isinstance(commento, str) and len(commento.strip()) >= 30 and frasi <= 4
+c = norm(commento) if isinstance(commento, str) else ""
+sul_traffico = re.search(r"traffic|richiest|access|visit|picco|errori|\d", c) is not None
+# un programma che non riesce a chiamare Claude non deve passare scrivendo l'errore al posto del commento
+messaggio_errore = re.search(r"api.?key|chiave api|authenticat|autenticazion|traceback|exception|eccezione|"
+                             r"non disponibile|unavailable|impossibile (generare|ottenere|scrivere|contattare)|"
+                             r"nessun commento|claude non|could not", c) is not None
+commento_ok = isinstance(commento, str) and len(commento.strip()) >= 30 and frasi <= 4 and sul_traffico \
+    and not messaggio_errore
 punti += commento_ok
-dettagli.append(f"commento presente (almeno 30 caratteri, al massimo 4 frasi): {commento_ok} ({str(commento)[:200]!r})")
+dettagli.append(f"commento sul traffico (almeno 30 caratteri, al massimo 4 frasi, non un messaggio d'errore): "
+                f"{commento_ok} ({str(commento)[:200]!r})")
 
 esito(punti == 4, punti, 4, dettagli, ex)

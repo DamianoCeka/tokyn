@@ -4,7 +4,7 @@ rifanno, quelle fermate da un problema dell'infrastruttura (limiti d'uso, API so
 
 Uso: python esegui.py [--modelli opus,sonnet] [--compiti a,b] [--condizioni tokyn,python,agent-sdk]
                       [--ripetizioni 3] [--paralleli 4] [--lavoro CARTELLA] [--risultati CARTELLA]
-                      [--solo-controlli] [--elenco]
+                      [--commit SHA] [--solo-controlli] [--elenco]
 
 Isolamento: ogni sessione gira fuori dal repository in una cartella dal nome neutro (/srv/progetti/<codice>), così
 dal percorso Claude non capisce che è un benchmark né in quale condizione si trova, e con una /tmp tutta sua
@@ -408,6 +408,7 @@ def main():
     ap.add_argument("--paralleli", type=int, default=4)
     ap.add_argument("--lavoro", default="/srv/progetti")
     ap.add_argument("--risultati", default=str(RISULTATI))
+    ap.add_argument("--commit", default="HEAD", help="il commit da cui prendere il plugin Tokyn da misurare")
     ap.add_argument("--solo-controlli", action="store_true")
     ap.add_argument("--elenco", action="store_true")
     ap.add_argument("--ripristina", action="store_true", help="rimette la copia originale di claude nell'Agent SDK")
@@ -432,14 +433,20 @@ def main():
     lavoro = Path(a.lavoro)
     lavoro.mkdir(parents=True, exist_ok=True)
     plugin = lavoro.parent / "plugin-tokyn"  # fuori da --lavoro: le sessioni senza Tokyn non lo vedono
+    # il plugin di un commit preciso (--commit, non la cartella di lavoro): si misura una versione pubblicata
     if plugin.exists():
         shutil.rmtree(plugin)
-    shutil.copytree(REPO / "plugins" / "tokyn", plugin, ignore=shutil.ignore_patterns("__pycache__"))
+    plugin.mkdir(parents=True)
+    commit = subprocess.run(["git", "rev-parse", a.commit], cwd=REPO, capture_output=True, text=True,
+                            check=True).stdout.strip()
+    archivio = subprocess.run(["git", "archive", "--format=tar", commit, "plugins/tokyn"], cwd=REPO,
+                              capture_output=True, check=True).stdout
+    subprocess.run(["tar", "-x", "--strip-components=2", "-C", str(plugin)], input=archivio, check=True)
     global IMPRONTA_PLUGIN
     IMPRONTA_PLUGIN = impronta(plugin)
     RISULTATI.mkdir(parents=True, exist_ok=True)
     (RISULTATI / "versioni.json").write_text(json.dumps({
-        "commit": subprocess.run(["git", "rev-parse", "HEAD"], cwd=REPO, capture_output=True, text=True).stdout.strip(),
+        "commit_plugin": commit,
         "plugin": IMPRONTA_PLUGIN,
         "claude_code": subprocess.run(["claude", "--version"], capture_output=True, text=True).stdout.strip(),
         "claude_code_agent_sdk": subprocess.run([str(sdk_bundled().with_name("claude.vero") if sdk_bundled().with_name(

@@ -2,10 +2,11 @@
 requisiti, gallo_andrea.txt è un cuoco senza nessun requisito, colombo_luca.txt e ricci_paolo.txt ne hanno solo una
 parte (il loro ordine reciproco non conta).
 
-Passa se risultato.json ha in "candidati" i 4 curriculum, ognuno una volta, con file (nome senza cartella), punteggio
-intero da 1 a 10 (8, 8.0 o "8") e motivazione non vuota; la lista è in ordine di punteggio decrescente; "migliore" è
-ferrari_giulia.txt, con un punteggio più alto di tutti gli altri; e gallo_andrea.txt ha un punteggio più basso di tutti
-gli altri. Maiuscole e spazi ai lati del nome del file sono ignorati.
+Passa se risultato.json ha in "candidati" i 4 curriculum, ognuno una volta, con file (nome senza cartella),
+punteggio intero da 1 a 10 (8, 8.0 o "8") e motivazione non vuota; la lista è in ordine di punteggio decrescente
+(i pari merito possono stare in qualunque ordine); "migliore" è ferrari_giulia.txt, con un punteggio più alto di tutti
+gli altri; e gallo_andrea.txt ha un punteggio più basso di tutti gli altri. Maiuscole e spazi ai lati del nome del
+file sono ignorati; chiavi in più sono ammesse.
 """
 
 import sys

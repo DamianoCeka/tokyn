@@ -4,9 +4,9 @@
 Passa se risultato.json ha i movimenti nell'ordine del file con data identica al file, descrizione uguale (maiuscole e
 spazi ignorati) e l'importo giusto col segno, scritto come numero JSON; le categorie sono tutte tra le cinque ammesse
 (maiuscole e accenti ignorati) e almeno 7 su 8 sono giuste; e i totali sono numeri JSON arrotondati al centesimo (-51.8
-va bene, -51.800000000000004 no), uguali alla somma degli importi del file per le categorie che il programma ha assegnato (una
-categoria senza movimenti può mancare o valere 0). Con le categorie giuste i totali sono: spesa alimentare -85.50,
-trasporti -51.80, casa -728.45, svago -19.00, altro -12.80.
+va bene, -51.800000000000004 no), uguali alla somma degli importi del file per le categorie che il programma ha
+assegnato (una categoria senza movimenti può mancare o valere 0; chiavi in più sono ignorate). Con le categorie giuste
+i totali sono: spesa alimentare -85.50, trasporti -51.80, casa -728.45, svago -19.00, altro -12.80.
 """
 
 import sys

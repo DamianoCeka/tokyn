@@ -5,8 +5,9 @@ di calore. Le persone e le organizzazioni citate sono sei: Elena Marchesini, Lau
 Impianti, Comune di Montebrenna, Istituto Tecnico Volta.
 
 Passa se risultato.json ha un titolo (stringa non vuota che parla dello stabilimento), esattamente 5 punti (stringhe
-non vuote) che insieme riportano almeno 3 dei 4 fatti principali, e in `citati` (lista di stringhe) almeno 5 delle 6
-persone e organizzazioni.
+non vuote) che insieme riportano almeno 3 dei 4 fatti principali, e in `citati` (lista di stringhe, senza doppioni)
+almeno 5 delle 6 persone e organizzazioni, ognuna in una voce sua: "Elena Marchesini (Valtek Impianti)" conta per una
+sola delle due. Altri nomi in più in `citati` non tolgono punti.
 """
 
 import re
@@ -31,7 +32,8 @@ CITATI = {
     "Comune di Montebrenna": r"montebrenna",
     "Istituto Tecnico Volta": r"\bvolta\b",
 }
-TEMA = r"valtek|montebrenna|pomp[ae] di calore|stabiliment|fabbrica|posti di lavoro|assunzion|investiment|\b320\b|\b48\b"
+TEMA = (r"valtek|montebrenna|pomp[ae] di calore|stabiliment|fabbrica|impiant|posti di lavoro|lavoro|assunzion|"
+        r"investiment|milioni|produzion|industria|\b320\b|\b48\b")
 
 ex = esegui(sys.argv[1], QUI / "nascosti")
 dati = ex.json("risultato.json")
@@ -59,9 +61,27 @@ dettagli.append(f"i 5 punti riportano almeno 3 fatti principali su 4: {fatti_ok}
 citati = dati.get("citati")
 nomi = [norm(c) for c in citati if isinstance(c, str)] if isinstance(citati, list) else []
 stringhe = isinstance(citati, list) and len(nomi) == len(citati)
-trovati = [c for c, regola in CITATI.items() if any(re.search(regola, n) for n in nomi)]
-citati_ok = stringhe and len(trovati) >= 5
+doppioni = sorted({n for n in nomi if nomi.count(n) > 1})
+
+
+def abbina(nome, presi, visti):
+    """Abbinamento persona/organizzazione -> voce di `citati`, ogni voce al massimo una volta (cammini aumentanti)."""
+    for i, n in enumerate(nomi):
+        if i not in visti and re.search(CITATI[nome], n):
+            visti.add(i)
+            if i not in presi or abbina(presi[i], presi, visti):
+                presi[i] = nome
+                return True
+    return False
+
+
+presi = {}
+for nome in CITATI:
+    abbina(nome, presi, set())
+trovati = [c for c in CITATI if c in presi.values()]
+citati_ok = stringhe and not doppioni and len(trovati) >= 5
 punti += citati_ok
-dettagli.append(f"citati (lista di stringhe) con almeno 5 su 6: {citati_ok} ({len(trovati)} trovati: {trovati})")
+dettagli.append(f"citati (lista di stringhe senza doppioni) con almeno 5 su 6 in voci distinte: {citati_ok} "
+                f"({len(trovati)} trovati: {trovati}; doppioni: {doppioni})")
 
 esito(punti == 4, punti, 4, dettagli, ex)
