@@ -18,12 +18,15 @@ Un file contiene, in qualunque ordine:
 
 | Costrutto | A cosa serve |
 |---|---|
-| `import x` / `from x import y` | usare una libreria Python |
+| `import x` / `from x import y as z` | usare una libreria Python |
 | `NOME = valore` | costante globale (non si può modificare dopo) |
 | `type Nome:` | dati strutturati |
 | `def nome(...):` | funzione; può essere usata come strumento da un agente |
 | `agent Nome:` | un agente IA |
 | `main:` | il punto di partenza del programma (uno solo) |
+
+Le costanti e i valori predefiniti dei parametri si calcolano subito, dall'alto in basso:
+possono usare solo costanti e funzioni scritte prima di loro (come in Python).
 
 ## Agenti
 
@@ -96,22 +99,23 @@ type Ticket:
 
 Come in Python:
 
-- `x = valore`, `x += 1`, `x -= 1`, `x *= 2`, `x /= 2`
+- `x = valore`, `x += 1`, `x -= 1`, `x *= 2`, `x /= 2`, `x //= 2`, `x %= 2`; anche su `d["k"]`, `lista[i]`, `t.campo`
 - `if` / `elif` / `else`
 - `for x in lista:`, `for i in range(n):`, `for k, v in dizionario.items():`, `break`, `continue`
 - `return`, `pass`
 - Numeri: `3`, `2.5`, `1_000`, `1e-9`
-- Operatori: `+ - * / // %`, `== != < > <= >=`, `in`, `not in`, `and`, `or`, `not`
+- Operatori: `+ - * / // % **`, `== != < > <= >=` (anche concatenati: `0 <= x < 3`), `in`, `not in`, `and`, `or`, `not`
 - Liste `[1, 2]`, dizionari `{"a": 1}`, indici `x[0]`, attributi `x.y`, chiamate `f(a, b=1)`
-- Slice di testi e liste: `testo[:200]`, `lista[1:]`, `lista[-3:]`
-- Stringhe `"..."`, `'...'`, `"""..."""` e f-string `f"Ciao {nome}"`
+- Slice di testi e liste: `testo[:200]`, `lista[1:]`, `lista[-3:]`, `testo[::-1]`
+- Stringhe `"..."`, `'...'`, `"""..."""`, `r"\d+"` e f-string `f"Ciao {nome}"`
 - Metodi di stringhe, liste e dizionari di Python: `.upper()`, `.split()`, `.append()`, `.get()`, `.items()`…
 
 Non esistono in Tokyn (il checker lo segnala e dice cosa usare): `while`, `class`, `lambda`,
 `try`/`except`, `with`, `async`/`await`, `yield`, `global`, `match`, le comprehension
 `[x for x in ...]` (usa `for` con `.append()`), `a if c else b` (usa `if`/`else`),
-`is` (usa `==` e `!=`), le tuple, `a, b = ...` e `return a, b` (usa una lista).
-Al posto di `try`/`except`, `read_file`, `http_get` e `http_post` accettano un valore di riserva (`default`).
+`is` (usa `==` e `!=`), tuple e set (usa liste), `a, b = ...` e `return a, b` (usa una lista),
+`del` (usa `.pop()`), `raise` e `assert` (usa `if` e `return`), `def` dentro altre funzioni.
+Al posto di `try`/`except`, `read_file`, `http_get`, `http_post` e `json_parse` accettano un valore di riserva (`default`).
 
 ## Funzioni già presenti
 
@@ -125,7 +129,7 @@ Al posto di `try`/`except`, `read_file`, `http_get` e `http_post` accettano un v
 | `append_file(percorso, testo)` | aggiunge in fondo a un file |
 | `http_get(url, default)` | scarica una pagina e restituisce il testo; se la rete fallisce restituisce `default` |
 | `http_post(url, dati, default)` | invia dati JSON e restituisce la risposta; se fallisce restituisce `default` |
-| `json_parse(testo)` | da testo JSON a liste/dizionari |
+| `json_parse(testo, default)` | da testo JSON a liste/dizionari; se non è JSON valido restituisce `default` |
 | `json_dump(valore)` | da valore (anche `type`) a testo JSON |
 | `env(nome, default)` | legge una variabile d'ambiente |
 | `now()` | data e ora attuali, es. `"2026-10-28T14:30:00"` |
@@ -180,8 +184,10 @@ main:
 | E110 | tipo sconosciuto |
 | E121 / E122 | strumento senza tipi dei parametri / senza descrizione |
 | E130–E139 | campo dell'agente sbagliato, mancante o con un valore non valido |
+| E144 | agenti che si delegano a vicenda |
 | E142 | si tenta di modificare una costante |
 | E160 / E161 | nome non definito / variabile usata prima di assegnarla |
+| E162 | costante o valore predefinito che usa qualcosa scritto più sotto |
 | E170 | metodo inesistente su un agente (esistono solo `.ask` e `.reset`) |
 | E171 | campo inesistente in un `type` |
 | E175 | metodo inesistente su testo, lista o dizionario |

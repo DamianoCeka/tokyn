@@ -6,6 +6,7 @@ fa più spesso, e spiegare esattamente come correggerli.
 
 from __future__ import annotations
 
+import ast
 import re
 from dataclasses import dataclass, field
 
@@ -70,7 +71,7 @@ BUILTINS = {
     "append_file": (2, 2, NONE),
     "http_get": (1, 2, STR),
     "http_post": (2, 3, STR),
-    "json_parse": (1, 1, ANY),
+    "json_parse": (1, 2, ANY),
     "json_dump": (1, 1, STR),
     "env": (1, 2, STR),
     "now": (0, 0, STR),
@@ -81,7 +82,7 @@ STR_METHODS = {m for m in dir(str) if not m.startswith("_")}
 LIST_METHODS = {m for m in dir(list) if not m.startswith("_")}
 DICT_METHODS = {m for m in dir(dict) if not m.startswith("_")}
 
-PREC = {"or_": 1, "and_": 2, "not_": 3, "comparison": 4, "arith": 5, "term": 6, "unary": 7}
+PREC = {"or_": 1, "and_": 2, "not_": 3, "comparison": 4, "arith": 5, "term": 6, "unary": 7, "pow": 7.5}
 
 
 def type_name(t) -> str:
@@ -128,6 +129,7 @@ class AgentInfo:
     node: Tree
     line: int
     fields: dict = field(default_factory=dict)
+    agent_tools: list = field(default_factory=list)  # altri agenti a cui delega
 
 
 @dataclass
@@ -165,10 +167,10 @@ def pos(node) -> tuple[int, int, int]:
 
 
 def string_value(tok: Token) -> str:
-    s = str(tok)
-    if s[:3] in ('"""', "'''"):
-        return s[3:-3]
-    return bytes(s[1:-1], "utf-8").decode("unicode_escape", errors="ignore") if "\\" in s else s[1:-1]
+    try:
+        return ast.literal_eval(str(tok))
+    except (ValueError, SyntaxError):
+        return str(tok).strip("\"'")
 
 
 # ---------------------------------------------------------------- checker
@@ -195,6 +197,7 @@ class Checker:
         self.collect()
         self.check_types()
         self.check_agents()
+        self.check_agent_cycles()
         self.check_funcs()
         self.check_consts()
         self.check_main()
@@ -227,7 +230,8 @@ class Checker:
                 if self.declare(name_tok, ("module",)):
                     self.prog.imports[str(name_tok)] = node
             elif kind == "import_from":
-                for tok in node.children[1:]:
+                for imp in node.children[1:]:
+                    tok = imp.children[1] if imp.children[1] is not None else imp.children[0]
                     if self.declare(tok, ANY):
                         self.prog.imports[str(tok)] = node
             elif kind == "type_def":
@@ -341,6 +345,11 @@ class Checker:
                 resolved.append((pname, t, has_default))
                 scope.define(pname, t)
             info.params = resolved
+            defaults = Scope(self, kind="default")
+            defaults.before_line = info.line
+            for p in (params.children if params is not None else []):
+                if p is not None and p.children[2] is not None:
+                    self.infer(p.children[2], defaults)
             if name in self.prog.tool_funcs:
                 if not info.docstring:
                     self.error("E122", f'la funzione "{name}" è uno strumento di un agente ma non ha descrizione', name_tok,
@@ -354,10 +363,38 @@ class Checker:
             scope.collect_assigned(suite)
             self.check_block(suite, scope, in_loop=False)
 
+    def check_agent_cycles(self):
+        state = {}
+
+        def visit(name, path):
+            state[name] = "aperto"
+            for dep in self.prog.agents[name].agent_tools:
+                if state.get(dep) == "aperto":
+                    cycle = path[path.index(dep):] + [name, dep]
+                    self.error("E144", "gli agenti si delegano a vicenda: " + " → ".join(cycle),
+                               self.prog.agents[name].node.children[0],
+                               "Un agente non può delegare a chi delega (anche indirettamente) a lui: togline uno dai tools.")
+                elif dep not in state:
+                    visit(dep, path + [name])
+            state[name] = "chiuso"
+
+        for name in self.prog.agents:
+            if name not in state:
+                visit(name, [])
+
+    def definition_line(self, name):
+        """Riga in cui è definita una costante o una funzione (contano solo queste per l'ordine)."""
+        if name in self.prog.consts:
+            return self.prog.consts[name].meta.line
+        if name in self.prog.funcs:
+            return self.prog.funcs[name].line
+        return None
+
     # ------------------------------------------------------------ costanti
     def check_consts(self):
         scope = Scope(self, kind="const")
         for name, node in self.prog.consts.items():
+            scope.before_line = node.meta.line
             t = self.infer(node.children[1], scope)
             self.global_names[name] = t
 
@@ -401,7 +438,7 @@ class Checker:
                         elif tname in self.prog.funcs:
                             self.prog.tool_funcs.add(tname)
                         elif tname in self.prog.agents:
-                            pass
+                            info.agent_tools.append(tname)
                         else:
                             self.error("E133", f'lo strumento "{tname}" non esiste', item,
                                        did_you_mean(tname, available, "Strumenti disponibili")
@@ -569,6 +606,7 @@ class Checker:
         name = str(name_tok)
         t = scope.lookup(name)
         if t is not None:
+            self.check_order(name_tok, scope)
             if scope.kind == "const" and t[0] == "agent":
                 self.error("E191", "le costanti non possono usare agenti", name_tok,
                            "Usa l'agente dentro main o dentro una funzione.")
@@ -585,6 +623,14 @@ class Checker:
             hint = "Tokyn non ha classi: usa le variabili direttamente."
         self.error("E160", f'il nome "{name}" non è definito', name_tok, hint)
         return ANY
+
+    def check_order(self, name_tok, scope):
+        """Costanti e valori predefiniti si calcolano subito: possono usare solo ciò che è scritto prima."""
+        name = str(name_tok)
+        line = self.definition_line(name) if scope.before_line and not scope.has_local(name) else None
+        if line and line > scope.before_line:
+            self.error("E162", f'"{name}" è definita più sotto (riga {line}): qui si può usare solo ciò che è scritto prima',
+                       name_tok, f"Sposta la definizione di {name} sopra la riga {scope.before_line}.")
 
     def infer_number(self, node, scope):
         return FLOAT if any(c in str(node.children[0]) for c in ".eE") else INT
@@ -707,6 +753,12 @@ class Checker:
                        f"Esempio: valore.campo invece di valore[\"campo\"]")
         return ANY
 
+    def infer_pow(self, node, scope):
+        types = [self.infer(c, scope) for c in node.children if isinstance(c, Tree)]
+        if all(t in (INT, FLOAT) for t in types):
+            return FLOAT if FLOAT in types else INT
+        return ANY
+
     def infer_slice(self, node, scope):
         obj = self.infer(node.children[0], scope)
         for bound in node.children[1:]:
@@ -788,6 +840,8 @@ class Checker:
         if isinstance(callee, Tree) and callee.data == "name":
             name = str(callee.children[0])
             t = scope.lookup(name)
+            if t is not None:
+                self.check_order(callee.children[0], scope)
             if t is None:
                 self.infer_name(callee, scope)
                 infer_args()
@@ -869,6 +923,7 @@ class Scope:
         self.func = func
         self.locals: dict[str, tuple] = {}
         self.pending: set[str] = set()
+        self.before_line: int | None = None  # costanti e valori predefiniti: solo nomi definiti prima
 
     def define(self, name, t, tok=None):
         self.locals[name] = t

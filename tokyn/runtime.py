@@ -267,6 +267,7 @@ class Agent:
         self.memory = memory
         self.max_steps = max_steps
         self._history: list[dict] = []
+        self._mock_calls = 0
         self._tools_by_name = {(t.name if isinstance(t, Agent) else t.__tokyn_tool__["name"]): t for t in self.tools}
 
     def __repr__(self):
@@ -399,7 +400,8 @@ def _with_retry(fn, agent_name, attempts=3):
 # ======================================================================= mock
 
 
-def _example(spec: _Spec, field: str = ""):
+def _example(spec: _Spec, field: str = "", n: int = 0):
+    """Valore finto per un campo. n (numero della chiamata) fa variare scelte e bool tra una ask e l'altra."""
     k = spec.kind
     if k == "str":
         return f"esempio {field}".strip()
@@ -408,24 +410,26 @@ def _example(spec: _Spec, field: str = ""):
     if k == "float":
         return 1.0
     if k == "bool":
-        return True
+        return n % 2 == 0
     if k == "dict":
         return {}
     if k == "enum":
-        return spec.arg[0]
+        return spec.arg[n % len(spec.arg)]
     if k == "list":
-        return [_example(spec.arg, field)]
+        return [_example(spec.arg, field, n), _example(spec.arg, field, n + 1)]
     if k == "ref":
         cls = _TYPES[spec.arg]
-        return {f: _example(cls.__tokyn_specs__[f], f) for f in cls.__tokyn_fields__}
+        return {f: _example(cls.__tokyn_specs__[f], f, n) for f in cls.__tokyn_fields__}
     return None
 
 
 def _mock_answer(agent: Agent, text: str):
     """Risposta finta e prevedibile: permette di provare un programma senza API key."""
+    n = agent._mock_calls
+    agent._mock_calls += 1
     if agent.output is not None:
         cls = agent.output
-        data = {f: _example(cls.__tokyn_specs__[f], f) for f in cls.__tokyn_fields__}
+        data = {f: _example(cls.__tokyn_specs__[f], f, n) for f in cls.__tokyn_fields__}
         value = cls._from_dict(data)
         return value, _json.dumps(data, ensure_ascii=False)
     short = text if len(text) <= 60 else text[:57] + "..."
@@ -443,11 +447,11 @@ def read_file(path, default=_NO_DEFAULT):
     try:
         with open(path, encoding="utf-8") as f:
             return f.read()
-    except FileNotFoundError:
+    except (OSError, ValueError) as err:  # file mancante, cartella, permessi, testo non UTF-8
         if default is not _NO_DEFAULT:
             return default
-        raise TokynRuntimeError(f'il file "{path}" non esiste',
-                                hint=f'Se può mancare, dai un valore di riserva: read_file("{path}", "")') from None
+        message = f'il file "{path}" non esiste' if isinstance(err, FileNotFoundError) else f'impossibile leggere "{path}": {err}'
+        raise TokynRuntimeError(message, hint=f'Se può mancare, dai un valore di riserva: read_file("{path}", "")') from None
 
 
 def write_file(path, text):
@@ -460,35 +464,40 @@ def append_file(path, text):
         f.write(str(text))
 
 
-def _http(req, default, call):
+def _http(call, url, default, body=None):
+    headers = {"User-Agent": "tokyn/0.1"}
+    if body is not None:
+        headers["Content-Type"] = "application/json"
     try:
+        req = _urlreq.Request(str(url), data=body, headers=headers, method="POST" if body is not None else "GET")
         with _urlreq.urlopen(req, timeout=30) as r:
             return r.read().decode("utf-8", errors="replace")
-    except (OSError, ValueError) as err:  # rete, HTTP 4xx/5xx, timeout, indirizzo non valido
+    except Exception as err:  # rete, HTTP 4xx/5xx, timeout, indirizzo non valido
         if default is not _NO_DEFAULT:
             return default
         reason = getattr(err, "reason", None) or err
-        raise TokynRuntimeError(f"{call} fallita per {req.full_url}: {reason}",
+        raise TokynRuntimeError(f"{call} fallita per {url}: {reason}",
                                 hint=f"Se può fallire, dai un valore di riserva come ultimo argomento: {call}(..., \"\")") from None
 
 
 def http_get(url, default=_NO_DEFAULT):
-    req = _urlreq.Request(str(url), headers={"User-Agent": "tokyn/0.1"})
-    return _http(req, default, "http_get")
+    return _http("http_get", url, default)
 
 
 def http_post(url, data, default=_NO_DEFAULT):
     body = data if isinstance(data, str) else _json.dumps(to_plain(data))
-    req = _urlreq.Request(str(url), data=body.encode("utf-8"), method="POST",
-                          headers={"User-Agent": "tokyn/0.1", "Content-Type": "application/json"})
-    return _http(req, default, "http_post")
+    return _http("http_post", url, default, body.encode("utf-8"))
 
 
-def json_parse(text):
+def json_parse(text, default=_NO_DEFAULT):
     try:
         return _json.loads(text)
-    except _json.JSONDecodeError as err:
-        raise TokynRuntimeError(f"il testo non è JSON valido ({err.msg}, riga {err.lineno})") from None
+    except (ValueError, TypeError) as err:
+        if default is not _NO_DEFAULT:
+            return default
+        detail = f"{err.msg}, riga {err.lineno}" if isinstance(err, _json.JSONDecodeError) else str(err)
+        raise TokynRuntimeError(f"il testo non è JSON valido ({detail})",
+                                hint="Se può non esserlo, dai un valore di riserva: json_parse(testo, {})") from None
 
 
 def json_dump(value):

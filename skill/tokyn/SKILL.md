@@ -81,36 +81,49 @@ main:                                          # punto di partenza, uno solo
     nuovo.urgente = True
 ```
 
-- Istruzioni: `=`, `+=`, `-=`, `*=`, `/=`, `if`/`elif`/`else`, `for x in ...` (anche `for k, v in d.items()`),
-  `break`, `continue`, `return`, `pass`. Espressioni, numeri (`1_000`, `1e-9`), f-string, indici `x[-1]`,
-  slice `x[:200]` e metodi di str/list/dict come in Python. Campi dei `type` con il punto (`t.campo`), chiavi dei dizionari con `d["k"]`.
+- Istruzioni: `=` (anche `d["k"] = v`, `lista[i] = v`, `t.campo = v`), `+= -= *= /= //= %=`, `if`/`elif`/`else`,
+  `for x in ...` (anche `for k, v in d.items()`), `break`, `continue`, `return` (in `main` termina il programma), `pass`.
+- Espressioni come in Python: `+ - * / // % **`, confronti anche concatenati (`0 <= x < 3`), `and or not in`,
+  numeri `1_000` e `1e-9`, escape (`"\n"`), `r"\d+"`, f-string con formati (`{x:.2f}`), indici `x[-1]`, slice
+  `x[:200]` e `x[::-1]`, liste e dizionari anche su più righe. Tutti i metodi di str/list/dict e tutti i moduli
+  Python (`import os`, `from x import y as z`, `os.listdir(cartella)`). Nomi anche con accenti.
 - Funzioni già presenti: `print input len str int float bool list dict range enumerate zip sum min max sorted
   reversed abs round any all`, `write_file(p, testo)`, `append_file(p, testo)`, `sleep(s)` e:
-  - `read_file(p, default)`, `http_get(url, default)`, `http_post(url, dati, default)`: restituiscono testo.
-    Se il file manca o la rete fallisce restituiscono `default`; senza `default` il programma si ferma con un errore.
-  - `json_parse(testo)` → liste e dizionari (non `type`); `json_dump(valore)` → JSON indentato, anche di liste di `type`.
-  - `now()` → testo `"2026-10-28T14:30:00"` (la data è `now()[:10]`); `env(nome, default)` → variabile d'ambiente.
-- I percorsi sono relativi alla cartella da cui si esegue. Ogni modulo Python funziona: `import os`, `os.path.exists(p)`.
+  - `read_file(p, default)`, `http_get(url, default)`, `http_post(url, dati, default)` → testo;
+    `json_parse(testo, default)` → liste e dizionari (non `type`). Se qualcosa va storto (file mancante, rete,
+    indirizzo o JSON non validi) restituiscono `default`; senza `default` il programma si ferma con un errore chiaro.
+  - `json_dump(valore)` → JSON indentato, anche di `type` e liste di `type`. `now()` → `"2026-10-28T14:30:00"`
+    (la data è `now()[:10]`). `env(nome, default)`. A fine input `input()` ferma il programma: per leggere più
+    righe usa un terminatore (es. riga vuota). I percorsi sono relativi alla cartella da cui si esegue.
 
 ## Comportamento
 
-- `def`: tipi e `->` facoltativi, tranne negli strumenti (tipo di ogni parametro e descrizione). Le funzioni
-  possono chiamarsi tra loro; l'ordine delle definizioni nel file non conta.
-- Tipi ammessi in campi, parametri e ritorni: `str int float bool dict list list[T]` e i `type`; la descrizione va
-  bene dopo qualsiasi campo. Il runtime controlla tipi e valori `"a" | "b"`: limiti come "da 1 a 5" vanno nella descrizione.
+- Ordine: `type`, `def` e `agent` vanno in qualsiasi ordine. Costanti e valori predefiniti dei parametri si
+  calcolano subito, dall'alto in basso: usano solo costanti e funzioni scritte prima. Una costante può chiamare
+  funzioni (`ANNUNCIO = read_file("a.txt", "")`) e fare da `instructions`; non si riassegna, ma liste e dizionari
+  costanti si modificano (`LISTA.append(x)`).
+- `def`: tipi e `->` facoltativi, tranne negli strumenti (tipo di ogni parametro e descrizione).
+- Tipi in campi, parametri e ritorni: `str int float bool dict list list[T]` e i `type`; la descrizione va dopo
+  qualsiasi campo. Il runtime controlla i campi dei `type`, l'`output` degli agenti e gli argomenti che l'IA passa
+  agli strumenti (un intero va bene per `float`); non controlla le chiamate del tuo codice né limiti come "da 1 a 5":
+  scrivili nella descrizione e, se servono, verificali con un `if`.
 - `output` è il nome di un solo `type`: per una lista usa un type contenitore con un campo `list[Voce]`.
-- Un agente usato come strumento riceve un testo e restituisce la sua risposta (JSON se ha `output`); chi lo usa
-  lo vede descritto dalle sue `instructions`. Se uno strumento va in errore, l'errore torna all'IA, che può riprovare.
-- `memory` dura per tutta l'esecuzione. `max_steps` (default 10) vale per ogni `ask` di quell'agente.
-- Le costanti non si riassegnano, ma liste e dizionari costanti si possono modificare (`LISTA.append(x)`).
+- Uno strumento può restituire qualsiasi valore (l'IA lo riceve come testo o JSON). Se va in errore, l'errore
+  torna all'IA, che può riprovare. Un agente usato come strumento riceve un testo e restituisce la sua risposta
+  (JSON se ha `output`); chi lo usa lo vede descritto dalle sue `instructions`.
+- `memory` dura per tutta l'esecuzione. Ogni chiamata all'IA è un passaggio: `max_steps` (default 10) deve bastare
+  per gli strumenti più la risposta finale, altrimenti il programma si ferma con un errore.
+- In mock: testi `"esempio <campo>"`, numeri 1 e 1.0, liste di 2 elementi; valori `"a" | "b"` e bool cambiano a
+  ogni `ask` (prima il primo valore e True). Senza `output` la risposta è `"[mock Nome] risposta a: ..."`.
 - Modelli: `"claude-haiku"` per classificare o estrarre molti testi semplici (costa meno), il default `"claude"`
   per il resto, `"claude-opus"` solo per compiti difficili.
 
 ## Non esistono
 
-`while` (usa `for i in range(n):` con `break`), `class` (usa `type`/`agent`), `try`/`except` (per file e rete
-usa il `default`), `lambda` (usa `def`), `with`, `async`/`await`, `yield`, `global`, `match`, comprehension
-(usa `for` e `.append()`), `a if c else b` (usa `if`/`else`), `is` (usa `==`), tuple, `a, b = ...` e `return a, b`
-(usa una lista), campi facoltativi come `str | None` (usa `""`, `[]` o un valore come `"nessuno"`).
-Dentro una f-string usa le virgolette dell'altro tipo: `f"{d['k']}"`. Gli agenti hanno solo `.ask` e `.reset`.
-`True`, `False`, `None` con la maiuscola.
+`while` (usa `for i in range(n):` con `break`), `class` (usa `type`/`agent`), `try`/`except` (usa i `default`),
+`raise`/`assert` (usa `if` e `return`; uno strumento restituisce il messaggio d'errore come testo), `lambda` (usa
+`def`), `def` annidate, `with`, `async`/`await`, `yield`, `global`, `del` (usa `.pop()`), `match`, comprehension
+(usa `for` e `.append()`), `a if c else b` (usa `if`/`else`), `is` (usa `==`), tuple e set (usa liste),
+`a, b = ...` e `return a, b` (usa una lista), campi facoltativi come `str | None` (usa `""`, `[]` o un valore
+come `"nessuno"`). Dentro una f-string usa le virgolette dell'altro tipo: `f"{d['k']}"`. Gli agenti hanno solo
+`.ask` e `.reset`. `True`, `False`, `None` con la maiuscola.

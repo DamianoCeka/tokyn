@@ -65,24 +65,23 @@ class CodeGen:
             elif n.data == "import_from":
                 dotted, *names = n.children
                 mod = ".".join(str(t) for t in dotted.children)
-                self.emit(f"from {mod} import {', '.join(str(x) for x in names)}", src_line=n.meta.line)
+                items = [str(a) + (f" as {b}" if b is not None else "") for a, b in (x.children for x in names)]
+                self.emit(f"from {mod} import {', '.join(items)}", src_line=n.meta.line)
         self.emit("")
 
         for n in nodes:
             if n.data == "type_def":
                 self.gen_type(n)
+        # costanti e funzioni nell'ordine del file, come in Python (il checker lo verifica)
         for n in nodes:
             if n.data == "def_stmt":
                 self.gen_def(n)
-        for n in nodes:
-            if n.data == "const_def":
+            elif n.data == "const_def":
                 name, value = n.children
                 self.emit(f"{name} = {self.expr(value)}", src_line=n.meta.line)
-        if any(n.data == "const_def" for n in nodes):
-            self.emit("")
-        for n in nodes:
-            if n.data == "agent_def":
-                self.gen_agent(n)
+                self.emit("")
+        for name in self.agent_order():
+            self.gen_agent(self.prog.agents[name].node)
 
         main = self.prog.main
         self.emit("def __tokyn_main__():", src_line=main.meta.line if main is not None else None)
@@ -136,6 +135,23 @@ class CodeGen:
         self.emit(f"def {name}({', '.join(plist)}):", src_line=n.meta.line)
         self.gen_suite(suite, 1)
         self.emit("")
+
+    def agent_order(self) -> list[str]:
+        """Ogni agente dopo quelli a cui delega, così esistono già quando viene creato."""
+        order: list[str] = []
+        seen: set[str] = set()
+
+        def visit(name):
+            if name in seen:
+                return
+            seen.add(name)  # prima delle dipendenze: un ciclo (segnalato dal checker) non va in loop
+            for dep in self.prog.agents[name].agent_tools:
+                visit(dep)
+            order.append(name)
+
+        for name in self.prog.agents:
+            visit(name)
+        return order
 
     def gen_agent(self, n: Tree):
         name = str(n.children[0])
@@ -266,8 +282,10 @@ class CodeGen:
         if k == "getitem":
             return f"{self.wrap(c[0], 8)}[{self.expr(c[1])}]"
         if k == "slice":
-            lo, hi = (self.expr(x) if x is not None else "" for x in c[1:])
-            return f"{self.wrap(c[0], 8)}[{lo}:{hi}]"
+            lo, hi, step = (self.expr(x) if x is not None else "" for x in c[1:])
+            return f"{self.wrap(c[0], 8)}[{lo}:{hi}" + (f":{step}]" if step else "]")
+        if k == "pow":
+            return f"{self.wrap(c[0], 8)} ** {self.wrap(c[2], 7)}"
         raise ValueError(f"espressione sconosciuta: {k}")
 
 

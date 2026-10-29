@@ -80,10 +80,13 @@ agent A:
 main:
     t = A.ask("aiuto")
     print(t.categoria, t.urgente, len(t.tag))
+    t = A.ask("ancora")
+    print(t.categoria, t.urgente)
 '''
     rc, out, err = run(src, capsys)
     assert rc == 0, err
-    assert out.strip() == "tecnico True 1"
+    # le liste hanno 2 elementi e le scelte cambiano da una ask all'altra, così si provano più rami
+    assert out.split("\n")[:2] == ["tecnico True 2", "altro False"]
 
 
 def test_type_constructor_and_json(capsys):
@@ -109,6 +112,52 @@ def test_slices(capsys):
     assert out.strip() == "buon orno [2, 3] 2 BU"
 
 
+def test_python_operators(capsys):
+    src = (
+        "from os import path as p\n\n"
+        "main:\n"
+        "    x = 7\n"
+        "    x //= 2\n"
+        "    x %= 2\n"
+        "    print(x, 2 ** 3, -2 ** 2, 2 ** -1, (1 + 1) ** 2)\n"
+        '    print("abc"[::-1], [1, 2, 3, 4][::2], p.join("a", "b"))\n'
+        "    import_re = 0\n"
+    )
+    rc, out, err = run(src, capsys)
+    assert rc == 0, err
+    assert out.split("\n")[:2] == ["1 8 -4 0.5 4", "cba [1, 3] a/b"]
+
+
+def test_raw_strings_and_descriptions_with_accents(capsys):
+    src = 'import re\n\ntype T:\n    a: str "perché\\nsì"\n\nmain:\n    print(re.findall(r"\\d+", "a1b22"))\n'
+    rc, out, err = run(src, capsys)
+    assert rc == 0, err
+    assert out.strip() == "['1', '22']"
+    import tokyn.runtime as rt
+    exec(compile_source(src).python, {"__name__": "x"})
+    assert rt._TYPES["T"].__tokyn_schema__()["properties"]["a"]["description"] == "perché\nsì"
+
+
+def test_order_of_constants_functions_and_agents(capsys):
+    src = (
+        "LIMITE = 3\n"
+        "def f(n=LIMITE) -> int:\n    return n * DOPPIO\n"
+        "DOPPIO = 2\n"
+        "VALORE = f()\n\n"
+        'agent Capo:\n    model: "mock"\n    instructions: "c"\n    tools: [Tecnico]\n\n'
+        'agent Tecnico:\n    model: "mock"\n    instructions: "t"\n\n'
+        "main:\n    print(VALORE, Capo.ask(\"x\"))\n"
+    )
+    rc, out, err = run(src, capsys)
+    assert rc == 0, err
+    assert out.startswith("6 [mock Capo]")
+
+
+def test_text_in_triple_quotes_is_not_code():
+    src = 'agent A:\n    instructions: """\n        while you wait, try this:\n        def ...\n    """\n'
+    assert codes(src) == []
+
+
 def test_number_formats(capsys):
     rc, out, err = run("main:\n    x = 1_000 + 1\n    print(x, 2.5e3, 1e-3)\n", capsys)
     assert rc == 0, err
@@ -123,6 +172,12 @@ def test_defaults_for_missing_file_and_network(capsys, tmp_path, monkeypatch):
     assert out.split() == ["vuoto", "giu"]
     rc, _, err = run('main:\n    print(http_get("http://127.0.0.1:9/x"))\n', capsys)
     assert rc == 1 and "test.tokyn:2" in err and "http_get(..., \"\")" in err
+    # il valore di riserva copre ogni errore: indirizzo non valido, cartella al posto di un file, JSON rotto
+    src = ('main:\n    print(http_get("www.senza-schema.it", "a"), http_post("", {}, "b"), read_file(".", "c"))\n'
+           '    print(json_parse("non json", {}), json_parse(\'{"k": 1}\', {}))\n')
+    rc, out, err = run(src, capsys)
+    assert rc == 0, err
+    assert out.split("\n")[:2] == ["a b c", "{} {'k': 1}"]
 
 
 def test_python_interop(capsys):
@@ -197,6 +252,15 @@ main:
     ("main:\n    a, b = [1, 2]\n", "E002"),
     ("def f():\n    return 1, 2\n", "E002"),
     ("main:\n    print((1, 2))\n", "E002"),
+    ("main:\n    print({1, 2})\n", "E002"),
+    ('main:\n    d = {"a": 1}\n    del d["a"]\n', "E002"),
+    ('main:\n    raise ValueError("x")\n', "E002"),
+    ("main:\n    assert True\n", "E002"),
+    ("main:\n    def g():\n        return 1\n", "E002"),
+    ("A = B + 1\nB = 2\n", "E162"),
+    ("A = f()\ndef f() -> int:\n    return 1\n", "E162"),
+    ("def f(n=LIMITE):\n    return n\nLIMITE = 5\n", "E162"),
+    ('agent A:\n    instructions: "a"\n    tools: [B]\nagent B:\n    instructions: "b"\n    tools: [A]\n', "E144"),
     ('main:\n    d = {"k": 1}\n    print(f"{d["k"]}")\n', "E002"),
 ])
 def test_static_errors(src, code):

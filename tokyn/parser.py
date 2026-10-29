@@ -53,6 +53,10 @@ UNSUPPORTED = {
     "yield": "Restituisci una lista con `return`.",
     "global": "Le variabili globali sono costanti: definiscile in cima al file.",
     "match": "Usa `if` / `elif` / `else`.",
+    "nonlocal": "Le variabili di una funzione restano locali: restituisci il valore con `return`.",
+    "del": "Usa `d.pop(chiave)` per un dizionario e `lista.pop(i)` per una lista.",
+    "raise": "Non si sollevano errori: in uno strumento restituisci un messaggio di errore come testo (l'IA lo legge), altrove stampalo e usa `return`.",
+    "assert": "Usa `if condizione:` con un messaggio e `return`.",
 }
 
 TOKEN_LABELS = {
@@ -174,6 +178,8 @@ def _python_idiom(tok: Token, expected: set, line_text: str) -> tuple[str, str] 
     if tok.type == "COMMA" and "EQUAL" in expected:
         return ("l'assegnazione multipla `a, b = ...` non esiste in Tokyn",
                 "Assegna una variabile alla volta, es. `r = f()`, poi `a = r[0]` e `b = r[1]`.")
+    if tok.type == "COMMA" and expected == {"COLON"}:
+        return ("i set `{a, b}` non esistono in Tokyn", "Usa una lista: `[a, b]` (per togliere i doppioni controlla con `in`).")
     if tok.type == "COMMA" and expected == {"RPAR"}:
         return ("le tuple `(a, b)` non esistono in Tokyn", "Usa una lista: `[a, b]`.")
     if tok.type == "COMMA" and line_text.lstrip().startswith("return "):
@@ -249,9 +255,23 @@ def _unclosed_bracket(source: str, line: int, column: int) -> str:
 def _unsupported_scan(source: str) -> list[Diagnostic]:
     """Trova costrutti Python non presenti in Tokyn prima del parsing."""
     found = []
+    in_string = None  # riga dentro una stringa """...""": è testo, non codice
     for i, raw in enumerate(source.splitlines(), 1):
         stripped = raw.lstrip()
+        if in_string:
+            if raw.count(in_string) % 2:
+                in_string = None
+            continue
+        for quote in ('"""', "'''"):
+            if raw.count(quote) % 2:
+                in_string = quote
+                break
         if not stripped or stripped.startswith("#"):
+            continue
+        if stripped.startswith("def ") and raw[:1] in (" ", "\t"):
+            col = len(raw) - len(stripped) + 1
+            found.append(Diagnostic("E002", "una `def` dentro un'altra funzione o dentro main non esiste in Tokyn", i, col, 3,
+                                    "Definisci la funzione al livello del file, senza indentazione."))
             continue
         m = re.match(r"(\w+)\b(?!\s*[=.(\[,)])", stripped)
         word = m.group(1) if m else ""
