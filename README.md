@@ -174,18 +174,42 @@ file.tokyn → parser (Lark) → checker (tipi, nomi, agenti) → generatore →
 
 I grafici di questa pagina si rigenerano dai dati con `python scripts/make_charts.py`.
 
-## Stato e prossimi passi
+## Dove sta andando
 
-È un prototipo che funziona, con 105 test e prove dal vivo in Claude Code.
+Tokyn è giovane ma funziona già: plugin per Claude Code in italiano e in inglese, agenti che rispondono con il tuo
+Claude Code, 105 test. Le prossime tappe:
 
-- [x] Plugin per Claude Code, in italiano e in inglese
-- [x] Agenti che rispondono con il tuo Claude Code, senza chiave API
-- [ ] Benchmark più ampio: più sessioni in Claude Code, più compiti, altri modelli
-- [ ] Prove dal vivo con l'API di Anthropic (pronte in `tests/test_live.py`, serve una chiave)
-- [ ] Messaggi d'errore anche in inglese
-- [ ] Chiamate in parallelo tra agenti
-- [ ] Altri provider oltre ad Anthropic
-- [ ] Estensione VS Code (colori ed errori in tempo reale)
+<table>
+<tr>
+<td width="50%" valign="top">
+
+**Agenti in squadra**<br>
+Più agenti al lavoro nello stesso momento, che si dividono un compito e si passano i risultati. Oggi un agente
+può già delegare a un altro: il prossimo passo è farli lavorare in parallelo.
+
+</td>
+<td width="50%" valign="top">
+
+**Anche in TypeScript**<br>
+Lo stesso programma Tokyn compilato anche per Node e per il web: lo scrivi una volta e lo usi dove ti serve.
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+**Da programma a servizio, con un comando**<br>
+`tokyn serve`: l'agente che hai appena provato diventa un'API o un bot, pronto da mettere online.
+
+</td>
+<td width="50%" valign="top">
+
+**Errori mentre scrivi**<br>
+Un'estensione per VS Code con i colori di Tokyn e gli stessi errori che oggi guidano Claude, in tempo reale.
+
+</td>
+</tr>
+</table>
 
 ## Licenza
 
