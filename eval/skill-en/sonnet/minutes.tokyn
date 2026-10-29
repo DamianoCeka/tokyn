@@ -1,0 +1,58 @@
+type Action:
+    who: str "person responsible for the action"
+    what: str "what has to be done"
+    deadline: str "deadline as stated in the transcript, or the word none if no deadline is mentioned"
+
+type Minutes:
+    summary: str "short summary of the meeting in a few sentences"
+    decisions: list[str] "decisions taken during the meeting, one per item"
+    actions: list[Action] "actions assigned during the meeting"
+
+agent Secretary:
+    instructions: """
+        You write meeting minutes from a transcript.
+        Extract the decisions, the actions (who, what, deadline) and a summary.
+        Use only what is in the transcript: do not invent decisions, people or deadlines.
+        If an action has no deadline, put the word none in the deadline.
+    """
+    output: Minutes
+
+def cell(s: str) -> str:
+    return s.replace("|", "/").replace("\n", " ").strip()
+
+main:
+    text = read_file("transcript.txt", "")
+    if text.strip() == "":
+        print("File transcript.txt not found or empty.")
+        print("Paste the transcript here and finish with a line containing only END:")
+        pasted = []
+        for i in range(100000):
+            line = input()
+            if line.strip() == "END":
+                break
+            pasted.append(line)
+        text = "\n".join(pasted)
+    if text.strip() == "":
+        print("No text provided.")
+        return
+    m = Secretary.ask(text)
+    md = "# Meeting minutes\n\n"
+    md += f"Date: {now()[:10]}\n\n"
+    md += "## Summary\n\n" + m.summary + "\n\n"
+    md += "## Decisions\n\n"
+    if len(m.decisions) == 0:
+        md += "- No decisions recorded\n"
+    for d in m.decisions:
+        md += f"- {d}\n"
+    md += "\n## Actions\n\n"
+    if len(m.actions) == 0:
+        md += "No actions recorded\n"
+    else:
+        md += "| Who | What | Deadline |\n|---|---|---|\n"
+        for a in m.actions:
+            deadline = a.deadline.strip()
+            if deadline == "" or deadline.lower() == "none":
+                deadline = "not specified"
+            md += f"| {cell(a.who)} | {cell(a.what)} | {cell(deadline)} |\n"
+    write_file("minutes.md", md)
+    print("Minutes saved to minutes.md")

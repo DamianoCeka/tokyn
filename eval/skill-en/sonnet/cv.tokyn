@@ -1,0 +1,53 @@
+import os
+
+JOB = read_file("job.txt")
+INSTR = "You analyze CVs. Extract the name, the years of professional experience, the main skills and give a score from 1 to 10 of how well the candidate fits the job ad below (1 = not suited, 10 = perfect match). Be strict and consistent.\n\nJOB AD:\n" + JOB
+
+type Candidate:
+    name: str "full name of the candidate"
+    years_experience: float "total years of professional experience"
+    skills: list[str] "the candidate's skills, one short item each"
+    score: int "score from 1 to 10 of the fit with the job ad"
+
+agent Reader:
+    effort: "low"
+    instructions: INSTR
+    output: Candidate
+
+def clean(s: str) -> str:
+    return s.replace(";", ",").replace("\n", " ").strip()
+
+def by_score(row: dict) -> int:
+    return row["score"]
+
+main:
+    if not os.path.isdir("cvs"):
+        print("Folder cvs/ not found.")
+        return
+    files = sorted(os.listdir("cvs"))
+    rows = []
+    for f in files:
+        if not f.endswith(".txt"):
+            continue
+        text = read_file("cvs/" + f, "")
+        if text.strip() == "":
+            continue
+        c = Reader.ask(f"File: {f}\n\n{text}")
+        rows.append({
+            "file": f,
+            "name": c.name,
+            "years": c.years_experience,
+            "skills": c.skills,
+            "score": max(1, min(10, c.score))
+        })
+    ranking = sorted(rows, key=by_score, reverse=True)
+    print("Top 5 candidates:")
+    for i, row in enumerate(ranking[:5]):
+        skills_text = ", ".join(row["skills"])
+        print(f"{i + 1}. {row['name']} - score {row['score']}/10 - {row['years']} years - {skills_text}")
+    lines = ["file;name;years_experience;skills;score"]
+    for row in ranking:
+        skills_text = clean(", ".join(row["skills"]))
+        lines.append(f"{clean(row['file'])};{clean(row['name'])};{row['years']};{skills_text};{row['score']}")
+    write_file("candidates.csv", "\n".join(lines) + "\n")
+    print(f"Saved {len(ranking)} candidates to candidates.csv")

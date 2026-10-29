@@ -170,6 +170,14 @@ def pos(node) -> tuple[int, int, int]:
     return 0, 0, 1
 
 
+def type_name_token(tree: Tree, type_name: str):
+    """Il nome di un type nella sua definizione, per posizionare l'errore."""
+    for node in tree.children:
+        if isinstance(node, Tree) and node.data == "type_def" and str(node.children[0]) == type_name:
+            return node.children[0]
+    return None
+
+
 def string_value(tok: Token) -> str:
     try:
         with warnings.catch_warnings():  # es. "\d" in una descrizione: resta com'è, senza avvisi di Python
@@ -317,6 +325,25 @@ class Checker:
                     self.error("E114", f'il campo "{fname}" è ripetuto', fname)
                     continue
                 info.fields[str(fname)] = self.resolve_type(texpr)
+        self.check_recursive_types()
+
+    def check_recursive_types(self):
+        def refs(t):
+            if t[0] == "record":
+                return {t[1]}
+            return refs(t[1]) if t[0] == "list" else set()
+
+        def reaches(start, target, seen):
+            for t in self.prog.types[start].fields.values():
+                for name in refs(t):
+                    if name == target or (name not in seen and reaches(name, target, seen | {name})):
+                        return True
+            return False
+
+        for name, info in self.prog.types.items():
+            if reaches(name, name, {name}):
+                self.error("E115", f'il type "{name}" contiene se stesso, anche passando da altri type', type_name_token(self.tree, name),
+                           "I type non possono essere ricorsivi: collega gli elementi con un nome o un id (str), oppure usa dict.")
 
     # ------------------------------------------------------------ funzioni
     def read_signature(self, info: FuncInfo):
@@ -819,17 +846,20 @@ class Checker:
         kwargs = [a for a in arg_list if isinstance(a, Tree) and a.data == "kwarg"]
 
         def infer_args():
-            for a in positional:
-                self.infer(a, scope)
+            types = [self.infer(a, scope) for a in positional]
             for k in kwargs:
                 self.infer(k.children[1], scope)
+            return types
 
         # metodo di un agente: Agente.ask(...)
         if isinstance(callee, Tree) and callee.data == "getattr":
             obj = self.infer(callee.children[0], scope)
             method = str(callee.children[1])
             if obj[0] == "agent":
-                infer_args()
+                arg_types = infer_args()
+                if method == "ask_all" and arg_types and arg_types[0][0] in ("str", "int", "float", "bool", "dict", "record"):
+                    self.error("E186", f".ask_all() vuole una lista di testi, non {type_name(arg_types[0])}", positional[0],
+                               f"Per un testo solo usa {obj[1]}.ask(testo).")
                 if method not in AGENT_METHODS:
                     self.error("E170", f'gli agenti non hanno ".{method}"', callee.children[1],
                                "Un agente ha solo .ask(testo), .ask_all(lista_di_testi) e .reset().")

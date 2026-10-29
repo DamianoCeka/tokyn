@@ -59,7 +59,7 @@ agent Support:
     model: "claude"                            # default "claude"; also "claude-opus", "claude-haiku", "mock" or an id
     instructions: """
         Answer customers in English.
-    """                                        # required: text, multi-line text or a constant
+    """                                        # required: any text, also f"... {CONSTANT}"
     tools: [search_faq, Technician]            # def functions or other agents to delegate to
     output: Ticket                             # optional: structured answer instead of str
     memory: True                               # optional (default False): remembers between asks
@@ -89,11 +89,11 @@ main:                                          # entry point, only one
 ```
 
 - Statements: `=` and `+= -= *= /= //= %=` (also on `d["k"]`, `list[i]`, `t.field`), `if`/`elif`/`else`,
-  `for x in ...` (also `for k, v in d.items()`), `break`, `continue`, `return` (in `main` it ends the program),
+  `for x in ...` (also `for k, v in d.items()` and `for a, b in zip(x, y)`), `break`, `continue`, `return` (in `main` it ends the program),
   `pass`. Variables are visible in the whole function, as in Python.
 - Expressions as in Python: `+ - * / // % **`, chained comparisons (`0 <= x < 3`), `and or not in`,
   numbers `1_000` and `1e-9`, escapes (`"\n"`), `r"\d+"`, f-strings with any expression and format (`{x:.2f}`),
-  indexes `x[-1]`, slices `x[:200]` and `x[::-1]`; you can break lines inside brackets. All str/list/dict
+  indexes `x[-1]`, slices `x[:200]` and `x[::-1]`; lines can break inside brackets (trailing comma allowed). All str/list/dict
   methods and all Python modules (`import os`, `from x import y as z`, `os.listdir(folder)`). Names may have accents.
 - Built-in functions: `print input len str int float bool list dict range enumerate zip sum min max sorted
   reversed abs round any all`, `write_file(p, text)`, `append_file(p, text)`, `sleep(s)` and:
@@ -101,7 +101,8 @@ main:                                          # entry point, only one
     `json_parse(text, default)` → lists and dicts (not `type`s); `env(name, default)`. If something goes wrong
     (missing file, network, HTTP 4xx/5xx response, invalid address or JSON, unset variable) they return
     `default`; without `default` the program stops with a clear error. `http_post` sends `data` as JSON.
-  - `to_number(text, default)` → number from text (`"42"`, `"4,50"`, `"1.234,56"`), `default` if it is not one.
+    URLs are not encoded: to put text in one use `urllib.parse.quote(text)`.
+  - `to_number(text, default)` → int or float from text (`"42"`, `"4,50"`, `"1.234,56"`), `default` if it is not one.
   - `json_dump(value)` → indented JSON keeping accents, also of `type`s and lists of `type`s. `now()` →
     `"2026-10-28T14:30:00"` (the date is `now()[:10]`). At end of input `input()` stops the program with an error:
     to read several lines use a terminator (e.g. an empty line). Paths are relative to the folder you run from.
@@ -112,11 +113,13 @@ main:                                          # entry point, only one
   computed immediately, top to bottom: they use only constants and functions written before them, never agents
   (not even through a function). A constant is any expression (`JOB = "Role: " + read_file("a.txt", "")`) and can
   be used as `instructions`; it cannot be reassigned, but constant lists and dicts can be modified (`LIST.append(x)`).
+  Functions see every constant and import, wherever they are written.
 - `def`: types and `->` are optional; tools need the type of every parameter and a description.
 - Types for fields, parameters and returns: `str int float bool dict list list[T]` and `type`s; a description can
   follow any field. The runtime checks `type` fields, agent `output`s and the arguments the AI passes to tools
   (an int is fine for `float`); it does not check calls from your own code or limits like "from 1 to 5":
-  put them in the description and, if needed, check them with an `if`.
+  put them in the description and, if needed, check them with an `if`. `|` choices are text only; no recursive
+  types. Objects, including those returned by agents, can be modified with the dot.
 - `output` is the name of a single `type`: for a list use a container type with a `list[Item]` field.
 - A tool can return any value: the AI receives it as text or JSON (dates and the like become text).
   If it fails, the error goes back to the AI, which can retry. An agent used as a tool receives one text and
@@ -129,8 +132,9 @@ main:                                          # entry point, only one
   bools change at every `ask` of that agent and from one item to the next (starting from the first value and True).
   Without `output` the answer is `"[mock Name] risposta a: ..."`.
 - `Agent.ask_all(texts)` gives the same answers as a loop of `ask`, in the same order, but through the Batch API:
-  half price, slower (usually minutes, at most 24 hours), no `memory`. Use it for bulk jobs (classifying 100 emails),
-  not for chats.
+  half price, slower (usually minutes, at most 24 hours), no `memory`. Use it for bulk jobs (classifying 100 emails);
+  for a few texts, or when you need them right away, use a loop of `ask`. In mock it is instant. If a text gets no
+  answer even after a retry, the program stops saying which one.
 - Costs: `"claude-haiku"` to classify or extract many simple texts, the default `"claude"` for the rest,
   `"claude-opus"` only for hard tasks; `effort: "low"` cuts reasoning tokens. Instructions and tools stay in
   the cache between calls: keep them fixed and put the data that changes in the `ask` text.

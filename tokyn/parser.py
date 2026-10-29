@@ -167,6 +167,11 @@ def _python_idiom(tok: Token, expected: set, line_text: str) -> tuple[str, str] 
     if re.search(r'(?<!\w)f"[^"\n]*\{[^}\n]*"', line_text) or re.search(r"(?<!\w)f'[^'\n]*\{[^}\n]*'", line_text):
         return ("dentro una f-string non si possono usare le stesse virgolette della f-string",
                 "Usa le virgolette dell'altro tipo dentro le graffe, es. f\"{d['chiave']}\".")
+    if expected == {"_NL"} and re.match(r"\s*(if|elif|else|for)\b[^#]*:\s*[^\s#]", line_text):
+        return ("il blocco va sulla riga dopo i ':'", "Vai a capo dopo ':' e indenta il blocco di 4 spazi.")
+    if tok.type == "NUMBER" and {"STRING", "NAME"} <= expected:
+        return ("le scelte con `|` possono essere solo testi tra virgolette",
+                'Usa "1" | "2" | "3", oppure int con i limiti nella descrizione: priorita: int "da 1 a 3".')
     if tok.type == "FOR":
         return ("le comprehension `[... for x in ...]` non esistono in Tokyn",
                 "Usa un ciclo: risultato = [], poi `for x in lista:` e dentro `risultato.append(...)`.")

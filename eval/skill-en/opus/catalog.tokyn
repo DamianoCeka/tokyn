@@ -1,0 +1,44 @@
+def load_products(path: str) -> list:
+    rows = []
+    lines = read_file(path, "").splitlines()
+    for line in lines[1:]:
+        parts = line.split(";")
+        if len(parts) < 3:
+            continue
+        price = to_number(parts[1].strip(), -1)
+        if price < 0:
+            continue
+        rows.append({"name": parts[0].strip(), "price": price, "category": parts[2].strip()})
+    return rows
+
+def categories_of(rows: list) -> list:
+    found = []
+    for p in rows:
+        if p["category"] not in found:
+            found.append(p["category"])
+    return found
+
+PRODUCTS = load_products("products.csv")
+INSTRUCTIONS = "Answer questions about the product catalog of a shop, using the search tool. Categories: " + ", ".join(categories_of(PRODUCTS)) + ". Never invent products or prices."
+
+def search(category: str, max_price: float) -> list:
+    """Searches the catalog for products of a category (empty string = every category) costing at most max_price (use 1000000 for no limit). Returns name, price and category of each product."""
+    found = []
+    for p in PRODUCTS:
+        if category.strip() != "" and p["category"].lower() != category.strip().lower():
+            continue
+        if p["price"] <= max_price:
+            found.append(p)
+    return found
+
+agent Shop:
+    instructions: INSTRUCTIONS
+    tools: [search]
+    max_steps: 6
+
+main:
+    if len(PRODUCTS) == 0:
+        print("products.csv is missing or empty")
+        return
+    question = input("Question about the catalog: ")
+    print(Shop.ask(question))

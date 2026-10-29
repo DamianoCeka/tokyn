@@ -57,15 +57,16 @@ Lasciato libero di scegliere, in Python Claude ha scritto **5.397 token**; in To
 | | Python (quello che Claude scrive di solito) | Tokyn |
 |---|---:|---:|
 | Token di codice per 5 programmi | 5.397 | **1.910 (−65%)** |
-| Costo con Sonnet 5.5, Skill compresa | $0,054 | **$0,026 (−53%)** |
+| Costo con Sonnet 5.5, Skill compresa | $0,054 | **$0,026 (−51%)** |
 
-La Skill (3.230 token da leggere una volta) si ripaga già dal primo programma.
+La Skill (3.705 token da leggere una volta; 2.888 nella versione inglese) si ripaga con il primo o il secondo programma.
 Onestamente: con un framework come Pydantic AI il Python arriva allo stesso numero di token di Tokyn.
 Metodo completo, tutti i programmi e i limiti in [`bench/`](bench).
 
 **L'IA lo sa scrivere.** Ho dato solo la specifica a Claude Sonnet e Claude Haiku e ho chiesto 5 programmi
 a ciascuno. Risultato: **10 su 10 corretti al primo tentativo**. Poi, con la sola Skill, Opus, Sonnet e Haiku
-hanno scritto altri 50 programmi in tre tornate: **50 su 50 corretti al primo tentativo**. Dettagli in [`eval/`](eval).
+hanno scritto altri 80 programmi in quattro tornate, anche con la Skill in inglese: **80 su 80 corretti al primo
+tentativo**. Dettagli in [`eval/`](eval).
 
 ## Installazione
 

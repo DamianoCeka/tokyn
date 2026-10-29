@@ -64,4 +64,20 @@ Cosa ho imparato:
 - Le abitudini di Python (comprehension, `a if c else b`, `is None`, `a, b = ...`) ora hanno un errore che dice
   esattamente cosa scrivere al loro posto.
 
-Stessi limiti di prima: esecuzioni solo in `--mock` e solo modelli Claude.
+### Tornata 4: Skill italiana e inglese
+
+Ho aggiunto al linguaggio `ask_all` (Batch API), `effort` e `to_number`, ho scritto la Skill anche in inglese e ho
+ripetuto i 6 compiti della tornata 2 con tutte e due, tradotti per la versione inglese.
+
+| Skill | Opus | Sonnet | Haiku |
+|---|---|---|---|
+| Italiano | 6/6 ✓ | 6/6 ✓ | 6/6 ✓ |
+| Inglese | 6/6 ✓ | 6/6 ✓ | non conta |
+
+Haiku con la Skill inglese ha eseguito dei comandi, cosa vietata dalle regole del test: i suoi programmi passano il
+controllo, ma non li conto come primo tentativo. In totale le quattro tornate fanno **80 programmi su 80**.
+Senza che glielo chiedessi, i modelli hanno usato `effort` in 12 programmi, `to_number` in 11 e `ask_all` in 5.
+I programmi della versione inglese sono in [`skill-en/`](skill-en).
+
+Stessi limiti di prima: esecuzioni solo in `--mock` e solo modelli Claude. Le prove con l'API vera sono in
+[`tests/test_live.py`](../tests/test_live.py) e partono quando c'è `ANTHROPIC_API_KEY`.

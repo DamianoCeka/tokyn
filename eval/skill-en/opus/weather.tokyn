@@ -1,0 +1,22 @@
+def weather(city: str) -> str:
+    """Returns the current weather of a city (one short line)."""
+    url = "https://wttr.in/" + city.strip().replace(" ", "+") + "?format=3"
+    return http_get(url, "weather not available")
+
+agent Assistant:
+    instructions: """
+        Friendly chatbot. When the user asks about the weather in a city, use the weather tool.
+        If the tool says "weather not available", tell the user it cannot be retrieved right now.
+    """
+    tools: [weather]
+    memory: True
+    max_steps: 5
+
+main:
+    print("Chat started. Write 'bye' to quit.")
+    for turn in range(15):
+        text = input("You: ")
+        if text.strip().lower() == "bye":
+            break
+        print("Bot: " + Assistant.ask(text))
+    print("Bye!")

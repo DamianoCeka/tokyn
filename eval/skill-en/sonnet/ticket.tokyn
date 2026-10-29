@@ -1,0 +1,45 @@
+type Classification:
+    department: "sales" | "technical" | "billing" "department that should handle the ticket"
+    priority: int "priority from 1 (low) to 3 (high)"
+    needs_reply: bool "true if the customer expects a reply, false if no answer is needed"
+
+agent Classifier:
+    model: "claude-haiku"
+    effort: "low"
+    instructions: """
+        You classify customer support tickets.
+        For each ticket decide the department (sales, technical or billing),
+        the priority (1 = low, 2 = medium, 3 = urgent) and whether the ticket needs a reply.
+    """
+    output: Classification
+
+agent Drafter:
+    instructions: """
+        You write a draft reply to a customer support ticket.
+        Be polite, concise and concrete. Write in the language of the ticket.
+        Return only the text of the reply, without a subject line.
+    """
+
+main:
+    tickets = json_parse(read_file("tickets.json"))
+    counts = {"sales": 0, "technical": 0, "billing": 0}
+    results = []
+    for t in tickets:
+        c = Classifier.ask(f"Ticket {t['id']}: {t['text']}")
+        priority = max(1, min(3, c.priority))
+        draft = ""
+        if c.needs_reply:
+            draft = Drafter.ask(f"Department: {c.department}\nPriority: {priority}\nTicket: {t['text']}")
+        counts[c.department] += 1
+        results.append({
+            "id": t["id"],
+            "text": t["text"],
+            "department": c.department,
+            "priority": priority,
+            "needs_reply": c.needs_reply,
+            "draft": draft
+        })
+    write_file("results.json", json_dump(results))
+    print(f"Total tickets: {len(tickets)}")
+    for dep, n in counts.items():
+        print(f"{dep}: {n}")

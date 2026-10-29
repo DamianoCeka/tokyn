@@ -55,7 +55,8 @@ Un agente si usa **solo** così:
 - `Agente.ask(testo)` → restituisce la risposta. È un `str`, oppure un valore del `type` indicato in `output`.
 - `Agente.ask_all(testi)` → una lista di risposte, nello stesso ordine dei testi: come un ciclo di `ask`, ma con la
   Batch API di Anthropic, che costa la metà. È più lento (di solito minuti, al massimo 24 ore) e non usa la memoria:
-  adatto ai lavori in blocco, non alle chat.
+  adatto ai lavori in blocco, non alle chat. Un testo rifiutato o con un errore nel batch viene riprovato con una
+  chiamata normale; se resta senza risposta, il programma si ferma dicendo quale.
 - `Agente.reset()` → cancella la memoria.
 
 Durante `ask` il runtime gestisce da solo il ciclo delle chiamate agli strumenti,
@@ -134,7 +135,7 @@ Al posto di `try`/`except`, `read_file`, `http_get`, `http_post` e `json_parse` 
 | `http_get(url, default)` | scarica una pagina e restituisce il testo; se la rete fallisce restituisce `default` |
 | `http_post(url, dati, default)` | invia dati JSON e restituisce la risposta; se fallisce restituisce `default` |
 | `json_parse(testo, default)` | da testo JSON a liste/dizionari; se non è JSON valido restituisce `default` |
-| `to_number(testo, default)` | da testo a numero (`"42"`, `"4,50"`, `"1.234,56"`); se non è un numero restituisce `default` |
+| `to_number(testo, default)` | da testo a `int` o `float` (`"42"`, `"4,50"`, `"1.234,56"`); se non è un numero restituisce `default` |
 | `json_dump(valore)` | da valore (anche `type`) a testo JSON |
 | `env(nome, default)` | legge una variabile d'ambiente |
 | `now()` | data e ora attuali, es. `"2026-10-28T14:30:00"` |
@@ -188,6 +189,7 @@ main:
 | E003 / E004 / E005 / E009 | manca `:` / manca il blocco indentato / indentazione sbagliata |
 | E101 | nome definito due volte |
 | E110 | tipo sconosciuto |
+| E115 | `type` ricorsivo (contiene se stesso, anche tramite altri `type`) |
 | E121 / E122 | strumento senza tipi dei parametri / senza descrizione |
 | E130–E139 | campo dell'agente sbagliato, mancante o con un valore non valido |
 | E144 | agenti che si delegano a vicenda |

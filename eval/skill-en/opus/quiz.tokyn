@@ -1,0 +1,34 @@
+type Question:
+    question: str
+    options: list[str] "exactly 4 possible answers"
+    correct: int "index of the right answer in options, from 0 to 3"
+
+type Quiz:
+    questions: list[Question] "exactly 5 questions"
+
+agent QuizMaster:
+    instructions: """
+        Generate multiple-choice quiz questions on the topic given by the user.
+        Each question has exactly 4 options and exactly one correct answer.
+    """
+    output: Quiz
+
+main:
+    topic = input("Quiz topic: ")
+    quiz = QuizMaster.ask("Topic: " + topic + "\nWrite exactly 5 questions.")
+    score = 0
+    total = 0
+    for i, q in enumerate(quiz.questions[:5]):
+        if not (0 <= q.correct < len(q.options)):
+            continue
+        total += 1
+        print(f"\nQuestion {i + 1}: {q.question}")
+        for j, opt in enumerate(q.options):
+            print(f"  {j + 1}. {opt}")
+        answer = to_number(input(f"Your answer (1-{len(q.options)}): "), 0)
+        if answer - 1 == q.correct:
+            score += 1
+            print("Correct!")
+        else:
+            print(f"Wrong, the right answer was {q.correct + 1}. {q.options[q.correct]}")
+    print(f"\nFinal score: {score}/{total}")

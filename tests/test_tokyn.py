@@ -176,10 +176,10 @@ def test_no_python_warnings_for_escapes_in_text():
 
 
 def test_to_number(capsys):
-    src = ('main:\n    print(to_number("42") + 1, to_number("4,50"), to_number("1.234,56"), to_number("abc", 0))\n'
+    src = ('main:\n    print(to_number("42") + 1, to_number("4,50"), to_number("1.234.567"), to_number("abc", 0))\n'
            '    print(to_number("n/d"))\n')
     rc, out, err = run(src, capsys)
-    assert rc == 1 and out.split("\n")[0] == "43 4.5 1234.56 0"
+    assert rc == 1 and out.split("\n")[0] == "43 4.5 1234567 0"
     assert "test.tokyn:3" in err and "to_number(testo, 0)" in err
 
 
@@ -279,6 +279,11 @@ main:
     ('main:\n    x = "a" + 1\n', "E194"),
     ('agent A:\n    instructions: "i"\n    effort: "poco"\n', "E145"),
     ('agent A:\n    instructions: "i"\nmain:\n    A.ask_all()\n', "E186"),
+    ('agent A:\n    instructions: "i"\nmain:\n    A.ask_all("un testo solo")\n', "E186"),
+    ("type N:\n    figli: list[N]\n", "E115"),
+    ("type A:\n    b: B\ntype B:\n    a: list[A]\n", "E115"),
+    ("main:\n    x = 1\n    if x == 1: print(x)\n", "E002"),
+    ("type T:\n    p: 1 | 2 | 3\n", "E002"),
     ('main:\n    s = "abc"\n    print(s["a":])\n', "E176"),
     # costrutti Python che Tokyn non ha: errore mirato con l'alternativa
     ("main:\n    ys = [x * 2 for x in [1, 2]]\n", "E002"),
@@ -504,6 +509,52 @@ def test_fallbacks_are_dropped_if_the_api_rejects_them(monkeypatch):
     assert fake.calls[1]["output_config"] == {"effort": "low"}
 
 
+def test_truncated_answers_never_run_tools(monkeypatch):
+    import tokyn.runtime as rt
+    fake = _FakeClient(_reply(_use("t1", "meteo", citta="Pad"), stop="max_tokens"))
+    ns = _agents(METEO, monkeypatch, fake)
+    with pytest.raises(rt.TokynRuntimeError, match="troppo lunga"):
+        ns["A"].ask("x")
+    assert len(fake.calls) == 1  # lo strumento non è stato eseguito e il risultato non è tornato all'IA
+    fake = _FakeClient(_reply(_text("La risposta comple"), stop="model_context_window_exceeded"))
+    ns = _agents(METEO, monkeypatch, fake)
+    with pytest.raises(rt.TokynRuntimeError, match="contesto"):
+        ns["A"].ask("x")
+
+
+def test_unrelated_bad_requests_keep_fallbacks(monkeypatch):
+    import tokyn.runtime as rt
+    BadRequestError = type("BadRequestError", (Exception,), {})
+    fake = _FakeClient(BadRequestError("prompt is too long"), _reply(_text("ok")))
+    ns = _agents('agent A:\n    instructions: "i"\n', monkeypatch, fake)
+    with pytest.raises(rt.TokynRuntimeError, match="prompt is too long"):
+        ns["A"].ask("x")
+    assert ns["A"].ask("y") == "ok" and rt._FALLBACKS["attivi"] and len(fake.calls) == 2
+
+
+def test_server_errors_are_retried(monkeypatch):
+    import tokyn.runtime as rt
+    monkeypatch.setattr(rt._time, "sleep", lambda s: None)
+    Unavailable = type("ServiceUnavailableError", (Exception,), {"status_code": 503})
+    fake = _FakeClient(Unavailable("503"), _reply(_text("ok")))
+    ns = _agents('agent A:\n    instructions: "i"\n', monkeypatch, fake)
+    assert ns["A"].ask("x") == "ok"
+
+
+def test_usage_counts_every_fallback_attempt(monkeypatch):
+    import tokyn.runtime as rt
+    for key in rt._USAGE:
+        monkeypatch.setitem(rt._USAGE, key, 0)
+    usage = _Block(input_tokens=5, output_tokens=1, iterations=[
+        _Block(type="message", input_tokens=100, output_tokens=0),
+        _Block(type="fallback_message", input_tokens=100, output_tokens=20)])
+    fake = _FakeClient(_reply(_text("ok"), usage=usage))
+    ns = _agents('agent A:\n    instructions: "i"\n', monkeypatch, fake)
+    ns["A"].ask("x")
+    assert (rt._USAGE["input"], rt._USAGE["output"], rt._USAGE["fallback"]) == (200, 20, 1)
+    assert "modello di riserva" in rt.usage_report()
+
+
 class _FakeBatches:
     """Simula la Batch API: ogni batch risponde con le risposte preparate per custom_id, in ordine sparso."""
 
@@ -556,6 +607,20 @@ def test_ask_all_uses_the_batch_api(monkeypatch, capsys):
     assert "risposte pronte" in capsys.readouterr().err
     assert rt._USAGE["chiamate_batch"] - before["chiamate_batch"] == 3
     assert rt._USAGE["cache_lette"] - before["cache_lette"] == 80
+
+
+def test_ask_all_retries_refusals_and_reports_failures(monkeypatch):
+    import tokyn.runtime as rt
+    monkeypatch.setattr(rt._time, "sleep", lambda s: None)
+    refused = _reply(_text(""), stop="refusal")
+    batches = _FakeBatches([{"0": _reply(_text("uno")), "1": refused, "2": refused}])
+    # il rifiuto nel batch si riprova con la chiamata normale: il testo 1 ora va, il testo 2 viene rifiutato di nuovo
+    fake = _FakeClient(_reply(_text("due")), refused)
+    fake.batches = batches
+    ns = _agents('agent A:\n    instructions: "i"\n', monkeypatch, fake)
+    with pytest.raises(rt.TokynRuntimeError, match=r"1 testi su 3 senza risposta; il primo è testi\[2\]"):
+        ns["A"].ask_all(["a", "b", "c"])
+    assert all("fallbacks" in c for c in fake.calls)  # la ripresa usa i fallback, che il batch non ammette
 
 
 def test_ask_all_in_mock_and_types(capsys):

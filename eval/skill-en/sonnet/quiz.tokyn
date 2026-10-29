@@ -1,0 +1,38 @@
+type Question:
+    text: str "the text of the question"
+    options: list[str] "exactly 4 answer options, without letters or numbers in front"
+    correct: int "index from 0 to 3 of the right option inside options"
+
+type Quiz:
+    questions: list[Question] "exactly 5 multiple-choice questions"
+
+agent QuizMaker:
+    effort: "low"
+    instructions: """
+        You generate multiple-choice quizzes on the topic you are given.
+        Generate exactly 5 questions. Each question has exactly 4 options and exactly one right option.
+        Give the index (0 to 3) of the right option. Vary the position of the right option.
+    """
+    output: Quiz
+
+main:
+    topic = input("Topic of the quiz: ")
+    quiz = QuizMaker.ask(f"Topic: {topic}")
+    score = 0
+    asked = 0
+    for i, q in enumerate(quiz.questions):
+        if len(q.options) < 2 or q.correct < 0 or q.correct >= len(q.options):
+            continue
+        asked += 1
+        print("")
+        print(f"Question {asked}: {q.text}")
+        for j, opt in enumerate(q.options):
+            print(f"  {j + 1}) {opt}")
+        answer = to_number(input("Your answer (number): "), -1)
+        if answer - 1 == q.correct:
+            print("Correct!")
+            score += 1
+        else:
+            print(f"Wrong. The right answer was {q.correct + 1}) {q.options[q.correct]}")
+    print("")
+    print(f"Final score: {score}/{asked}")

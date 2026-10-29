@@ -1,0 +1,46 @@
+def load_rows() -> list:
+    rows = []
+    lines = read_file("products.csv", "").split("\n")
+    for i, line in enumerate(lines):
+        if i == 0 or line.strip() == "":
+            continue
+        parts = line.split(";")
+        if len(parts) < 3:
+            continue
+        rows.append({
+            "name": parts[0].strip(),
+            "price": to_number(parts[1].strip(), -1),
+            "category": parts[2].strip()
+        })
+    return rows
+
+def categories_text() -> str:
+    names = []
+    for row in load_rows():
+        if row["category"] not in names:
+            names.append(row["category"])
+    return ", ".join(names)
+
+def search(category: str, max_price: float) -> list:
+    """Searches the catalog. Returns the products (name, price, category) of the given category with a price lower than or equal to max_price. Use an empty category to search every category and a very high max_price (for example 1000000) for no price limit."""
+    found = []
+    for row in load_rows():
+        same_category = category.strip() == "" or row["category"].lower() == category.strip().lower()
+        if same_category and row["price"] >= 0 and row["price"] <= max_price:
+            found.append(row)
+    return found
+
+CATEGORIES = categories_text()
+INSTR = "You answer questions about a product catalog. Always use the search tool to find products, never invent products or prices. Prices are in euros. Reply in the language of the user, briefly. Categories present in the catalog: " + CATEGORIES
+
+agent Assistant:
+    instructions: INSTR
+    tools: [search]
+    max_steps: 10
+
+main:
+    if CATEGORIES == "":
+        print("File products.csv not found or empty.")
+        return
+    question = input("Ask a question about the catalog: ")
+    print(Assistant.ask(question))

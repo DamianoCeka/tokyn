@@ -58,7 +58,7 @@ agent Supporto:
     model: "claude"                            # default "claude"; anche "claude-opus", "claude-haiku", "mock" o un id
     instructions: """
         Rispondi ai clienti in italiano.
-    """                                        # obbligatorio: testo, testo su più righe o costante
+    """                                        # obbligatorio: qualsiasi testo, anche f"... {COSTANTE}"
     tools: [cerca_faq, Tecnico]                # funzioni def o altri agenti a cui delegare
     output: Ticket                             # facoltativo: risposta strutturata invece di str
     memory: True                               # facoltativo (default False): ricorda tra una ask e l'altra
@@ -88,11 +88,11 @@ main:                                          # punto di partenza, uno solo
 ```
 
 - Istruzioni: `=` e `+= -= *= /= //= %=` (anche su `d["k"]`, `lista[i]`, `t.campo`), `if`/`elif`/`else`,
-  `for x in ...` (anche `for k, v in d.items()`), `break`, `continue`, `return` (in `main` termina il programma),
+  `for x in ...` (anche `for k, v in d.items()` e `for a, b in zip(x, y)`), `break`, `continue`, `return` (in `main` termina il programma),
   `pass`. Le variabili valgono in tutta la funzione, come in Python.
 - Espressioni come in Python: `+ - * / // % **`, confronti anche concatenati (`0 <= x < 3`), `and or not in`,
   numeri `1_000` e `1e-9`, escape (`"\n"`), `r"\d+"`, f-string con qualsiasi espressione e formato (`{x:.2f}`),
-  indici `x[-1]`, slice `x[:200]` e `x[::-1]`; dentro parentesi si può andare a capo. Tutti i metodi di str/list/dict e tutti i moduli
+  indici `x[-1]`, slice `x[:200]` e `x[::-1]`; dentro parentesi si va a capo (virgola finale ammessa). Tutti i metodi di str/list/dict e tutti i moduli
   Python (`import os`, `from x import y as z`, `os.listdir(cartella)`). Nomi anche con accenti.
 - Funzioni già presenti: `print input len str int float bool list dict range enumerate zip sum min max sorted
   reversed abs round any all`, `write_file(p, testo)`, `append_file(p, testo)`, `sleep(s)` e:
@@ -100,7 +100,8 @@ main:                                          # punto di partenza, uno solo
     `json_parse(testo, default)` → liste e dizionari (non `type`); `env(nome, default)`. Se qualcosa va storto
     (file mancante, rete, risposta HTTP 4xx/5xx, indirizzo o JSON non validi, variabile assente) restituiscono
     `default`; senza `default` il programma si ferma con un errore chiaro. `http_post` invia `dati` come JSON.
-  - `to_number(testo, default)` → numero da testo (`"42"`, `"4,50"`, `"1.234,56"`), `default` se non lo è.
+    Gli URL non vengono codificati: per inserire un testo usa `urllib.parse.quote(testo)`.
+  - `to_number(testo, default)` → int o float da testo (`"42"`, `"4,50"`, `"1.234,56"`), `default` se non lo è.
   - `json_dump(valore)` → JSON indentato con gli accenti, anche di `type` e liste di `type`. `now()` →
     `"2026-10-28T14:30:00"` (la data è `now()[:10]`). A fine input `input()` ferma il programma con un errore:
     per leggere più righe usa un terminatore (es. riga vuota). I percorsi sono relativi alla cartella da cui si esegue.
@@ -111,11 +112,13 @@ main:                                          # punto di partenza, uno solo
   calcolano subito, dall'alto in basso: usano solo costanti e funzioni scritte prima, mai agenti (neanche tramite
   una funzione). Una costante è qualsiasi espressione (`ANNUNCIO = "Ruolo: " + read_file("a.txt", "")`) e può
   fare da `instructions`; non si riassegna, ma liste e dizionari costanti si modificano (`LISTA.append(x)`).
+  Le funzioni vedono tutte le costanti e gli import, ovunque siano scritti.
 - `def`: tipi e `->` facoltativi; negli strumenti servono il tipo di ogni parametro e la descrizione.
 - Tipi in campi, parametri e ritorni: `str int float bool dict list list[T]` e i `type`; la descrizione va dopo
   qualsiasi campo. Il runtime controlla i campi dei `type`, l'`output` degli agenti e gli argomenti che l'IA passa
   agli strumenti (un intero va bene per `float`); non controlla le chiamate del tuo codice né limiti come "da 1 a 5":
-  scrivili nella descrizione e, se servono, verificali con un `if`.
+  scrivili nella descrizione e, se servono, verificali con un `if`. Le scelte con `|` sono solo testi; niente type
+  ricorsivi. Gli oggetti, anche quelli restituiti dagli agenti, si modificano con il punto.
 - `output` è il nome di un solo `type`: per una lista usa un type contenitore con un campo `list[Voce]`.
 - Uno strumento può restituire qualsiasi valore: l'IA lo riceve come testo o JSON (date e simili diventano testo).
   Se va in errore, l'errore torna all'IA, che può riprovare. Un agente usato come strumento riceve un testo e
@@ -129,7 +132,8 @@ main:                                          # punto di partenza, uno solo
   Senza `output` la risposta è `"[mock Nome] risposta a: ..."`.
 - `Agente.ask_all(testi)` dà le stesse risposte di un ciclo di `ask`, nello stesso ordine, ma con la Batch API:
   metà prezzo, più lento (di solito minuti, al massimo 24 ore), senza `memory`. Usalo per i lavori in blocco
-  (classificare 100 email), non per le chat.
+  (classificare 100 email); per pochi testi o se servono subito usa un ciclo di `ask`. In mock è immediato. Se un
+  testo resta senza risposta anche dopo un nuovo tentativo, il programma si ferma dicendo quale.
 - Costi: `"claude-haiku"` per classificare o estrarre molti testi semplici, il default `"claude"` per il resto,
   `"claude-opus"` solo per compiti difficili; `effort: "low"` riduce i token di ragionamento. Istruzioni e
   strumenti restano in cache tra una chiamata e l'altra: tienili fissi e metti i dati che cambiano nel testo dell'`ask`.

@@ -1,0 +1,58 @@
+import os
+
+JOB = read_file("job.txt")
+INSTRUCTIONS = "Extract candidate data from a CV and score, from 1 (poor) to 10 (excellent), how well it fits this job ad:\n\n" + JOB
+
+type Candidate:
+    name: str "full name of the candidate"
+    years_experience: int "total years of work experience"
+    skills: list[str] "main skills"
+    score: int "fit to the job ad, from 1 (poor) to 10 (excellent)"
+
+agent Recruiter:
+    instructions: INSTRUCTIONS
+    output: Candidate
+    effort: "low"
+
+def by_score(c: dict) -> int:
+    return c["score"]
+
+def clean(text: str) -> str:
+    return str(text).replace(";", ",").replace("\n", " ").strip()
+
+main:
+    files = []
+    texts = []
+    if not os.path.isdir("cvs"):
+        print("Folder cvs/ not found")
+        return
+    for f in sorted(os.listdir("cvs")):
+        if f.lower().endswith(".txt"):
+            files.append(f)
+            texts.append(read_file("cvs/" + f, ""))
+    if len(files) == 0:
+        print("No .txt files in cvs/")
+        return
+
+    answers = Recruiter.ask_all(texts)
+
+    candidates = []
+    for i, c in enumerate(answers):
+        score = min(max(c.score, 1), 10)
+        candidates.append({"file": files[i], "name": c.name, "years": c.years_experience,
+                           "skills": c.skills, "score": score})
+
+    ranked = sorted(candidates, key=by_score, reverse=True)
+    print("Top 5:")
+    for i, c in enumerate(ranked[:5]):
+        print(f"{i + 1}. {c['name']} ({c['file']}) - score {c['score']}/10, {c['years']} years")
+
+    lines = ["file;name;years_experience;skills;score"]
+    for c in ranked:
+        skills = []
+        for s in c["skills"]:
+            skills.append(clean(s))
+        lines.append(clean(c["file"]) + ";" + clean(c["name"]) + ";" + str(c["years"]) + ";"
+                     + ", ".join(skills) + ";" + str(c["score"]))
+    write_file("candidates.csv", "\n".join(lines) + "\n")
+    print(f"Saved {len(candidates)} candidates to candidates.csv")

@@ -25,7 +25,7 @@ FINAL_TOOL = "rispondi"
 EFFORTS = ("low", "medium", "high", "xhigh", "max")
 MAX_TOKENS = 16000  # il thinking è sempre attivo sui modelli attuali e conta nei token della risposta
 # Se l'IA rifiuta una richiesta, l'API la riprova da sola su un altro modello (Claude API; Haiku non lo prevede).
-FALLBACK_MODELS = {"claude-sonnet-5-5", "claude-opus-5-5", "claude-opus-5", "claude-fable-5-1"}
+FALLBACK_MODELS = {"claude-sonnet-5-5", "claude-opus-5-5", "claude-opus-5", "claude-fable-5", "claude-fable-5-1"}
 FALLBACK_BETA = "server-side-fallback-2026-07-01"
 
 _TYPES: dict[str, type] = {}
@@ -324,6 +324,9 @@ class Agent:
 
         È più lento (di solito minuti) e non usa la memoria: ogni testo è una richiesta a sé.
         """
+        if isinstance(texts, (str, dict)) or not hasattr(texts, "__iter__"):
+            raise TokynRuntimeError(f"{self.name}.ask_all vuole una lista di testi",
+                                    hint=f"Per un testo solo usa {self.name}.ask(testo).")
         texts = [str(t) for t in texts]
         if _use_mock(self.model):
             return [_mock_answer(self, t)[0] for t in texts]
@@ -377,14 +380,20 @@ class Agent:
             raise TokynRuntimeError(
                 f"l'IA ha rifiutato la richiesta dell'agente {self.name}" + (f" (categoria: {category})" if category else ""),
                 hint="Riformula le instructions o il testo della richiesta.")
+        stop = getattr(response, "stop_reason", None)
+        if stop == "model_context_window_exceeded":
+            raise TokynRuntimeError(f"la conversazione dell'agente {self.name} non sta più nel contesto del modello",
+                                    hint="Usa Agente.reset() più spesso, memory: False o testi più corti.")
+        if stop == "max_tokens":  # anche gli strumenti avrebbero un input troncato: non si eseguono
+            thinking_only = not any(getattr(b, "type", "") in ("text", "tool_use") for b in response.content)
+            raise TokynRuntimeError(
+                f"la risposta dell'agente {self.name} è stata interrotta perché troppo lunga",
+                hint="Usa un effort più basso." if thinking_only else "Chiedi nelle instructions una risposta più breve.")
         messages.append({"role": "assistant", "content": [_plain(b) for b in response.content]})
         uses = [b for b in response.content if getattr(b, "type", "") == "tool_use"]
         texts = "".join(b.text for b in response.content if getattr(b, "type", "") == "text").strip()
 
         if not uses:
-            if getattr(response, "stop_reason", None) == "max_tokens":
-                raise TokynRuntimeError(f"la risposta dell'agente {self.name} è stata interrotta perché troppo lunga",
-                                        hint="Chiedi nelle instructions una risposta più breve.")
             if self.output is None:
                 return True, texts, texts
             if self._native_output:
@@ -438,7 +447,7 @@ class Agent:
         """Un batch per ogni passaggio: i testi che chiedono strumenti proseguono nel batch successivo."""
         client = _client()
         pending = {str(i): [{"role": "user", "content": t}] for i, t in enumerate(texts)}
-        answers = {}
+        answers, failures = {}, {}
         for step in range(self.max_steps):
             if not pending:
                 break
@@ -448,17 +457,32 @@ class Agent:
             retry = []
             for entry in client.messages.batches.results(batch.id):
                 cid = entry.custom_id
-                if entry.result.type != "succeeded":
+                message = entry.result.message if entry.result.type == "succeeded" else None
+                if message is None or getattr(message, "stop_reason", None) == "refusal":
+                    # errore, scadenza o rifiuto: si riprova con la chiamata normale (che ha anche i fallback)
                     retry.append(cid)
                     continue
-                done, value, _ = self._step(entry.result.message, pending[cid], batch=True)
+                try:
+                    done, value, _ = self._step(message, pending[cid], batch=True)
+                except TokynRuntimeError as err:
+                    failures[cid] = err
+                    del pending[cid]
+                    continue
                 if done:
                     answers[cid] = value
                     del pending[cid]
-            for cid in retry:  # errore o scadenza nel batch: si riprova con la chiamata normale
-                answers[cid], _ = self._run(pending.pop(cid), steps_done=step)
-        if pending:
-            raise self._too_many_steps()
+            for cid in sorted(retry, key=int):  # nell'ordine della lista
+                try:
+                    answers[cid], _ = self._run(pending.pop(cid), steps_done=step)
+                except TokynRuntimeError as err:
+                    failures[cid] = err
+        for cid in pending:
+            failures[cid] = self._too_many_steps()
+        if failures:
+            first = min(failures, key=int)
+            raise TokynRuntimeError(
+                f"{self.name}.ask_all: {len(failures)} testi su {len(texts)} senza risposta; il primo è testi[{first}] "
+                f"({texts[int(first)][:40]!r}): {failures[first].message}", hint=failures[first].hint)
         return [answers[str(i)] for i in range(len(texts))]
 
 
@@ -483,7 +507,8 @@ def _wait_batch(client, batch, agent_name):
     return batch
 
 
-_USAGE = {"chiamate": 0, "chiamate_batch": 0, "input": 0, "output": 0, "cache_lette": 0, "cache_scritte": 0}
+_USAGE = {"chiamate": 0, "chiamate_batch": 0, "fallback": 0,
+          "input": 0, "output": 0, "cache_lette": 0, "cache_scritte": 0}
 
 
 def _count_usage(response, batch=False):
@@ -491,16 +516,23 @@ def _count_usage(response, batch=False):
     usage = getattr(response, "usage", None)
     if usage is None:
         return
-    _USAGE["input"] += getattr(usage, "input_tokens", 0) or 0
-    _USAGE["output"] += getattr(usage, "output_tokens", 0) or 0
-    _USAGE["cache_lette"] += getattr(usage, "cache_read_input_tokens", 0) or 0
-    _USAGE["cache_scritte"] += getattr(usage, "cache_creation_input_tokens", 0) or 0
+    # con un fallback lato server ogni tentativo si paga: usage.iterations li elenca tutti
+    parts = getattr(usage, "iterations", None) or [usage]
+    _USAGE["fallback"] += sum(1 for p in parts if getattr(p, "type", "") == "fallback_message")
+    for part in parts:
+        _USAGE["input"] += getattr(part, "input_tokens", 0) or 0
+        _USAGE["output"] += getattr(part, "output_tokens", 0) or 0
+        _USAGE["cache_lette"] += getattr(part, "cache_read_input_tokens", 0) or 0
+        _USAGE["cache_scritte"] += getattr(part, "cache_creation_input_tokens", 0) or 0
 
 
 def usage_report() -> str:
     u = _USAGE
-    return (f"token: {u['input']} in ingresso, {u['output']} in uscita, {u['cache_lette']} letti dalla cache, "
-            f"{u['cache_scritte']} scritti in cache ({u['chiamate']} chiamate, {u['chiamate_batch']} nella Batch API a metà prezzo)")
+    report = (f"token: {u['input']} in ingresso, {u['output']} in uscita, {u['cache_lette']} letti dalla cache, "
+              f"{u['cache_scritte']} scritti in cache ({u['chiamate']} chiamate, {u['chiamate_batch']} nella Batch API a metà prezzo)")
+    if u["fallback"]:
+        report += f"; {u['fallback']} risposte da un modello di riserva dopo un rifiuto"
+    return report
 
 
 def _use_mock(model) -> bool:
@@ -538,7 +570,7 @@ def _create(params, agent_name):
             return _with_retry(lambda: client.beta.messages.create(**params, betas=[FALLBACK_BETA], fallbacks="default"),
                                agent_name)
         except TokynRuntimeError as err:
-            if not err.bad_request:
+            if not (err.bad_request and "fallback" in err.message.lower()):
                 raise
             _FALLBACKS["attivi"] = False  # l'API non accetta i fallback per questa chiave: si prosegue senza
     return _with_retry(lambda: client.messages.create(**params), agent_name)
@@ -551,7 +583,8 @@ def _with_retry(fn, agent_name, attempts=3):
             return fn()
         except Exception as err:
             name = type(err).__name__
-            retryable = name in ("RateLimitError", "APIConnectionError", "APITimeoutError", "InternalServerError", "OverloadedError")
+            retryable = (name in ("RateLimitError", "APIConnectionError", "APITimeoutError")
+                         or (getattr(err, "status_code", 0) or 0) >= 500)
             if not retryable or i == attempts - 1:
                 if name == "AuthenticationError":
                     raise TokynRuntimeError("la chiave ANTHROPIC_API_KEY non è valida") from None
@@ -675,6 +708,8 @@ def to_number(text, default=_NO_DEFAULT):
     s = str(text).strip().replace(" ", "")
     if "," in s and "." in s:  # separatore delle migliaia: vale quello che viene prima
         s = s.replace(".", "").replace(",", ".") if s.rfind(",") > s.rfind(".") else s.replace(",", "")
+    elif s.count(",") > 1 or s.count(".") > 1:  # "1.234.567": solo migliaia
+        s = s.replace(",", "").replace(".", "")
     else:
         s = s.replace(",", ".")
     try:

@@ -1,0 +1,57 @@
+type Action:
+    who: str "person responsible"
+    what: str "what has to be done"
+    deadline: str "deadline as stated in the meeting, or 'none' if not stated"
+
+type Minutes:
+    summary: str "short summary of the meeting"
+    decisions: list[str] "decisions taken"
+    actions: list[Action]
+
+agent Secretary:
+    instructions: """
+        Write meeting minutes from a transcript: a short summary, the decisions taken and the
+        actions (who, what, deadline). Do not invent deadlines: use "none" when not stated.
+    """
+    output: Minutes
+
+def cell(text: str) -> str:
+    return text.replace("|", "/").replace("\n", " ").strip()
+
+main:
+    text = read_file("transcript.txt", "")
+    if text.strip() == "":
+        print("transcript.txt not found. Paste the transcript, then a line with only END:")
+        lines = []
+        for i in range(100_000):
+            line = input()
+            if line.strip() == "END":
+                break
+            lines.append(line)
+        text = "\n".join(lines)
+    if text.strip() == "":
+        print("No text, nothing to do.")
+        return
+
+    m = Secretary.ask(text)
+
+    md = "# Meeting minutes\n\n"
+    md += "_Generated on " + now()[:10] + "_\n\n"
+    md += "## Summary\n\n" + m.summary + "\n\n"
+    md += "## Decisions\n\n"
+    if len(m.decisions) == 0:
+        md += "_No decisions._\n"
+    for d in m.decisions:
+        md += "- " + d + "\n"
+    md += "\n## Actions\n\n"
+    if len(m.actions) == 0:
+        md += "_No actions._\n"
+    else:
+        md += "| Who | What | Deadline |\n|---|---|---|\n"
+        for a in m.actions:
+            deadline = a.deadline.strip()
+            if deadline == "" or deadline.lower() == "none":
+                deadline = "-"
+            md += f"| {cell(a.who)} | {cell(a.what)} | {cell(deadline)} |\n"
+    write_file("minutes.md", md)
+    print("Saved minutes.md")
