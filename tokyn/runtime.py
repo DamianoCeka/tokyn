@@ -1036,8 +1036,8 @@ def _post_chat(url, chiave, body, agent_name, nome, attempts=5):
             wait = delay if after is None else after
         except (OSError, _httpc.HTTPException) as err:  # rete, connessione rifiutata, timeout
             if last:
-                hint = (tr(f"Avvia Ollama e scarica il modello: ollama pull {body['model']}",
-                           f"Start Ollama and download the model: ollama pull {body['model']}") if nome == "ollama"
+                hint = (tr(f"Avvia Ollama e scarica il modello {body['model']} dall'app di Ollama.",
+                           f"Start Ollama and download the model {body['model']} with the Ollama app.") if nome == "ollama"
                         else tr("Controlla TOKYN_OPENAI_BASE_URL.", "Check TOKYN_OPENAI_BASE_URL.") if nome == "openai-compatible"
                         else tr("Controlla la connessione a internet.", "Check the internet connection."))
                 shown = re.sub(r"//[^/@]*@", "//", url)  # utente e password nell'indirizzo non si stampano
@@ -1124,7 +1124,7 @@ def _errore_http(status, message, no_credit, agent_name, nome, modello):
     if status == 404:
         return TokynRuntimeError(tr(f'modello "{modello}" non trovato su {nome} per l\'agente {agent_name}{detail}',
                                     f'model "{modello}" not found on {nome} for agent {agent_name}{detail}'),
-                                 hint=tr(f"Scaricalo con: ollama pull {modello}", f"Download it with: ollama pull {modello}")
+                                 hint=tr(f"Scarica il modello {modello} con Ollama.", f"Download the model {modello} with Ollama.")
                                  if nome == "ollama" else
                                  tr(f'Controlla il nome del modello dopo "{nome}:" nella documentazione di {nome}.',
                                     f'Check the model name after "{nome}:" in the {nome} documentation.'))
