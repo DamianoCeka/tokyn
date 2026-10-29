@@ -32,8 +32,13 @@ def misure(e):
         "eseguibile": bool(controllo.get("eseguibile")),
         "costo_esecuzione": (controllo.get("costo_ia") or {}).get("costo_usd"),
         "provato": (e.get("prove_del_programma") or {}).get("chiamate", 0) > 0,  # chiamate vere all'IA in sessione
+        "claude_api": "claude-api" in (e.get("skill") or []),  # ha aperto la documentazione dell'API
         "consegnato": bool(e.get("programma_consegnato")),
     }
+
+
+def mediana(valori):
+    return round(statistics.median(valori), 4) if valori else None
 
 
 def wilson(k, n, z=1.96):
@@ -95,6 +100,10 @@ def analizza(esiti):
                 "eseguibili": sum(p["eseguibile"] for p in tutte), "provati": sum(p["provato"] for p in tutte),
                 "consegnati": sum(p["consegnato"] for p in tutte),
                 "costo_esecuzione_mediano": statistics.median(esec) if esec else None,
+                # la skill integrata claude-api (documentazione dell'API): quante sessioni l'hanno aperta e quanto costano
+                "con_claude_api": sum(p["claude_api"] for p in tutte),
+                "costo_sessione_mediano_con_claude_api": mediana([p["costo_sessione"] for p in tutte if p["claude_api"]]),
+                "costo_sessione_mediano_senza_claude_api": mediana([p["costo_sessione"] for p in tutte if not p["claude_api"]]),
             }
         for altra in ("python", "agent-sdk"):
             confronto = {}
@@ -175,7 +184,16 @@ def markdown(r, n_prove):
                          f"{euro(s['somma_costo_prove'])} | {numero(s['somma_token_output'])} | "
                          f"{numero(s['somma_secondi'] / 60, 1)} min | {s['ok']} su {s['prove']} "
                          f"({numero(s['ok_percento'])}%) | {s['provati']} su {s['prove']} |")
-        righe += ["", "Somme sui compiti delle mediane delle 3 ripetizioni.", ""]
+        righe += ["", "Somme sui compiti delle mediane delle 3 ripetizioni.", "",
+                  "**Documentazione dell'API.** Sessioni che hanno aperto la skill integrata `claude-api` e costo mediano "
+                  "di una sessione con e senza:", ""]
+        for cond in CONDIZIONI:
+            s_ = m["condizioni"].get(cond)
+            if s_:
+                righe.append(f"- {NOMI[cond]}: {s_['con_claude_api']} su {s_['prove']}; "
+                             f"con {euro(s_['costo_sessione_mediano_con_claude_api'])}, "
+                             f"senza {euro(s_['costo_sessione_mediano_senza_claude_api'])}")
+        righe.append("")
         for altra in ("python", "agent-sdk"):
             c = m["confronti"].get(f"tokyn/{altra}", {})
             righe += [f"**Tokyn rispetto a {NOMI[altra]}** (media geometrica dei rapporti sui compiti):", "",

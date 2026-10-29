@@ -114,6 +114,9 @@ Lo script è [`analizza.py`](analizza.py).
     ricampionamenti, seme fisso);
   - la riduzione è 1 − rapporto.
 - La **percentuale di controlli superati** per condizione, con un intervallo di Wilson al 95%.
+- Quante sessioni hanno aperto la skill integrata `claude-api` (la documentazione dell'API di Anthropic) e il costo
+  mediano delle sessioni con e senza. La pilota ha mostrato che pesa molto sul costo: serve a capire da dove viene la
+  differenza. Questa analisi è stata aggiunta dopo la pilota e prima delle prove.
 - Si mostrano tutti i compiti, anche quelli in cui Tokyn perde.
 
 ## Le regole
