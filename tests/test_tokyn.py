@@ -388,7 +388,7 @@ def test_old_anthropic_sdk_is_reported(monkeypatch):
     monkeypatch.setitem(sys.modules, "anthropic", types.SimpleNamespace(__version__="0.107.1", Anthropic=object))
     with pytest.raises(rt.TokynRuntimeError) as err:
         rt._client()
-    assert "too old (0.107.1)" in err.value.message and 'anthropic>=0.108' in err.value.hint
+    assert "too old (0.107.1)" in err.value.message and '0.108' in err.value.hint
     assert [rt._sdk_too_old(v) for v in ("0.40.0", "0.108.0", "0.125.0", "1.0.0", "2.3.0", "", "dev")] == \
         [True, False, False, False, False, False, False]
 

@@ -796,13 +796,13 @@ def _client():
         import anthropic
     except ImportError:
         raise TokynRuntimeError(tr("manca il pacchetto anthropic", "the anthropic package is missing"),
-                                hint=tr("Installa con: pip install anthropic", "Install it with: pip install anthropic")) from None
+                                hint=tr("Installa il pacchetto Python anthropic.", "Install the anthropic Python package.")) from None
     version = getattr(anthropic, "__version__", "")
     if _sdk_too_old(version):  # prima della 0.108 l'SDK rifiuta `fallbacks` con un TypeError a ogni chiamata
         raise TokynRuntimeError(tr(f"il pacchetto anthropic è troppo vecchio ({version}): Tokyn vuole la 0.108 o successiva",
                                    f"the anthropic package is too old ({version}): Tokyn needs 0.108 or newer"),
-                                hint=tr('Aggiornalo con: pip install -U "anthropic>=0.108"',
-                                        'Upgrade it with: pip install -U "anthropic>=0.108"'))
+                                hint=tr("Aggiorna il pacchetto Python anthropic alla versione 0.108 o successiva.",
+                                        "Upgrade the anthropic Python package to version 0.108 or newer."))
     _CLIENT = anthropic.Anthropic()
     return _CLIENT
 
