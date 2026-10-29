@@ -1,0 +1,272 @@
+12:38:50 135 prove, 4 alla volta
+12:38:51 opus/catalogo/python/r3: sessione avviata
+12:38:51 opus/articolo/agent-sdk/r2: sessione avviata
+12:38:51 opus/documenti/python/r1: sessione avviata
+12:38:51 opus/candidati/agent-sdk/r2: sessione avviata
+12:40:06 opus/catalogo/python/r3: $0.68 + prove $0.00, 5868 token, 62 s, controllo NO
+12:40:06 opus/recensioni/tokyn/r2: sessione avviata
+12:40:15 opus/documenti/python/r1: $0.73 + prove $0.00, 6351 token, 71 s, controllo NO
+12:40:15 opus/recensioni/tokyn/r3: sessione avviata
+12:40:21 opus/articolo/agent-sdk/r2: $0.62 + prove $0.06, 4897 token, 71 s, controllo ok
+12:40:21 opus/email/tokyn/r2: sessione avviata
+12:40:30 opus/candidati/agent-sdk/r2: $0.68 + prove $0.21, 6175 token, 83 s, controllo ok
+12:40:30 opus/recensioni/agent-sdk/r1: sessione avviata
+12:41:06 opus/recensioni/tokyn/r2: $0.15 + prove $0.00, 1889 token, 34 s, controllo ok
+12:41:06 opus/candidati/tokyn/r1: sessione avviata
+12:41:15 opus/recensioni/tokyn/r3: $0.16 + prove $0.00, 2027 token, 35 s, controllo ok
+12:41:15 opus/fattura/agent-sdk/r3: sessione avviata
+12:41:25 opus/email/tokyn/r2: $0.18 + prove $0.00, 2245 token, 37 s, controllo ok
+12:41:25 opus/riunione/agent-sdk/r1: sessione avviata
+12:41:42 opus/recensioni/agent-sdk/r1: $0.60 + prove $0.06, 4143 token, 52 s, controllo ok
+12:41:42 opus/vendite/tokyn/r1: sessione avviata
+12:42:45 opus/riunione/agent-sdk/r1: $0.65 + prove $0.04, 5303 token, 64 s, controllo ok
+12:42:45 opus/catalogo/python/r2: sessione avviata
+12:42:46 opus/fattura/agent-sdk/r3: $0.65 + prove $0.06, 5128 token, 70 s, controllo ok
+12:42:46 opus/documenti/tokyn/r3: sessione avviata
+12:42:50 opus/candidati/tokyn/r1: $0.23 + prove $0.05, 3462 token, 71 s, controllo ok
+12:42:50 opus/magazzino/agent-sdk/r2: sessione avviata
+12:43:03 opus/vendite/tokyn/r1: $0.25 + prove $0.02, 4254 token, 62 s, controllo ok
+12:43:03 opus/riunione/agent-sdk/r3: sessione avviata
+12:43:51 opus/catalogo/python/r2: $0.61 + prove $0.00, 4497 token, 52 s, controllo NO
+12:43:51 opus/log/python/r3: sessione avviata
+12:44:00 opus/documenti/tokyn/r3: $0.18 + prove $0.02, 2340 token, 44 s, controllo ok
+12:44:00 opus/fattura/agent-sdk/r2: sessione avviata
+12:44:20 opus/riunione/agent-sdk/r3: $0.62 + prove $0.04, 4621 token, 58 s, controllo ok
+12:44:20 opus/riunione/python/r2: sessione avviata
+12:44:42 opus/magazzino/agent-sdk/r2: $0.29 + prove $0.33, 7399 token, 93 s, controllo ok
+12:44:42 opus/riunione/tokyn/r3: sessione avviata
+12:45:16 opus/log/python/r3: $0.67 + prove $0.00, 6000 token, 72 s, controllo NO
+12:45:16 opus/scadenze/tokyn/r1: sessione avviata
+12:45:25 opus/riunione/tokyn/r3: $0.16 + prove $0.01, 1976 token, 25 s, controllo ok
+12:45:25 opus/fattura/tokyn/r3: sessione avviata
+12:45:45 opus/fattura/agent-sdk/r2: $0.65 + prove $0.08, 6025 token, 84 s, controllo ok
+12:45:45 opus/scadenze/python/r2: sessione avviata
+12:45:57 opus/riunione/python/r2: $0.75 + prove $0.00, 7618 token, 83 s, controllo NO
+12:45:57 opus/spese/python/r2: sessione avviata
+12:46:32 opus/fattura/tokyn/r3: $0.21 + prove $0.02, 3221 token, 47 s, controllo ok
+12:46:32 opus/email/agent-sdk/r1: sessione avviata
+12:47:02 opus/scadenze/python/r2: $0.70 + prove $0.00, 5640 token, 63 s, controllo NO
+12:47:02 opus/documenti/tokyn/r2: sessione avviata
+12:47:15 opus/spese/python/r2: $0.68 + prove $0.00, 6279 token, 64 s, controllo NO
+12:47:15 opus/documenti/python/r3: sessione avviata
+12:47:26 opus/scadenze/tokyn/r1: $0.30 + prove $0.04, 5409 token, 88 s, controllo ok
+12:47:26 opus/spese/tokyn/r3: sessione avviata
+12:47:54 opus/email/agent-sdk/r1: $0.61 + prove $0.12, 4646 token, 61 s, controllo ok
+12:47:54 opus/log/python/r2: sessione avviata
+12:48:25 opus/documenti/tokyn/r2: $0.20 + prove $0.03, 2573 token, 56 s, controllo ok
+12:48:25 opus/riunione/agent-sdk/r2: sessione avviata
+12:48:40 opus/documenti/python/r3: $0.71 + prove $0.00, 6412 token, 72 s, controllo NO
+12:48:40 opus/candidati/python/r2: sessione avviata
+12:48:47 opus/spese/tokyn/r3: $0.19 + prove $0.00, 2879 token, 52 s, controllo ok
+12:48:47 opus/candidati/agent-sdk/r3: sessione avviata
+12:49:26 opus/log/python/r2: $0.71 + prove $0.00, 6650 token, 78 s, controllo NO
+12:49:26 opus/documenti/python/r2: sessione avviata
+12:49:47 opus/riunione/agent-sdk/r2: $0.21 + prove $0.05, 4825 token, 64 s, controllo ok
+12:49:47 opus/scadenze/python/r3: sessione avviata
+12:49:52 opus/candidati/python/r2: $0.67 + prove $0.00, 5513 token, 59 s, controllo NO
+12:49:52 opus/catalogo/agent-sdk/r1: sessione avviata
+12:50:09 opus/candidati/agent-sdk/r3: $0.26 + prove $0.19, 4728 token, 64 s, controllo ok
+12:50:09 opus/catalogo/tokyn/r2: sessione avviata
+12:50:57 opus/documenti/python/r2: $0.78 + prove $0.00, 7094 token, 78 s, controllo NO
+12:50:57 opus/moderazione/tokyn/r2: sessione avviata
+12:50:58 opus/catalogo/agent-sdk/r1: $0.58 + prove $0.04, 3867 token, 48 s, controllo ok
+12:50:58 opus/scadenze/agent-sdk/r1: sessione avviata
+12:51:52 opus/scadenze/python/r3: $0.86 + prove $0.00, 9619 token, 111 s, controllo NO
+12:51:52 opus/documenti/agent-sdk/r1: sessione avviata
+12:52:10 opus/moderazione/tokyn/r2: $0.17 + prove $0.00, 2279 token, 42 s, controllo ok
+12:52:10 opus/log/tokyn/r1: sessione avviata
+12:52:45 opus/catalogo/tokyn/r2: $0.21 + prove $0.03, 3191 token, 118 s, controllo ok
+12:52:45 opus/magazzino/python/r3: sessione avviata
+12:52:52 opus/scadenze/agent-sdk/r1: $0.27 + prove $0.16, 6045 token, 91 s, controllo ok
+12:52:52 opus/catalogo/agent-sdk/r3: sessione avviata
+12:53:08 opus/documenti/agent-sdk/r1: $0.62 + prove $0.10, 4630 token, 58 s, controllo ok
+12:53:08 opus/articolo/agent-sdk/r3: sessione avviata
+12:53:10 opus/log/tokyn/r1: $0.27 + prove $0.01, 3244 token, 44 s, controllo ok
+12:53:10 opus/riunione/tokyn/r1: sessione avviata
+12:53:59 opus/riunione/tokyn/r1: $0.17 + prove $0.01, 2225 token, 29 s, controllo ok
+12:53:59 opus/articolo/tokyn/r1: sessione avviata
+12:54:02 opus/catalogo/agent-sdk/r3: $0.57 + prove $0.04, 4253 token, 50 s, controllo ok
+12:54:02 opus/moderazione/python/r2: sessione avviata
+12:54:19 opus/magazzino/python/r3: $0.74 + prove $0.00, 7866 token, 80 s, controllo NO
+12:54:19 opus/spese/python/r3: sessione avviata
+12:55:03 opus/articolo/tokyn/r1: $0.18 + prove $0.02, 2440 token, 39 s, controllo ok
+12:55:03 opus/assistente/tokyn/r3: sessione avviata
+12:55:25 opus/articolo/agent-sdk/r3: $0.30 + prove $0.15, 6116 token, 117 s, controllo ok
+12:55:25 opus/magazzino/agent-sdk/r3: sessione avviata
+12:55:43 opus/moderazione/python/r2: $0.74 + prove $0.00, 7540 token, 88 s, controllo NO
+12:55:43 opus/scadenze/agent-sdk/r2: sessione avviata
+12:56:01 opus/spese/python/r3: $0.80 + prove $0.00, 8409 token, 89 s, controllo NO
+12:56:01 opus/articolo/tokyn/r2: sessione avviata
+12:57:08 opus/articolo/tokyn/r2: $0.20 + prove $0.02, 2730 token, 46 s, controllo ok
+12:57:08 opus/magazzino/tokyn/r1: sessione avviata
+12:57:13 opus/assistente/tokyn/r3: $0.18 + prove $0.04, 2566 token, 95 s, controllo ok
+12:57:13 opus/vendite/agent-sdk/r2: sessione avviata
+12:57:35 opus/scadenze/agent-sdk/r2: $0.27 + prove $0.20, 6071 token, 90 s, controllo ok
+12:57:35 opus/email/python/r3: sessione avviata
+12:57:48 opus/magazzino/agent-sdk/r3: $0.38 + prove $0.13, 9097 token, 114 s, controllo ok
+12:57:48 opus/assistente/agent-sdk/r1: sessione avviata
+12:58:40 opus/vendite/agent-sdk/r2: $0.26 + prove $0.02, 6038 token, 66 s, controllo ok
+12:58:40 opus/assistente/agent-sdk/r3: sessione avviata
+12:58:49 opus/email/python/r3: $0.63 + prove $0.00, 5243 token, 60 s, controllo NO
+12:58:49 opus/email/python/r2: sessione avviata
+12:59:38 opus/magazzino/tokyn/r1: $0.22 + prove $0.08, 3544 token, 99 s, controllo ok
+12:59:38 opus/spese/agent-sdk/r3: sessione avviata
+12:59:57 opus/email/python/r2: $0.63 + prove $0.00, 4795 token, 54 s, controllo NO
+12:59:57 opus/recensioni/agent-sdk/r2: sessione avviata
+13:00:03 opus/assistente/agent-sdk/r3: $0.61 + prove $0.04, 4114 token, 61 s, controllo ok
+13:00:03 opus/vendite/tokyn/r3: sessione avviata
+13:00:52 opus/spese/agent-sdk/r3: $0.24 + prove $0.03, 5070 token, 57 s, controllo ok
+13:00:52 opus/catalogo/tokyn/r3: sessione avviata
+13:00:54 opus/assistente/agent-sdk/r1: $0.75 + prove $0.17, 7156 token, 163 s, controllo ok
+13:00:54 opus/magazzino/tokyn/r2: sessione avviata
+13:01:07 opus/recensioni/agent-sdk/r2: $0.19 + prove $0.06, 3706 token, 51 s, controllo ok
+13:01:07 opus/spese/python/r1: sessione avviata
+13:01:40 opus/vendite/tokyn/r3: $0.34 + prove $0.02, 6857 token, 77 s, controllo ok
+13:01:40 opus/spese/agent-sdk/r1: sessione avviata
+13:02:49 opus/spese/python/r1: $0.83 + prove $0.00, 8168 token, 88 s, controllo NO
+13:02:49 opus/candidati/python/r1: sessione avviata
+13:02:56 opus/catalogo/tokyn/r3: $0.24 + prove $0.02, 4179 token, 82 s, controllo ok
+13:02:56 opus/recensioni/python/r2: sessione avviata
+13:03:03 opus/spese/agent-sdk/r1: $0.66 + prove $0.03, 5388 token, 66 s, controllo ok
+13:03:03 opus/moderazione/agent-sdk/r2: sessione avviata
+13:03:44 opus/magazzino/tokyn/r2: $0.26 + prove $0.09, 4135 token, 119 s, controllo ok
+13:03:44 opus/articolo/tokyn/r3: sessione avviata
+13:04:03 opus/recensioni/python/r2: $0.67 + prove $0.00, 4483 token, 52 s, controllo NO
+13:04:03 opus/riunione/tokyn/r2: sessione avviata
+13:04:34 opus/moderazione/agent-sdk/r2: $0.63 + prove $0.12, 4990 token, 68 s, controllo ok
+13:04:34 opus/moderazione/agent-sdk/r1: sessione avviata
+13:04:37 opus/candidati/python/r1: $0.78 + prove $0.00, 8419 token, 95 s, controllo NO
+13:04:37 opus/moderazione/tokyn/r1: sessione avviata
+13:04:50 opus/riunione/tokyn/r2: $0.17 + prove $0.01, 2227 token, 29 s, controllo ok
+13:04:50 opus/log/tokyn/r3: sessione avviata
+13:04:57 opus/articolo/tokyn/r3: $0.20 + prove $0.03, 2764 token, 44 s, controllo ok
+13:04:57 opus/articolo/agent-sdk/r1: sessione avviata
+13:06:08 opus/log/tokyn/r3: $0.23 + prove $0.01, 3836 token, 61 s, controllo ok
+13:06:08 opus/fattura/python/r1: sessione avviata
+13:06:09 opus/moderazione/agent-sdk/r1: $0.67 + prove $0.12, 5465 token, 75 s, controllo ok
+13:06:09 opus/magazzino/python/r2: sessione avviata
+13:06:10 opus/moderazione/tokyn/r1: $0.20 + prove $0.00, 2872 token, 64 s, controllo ok
+13:06:10 opus/recensioni/python/r3: sessione avviata
+13:06:24 opus/articolo/agent-sdk/r1: $0.60 + prove $0.06, 4542 token, 66 s, controllo ok
+13:06:24 opus/documenti/tokyn/r1: sessione avviata
+13:07:16 opus/fattura/python/r1: $0.63 + prove $0.00, 5277 token, 55 s, controllo NO
+13:07:16 opus/moderazione/python/r1: sessione avviata
+13:07:21 opus/recensioni/python/r3: $0.65 + prove $0.00, 5224 token, 57 s, controllo NO
+13:07:21 opus/candidati/python/r3: sessione avviata
+13:07:30 opus/documenti/tokyn/r1: $0.19 + prove $0.02, 2665 token, 40 s, controllo ok
+13:07:30 opus/fattura/agent-sdk/r1: sessione avviata
+13:07:54 opus/magazzino/python/r2: $0.81 + prove $0.00, 8923 token, 91 s, controllo NO
+13:07:54 opus/email/tokyn/r3: sessione avviata
+13:08:32 opus/moderazione/python/r1: $0.67 + prove $0.00, 5499 token, 62 s, controllo NO
+13:08:32 opus/recensioni/tokyn/r1: sessione avviata
+13:09:04 opus/fattura/agent-sdk/r1: $0.64 + prove $0.06, 5353 token, 72 s, controllo ok
+13:09:04 opus/scadenze/tokyn/r2: sessione avviata
+13:09:13 opus/candidati/python/r3: $0.88 + prove $0.00, 8429 token, 99 s, controllo NO
+13:09:13 opus/assistente/python/r1: sessione avviata
+13:09:19 opus/email/tokyn/r3: $0.19 + prove $0.00, 2411 token, 59 s, controllo ok
+13:09:19 opus/assistente/python/r3: sessione avviata
+13:09:34 opus/recensioni/tokyn/r1: $0.17 + prove $0.00, 2158 token, 37 s, controllo ok
+13:09:34 opus/vendite/agent-sdk/r3: sessione avviata
+13:10:49 opus/assistente/python/r1: $0.73 + prove $0.00, 7493 token, 82 s, controllo NO
+13:10:49 opus/email/tokyn/r1: sessione avviata
+13:10:54 opus/vendite/agent-sdk/r3: $0.64 + prove $0.01, 6037 token, 63 s, controllo ok
+13:10:54 opus/fattura/python/r3: sessione avviata
+13:10:54 opus/assistente/python/r3: $0.76 + prove $0.00, 7458 token, 82 s, controllo NO
+13:10:54 opus/articolo/python/r2: sessione avviata
+13:11:00 opus/scadenze/tokyn/r2: $0.27 + prove $0.04, 4270 token, 78 s, controllo ok
+13:11:00 opus/magazzino/agent-sdk/r1: sessione avviata
+13:12:12 opus/fattura/python/r3: $0.67 + prove $0.00, 5817 token, 64 s, controllo NO
+13:12:12 opus/log/agent-sdk/r2: sessione avviata
+13:12:16 opus/email/tokyn/r1: $0.19 + prove $0.00, 2283 token, 61 s, controllo ok
+13:12:16 opus/moderazione/python/r3: sessione avviata
+13:12:28 opus/articolo/python/r2: $0.76 + prove $0.00, 7332 token, 80 s, controllo NO
+13:12:28 opus/catalogo/python/r1: sessione avviata
+13:13:09 opus/magazzino/agent-sdk/r1: $0.28 + prove $0.21, 6120 token, 98 s, controllo ok
+13:13:09 opus/vendite/python/r2: sessione avviata
+13:13:22 opus/log/agent-sdk/r2: $0.20 + prove $0.01, 3901 token, 52 s, controllo ok
+13:13:22 opus/magazzino/tokyn/r3: sessione avviata
+13:13:34 opus/moderazione/python/r3: $0.68 + prove $0.00, 5366 token, 64 s, controllo NO
+13:13:34 opus/scadenze/python/r1: sessione avviata
+13:13:47 opus/catalogo/python/r1: $0.71 + prove $0.00, 5880 token, 65 s, controllo NO
+13:13:47 opus/log/agent-sdk/r1: sessione avviata
+13:14:56 opus/log/agent-sdk/r1: $0.18 + prove $0.02, 4103 token, 51 s, controllo ok
+13:14:56 opus/log/python/r1: sessione avviata
+13:15:07 opus/vendite/python/r2: $0.82 + prove $0.00, 9684 token, 105 s, controllo NO
+13:15:07 opus/documenti/agent-sdk/r3: sessione avviata
+13:15:31 opus/scadenze/python/r1: $0.81 + prove $0.00, 8515 token, 103 s, controllo NO
+13:15:31 opus/vendite/python/r3: sessione avviata
+13:15:45 opus/magazzino/tokyn/r3: $0.27 + prove $0.06, 4454 token, 113 s, controllo ok
+13:15:45 opus/log/agent-sdk/r3: sessione avviata
+13:16:13 opus/documenti/agent-sdk/r3: $0.57 + prove $0.10, 4162 token, 49 s, controllo ok
+13:16:13 opus/vendite/python/r1: sessione avviata
+13:16:39 opus/log/python/r1: $0.78 + prove $0.00, 7462 token, 89 s, controllo NO
+13:16:39 opus/moderazione/tokyn/r3: sessione avviata
+13:16:50 opus/log/agent-sdk/r3: $0.17 + prove $0.01, 3462 token, 47 s, controllo ok
+13:16:50 opus/documenti/agent-sdk/r2: sessione avviata
+13:17:38 opus/vendite/python/r3: $0.88 + prove $0.00, 10401 token, 114 s, controllo NO
+13:17:38 opus/candidati/tokyn/r2: sessione avviata
+13:17:53 opus/vendite/python/r1: $0.71 + prove $0.00, 8196 token, 87 s, controllo NO
+13:17:53 opus/magazzino/python/r1: sessione avviata
+13:18:10 opus/moderazione/tokyn/r3: $0.19 + prove $0.00, 2638 token, 62 s, controllo ok
+13:18:10 opus/fattura/tokyn/r2: sessione avviata
+13:18:21 opus/documenti/agent-sdk/r2: $0.59 + prove $0.06, 4157 token, 63 s, controllo ok
+13:18:21 opus/log/tokyn/r2: sessione avviata
+13:19:12 opus/fattura/tokyn/r2: $0.21 + prove $0.02, 3171 token, 46 s, controllo ok
+13:19:12 opus/spese/agent-sdk/r2: sessione avviata
+13:19:18 opus/candidati/tokyn/r2: $0.23 + prove $0.05, 3117 token, 69 s, controllo ok
+13:19:18 opus/spese/tokyn/r2: sessione avviata
+13:19:19 opus/magazzino/python/r1: $0.77 + prove $0.00, 6802 token, 72 s, controllo NO
+13:19:19 opus/candidati/agent-sdk/r1: sessione avviata
+13:19:21 opus/log/tokyn/r2: $0.21 + prove $0.01, 3298 token, 43 s, controllo ok
+13:19:21 opus/riunione/python/r3: sessione avviata
+13:20:24 opus/spese/agent-sdk/r2: $0.62 + prove $0.02, 4910 token, 55 s, controllo ok
+13:20:24 opus/articolo/python/r1: sessione avviata
+13:20:50 opus/riunione/python/r3: $0.72 + prove $0.00, 6851 token, 75 s, controllo NO
+13:20:50 opus/email/python/r1: sessione avviata
+13:21:02 opus/candidati/agent-sdk/r1: $0.71 + prove $0.22, 6146 token, 85 s, controllo ok
+13:21:02 opus/riunione/python/r1: sessione avviata
+13:21:07 opus/spese/tokyn/r2: $0.21 + prove $0.00, 3251 token, 80 s, controllo ok
+13:21:07 opus/candidati/tokyn/r3: sessione avviata
+13:21:52 opus/articolo/python/r1: $0.75 + prove $0.00, 6964 token, 75 s, controllo NO
+13:21:52 opus/catalogo/tokyn/r1: sessione avviata
+13:21:55 opus/email/python/r1: $0.63 + prove $0.00, 4521 token, 51 s, controllo NO
+13:21:55 opus/recensioni/agent-sdk/r3: sessione avviata
+13:22:17 opus/riunione/python/r1: $0.74 + prove $0.00, 5907 token, 62 s, controllo NO
+13:22:17 opus/vendite/agent-sdk/r1: sessione avviata
+13:22:51 opus/candidati/tokyn/r3: $0.23 + prove $0.05, 3143 token, 68 s, controllo ok
+13:22:51 opus/catalogo/agent-sdk/r2: sessione avviata
+13:22:53 opus/recensioni/agent-sdk/r3: $0.54 + prove $0.04, 3218 token, 40 s, controllo ok
+13:22:53 opus/articolo/python/r3: sessione avviata
+13:23:10 opus/catalogo/tokyn/r1: $0.18 + prove $0.02, 2323 token, 49 s, controllo ok
+13:23:10 opus/fattura/tokyn/r1: sessione avviata
+13:24:00 opus/vendite/agent-sdk/r1: $0.66 + prove $0.05, 6307 token, 83 s, controllo ok
+13:24:00 opus/email/agent-sdk/r3: sessione avviata
+13:24:08 opus/fattura/tokyn/r1: $0.21 + prove $0.00, 3158 token, 43 s, controllo ok
+13:24:08 opus/assistente/tokyn/r2: sessione avviata
+13:24:19 opus/articolo/python/r3: $0.75 + prove $0.00, 6522 token, 72 s, controllo NO
+13:24:19 opus/assistente/python/r2: sessione avviata
+13:24:49 opus/catalogo/agent-sdk/r2: $0.77 + prove $0.04, 8425 token, 102 s, controllo ok
+13:24:49 opus/vendite/tokyn/r2: sessione avviata
+13:25:03 opus/email/agent-sdk/r3: $0.55 + prove $0.06, 3083 token, 43 s, controllo ok
+13:25:03 opus/scadenze/tokyn/r3: sessione avviata
+13:25:57 opus/assistente/python/r2: $0.76 + prove $0.00, 7455 token, 85 s, controllo NO
+13:25:57 opus/fattura/python/r2: sessione avviata
+13:26:08 opus/vendite/tokyn/r2: $0.25 + prove $0.01, 4209 token, 55 s, controllo ok
+13:26:08 opus/assistente/tokyn/r1: sessione avviata
+13:26:25 opus/assistente/tokyn/r2: $0.25 + prove $0.05, 4016 token, 104 s, controllo ok
+13:26:25 opus/spese/tokyn/r1: sessione avviata
+13:26:47 opus/scadenze/tokyn/r3: $0.27 + prove $0.03, 4341 token, 69 s, controllo ok
+13:26:47 opus/scadenze/agent-sdk/r3: sessione avviata
+13:27:07 opus/fattura/python/r2: $0.63 + prove $0.00, 5369 token, 56 s, controllo NO
+13:27:07 opus/recensioni/python/r1: sessione avviata
+13:27:41 opus/assistente/tokyn/r1: $0.17 + prove $0.02, 2255 token, 51 s, controllo ok
+13:27:41 opus/moderazione/agent-sdk/r3: sessione avviata
+13:27:49 opus/spese/tokyn/r1: $0.21 + prove $0.00, 3248 token, 55 s, controllo ok
+13:27:49 opus/email/agent-sdk/r2: sessione avviata
+13:28:01 opus/recensioni/python/r1: $0.56 + prove $0.00, 3837 token, 41 s, controllo NO
+13:28:01 opus/assistente/agent-sdk/r2: sessione avviata
+13:28:46 opus/scadenze/agent-sdk/r3: $0.29 + prove $0.25, 6137 token, 97 s, controllo ok
+13:29:04 opus/email/agent-sdk/r2: $0.60 + prove $0.06, 4405 token, 55 s, controllo ok
+13:29:10 opus/moderazione/agent-sdk/r3: $0.64 + prove $0.10, 5686 token, 69 s, controllo ok
+13:29:26 opus/assistente/agent-sdk/r2: $0.21 + prove $0.05, 4052 token, 62 s, controllo ok
+13:29:26 concluse 135 su 135; da rifare per l'infrastruttura: 0

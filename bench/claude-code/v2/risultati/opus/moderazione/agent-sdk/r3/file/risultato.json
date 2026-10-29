@@ -1,0 +1,33 @@
+[
+  {
+    "id": 17,
+    "decisione": "pubblica",
+    "motivo": "Domanda pertinente sulle macchie nere delle rose rampicanti, con un tono cortese e senza spam, insulti o dati personali."
+  },
+  {
+    "id": 18,
+    "decisione": "rivedi",
+    "motivo": "Il consiglio sul rame contro la peronospora è utile, ma il tono è spazientito e polemico, anche se non ci sono insulti.",
+    "riscrittura": "Ci tengo a ribadirlo: il rame contro la peronospora va dato col tempo asciutto, perché se piove dopo un'ora il trattamento è inutile."
+  },
+  {
+    "id": 19,
+    "decisione": "rifiuta",
+    "motivo": "Il commento è spam: è un'offerta commerciale di semi e bulbi che invita a scrivere su WhatsApp per ricevere il catalogo."
+  },
+  {
+    "id": 20,
+    "decisione": "rifiuta",
+    "motivo": "Il commento contiene un indirizzo email personale (anche se è dell'autore), che le regole vietano."
+  },
+  {
+    "id": 21,
+    "decisione": "pubblica",
+    "motivo": "Ringraziamento cortese e pertinente sulla guida al compost, senza spam, insulti o dati personali."
+  },
+  {
+    "id": 22,
+    "decisione": "rifiuta",
+    "motivo": "Il commento contiene un attacco personale diretto a Michele (\"sei proprio un caso disperato\")."
+  }
+]

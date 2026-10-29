@@ -1,0 +1,83 @@
+{
+ "prova": "opus/assistente/tokyn/r1",
+ "cartella": "b8a354faf9",
+ "modello": "opus",
+ "compito": "assistente",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.17047800000000002,
+ "costo_usd_telemetria": 0.170478,
+ "token_output": 2255,
+ "token_input": 14,
+ "token_cache_scritti": 13081,
+ "token_cache_letti": 103370,
+ "prove_del_programma": {
+  "costo_usd": 0.023882,
+  "token_output": 469,
+  "chiamate": 6,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 51.0,
+ "secondi_api": 22.8,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 820,
+ "righe_tokyn": 19,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "assistente.tokyn",
+  "programma.py"
+ ],
+ "risposta_finale": "i chiama Marco e abita in Germania. Poi chiede \"Quanto mi costa la spedizione?\" e riceve \"12 €\": la soglia dei 49 € per la spedizione gratuita vale solo per l'Italia.\n2. Il cliente chiede \"Accettate i buoni regalo?\". L'assistente risponde che nelle FAQ non c'è questa informazione e non inventa nulla.\n3. Il cliente chiede \"Come mi chiamo e dove abito?\". L'assistente risponde \"Ti chiami Marco e abiti in Germania\", quindi la memoria funziona.\n4. Dopo `esci` il programma si ferma e la riga successiva non viene letta.\n5. Ho provato anche `programma.py` così come te lo consegno: \"Fate confezioni regalo?\" seguito da \"Quanto costa?\" dà \"2,50 €\" entrambe le volte.\n\n**Cose da sapere**\n- **Chiave API:** nelle prove il programma ha usato il mio Claude Code, perché qui non c'è una chiave API. Per farlo usare ai clienti devi impostare `ANTHROPIC_API_KEY`: le regole di Anthropic consentono di usare Claude Code solo per provare.\n- **Costo:** con le FAQ attuali ogni risposta costa intorno a mezzo centesimo di dollaro.\n- **Fine dell'input:** se l'input finisce senza `esci` (per esempio con Ctrl+D), il programma si ferma con un errore invece di chiudersi in modo pulito.\n- **Modificare il programma:** accanto c'è `assistente.tokyn`, il sorgente da cui ho generato `programma.py` con Tokyn. Se vuoi cambiare il comportamento conviene modificare quello e generare di nuovo il Python.\n- **Aggiornare le FAQ:** le FAQ si leggono da `faq.txt` a ogni avvio, quindi per aggiornarle basta modificare il file.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "spedizione 6,90 euro: True",
+   "codice sconto CIAONESPOLO: True",
+   "reso entro 45 giorni: True",
+   "si ricorda il nome Giulia: True",
+   "termina su esci (codice 0) senza rispondere dopo: True",
+   "output (ultimi 1500 caratteri): Ciao Giulia, piacere! Sono l'assistente di Casa Nespolo. Come posso aiutarti oggi?\nCiao Giulia! In Italia la spedizione standard costa 6,90 €, ed è gratuita per ordini da 79 € in su. 😊\n\nPosso aiutarti con altro?\nSì, Giulia! Con il codice **CIAONESPOLO** hai il 10% di sconto sul tuo primo ordine. 🎉\n\nPosso aiutarti con qualcos'altro?\nPuoi restituire i prodotti entro **45 giorni dalla consegna**, Giulia. Il reso costa 7 €, tranne per i prodotti difettosi.\n\nPosso aiutarti con altro? 😊\nTi chiami Giulia! 😊 Me l'hai detto all'inizio della conversazione.\n\nPosso aiutarti con qualcos'altro?\n"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.020488,
+   "token_output": 312,
+   "chiamate": 5,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

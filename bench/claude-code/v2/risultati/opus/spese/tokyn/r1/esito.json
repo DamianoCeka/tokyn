@@ -1,0 +1,81 @@
+{
+ "prova": "opus/spese/tokyn/r1",
+ "cartella": "b43ffd30a5",
+ "modello": "opus",
+ "compito": "spese",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2149924,
+ "costo_usd_telemetria": 0.214992,
+ "token_output": 3248,
+ "token_input": 12,
+ "token_cache_scritti": 16525,
+ "token_cache_letti": 88922,
+ "prove_del_programma": {
+  "costo_usd": 0.001938,
+  "token_output": 671,
+  "chiamate": 11,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 54.9,
+ "secondi_api": 30.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 847,
+ "righe_tokyn": 45,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": " |\n| altro | stipendio, commissione bonifico | 1848,50 |\n\n**Le entrate entrano nei totali.** Come hai chiesto, il programma somma tutti gli importi, quindi lo stipendio (+1850) finisce in `altro` e quel totale risulta positivo. Se vuoi contare solo le uscite, basta una riga: dimmelo e la aggiungo.\n\n**Per farlo girare ogni mese ti serve una chiave API di Anthropic.** Nella prova non c'era nessuna chiave, quindi le risposte sono arrivate dal tuo Claude Code. Va bene per provarlo, ma per usarlo regolarmente le regole di Anthropic chiedono la chiave. Impostala con `export ANTHROPIC_API_KEY=...` prima di `python programma.py`; il programma la usa da solo, senza modifiche.\n\nCome funziona:\n- Ogni movimento viene inviato a Claude Haiku, il modello più economico, che può rispondere solo con una delle cinque categorie. Nel programma ci sono esempi per ogni categoria (supermercati, pedaggi, bollette, streaming…).\n- L'importo con la virgola viene convertito in numero, anche nella forma `1.234,56`. I totali sono arrovondati al centesimo.\n- Le righe vuote vengono saltate. Una riga con l'importo non leggibile viene segnalata a schermo e lasciata fuori dal risultato, così il programma non si blocca. Se una descrizione contiene un punto e virgola resta intera.\n\nAccanto a `programma.py` c'è `programma.tokyn`: è il sorgente da cui ho generato il Python con il compilatore della skill tokyn. Se vuoi cambiare qualcosa, per esempio le categorie, conviene modificare il `.tokyn` e rigenerare il file.",
+ "controllo": {
+  "ok": true,
+  "punti": 3,
+  "massimo": 3,
+  "dettagli": [
+   "8 movimenti nell'ordine del file con data, descrizione e importo giusti: True",
+   "categorie ammesse e giuste: True (8 su 8: ['spesa alimentare', 'trasporti', 'casa', 'svago', 'spesa alimentare', 'trasporti', 'casa', 'altro'])",
+   "totali arrotondati al centesimo e coerenti con le categorie assegnate: True (uguali ai totali attesi: True; {'spesa alimentare': -85.5, 'trasporti': -51.8, 'casa': -728.45, 'svago': -19.0, 'altro': -12.8})"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.001306,
+   "token_output": 484,
+   "chiamate": 8,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

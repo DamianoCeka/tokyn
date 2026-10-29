@@ -1,0 +1,81 @@
+{
+ "prova": "opus/scadenze/agent-sdk/r3",
+ "cartella": "e1dbf85930",
+ "modello": "opus",
+ "compito": "scadenze",
+ "condizione": "agent-sdk",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2893632,
+ "costo_usd_telemetria": 0.289363,
+ "token_output": 6137,
+ "token_input": 14,
+ "token_cache_scritti": 18073,
+ "token_cache_letti": 109916,
+ "prove_del_programma": {
+  "costo_usd": 0.247523,
+  "token_output": 9859,
+  "chiamate": 16,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 9,
+ "secondi": 97.0,
+ "secondi_api": 51.9,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Bash": 5,
+  "Write": 1,
+  "Edit": 2
+ },
+ "skill": [],
+ "programma_consegnato": true,
+ "righe_programma": 142,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "l servizio e la data e chiude con «Cordiali saluti». Ecco un oggetto generato, per esempio: «Promemoria: il contratto di Assistenza tecnica scade il 12 novembre 2026». Bastano circa 8 secondi in tutto, perché le email vengono scritte in parallelo.\n\n**Altre prove fatte:**\n- **Scadenza il giorno stesso:** con `2026-11-12` Ottica Ferri risulta con `giorni_mancanti: 0` e l'oggetto dice «scade oggi».\n- **Limite dei 30 giorni:** con `2026-11-01` la scadenza del 1º dicembre (30 giorni dopo) è inclusa. Con `2026-10-31` la stessa scadenza (31 giorni dopo) è esclusa.\n- **Nessun contratto in scadenza:** scrive `{\"in_scadenza\": []}` senza chiamare Claude.\n- **Argomento sbagliato:** se la data manca o non è valida, mostra un messaggio d'errore e si ferma.\n\n**Come funziona:**\n- Claude risponde in un formato JSON fisso con `oggetto` e `testo`, e non ha accesso a nessuno strumento.\n- La data gli arriva già scritta in italiano (per esempio «1º dicembre»), così non può sbagliarla.\n- Il programma controlla che il testo contenga davvero il nome del cliente e il servizio. Se non li contiene, chiede a Claude di riscrivere l'email, fino a 3 tentativi; se fallisce ancora, si ferma con un errore invece di salvare un'email sbagliata.\n- Le righe del CSV con una scadenza non valida vengono saltate con un avviso. A parità di scadenza, i contratti sono ordinati per cliente.\n\nLa colonna `email` viene letta ma non finisce nel risultato, come nel vostro esempio. Il programma prepara le email ma non le invia.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "esattamente i 4 contratti in scadenza: True (['Panificio Russo', 'Farmacia Conti', 'Hotel Bellavista', 'Ferramenta Gallo Snc'])",
+   "scadenze come nel file e in ordine di scadenza: True (['2026-12-15', '2026-12-28', '2027-01-06', '2027-01-14'])",
+   "giorni_mancanti giusti: True ([0, 13, 22, 30])",
+   "email con oggetto e testo che nominano cliente e servizio: True",
+   "email scritte una per una (testi diversi anche senza nomi, servizi e date): True"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.065013,
+   "token_output": 2876,
+   "chiamate": 4,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}
