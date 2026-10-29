@@ -73,7 +73,7 @@ Condizioni uguali per tutti:
 - le skill integrate di Claude Code, per esempio `claude-api`.
 
 Ogni sessione è nuova e gira in una cartella dal nome neutro che contiene solo i dati del compito, con una `/tmp`
-tutta sua. Il plugin Tokyn è quello del commit da cui partono le prove; la sua impronta è in
+tutta sua. Il plugin Tokyn è quello di un commit preciso, preso con `git archive`; il commit e l'impronta sono in
 `risultati/versioni.json` e in ogni prova.
 
 ## Ripetizioni, modelli, ordine
@@ -122,12 +122,19 @@ Lo script è [`analizza.py`](analizza.py).
   Le sessioni concluse non si rifanno e non si scartano, anche se il programma è sbagliato o manca.
 - Se dopo le prove si scopre un errore in un controllo, si corregge il controllo e si rifanno i controlli di tutte le
   prove di quel compito (non le sessioni). La correzione si dichiara nei risultati.
-- Una prova pilota (compito `recensioni`, Sonnet) è servita a verificare lo script e non entra nei risultati. Ha
-  portato a tre cambiamenti fatti prima di cominciare:
+- Le prove pilota non entrano nei risultati. Sono servite a verificare lo script e i controlli: prima sul compito
+  `recensioni`, poi una sessione per condizione su tutti i compiti, con Sonnet. Hanno portato a questi cambiamenti, fatti
+  prima di cominciare:
   - una `/tmp` privata per ogni sessione;
   - la misura dei costi delle prove con la telemetria, e lo script che la fa arrivare ai programmi provati;
   - una riga nella Skill di Tokyn: il sorgente `.tokyn` va scritto nella cartella del progetto. In una sessione
     Claude l'aveva scritto in `/tmp`, e l'utente non se lo sarebbe ritrovato.
+  - Le correzioni ai controlli dei compiti emerse dalla pilota, se ce ne sono, sono nella storia del repository.
+- Altri cambiamenti fatti a Tokyn prima delle prove, non dovuti alla pilota ma a una revisione delle regole di
+  Anthropic: il runtime avvisa una volta quando gli agenti usano Claude Code invece della chiave API; la Skill descrive
+  in modo più preciso quando usarla e ricorda che Claude Code serve a provare i programmi.
+- Il plugin misurato viene dal commit passato a `esegui.py --commit`, scritto in `risultati/versioni.json`. Le
+  modifiche fatte a Tokyn mentre le prove girano (per esempio i messaggi in inglese) non entrano nelle prove.
 
 ## Limiti noti
 
