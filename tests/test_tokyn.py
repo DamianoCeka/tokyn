@@ -800,3 +800,15 @@ def test_backend_choice(monkeypatch, tmp_path):
     assert rt._backend() == "api"
     monkeypatch.setenv("TOKYN_BACKEND", "claude-code")
     assert rt._backend() == "claude-code"
+
+
+def test_claude_code_chosen_automatically_warns_once(fake_claude, monkeypatch, capsys):
+    import tokyn.runtime as rt
+    monkeypatch.setattr(rt, "_AVVISO_CLAUDE_CODE", [])
+    monkeypatch.setenv("TOKYN_BACKEND", "claude-code")  # scelto da chi lo usa: nessun avviso
+    rt._backend()
+    assert capsys.readouterr().err == ""
+    monkeypatch.delenv("TOKYN_BACKEND")
+    assert rt._backend() == "claude-code" and rt._backend() == "claude-code"
+    err = capsys.readouterr().err
+    assert err.count("Tokyn: senza chiave API") == 1 and "legal-and-compliance" in err

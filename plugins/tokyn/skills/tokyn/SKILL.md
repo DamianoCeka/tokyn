@@ -1,6 +1,6 @@
 ---
 name: tokyn
-description: Scrive in Tokyn (file .tokyn) i programmi con agenti IA, chatbot, estrazioni o classificazioni di testi con Claude, che richiedono molti meno token del Python equivalente; li controlla e li prova con il compilatore incluso e, se serve, li trasforma in un file Python. Usala quando l'utente chiede un programma o uno script con agenti IA o automazioni con Claude, anche in Python, quando nomina Tokyn, o quando nel progetto ci sono file .tokyn. Non usarla se l'utente chiede esplicitamente un altro framework (SDK Anthropic, LangChain…) o se il codice va in un progetto scritto in un linguaggio diverso da Python.
+description: Scrive in Tokyn (file .tokyn) i programmi che usano Claude (agenti IA, chatbot, estrazione o classificazione di testi), con molti meno token del Python equivalente; li controlla e li prova con il compilatore incluso e, se l'utente vuole Python, gli consegna il file Python generato dal compilatore. Usala quando l'utente chiede un programma o uno script che usa Claude o agenti IA, anche in Python, quando nomina Tokyn, o quando nel progetto ci sono file .tokyn. Non usarla per programmi senza IA, se l'utente chiede esplicitamente un altro framework (SDK Anthropic, LangChain…) o se il codice va in un progetto scritto in un linguaggio diverso da Python.
 ---
 
 # Tokyn
@@ -12,8 +12,8 @@ un terzo dei token del Python. Tutto quello che serve per scriverlo è in questo
 
 ## Procedura
 
-1. Scrivi il programma in un file `.tokyn` nella cartella del progetto, anche se l'utente vuole Python: il Python
-   si genera al passo 4, e il `.tokyn` resta accanto come sorgente da modificare.
+1. Scrivi il programma in un file `.tokyn` nella cartella del progetto. Se l'utente vuole Python lo riceve al
+   passo 4, generato dal compilatore; il `.tokyn` resta accanto come sorgente da modificare.
 2. Controlla e prova gratis, con risposte finte: `python ${CLAUDE_SKILL_DIR}/tokyn_cli.py run file.tokyn --mock`
    - Se ci sono errori, li elenca con riga, colonna e correzione (`→`) e non esegue nulla.
      Correggi con modifiche puntuali, senza riscrivere il file, e ripeti finché gira.
@@ -24,7 +24,8 @@ un terzo dei token del Python. Tutto quello che serve per scriverlo è in questo
 3. Quando serve vedere risposte vere: `python ${CLAUDE_SKILL_DIR}/tokyn_cli.py run file.tokyn --usage`.
    Senza `ANTHROPIC_API_KEY` gli agenti rispondono con il Claude Code dell'utente (`claude -p`: nessuna chiave,
    qualche secondo per ogni `ask`); con la chiave usano l'API. Se il programma fa molte chiamate, avvisa l'utente
-   prima e lancialo in background. `--usage` mostra alla fine i token spesi.
+   prima e lancialo in background. `--usage` mostra alla fine i token spesi. Per le regole di Anthropic Claude Code
+   serve a provare: un programma che gira da solo o per altre persone ha bisogno della chiave API.
 4. Se l'utente vuole Python: `python ${CLAUDE_SKILL_DIR}/tokyn_cli.py build file.tokyn --standalone -o file.py`.
    Il file non dipende da Tokyn e funziona con la chiave API o con Claude Code. Non scrivere il Python a mano:
    costerebbe i token che Tokyn fa risparmiare.

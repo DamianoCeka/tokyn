@@ -595,14 +595,26 @@ for line in sys.stdin:
 """
 
 
+_AVVISO_CLAUDE_CODE = []
+
+
 def _backend() -> str:
-    """Chi risponde agli agenti: l'API se c'è la chiave, altrimenti Claude Code se è installato."""
+    """Chi risponde agli agenti: l'API se c'è la chiave, altrimenti Claude Code se è installato. Se Claude Code è
+    scelto da solo (non con TOKYN_BACKEND), avvisa una volta: per le regole di Anthropic l'abbonamento serve a usare
+    Claude Code di persona, quindi va bene per provare un programma, non per farlo girare da solo o per altri."""
     choice = os.environ.get("TOKYN_BACKEND", "").strip().lower()
     if choice in ("api", "claude-code"):
         return choice
     if os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN"):
         return "api"
-    return "claude-code" if shutil.which("claude") else "api"
+    if not shutil.which("claude"):
+        return "api"
+    if not _AVVISO_CLAUDE_CODE:
+        _AVVISO_CLAUDE_CODE.append(True)
+        print("Tokyn: senza chiave API gli agenti rispondono con il tuo Claude Code. Va bene per provare il programma; "
+              "se deve girare da solo o per altre persone serve una chiave dell'API di Anthropic "
+              "(https://code.claude.com/docs/en/legal-and-compliance).", file=sys.stderr)
+    return "claude-code"
 
 
 class _ToolServer:
