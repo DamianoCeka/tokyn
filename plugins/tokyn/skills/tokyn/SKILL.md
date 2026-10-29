@@ -20,7 +20,6 @@ un terzo dei token del Python. Tutto quello che serve per scriverlo è in questo
    - Se il programma usa `input()`, passa le risposte una per riga:
      `printf 'ciao\nesci\n' | python ${CLAUDE_SKILL_DIR}/tokyn_cli.py run file.tokyn --mock`
    - In mock gli agenti non chiamano gli strumenti; `write_file`, `http_post` ecc. invece vengono eseguiti davvero.
-   - Se manca `lark`: `pip install lark` (con `--break-system-packages` se pip lo chiede).
 3. Quando serve vedere risposte vere: `python ${CLAUDE_SKILL_DIR}/tokyn_cli.py run file.tokyn --usage`.
    Senza `ANTHROPIC_API_KEY` gli agenti rispondono con il Claude Code dell'utente (`claude -p`: nessuna chiave,
    qualche secondo per ogni `ask`); con la chiave usano l'API. Se il programma fa molte chiamate, avvisa l'utente

@@ -891,9 +891,35 @@ def test_plugin_launcher_speaks_its_language(tmp_path, plugin, own, other):
         assert word[own] in _cli([], dict(env, LANG=locale[lang]), cmd=cmd).stdout
     # ...a meno che non si imposti TOKYN_LANG
     assert word[other] in _cli([], dict(env, TOKYN_LANG=other, LANG=locale[own]), cmd=cmd).stdout
-    # anche il messaggio del lanciatore quando manca lark
-    r = _cli([], {"PYTHONPATH": "", "LANG": locale[other]}, cmd=cmd)
+    # anche il messaggio del lanciatore quando mancano sia lark sia la sua copia nella Skill
+    import shutil
+    skill = tmp_path / "skill"
+    shutil.copytree(launcher.parent, skill, ignore=shutil.ignore_patterns("vendor", "__pycache__"))
+    r = _cli([], {"PYTHONPATH": "", "LANG": locale[other]}, cmd=[sys.executable, "-I", "-S", str(skill / "tokyn_cli.py"), "check", str(f)])
     assert r.returncode == 1 and {"it": "manca la libreria lark", "en": "the lark library is missing"}[own] in r.stderr
+
+
+@pytest.mark.parametrize("plugin", ["tokyn", "tokyn-en"])
+def test_plugin_launcher_works_without_lark_installed(tmp_path, plugin):
+    """Senza lark installato il lanciatore usa la copia inclusa nella Skill: niente `pip install`."""
+    skill = ROOT / "plugins" / plugin / "skills" / "tokyn"
+    # -I -S: niente PYTHONPATH né site-packages, quindi Python vede solo la libreria standard
+    hidden = subprocess.run([sys.executable, "-I", "-S", "-c", "import lark"], capture_output=True, text=True)
+    if hidden.returncode == 0:
+        pytest.skip("lark è nella libreria standard di questo Python: non si può nascondere")
+    cmd = [sys.executable, "-I", "-S", str(skill / "tokyn_cli.py")]
+    (tmp_path / "a.tokyn").write_text('import lark\n\nmain:\n    print(lark.__file__)\n    print("ciao " + input())\n',
+                                      encoding="utf-8")
+    r = subprocess.run(cmd + ["check", "a.tokyn"], capture_output=True, text=True, cwd=tmp_path)
+    assert r.returncode == 0 and "ok" in r.stdout, r.stdout + r.stderr
+    r = subprocess.run(cmd + ["run", "a.tokyn", "--mock"], input="mondo\n", capture_output=True, text=True, cwd=tmp_path)
+    assert r.returncode == 0, r.stderr
+    used, greeting = r.stdout.strip().splitlines()
+    assert Path(used).resolve().is_relative_to((skill / "vendor" / "lark").resolve()) and greeting == "ciao mondo"
+    # la copia di lark ha la sua licenza, e nessun file del plugin supera i 256 KiB
+    assert "Permission is hereby granted" in (skill / "vendor" / "lark" / "LICENSE").read_text(encoding="utf-8")
+    big = [str(p) for p in (ROOT / "plugins" / plugin).rglob("*") if p.is_file() and p.stat().st_size >= 256 * 1024]
+    assert not big, big
 
 
 def test_build_skill_copies_the_english_spec():

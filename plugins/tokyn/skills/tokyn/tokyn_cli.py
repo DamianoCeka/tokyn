@@ -10,7 +10,8 @@ from pathlib import Path
 # scripts/build_skill.py la cambia nella copia per il plugin inglese.
 LINGUA = "it"
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+SKILL = Path(__file__).resolve().parent
+sys.path.insert(0, str(SKILL))
 
 from tokyn import lingua  # noqa: E402
 
@@ -18,11 +19,17 @@ lingua.imposta_plugin(LINGUA)
 
 try:
     import lark  # noqa: F401
-except ImportError:
-    sys.exit(lingua.tr("manca la libreria lark: installala con `pip install lark anthropic` "
-                       "(aggiungi --break-system-packages se pip lo chiede)",
-                       "the lark library is missing: install it with `pip install lark anthropic` "
-                       "(add --break-system-packages if pip asks for it)"))
+except ImportError:  # lark non è installato: si usa la copia inclusa nella Skill (vendor/lark, licenza MIT)
+    for nome in [m for m in sys.modules if m == "lark" or m.startswith("lark.")]:
+        del sys.modules[nome]  # i pezzi già caricati di un lark installato ma rotto
+    sys.path.insert(1, str(SKILL / "vendor"))
+    try:
+        import lark  # noqa: F401
+    except ImportError:
+        sys.exit(lingua.tr("manca la libreria lark e nella Skill non c'è la sua copia (cartella vendor): "
+                           "reinstalla il plugin oppure installa lark con `pip install lark`",
+                           "the lark library is missing and so is its copy in the Skill (the vendor folder): "
+                           "reinstall the plugin or install lark with `pip install lark`"))
 
 from tokyn.cli import main  # noqa: E402
 

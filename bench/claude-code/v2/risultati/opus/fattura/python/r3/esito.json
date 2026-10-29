@@ -1,0 +1,74 @@
+{
+ "prova": "opus/fattura/python/r3",
+ "cartella": "64c40f82c0",
+ "modello": "opus",
+ "compito": "fattura",
+ "condizione": "python",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.6717903999999999,
+ "costo_usd_telemetria": 0.67179,
+ "token_output": 5817,
+ "token_input": 18,
+ "token_cache_scritti": 58620,
+ "token_cache_letti": 432092,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 12,
+ "secondi": 63.7,
+ "secondi_api": 54.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Grep": 2,
+  "Read": 1,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 106,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "ua fattura: dichiarato € 226,40, calcolato € 226,40, risulta corretto. Il `risultato.json` ha esattamente il formato che mi ha chiesto.\n  - un totale sbagliato di un centesimo (0,51 invece di 0,50): risulta non corretto.\n  - importi come 3 × 0,10 + 0,20, dove i calcoli normali in Python danno un piccolo errore: il risultato è comunque giusto, perché i conti sono fatti con importi esatti al centesimo.\n- **Parametri della richiesta:** la versione installata della libreria di Anthropic li accetta tutti.\n\n**Come funziona:**\n- Manda il testo di `fattura.txt` a Claude Opus 5.5 e gli chiede di rispondere seguendo uno schema JSON fisso: fornitore, data AAAA-MM-GG, righe in ordine, totale dichiarato. Gli chiedo di riportare gli importi così come sono scritti, senza correggerli, e di trattare il testo della fattura solo come dati da leggere.\n- Il programma controlla che la data sia valida e somma quantità × prezzo per ogni riga. Arrotonda al centesimo e confronta il risultato con il totale dichiarato.\n- Scrive `risultato.json` e stampa una riga con l'esito.\n- Ho attivato il ripiego automatico (`fallbacks`): se Claude Opus 5.5 rifiuta la richiesta, risponde un altro modello. Se preferisce non averlo, si toglie con due righe.\n\n**Per provarlo:**\n```\nexport ANTHROPIC_API_KEY=...   # oppure: ant auth login\npython programma.py\n```\nCon questa fattura dovrebbe dire che il totale è corretto: 51,00 + 78,40 + 12,00 + 85,00 = 226,40. Se mi dà una chiave in questa sessione, faccio io la prova vera.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 6,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

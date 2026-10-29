@@ -21,7 +21,6 @@ one comes with the fix (`→`).
    - If the program uses `input()`, pass the answers one per line:
      `printf 'hello\nquit\n' | python ${CLAUDE_SKILL_DIR}/tokyn_cli.py run file.tokyn --mock`
    - In mock, agents do not call tools; `write_file`, `http_post` etc. do run for real.
-   - If `lark` is missing: `pip install lark` (with `--break-system-packages` if pip asks).
 3. When you need real answers: `python ${CLAUDE_SKILL_DIR}/tokyn_cli.py run file.tokyn --usage`.
    Without `ANTHROPIC_API_KEY` the agents answer through the user's Claude Code (`claude -p`: no key, a few
    seconds per `ask`); with the key they use the API. If the program makes many calls, tell the user first and run

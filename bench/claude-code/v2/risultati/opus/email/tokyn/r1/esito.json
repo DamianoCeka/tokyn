@@ -1,0 +1,82 @@
+{
+ "prova": "opus/email/tokyn/r1",
+ "cartella": "35aaf478ad",
+ "modello": "opus",
+ "compito": "email",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.192183,
+ "costo_usd_telemetria": 0.192183,
+ "token_output": 2283,
+ "token_input": 12,
+ "token_cache_scritti": 16118,
+ "token_cache_letti": 87655,
+ "prove_del_programma": {
+  "costo_usd": 0.003247,
+  "token_output": 2718,
+  "chiamate": 15,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 61.4,
+ "secondi_api": 22.5,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 832,
+ "righe_tokyn": 29,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "eiere) | no |\n| msg_002.txt | reclamo (ordine 4471 mai arrivato, regalo per domani) | **sì** |\n| msg_003.txt | informazioni (lavastoviglie e microonde) | no |\n| msg_004.txt | spam (offerta SEO che chiede i dati della carta) | no |\n| msg_005.txt | reclamo (vaso arrivato scheggiato) | no |\n\nAl primo giro alcuni riassunti erano frasi molto lunghe. Ho chiesto un massimo di circa 25 parole e ora sono brevi come nel tuo esempio. Un'email è urgente se il cliente ha una scadenza vicina, un problema grave o chiede una risposta immediata. Lo spam non è mai urgente. Se vuoi un criterio diverso basta cambiare quella regola.\n\nCome funziona:\n- **Ordine dei file:** legge i `.txt` di `email/` in ordine di nome.\n- **Modello:** manda ogni email a Claude Haiku, adatto a classificare testi semplici e poco costoso.\n- **Controllo delle risposte:** la categoria può essere solo uno dei quattro valori previsti, e le risposte vengono controllate prima di finire nel file.\n\nAltre due cose da sapere:\n- **Chiave API:** nella prova le risposte sono arrivate tramite il tuo Claude Code, perché qui non c'era una chiave API. Se il programma deve girare da solo o lo usano altre persone, imposta la variabile `ANTHROPIC_API_KEY`. Il costo stimato a prezzi API è circa un decimo di centesimo per 5 email.\n- **File sorgente:** accanto c'è `programma.tokyn`, la versione scritta con la skill tokyn da cui è stato generato `programma.py`. Se vuoi modificare il programma conviene cambiare quel file e rigenerare il Python.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 email in ordine di nome del file: True (['msg_201.txt', 'msg_202.txt', 'msg_203.txt', 'msg_204.txt', 'msg_205.txt', 'msg_206.txt'])",
+   "categorie ammesse e giuste: True (6 su 6: ['ordine', 'reclamo', 'informazioni', 'spam', 'ordine', 'reclamo'])",
+   "urgente booleano e giusto: True (6 su 6: [False, True, False, False, True, False])",
+   "riassunti brevi e sull'argomento: True (brevi: True, sull'argomento: 6 su 6)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.001453,
+   "token_output": 975,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}
