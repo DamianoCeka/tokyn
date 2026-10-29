@@ -1,0 +1,10 @@
+[
+  {"codice": "CAN-01", "nome": "Risme di carta A4", "quantita": 120, "prezzo_unitario": 4.9, "scorta_minima": 50},
+  {"codice": "CAN-02", "nome": "Toner per stampante laser", "quantita": 3, "prezzo_unitario": 78.5, "scorta_minima": 4},
+  {"codice": "CAN-03", "nome": "Buste imbottite", "quantita": 260, "prezzo_unitario": 0.85, "scorta_minima": 100},
+  {"codice": "CAN-04", "nome": "Evidenziatori gialli", "quantita": 18, "prezzo_unitario": 1.2, "scorta_minima": 30},
+  {"codice": "CAN-05", "nome": "Cucitrice da tavolo", "quantita": 9, "prezzo_unitario": 11.4, "scorta_minima": 3},
+  {"codice": "CAN-06", "nome": "Raccoglitori ad anelli", "quantita": 45, "prezzo_unitario": 3.1, "scorta_minima": 20},
+  {"codice": "CAN-07", "nome": "Foglietti adesivi colorati", "quantita": 70, "prezzo_unitario": 2.35, "scorta_minima": 40},
+  {"codice": "CAN-08", "nome": "Penne a sfera blu", "quantita": 150, "prezzo_unitario": 0.45, "scorta_minima": 200}
+]

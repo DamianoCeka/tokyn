@@ -1,0 +1,4 @@
+Quanti martelli abbiamo in magazzino?
+Quanto vale in tutto la merce che abbiamo in magazzino?
+Quali articoli sono sotto la scorta minima?
+Quanti pezzi dobbiamo ordinare in totale per riportare alla scorta minima gli articoli che sono sotto?

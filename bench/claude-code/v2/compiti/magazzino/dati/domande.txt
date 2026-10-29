@@ -1,0 +1,5 @@
+Quante risme di carta A4 abbiamo?
+Qual è il valore totale del magazzino?
+Quali prodotti sono sotto la scorta minima?
+Quanto vale la scorta di toner che abbiamo?
+Quanti evidenziatori mancano per arrivare alla scorta minima?

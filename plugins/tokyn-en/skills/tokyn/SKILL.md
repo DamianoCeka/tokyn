@@ -13,7 +13,8 @@ each one comes with the fix (`→`).
 
 ## Procedure
 
-1. Write the program in a `.tokyn` file, even if the user wants Python: the Python is generated at step 4.
+1. Write the program in a `.tokyn` file in the project folder, even if the user wants Python: the Python is
+   generated at step 4, and the `.tokyn` file stays next to it as the source to edit.
 2. Check and try it for free, with fake answers: `python ${CLAUDE_SKILL_DIR}/tokyn_cli.py run file.tokyn --mock`
    - If there are errors, it lists them with line, column and fix (`→`) and runs nothing.
      Fix them with targeted edits, without rewriting the file, and repeat until it runs.

@@ -12,7 +12,8 @@ un terzo dei token del Python. Tutto quello che serve per scriverlo è in questo
 
 ## Procedura
 
-1. Scrivi il programma in un file `.tokyn`, anche se l'utente vuole Python: il Python si genera al passo 4.
+1. Scrivi il programma in un file `.tokyn` nella cartella del progetto, anche se l'utente vuole Python: il Python
+   si genera al passo 4, e il `.tokyn` resta accanto come sorgente da modificare.
 2. Controlla e prova gratis, con risposte finte: `python ${CLAUDE_SKILL_DIR}/tokyn_cli.py run file.tokyn --mock`
    - Se ci sono errori, li elenca con riga, colonna e correzione (`→`) e non esegue nulla.
      Correggi con modifiche puntuali, senza riscrivere il file, e ripeti finché gira.

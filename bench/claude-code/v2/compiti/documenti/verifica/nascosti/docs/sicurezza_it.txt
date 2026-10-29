@@ -1,0 +1,7 @@
+POLITICA DI SICUREZZA INFORMATICA
+
+Password: almeno 12 caratteri, diverse per ogni servizio, da cambiare ogni 90 giorni. Il sistema avvisa una
+settimana prima della scadenza.
+Le chiavette USB personali non si possono collegare ai computer aziendali.
+Chi riceve un'email sospetta non deve cliccare sui link e deve segnalarla a sicurezza@azienda.example.
+In caso di furto o smarrimento del portatile bisogna avvisare subito l'help desk.
