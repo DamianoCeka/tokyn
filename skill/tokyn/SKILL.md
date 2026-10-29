@@ -32,7 +32,7 @@ con `ANTHROPIC_API_KEY` impostata.
 ## Riferimento del linguaggio
 
 ```
-import math                                    # qualsiasi libreria Python: import x / from x import y
+import math                                    # librerie Python
 SOGLIA = 3                                     # costante globale: non si può riassegnare
 
 type Riga:                                     # dati strutturati; tutti i campi sono obbligatori
@@ -40,8 +40,9 @@ type Riga:                                     # dati strutturati; tutti i campi
     prezzo: float "prezzo unitario in euro"    # stringa dopo il tipo = descrizione per l'IA
 
 type Ticket:
-    categoria: "tecnico" | "commerciale" | "altro"   # solo uno di questi valori
+    categoria: "tecnico" | "commerciale" | "altro" "chi deve gestirlo"   # solo uno di questi valori
     urgente: bool
+    tag: list[str]
     righe: list[Riga]                          # tipi: str int float bool dict list[T] o un altro type
 
 def cerca_faq(domanda: str) -> str:
@@ -65,11 +66,13 @@ def per_prezzo(r: Riga) -> float:
     return r.prezzo
 
 main:                                          # punto di partenza, uno solo
+    conteggi = {"tecnico": 0, "commerciale": 0, "altro": 0}
     for turno in range(20):                    # ciclo di chat: for + break
         testo = input("Tu: ")
         if testo.strip().lower() == "esci":
             break
         t = Supporto.ask(testo)                # un solo argomento; restituisce str o il type di output
+        conteggi[t.categoria] += 1
         if t.categoria == "tecnico" and t.urgente:
             righe = sorted(t.righe, key=per_prezzo, reverse=True)   # ordinare per campo: def + key=
             for i, r in enumerate(righe[:SOGLIA]):
@@ -77,44 +80,49 @@ main:                                          # punto di partenza, uno solo
         elif t.categoria not in ["commerciale"]:
             print(json_dump(t))
     Supporto.reset()                           # cancella la memoria
-    nuovo = Ticket(categoria="altro", urgente=False, righe=[])  # costruttore con i nomi dei campi
+    nuovo = Ticket(categoria="altro", urgente=False, tag=[], righe=[])  # costruttore con i nomi dei campi
     nuovo.urgente = True
 ```
 
-- Istruzioni: `=` (anche `d["k"] = v`, `lista[i] = v`, `t.campo = v`), `+= -= *= /= //= %=`, `if`/`elif`/`else`,
-  `for x in ...` (anche `for k, v in d.items()`), `break`, `continue`, `return` (in `main` termina il programma), `pass`.
+- Istruzioni: `=` e `+= -= *= /= //= %=` (anche su `d["k"]`, `lista[i]`, `t.campo`), `if`/`elif`/`else`,
+  `for x in ...` (anche `for k, v in d.items()`), `break`, `continue`, `return` (in `main` termina il programma),
+  `pass`. Le variabili valgono in tutta la funzione, come in Python.
 - Espressioni come in Python: `+ - * / // % **`, confronti anche concatenati (`0 <= x < 3`), `and or not in`,
-  numeri `1_000` e `1e-9`, escape (`"\n"`), `r"\d+"`, f-string con formati (`{x:.2f}`), indici `x[-1]`, slice
-  `x[:200]` e `x[::-1]`, liste e dizionari anche su più righe. Tutti i metodi di str/list/dict e tutti i moduli
+  numeri `1_000` e `1e-9`, escape (`"\n"`), `r"\d+"`, f-string con qualsiasi espressione e formato (`{x:.2f}`),
+  indici `x[-1]`, slice `x[:200]` e `x[::-1]`; dentro parentesi si può andare a capo. Tutti i metodi di str/list/dict e tutti i moduli
   Python (`import os`, `from x import y as z`, `os.listdir(cartella)`). Nomi anche con accenti.
 - Funzioni già presenti: `print input len str int float bool list dict range enumerate zip sum min max sorted
   reversed abs round any all`, `write_file(p, testo)`, `append_file(p, testo)`, `sleep(s)` e:
   - `read_file(p, default)`, `http_get(url, default)`, `http_post(url, dati, default)` → testo;
-    `json_parse(testo, default)` → liste e dizionari (non `type`). Se qualcosa va storto (file mancante, rete,
-    indirizzo o JSON non validi) restituiscono `default`; senza `default` il programma si ferma con un errore chiaro.
-  - `json_dump(valore)` → JSON indentato, anche di `type` e liste di `type`. `now()` → `"2026-10-28T14:30:00"`
-    (la data è `now()[:10]`). `env(nome, default)`. A fine input `input()` ferma il programma: per leggere più
-    righe usa un terminatore (es. riga vuota). I percorsi sono relativi alla cartella da cui si esegue.
+    `json_parse(testo, default)` → liste e dizionari (non `type`); `env(nome, default)`. Se qualcosa va storto
+    (file mancante, rete, risposta HTTP 4xx/5xx, indirizzo o JSON non validi, variabile assente) restituiscono
+    `default`; senza `default` il programma si ferma con un errore chiaro. `http_post` invia `dati` come JSON.
+  - `json_dump(valore)` → JSON indentato con gli accenti, anche di `type` e liste di `type`. `now()` →
+    `"2026-10-28T14:30:00"` (la data è `now()[:10]`). A fine input `input()` ferma il programma con un errore:
+    per leggere più righe usa un terminatore (es. riga vuota). I percorsi sono relativi alla cartella da cui si esegue.
 
 ## Comportamento
 
 - Ordine: `type`, `def` e `agent` vanno in qualsiasi ordine. Costanti e valori predefiniti dei parametri si
-  calcolano subito, dall'alto in basso: usano solo costanti e funzioni scritte prima. Una costante può chiamare
-  funzioni (`ANNUNCIO = read_file("a.txt", "")`) e fare da `instructions`; non si riassegna, ma liste e dizionari
-  costanti si modificano (`LISTA.append(x)`).
-- `def`: tipi e `->` facoltativi, tranne negli strumenti (tipo di ogni parametro e descrizione).
+  calcolano subito, dall'alto in basso: usano solo costanti e funzioni scritte prima, mai agenti (neanche tramite
+  una funzione). Una costante è qualsiasi espressione (`ANNUNCIO = "Ruolo: " + read_file("a.txt", "")`) e può
+  fare da `instructions`; non si riassegna, ma liste e dizionari costanti si modificano (`LISTA.append(x)`).
+- `def`: tipi e `->` facoltativi; negli strumenti servono il tipo di ogni parametro e la descrizione.
 - Tipi in campi, parametri e ritorni: `str int float bool dict list list[T]` e i `type`; la descrizione va dopo
   qualsiasi campo. Il runtime controlla i campi dei `type`, l'`output` degli agenti e gli argomenti che l'IA passa
   agli strumenti (un intero va bene per `float`); non controlla le chiamate del tuo codice né limiti come "da 1 a 5":
   scrivili nella descrizione e, se servono, verificali con un `if`.
 - `output` è il nome di un solo `type`: per una lista usa un type contenitore con un campo `list[Voce]`.
-- Uno strumento può restituire qualsiasi valore (l'IA lo riceve come testo o JSON). Se va in errore, l'errore
-  torna all'IA, che può riprovare. Un agente usato come strumento riceve un testo e restituisce la sua risposta
-  (JSON se ha `output`); chi lo usa lo vede descritto dalle sue `instructions`.
-- `memory` dura per tutta l'esecuzione. Ogni chiamata all'IA è un passaggio: `max_steps` (default 10) deve bastare
-  per gli strumenti più la risposta finale, altrimenti il programma si ferma con un errore.
-- In mock: testi `"esempio <campo>"`, numeri 1 e 1.0, liste di 2 elementi; valori `"a" | "b"` e bool cambiano a
-  ogni `ask` (prima il primo valore e True). Senza `output` la risposta è `"[mock Nome] risposta a: ..."`.
+- Uno strumento può restituire qualsiasi valore: l'IA lo riceve come testo o JSON (date e simili diventano testo).
+  Se va in errore, l'errore torna all'IA, che può riprovare. Un agente usato come strumento riceve un testo e
+  restituisce la sua risposta (JSON se ha `output`); chi lo usa vede i primi 300 caratteri delle sue
+  `instructions`, quindi scrivi all'inizio a cosa serve.
+- `memory` ricorda domande e risposte finali (non i risultati degli strumenti) per tutta l'esecuzione. Ogni
+  chiamata all'IA è un passaggio: `max_steps` (default 10) deve bastare per gli strumenti più la risposta finale,
+  altrimenti il programma si ferma con un errore (se l'agente fa da strumento, l'errore torna a chi lo usa).
+- In mock: testi `"esempio <campo>"`, numeri 1 e 1.0, dict vuoti, liste di 2 elementi; valori `"a" | "b"` e bool
+  cambiano a ogni `ask` di quell'agente e da un elemento al successivo (si parte dal primo valore e da True).
+  Senza `output` la risposta è `"[mock Nome] risposta a: ..."`.
 - Modelli: `"claude-haiku"` per classificare o estrarre molti testi semplici (costa meno), il default `"claude"`
   per il resto, `"claude-opus"` solo per compiti difficili.
 

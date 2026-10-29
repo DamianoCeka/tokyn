@@ -156,6 +156,22 @@ def test_order_of_constants_functions_and_agents(capsys):
 def test_text_in_triple_quotes_is_not_code():
     src = 'agent A:\n    instructions: """\n        while you wait, try this:\n        def ...\n    """\n'
     assert codes(src) == []
+    # un """ in un commento o in una stringa normale non deve confondere il riconoscimento del testo
+    src = '# le istruzioni vanno tra """\nX = \'"""\'\nagent A:\n    instructions: """\n        del documento\n        def inisci\n    """\n'
+    assert codes(src) == []
+
+
+def test_fstring_hint_only_for_real_fstrings():
+    assert codes('main:\n    d = {"pdf": {"estensione" ".pdf"}}\n') == ["E008"]
+
+
+def test_no_python_warnings_for_escapes_in_text():
+    import warnings
+    src = 'type R:\n    s: str "come \\d+"\n\ndef f(t: str) -> str:\n    """Cerca \\d+."""\n    return t\n'
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        assert check_source(src).ok
+    assert not [w for w in caught if issubclass(w.category, SyntaxWarning)]
 
 
 def test_number_formats(capsys):
@@ -314,6 +330,17 @@ def test_missing_input_explains_how_to_pass_it(capsys, monkeypatch):
     monkeypatch.setattr(sys, "stdin", io.StringIO(""))
     rc, _, err = run('main:\n    x = input("> ")\n    print(x)\n', capsys)
     assert rc == 1 and "test.tokyn:2" in err and "printf" in err
+
+
+def test_tool_results_and_env_defaults(monkeypatch):
+    import datetime
+    import tokyn.runtime as rt
+    fn = rt.tool("quando", "Quando.", {}, rt.T.ANY)(lambda: {"il": datetime.date(2026, 1, 2)})
+    assert rt._call_tool(fn, {}) == '{"il": "2026-01-02"}'
+    monkeypatch.delenv("TOKYN_NON_ESISTE", raising=False)
+    assert rt.env("TOKYN_NON_ESISTE", None) is None
+    with pytest.raises(rt.TokynRuntimeError):
+        rt.env("TOKYN_NON_ESISTE")
 
 
 def test_missing_api_key(capsys, monkeypatch):

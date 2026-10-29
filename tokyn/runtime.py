@@ -251,7 +251,7 @@ def _call_tool(obj, args: dict):
                 converted[p] = convert(args[p], spec, p)
         result = obj(**converted)
     result = to_plain(result)
-    return result if isinstance(result, str) else _json.dumps(result, ensure_ascii=False)
+    return result if isinstance(result, str) else _json.dumps(result, ensure_ascii=False, default=str)
 
 
 # ======================================================================= agenti
@@ -501,12 +501,12 @@ def json_parse(text, default=_NO_DEFAULT):
 
 
 def json_dump(value):
-    return _json.dumps(to_plain(value), ensure_ascii=False, indent=2)
+    return _json.dumps(to_plain(value), ensure_ascii=False, indent=2, default=str)
 
 
-def env(name, default=None):
+def env(name, default=_NO_DEFAULT):
     value = os.environ.get(name, default)
-    if value is None:
+    if value is _NO_DEFAULT:
         raise TokynRuntimeError(f'la variabile d\'ambiente "{name}" non è impostata',
                                 hint=f'Impostala, oppure dai un valore di riserva: env("{name}", "...")')
     return value

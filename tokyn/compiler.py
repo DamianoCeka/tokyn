@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import sys
 import traceback
+import warnings
 from dataclasses import dataclass
 
 from .checker import check
@@ -59,7 +60,9 @@ def run_source(source: str, filename: str = "<tokyn>", mock: bool = False) -> in
     pseudo = f"<tokyn:{filename}>"
     namespace = {"__name__": "__tokyn__", "__file__": filename}
     try:
-        code = compile(compiled.python, pseudo, "exec")
+        with warnings.catch_warnings():  # es. "\d" in una stringa: niente avvisi di Python sul codice generato
+            warnings.simplefilter("ignore", SyntaxWarning)
+            code = compile(compiled.python, pseudo, "exec")
         exec(code, namespace)
         namespace["__tokyn_main__"]()
         return 0
@@ -93,8 +96,8 @@ def translate_exception(err: BaseException) -> tuple[str, str]:
     if isinstance(err, IndexError):
         return "posizione fuori dalla lista", "Controlla la lunghezza con len(lista) prima di leggere un elemento."
     if isinstance(err, EOFError):
-        return ("il programma aspetta un input (input()) ma non ne ha ricevuti",
-                "Per provarlo senza tastiera passa le risposte una per riga, es.: "
+        return ("input() non ha ricevuto una riga: l'input è finito",
+                "Passa una riga per ogni input() che il programma chiede, compresa quella che lo fa terminare, es.: "
                 "printf 'ciao\\nesci\\n' | tokyn run file.tokyn --mock")
     if isinstance(err, ZeroDivisionError):
         return "divisione per zero", ""

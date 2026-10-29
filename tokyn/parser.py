@@ -164,7 +164,7 @@ def _syntax_diagnostic(err: UnexpectedInput, source: str) -> Diagnostic:
 
 def _python_idiom(tok: Token, expected: set, line_text: str) -> tuple[str, str] | None:
     """Riconosce i costrutti Python più comuni che Tokyn non ha e dice cosa scrivere al loro posto."""
-    if re.search(r'f"[^"\n]*\{[^}\n]*"', line_text) or re.search(r"f'[^'\n]*\{[^}\n]*'", line_text):
+    if re.search(r'(?<!\w)f"[^"\n]*\{[^}\n]*"', line_text) or re.search(r"(?<!\w)f'[^'\n]*\{[^}\n]*'", line_text):
         return ("dentro una f-string non si possono usare le stesse virgolette della f-string",
                 "Usa le virgolette dell'altro tipo dentro le graffe, es. f\"{d['chiave']}\".")
     if tok.type == "FOR":
@@ -252,21 +252,48 @@ def _unclosed_bracket(source: str, line: int, column: int) -> str:
     return f"'{pairs[stack[-1]]}'" if stack else ""
 
 
+def _lines_inside_strings(source: str) -> set[int]:
+    """Righe che iniziano dentro una stringa tra virgolette triple: sono testo, non codice."""
+    inside, line, i, quote = set(), 1, 0, None
+    while i < len(source):
+        c = source[i]
+        if c == "\n":
+            line += 1
+            if quote in ('"""', "'''"):
+                inside.add(line)
+            elif quote:  # una stringa normale finisce con la riga
+                quote = None
+            i += 1
+            continue
+        if quote:
+            if c == "\\" and source[i + 1:i + 2] != "\n":
+                i += 2
+                continue
+            if source.startswith(quote, i):
+                i += len(quote)
+                quote = None
+                continue
+        elif c == "#":
+            while i < len(source) and source[i] != "\n":
+                i += 1
+            continue
+        elif source.startswith('"""', i) or source.startswith("'''", i):
+            quote = source[i:i + 3]
+            i += 3
+            continue
+        elif c in "\"'":
+            quote = c
+        i += 1
+    return inside
+
+
 def _unsupported_scan(source: str) -> list[Diagnostic]:
     """Trova costrutti Python non presenti in Tokyn prima del parsing."""
     found = []
-    in_string = None  # riga dentro una stringa """...""": è testo, non codice
+    text_lines = _lines_inside_strings(source)
     for i, raw in enumerate(source.splitlines(), 1):
         stripped = raw.lstrip()
-        if in_string:
-            if raw.count(in_string) % 2:
-                in_string = None
-            continue
-        for quote in ('"""', "'''"):
-            if raw.count(quote) % 2:
-                in_string = quote
-                break
-        if not stripped or stripped.startswith("#"):
+        if i in text_lines or not stripped or stripped.startswith("#"):
             continue
         if stripped.startswith("def ") and raw[:1] in (" ", "\t"):
             col = len(raw) - len(stripped) + 1

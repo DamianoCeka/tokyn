@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import ast
 import re
+import warnings
 from dataclasses import dataclass, field
 
 from lark import Token, Tree
@@ -168,7 +169,9 @@ def pos(node) -> tuple[int, int, int]:
 
 def string_value(tok: Token) -> str:
     try:
-        return ast.literal_eval(str(tok))
+        with warnings.catch_warnings():  # es. "\d" in una descrizione: resta com'è, senza avvisi di Python
+            warnings.simplefilter("ignore")
+            return ast.literal_eval(str(tok))
     except (ValueError, SyntaxError):
         return str(tok).strip("\"'")
 

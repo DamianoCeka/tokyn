@@ -1,0 +1,40 @@
+# catalogo.tokyn: domande in linguaggio naturale sul catalogo prodotti
+
+PRODOTTI = read_file("prodotti.csv")
+
+def cerca(categoria: str, prezzo_max: float) -> str:
+    """Cerca nel catalogo i prodotti della categoria indicata con prezzo in euro non superiore a prezzo_max. Restituisce un prodotto per riga."""
+    trovati = []
+    for riga in PRODOTTI.split("\n")[1:]:
+        campi = riga.strip().split(";")
+        if len(campi) < 3:
+            continue
+        nome = campi[0].strip()
+        prezzo = float(campi[1])
+        cat = campi[2].strip()
+        if cat.lower() == categoria.strip().lower() and prezzo <= prezzo_max:
+            trovati.append(nome + " - " + str(prezzo) + " euro")
+    if len(trovati) == 0:
+        return "nessun prodotto trovato"
+    return "\n".join(trovati)
+
+agent Commesso:
+    instructions: """
+        Rispondi in italiano alle domande sul catalogo prodotti usando lo strumento
+        cerca, con la categoria e il prezzo massimo richiesti. Se l'utente non indica
+        un prezzo massimo, usa 1000000. Se non trovi nulla, dillo chiaramente.
+    """
+    tools: [cerca]
+
+main:
+    categorie = []
+    for riga in PRODOTTI.split("\n")[1:]:
+        campi = riga.strip().split(";")
+        if len(campi) >= 3:
+            cat = campi[2].strip()
+            if cat not in categorie:
+                categorie.append(cat)
+    elenco = ", ".join(categorie)
+    domanda = input("Domanda sul catalogo: ")
+    risposta = Commesso.ask(f"Categorie nel catalogo: {elenco}\n\nDomanda: {domanda}")
+    print(risposta)

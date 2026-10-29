@@ -1,0 +1,45 @@
+type Classificazione:
+    reparto: "vendite" | "tecnico" | "amministrazione"
+    priorita: int "priorità da 1 (bassa) a 3 (alta)"
+    serve_risposta: bool "vero se il cliente si aspetta una risposta, falso se basta archiviare il ticket"
+
+agent Classificatore:
+    model: "claude-haiku"
+    instructions: """
+        Classifichi ticket di assistenza clienti scritti in italiano.
+        Scegli il reparto competente tra vendite, tecnico e amministrazione.
+        Assegna una priorità intera da 1 (bassa) a 3 (alta, urgente).
+        Indica se il ticket richiede una risposta al cliente.
+    """
+    output: Classificazione
+
+agent Redattore:
+    instructions: """
+        Scrivi in italiano la bozza di risposta a un ticket di assistenza.
+        Ricevi il reparto competente e il testo del ticket.
+        Tono cortese e professionale, breve, senza inventare dati che non hai.
+        Restituisci solo il testo della risposta.
+    """
+
+main:
+    tickets = json_parse(read_file("tickets.json"))
+    risultati = []
+    conteggi = {"vendite": 0, "tecnico": 0, "amministrazione": 0}
+    for t in tickets:
+        c = Classificatore.ask(t["testo"])
+        priorita = max(1, min(3, c.priorita))
+        bozza = ""
+        if c.serve_risposta:
+            bozza = Redattore.ask(f"Reparto: {c.reparto}\nTicket: {t['testo']}")
+        risultati.append({
+            "id": t["id"],
+            "reparto": c.reparto,
+            "priorita": priorita,
+            "serve_risposta": c.serve_risposta,
+            "bozza": bozza
+        })
+        conteggi[c.reparto] = conteggi[c.reparto] + 1
+    write_file("risultati.json", json_dump(risultati))
+    print(f"Ticket elaborati: {len(tickets)}")
+    for reparto, n in conteggi.items():
+        print(f"{reparto}: {n}")

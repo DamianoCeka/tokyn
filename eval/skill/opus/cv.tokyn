@@ -1,0 +1,48 @@
+import os
+
+ANNUNCIO = read_file("annuncio.txt")
+ISTRUZIONI = "Analizzi curriculum vitae. Dal CV estrai nome, anni di esperienza e competenze, e dai un voto da 1 a 10 a quanto il candidato è adatto a questo annuncio di lavoro:\n\n" + ANNUNCIO
+
+type Candidato:
+    nome: str "nome e cognome del candidato"
+    anni_esperienza: int "anni di esperienza lavorativa"
+    competenze: list[str] "competenze principali, una per elemento"
+    voto: int "da 1 a 10: quanto il candidato è adatto all'annuncio"
+
+agent Valutatore:
+    instructions: ISTRUZIONI
+    output: Candidato
+
+def per_voto(c: Candidato) -> int:
+    return c.voto
+
+def pulisci(testo: str) -> str:
+    return testo.replace(";", ",").replace("\n", " ").strip()
+
+main:
+    if not os.path.isdir("cvs"):
+        print("Cartella cvs/ non trovata.")
+        return
+    candidati = []
+    for nome_file in sorted(os.listdir("cvs")):
+        if not nome_file.lower().endswith(".txt"):
+            continue
+        c = Valutatore.ask(read_file("cvs/" + nome_file))
+        if c.voto < 1:
+            c.voto = 1
+        if c.voto > 10:
+            c.voto = 10
+        candidati.append(c)
+    if len(candidati) == 0:
+        print("Nessun CV .txt trovato in cvs/.")
+        return
+    classifica = sorted(candidati, key=per_voto, reverse=True)
+    print("Classifica (primi 5):")
+    for i, c in enumerate(classifica[:5]):
+        print(f"{i + 1}. {c.nome} - voto {c.voto}/10, {c.anni_esperienza} anni di esperienza")
+    righe = ["nome;anni_esperienza;competenze;voto"]
+    for c in classifica:
+        competenze = pulisci(", ".join(c.competenze))
+        righe.append(f"{pulisci(c.nome)};{c.anni_esperienza};{competenze};{c.voto}")
+    write_file("candidati.csv", "\n".join(righe) + "\n")
+    print(f"Salvati {len(classifica)} candidati in candidati.csv")

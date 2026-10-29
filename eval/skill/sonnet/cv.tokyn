@@ -1,0 +1,53 @@
+import os
+
+ANNUNCIO = read_file("annuncio.txt")
+
+ISTRUZIONI = """
+    Analizzi curriculum in italiano e li valuti rispetto a un annuncio di lavoro.
+    Dal curriculum estrai: nome del candidato, anni di esperienza (intero, 0 se non indicati),
+    elenco delle competenze principali e un voto intero da 1 a 10 che indica
+    quanto il candidato è adatto all'annuncio (1 = per niente, 10 = perfetto).
+    Annuncio di lavoro:
+""" + ANNUNCIO
+
+type Candidato:
+    nome: str "nome e cognome del candidato"
+    anni_esperienza: int "anni di esperienza lavorativa complessiva"
+    competenze: list[str] "competenze principali, una per elemento"
+    voto: int "adeguatezza all'annuncio, intero da 1 a 10"
+
+agent Selezionatore:
+    instructions: ISTRUZIONI
+    output: Candidato
+
+def per_voto(r: dict) -> int:
+    return r["voto"]
+
+def pulisci(s: str) -> str:
+    return s.replace(";", ",").replace("\n", " ").strip()
+
+main:
+    candidati = []
+    for nome_file in sorted(os.listdir("cvs")):
+        if not nome_file.endswith(".txt"):
+            continue
+        testo = read_file("cvs/" + nome_file)
+        c = Selezionatore.ask(testo)
+        candidati.append({
+            "file": nome_file,
+            "nome": c.nome,
+            "anni": c.anni_esperienza,
+            "competenze": c.competenze,
+            "voto": max(1, min(10, c.voto))
+        })
+    ordinati = sorted(candidati, key=per_voto, reverse=True)
+    print("Classifica dei primi 5 candidati")
+    for i, r in enumerate(ordinati[:5]):
+        comp = ", ".join(r["competenze"])
+        print(f"{i + 1}. {r['nome']} - voto {r['voto']}/10 - {r['anni']} anni - {comp}")
+    righe = ["nome;anni_esperienza;competenze;voto;file"]
+    for r in ordinati:
+        comp = pulisci(", ".join(r["competenze"]))
+        righe.append(f"{pulisci(r['nome'])};{r['anni']};{comp};{r['voto']};{r['file']}")
+    write_file("candidati.csv", "\n".join(righe) + "\n")
+    print(f"Salvati {len(ordinati)} candidati in candidati.csv")

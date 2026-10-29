@@ -1,0 +1,56 @@
+type Azione:
+    chi: str "persona responsabile"
+    cosa: str "attività da svolgere"
+    scadenza: str "scadenza come detta nella riunione; stringa vuota se non indicata"
+
+type Verbale:
+    riassunto: str "riassunto della riunione in uno o due paragrafi"
+    decisioni: list[str] "decisioni prese, una per elemento"
+    azioni: list[Azione]
+
+agent Verbalizzatore:
+    instructions: """
+        Analizzi la trascrizione di una riunione e ne ricavi il verbale in italiano:
+        un riassunto, le decisioni prese e le azioni (chi, cosa, scadenza).
+        Non inventare scadenze: se non sono dette, lascia la scadenza vuota.
+    """
+    output: Verbale
+
+def cella(testo: str) -> str:
+    return testo.replace("|", "/").replace("\n", " ").strip()
+
+main:
+    testo = read_file("trascrizione.txt", "")
+    if testo.strip() == "":
+        print("trascrizione.txt non trovato.")
+        print("Incolla il testo della trascrizione e scrivi FINE su una riga da sola per terminare:")
+        righe = []
+        for i in range(100_000):
+            riga = input()
+            if riga.strip() == "FINE":
+                break
+            righe.append(riga)
+        testo = "\n".join(righe)
+    if testo.strip() == "":
+        print("Nessun testo da verbalizzare.")
+        return
+    v = Verbalizzatore.ask(testo)
+    md = "# Verbale della riunione\n\n"
+    md += "## Riassunto\n\n" + v.riassunto.strip() + "\n\n"
+    md += "## Decisioni\n\n"
+    if len(v.decisioni) == 0:
+        md += "_Nessuna decisione._\n"
+    for d in v.decisioni:
+        md += f"- {d.strip()}\n"
+    md += "\n## Azioni\n\n"
+    if len(v.azioni) == 0:
+        md += "_Nessuna azione._\n"
+    else:
+        md += "| Chi | Cosa | Scadenza |\n| --- | --- | --- |\n"
+        for a in v.azioni:
+            scadenza = cella(a.scadenza)
+            if scadenza == "":
+                scadenza = "non indicata"
+            md += f"| {cella(a.chi)} | {cella(a.cosa)} | {scadenza} |\n"
+    write_file("verbale.md", md)
+    print("Verbale salvato in verbale.md")

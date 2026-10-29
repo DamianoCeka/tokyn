@@ -1,0 +1,38 @@
+# ticket.tokyn: classifica i ticket e prepara le bozze di risposta
+
+type Classificazione:
+    reparto: "vendite" | "tecnico" | "amministrazione" "reparto a cui assegnare il ticket"
+    priorita: int "priorità da 1 (bassa) a 3 (alta)"
+    serve_risposta: bool "true se il cliente aspetta una risposta scritta"
+
+agent Classificatore:
+    model: "claude-haiku"
+    instructions: """
+        Classifica il ticket di assistenza che ricevi. Scegli il reparto tra
+        vendite, tecnico e amministrazione. Assegna una priorità da 1 a 3 e
+        indica se il cliente aspetta una risposta scritta.
+    """
+    output: Classificazione
+
+agent Redattore:
+    instructions: """
+        Scrivi in italiano una bozza di risposta breve e cortese al cliente
+        che ha scritto il ticket ricevuto.
+    """
+
+main:
+    tickets = json_parse(read_file("tickets.json"), [])
+    risultati = []
+    conteggio = {"vendite": 0, "tecnico": 0, "amministrazione": 0}
+    for t in tickets:
+        c = Classificatore.ask(t["testo"])
+        priorita = min(3, max(1, c.priorita))
+        bozza = ""
+        if c.serve_risposta:
+            bozza = Redattore.ask(t["testo"])
+        riga = {"id": t["id"], "reparto": c.reparto, "priorita": priorita, "serve_risposta": c.serve_risposta, "bozza": bozza}
+        risultati.append(riga)
+        conteggio[c.reparto] = conteggio[c.reparto] + 1
+    write_file("risultati.json", json_dump(risultati))
+    for reparto in conteggio:
+        print(f"{reparto}: {conteggio[reparto]} ticket")

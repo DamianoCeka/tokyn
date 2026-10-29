@@ -1,0 +1,24 @@
+from urllib.parse import quote
+
+def meteo(citta: str) -> str:
+    """Restituisce il meteo attuale di una città (nome della città, es. Roma)."""
+    return http_get("https://wttr.in/" + quote(citta.strip()) + "?format=3", "meteo non disponibile")
+
+agent Assistente:
+    instructions: """
+        Sei un assistente cordiale che risponde in italiano.
+        Quando l'utente chiede il meteo di una città usa lo strumento meteo;
+        se lo strumento risponde "meteo non disponibile", dillo all'utente.
+    """
+    tools: [meteo]
+    memory: True
+
+main:
+    print("Chatbot meteo. Scrivi 'ciao' per uscire.")
+    for turno in range(15):
+        testo = input("Tu: ")
+        if testo.strip().lower() == "ciao":
+            print("Bot: Ciao, alla prossima!")
+            break
+        risposta = Assistente.ask(testo)
+        print(f"Bot: {risposta}")

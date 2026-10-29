@@ -1,0 +1,42 @@
+type Domanda:
+    testo: str "testo della domanda"
+    opzioni: list[str] "esattamente 4 opzioni di risposta"
+    corretta: int "indice (da 0 a 3) dell'opzione corretta nella lista opzioni"
+
+type Quiz:
+    domande: list[Domanda] "esattamente 5 domande a scelta multipla"
+
+agent Generatore:
+    instructions: """
+        Crei quiz in italiano a scelta multipla su un argomento dato.
+        Genera esattamente 5 domande, ognuna con esattamente 4 opzioni e una sola risposta giusta.
+        Indica con corretta l'indice (da 0 a 3) dell'opzione giusta. Varia la posizione della risposta giusta.
+    """
+    output: Quiz
+
+main:
+    argomento = input("Su quale argomento vuoi il quiz? ")
+    quiz = Generatore.ask("Argomento: " + argomento)
+    totale = len(quiz.domande)
+    punti = 0
+    for i, d in enumerate(quiz.domande):
+        print(f"\nDomanda {i + 1}/{totale}: {d.testo}")
+        validi = []
+        for j, o in enumerate(d.opzioni):
+            print(f"  {j + 1}) {o}")
+            validi.append(str(j + 1))
+        scelta = -1
+        for tentativo in range(5):
+            risposta = input(f"Risposta (1-{len(d.opzioni)}): ").strip()
+            if risposta in validi:
+                scelta = int(risposta) - 1
+                break
+            print("Risposta non valida.")
+        if scelta == d.corretta:
+            punti += 1
+            print("Corretto!")
+        elif 0 <= d.corretta < len(d.opzioni):
+            print(f"Sbagliato. La risposta giusta era: {d.opzioni[d.corretta]}")
+        else:
+            print("Sbagliato.")
+    print(f"\nPunteggio finale: {punti}/{totale}")

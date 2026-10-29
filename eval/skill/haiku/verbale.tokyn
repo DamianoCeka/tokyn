@@ -1,0 +1,52 @@
+# verbale.tokyn: da una trascrizione a un verbale in Markdown
+
+type Azione:
+    chi: str "persona o reparto responsabile dell'azione"
+    cosa: str "azione da svolgere"
+    scadenza: str "scadenza nel formato AAAA-MM-GG, oppure stringa vuota se non è indicata"
+
+type Verbale:
+    riassunto: str "riassunto della riunione in 3-5 frasi"
+    decisioni: list[str] "decisioni prese durante la riunione"
+    azioni: list[Azione] "azioni da svolgere, con responsabile e scadenza"
+
+agent Verbalizzatore:
+    instructions: """
+        Leggi la trascrizione di una riunione in italiano. Estrai le decisioni prese,
+        le azioni con chi le svolge, cosa va fatto e la scadenza, e scrivi un breve
+        riassunto. Se la scadenza non viene indicata lascia la scadenza vuota.
+        Non aggiungere nulla che non sia nella trascrizione.
+    """
+    output: Verbale
+
+main:
+    testo = read_file("trascrizione.txt", "")
+    if testo.strip() == "":
+        print("Non trovo trascrizione.txt. Incolla il testo della riunione, poi una riga vuota:")
+        righe = []
+        for i in range(10000):
+            riga = input()
+            if riga == "":
+                break
+            righe.append(riga)
+        testo = "\n".join(righe)
+    if testo.strip() == "":
+        print("Nessuna trascrizione: niente verbale.")
+        return
+    v = Verbalizzatore.ask(testo)
+    md = "# Verbale della riunione\n\n"
+    md += "## Riassunto\n\n" + v.riassunto + "\n\n"
+    md += "## Decisioni\n\n"
+    if len(v.decisioni) == 0:
+        md += "- nessuna decisione registrata\n"
+    for d in v.decisioni:
+        md += "- " + d + "\n"
+    md += "\n## Azioni\n\n"
+    md += "| Chi | Cosa | Scadenza |\n|---|---|---|\n"
+    for a in v.azioni:
+        scadenza = a.scadenza
+        if scadenza.strip() == "":
+            scadenza = "non indicata"
+        md += f"| {a.chi} | {a.cosa} | {scadenza} |\n"
+    write_file("verbale.md", md)
+    print("Verbale scritto in verbale.md")
