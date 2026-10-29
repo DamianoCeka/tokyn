@@ -95,7 +95,17 @@ tokyn spec                   # stampa la specifica
 - **Agenti come strumenti**: un agente può delegare a un altro.
 - **Python ovunque**: `import` di qualsiasi libreria Python.
 - **Slice** di testi e liste: `testo[:200]`, `lista[-3:]`.
-- **Valori di riserva al posto di `try`**: `read_file(p, "")` e `http_get(url, "")` non fermano il programma se il file manca o la rete cade.
+- **Valori di riserva al posto di `try`**: `read_file(p, "")` e `http_get(url, "")` non fermano il programma se il file manca o la rete cade; `to_number(testo, 0)` converte anche `"4,50"`.
+
+## Meno costi anche quando il programma gira
+
+Il runtime usa da solo le funzioni dell'API di Claude che fanno risparmiare:
+
+- **Prompt caching**: istruzioni e strumenti di ogni agente restano in cache tra una chiamata e l'altra.
+- **Output strutturati nativi**: la risposta arriva già nel formato del `type`, senza giri in più.
+- **Batch API**: `Agente.ask_all(testi)` risponde a una lista di testi a metà prezzo.
+- **`effort: "low"`** negli agenti che classificano o estraggono, per spendere meno token di ragionamento.
+- `tokyn run file.tokyn --usage` mostra quanti token sono stati spesi e quanti letti dalla cache.
 - **Errori a runtime** riportati alla riga del file `.tokyn`, non del Python generato.
 - **Errori mirati per le abitudini di Python**: se un modello scrive una comprehension, `a if c else b`, `is None` o `a, b = ...`, il checker dice esattamente cosa scrivere al loro posto.
 
@@ -106,7 +116,8 @@ La specifica completa è in [`tokyn/SPEC.md`](tokyn/SPEC.md). Gli esempi sono in
 Il modo principale per usare Tokyn è come **Skill di Claude**: quando chiedi un agente o un'automazione con IA,
 Claude lo scrive in Tokyn, lo controlla con `tokyn check` finché non ci sono errori, e lo esegue.
 
-1. Crea lo zip: `python scripts/build_skill.py` (oppure scaricalo dalle Release).
+1. Crea lo zip: `python scripts/build_skill.py` (oppure scaricalo dalle Release). Crea `dist/tokyn-skill.zip`
+   in italiano e `dist/tokyn-skill-en.zip` in inglese: stesso contenuto, il 21% di token in meno.
 2. Caricalo in Claude, nelle impostazioni delle Skill. In Claude Code, invece, estrailo in `~/.claude/skills/`
    (o nella cartella `.claude/skills/` del progetto).
 
@@ -136,7 +147,7 @@ file.tokyn → parser (Lark) → checker (tipi, nomi, agenti) → generatore →
 - [ ] Estensione VS Code (colori ed errori in tempo reale)
 - [ ] Benchmark più ampio: più compiti, altri modelli, token spesi in sessioni reali con correzioni
 - [ ] Altri provider oltre ad Anthropic
-- [ ] Gestione degli errori (`try`) e chiamate in parallelo tra agenti
+- [ ] Chiamate in parallelo tra agenti
 - [ ] Messaggi d'errore anche in inglese
 
 ## Licenza

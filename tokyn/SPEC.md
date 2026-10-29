@@ -48,10 +48,14 @@ Campi (si scrivono con `:`, mai con `=`):
 | `output` | no | nome di un `type`: l'agente risponde con dati strutturati |
 | `memory` | no (default `False`) | `True` per ricordare la conversazione tra una `ask` e l'altra |
 | `max_steps` | no (default `10`) | numero massimo di passaggi per ogni `ask` |
+| `effort` | no | quanto ragiona l'IA: `"low"`, `"medium"`, `"high"`, `"xhigh"`, `"max"`. `"low"` costa meno: va bene per classificare ed estrarre |
 
 Un agente si usa **solo** così:
 
 - `Agente.ask(testo)` → restituisce la risposta. È un `str`, oppure un valore del `type` indicato in `output`.
+- `Agente.ask_all(testi)` → una lista di risposte, nello stesso ordine dei testi: come un ciclo di `ask`, ma con la
+  Batch API di Anthropic, che costa la metà. È più lento (di solito minuti, al massimo 24 ore) e non usa la memoria:
+  adatto ai lavori in blocco, non alle chat.
 - `Agente.reset()` → cancella la memoria.
 
 Durante `ask` il runtime gestisce da solo il ciclo delle chiamate agli strumenti,
@@ -130,6 +134,7 @@ Al posto di `try`/`except`, `read_file`, `http_get`, `http_post` e `json_parse` 
 | `http_get(url, default)` | scarica una pagina e restituisce il testo; se la rete fallisce restituisce `default` |
 | `http_post(url, dati, default)` | invia dati JSON e restituisce la risposta; se fallisce restituisce `default` |
 | `json_parse(testo, default)` | da testo JSON a liste/dizionari; se non è JSON valido restituisce `default` |
+| `to_number(testo, default)` | da testo a numero (`"42"`, `"4,50"`, `"1.234,56"`); se non è un numero restituisce `default` |
 | `json_dump(valore)` | da valore (anche `type`) a testo JSON |
 | `env(nome, default)` | legge una variabile d'ambiente |
 | `now()` | data e ora attuali, es. `"2026-10-28T14:30:00"` |
@@ -169,6 +174,7 @@ main:
 | `tokyn check --json file.tokyn` | stessa cosa in JSON (per IA e strumenti) |
 | `tokyn run file.tokyn` | esegue (serve `ANTHROPIC_API_KEY`) |
 | `tokyn run file.tokyn --mock` | esegue con risposte finte, senza chiamare l'IA |
+| `tokyn run file.tokyn --usage` | alla fine mostra i token spesi e quelli letti dalla cache |
 | `tokyn build file.tokyn` | genera il file Python equivalente |
 | `tokyn build file.tokyn --standalone` | genera un file Python autonomo (serve solo `anthropic`) |
 | `tokyn spec` | stampa questa specifica |
@@ -185,6 +191,7 @@ main:
 | E121 / E122 | strumento senza tipi dei parametri / senza descrizione |
 | E130–E139 | campo dell'agente sbagliato, mancante o con un valore non valido |
 | E144 | agenti che si delegano a vicenda |
+| E145 | valore di `effort` non valido |
 | E142 | si tenta di modificare una costante |
 | E160 / E161 | nome non definito / variabile usata prima di assegnarla |
 | E162 | costante o valore predefinito che usa qualcosa scritto più sotto |

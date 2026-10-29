@@ -28,12 +28,13 @@ def test_examples_are_valid():
         assert result.ok, f"{path.name}: {[d.to_dict() for d in result.diagnostics]}"
 
 
-def test_skill_reference_is_valid(capsys, monkeypatch):
+@pytest.mark.parametrize("folder,answers", [("tokyn", "il pc non parte\nesci\n"), ("tokyn-en", "the pc won't start\nquit\n")])
+def test_skill_reference_is_valid(capsys, monkeypatch, folder, answers):
     import io
-    skill = (ROOT / "skill" / "tokyn" / "SKILL.md").read_text(encoding="utf-8")
+    skill = (ROOT / "skill" / folder / "SKILL.md").read_text(encoding="utf-8")
     start = skill.index("```\nimport math") + 4
     src = skill[start:skill.index("```", start)]
-    monkeypatch.setattr(sys, "stdin", io.StringIO("il pc non parte\nesci\n"))
+    monkeypatch.setattr(sys, "stdin", io.StringIO(answers))
     rc, _, err = run(src, capsys)
     assert rc == 0, err
 
@@ -174,6 +175,22 @@ def test_no_python_warnings_for_escapes_in_text():
     assert not [w for w in caught if issubclass(w.category, SyntaxWarning)]
 
 
+def test_to_number(capsys):
+    src = ('main:\n    print(to_number("42") + 1, to_number("4,50"), to_number("1.234,56"), to_number("abc", 0))\n'
+           '    print(to_number("n/d"))\n')
+    rc, out, err = run(src, capsys)
+    assert rc == 1 and out.split("\n")[0] == "43 4.5 1234.56 0"
+    assert "test.tokyn:3" in err and "to_number(testo, 0)" in err
+
+
+def test_cli_usage_report(tmp_path):
+    f = tmp_path / "a.tokyn"
+    f.write_text('agent A:\n    instructions: "i"\n\nmain:\n    print(A.ask("x"))\n', encoding="utf-8")
+    r = subprocess.run([sys.executable, "-m", "tokyn", "run", str(f), "--mock", "--usage"],
+                       capture_output=True, text=True, cwd=ROOT)
+    assert r.returncode == 0 and "token:" in r.stderr and "Batch API" in r.stderr
+
+
 def test_number_formats(capsys):
     rc, out, err = run("main:\n    x = 1_000 + 1\n    print(x, 2.5e3, 1e-3)\n", capsys)
     assert rc == 0, err
@@ -260,6 +277,8 @@ main:
     ('type T:\n    c: "a" | "b"\nagent A:\n    instructions: "i"\n    output: T\nmain:\n    t = A.ask("x")\n    if t.c == "z":\n        pass\n', "E190"),
     ('main:\n    print(f"{nome}")\n', "E160"),
     ('main:\n    x = "a" + 1\n', "E194"),
+    ('agent A:\n    instructions: "i"\n    effort: "poco"\n', "E145"),
+    ('agent A:\n    instructions: "i"\nmain:\n    A.ask_all()\n', "E186"),
     ('main:\n    s = "abc"\n    print(s["a":])\n', "E176"),
     # costrutti Python che Tokyn non ha: errore mirato con l'alternativa
     ("main:\n    ys = [x * 2 for x in [1, 2]]\n", "E002"),
@@ -387,26 +406,36 @@ class _Block:
         self.__dict__.update(kw)
 
 
-class _FakeClient:
-    """Simula l'API: prima chiama uno strumento, poi sbaglia il formato, poi risponde bene."""
+def _reply(*content, stop="end_turn", usage=None):
+    return _Block(content=list(content), stop_reason=stop, usage=usage)
 
-    def __init__(self):
+
+def _text(t):
+    return _Block(type="text", text=t)
+
+
+def _use(id, name, **inp):
+    return _Block(type="tool_use", id=id, name=name, input=inp)
+
+
+class _FakeClient:
+    """Simula l'API: restituisce le risposte preparate e registra i parametri di ogni chiamata."""
+
+    def __init__(self, *replies):
+        self.replies = list(replies)
         self.calls = []
         self.messages = self
+        self.beta = self
 
     def create(self, **kwargs):
         self.calls.append(dict(kwargs, messages=list(kwargs["messages"])))
-        n = len(self.calls)
-        if n == 1:
-            return _Block(content=[_Block(type="tool_use", id="t1", name="meteo", input={"citta": "Padova"})])
-        if n == 2:
-            return _Block(content=[_Block(type="tool_use", id="t2", name="rispondi", input={"citta": "Padova", "gradi": "tanti"})])
-        return _Block(content=[_Block(type="tool_use", id="t3", name="rispondi", input={"citta": "Padova", "gradi": 18})])
+        reply = self.replies.pop(0)
+        if isinstance(reply, Exception):
+            raise reply
+        return reply
 
 
-def test_agent_loop_with_fake_api(monkeypatch):
-    import tokyn.runtime as rt
-    src = '''
+METEO = '''
 type Meteo:
     citta: str
     gradi: int
@@ -420,21 +449,124 @@ agent A:
     tools: [meteo]
     output: Meteo
 '''
+
+
+def _agents(src, monkeypatch, fake):
+    import tokyn.runtime as rt
     ns = {"__name__": "x"}
     exec(compile_source(src).python, ns)
-    fake = _FakeClient()
     monkeypatch.setattr(rt, "_CLIENT", fake)
+    monkeypatch.setitem(rt._FALLBACKS, "attivi", True)
     monkeypatch.delenv("TOKYN_MOCK", raising=False)
+    return ns
+
+
+def test_agent_loop_with_fake_api(monkeypatch):
+    fake = _FakeClient(
+        _reply(_use("t1", "meteo", citta="Padova"), stop="tool_use"),
+        _reply(_text('{"citta": "Padova", "gradi": "tanti"}')),
+        _reply(_text('{"citta": "Padova", "gradi": 18}')),
+    )
+    ns = _agents(METEO, monkeypatch, fake)
     result = ns["A"].ask("Che tempo fa a Padova?")
     assert (result.citta, result.gradi) == ("Padova", 18)
     # lo strumento è stato eseguito e il risultato è tornato all'IA
-    second = fake.calls[1]["messages"][-1]["content"][0]
-    assert second["content"] == "Padova: 18 gradi"
-    # l'output non valido è stato rimandato all'IA come errore
-    third = fake.calls[2]["messages"][-1]["content"][0]
-    assert third["is_error"] and "gradi" in third["content"]
-    assert fake.calls[0]["model"] == "claude-sonnet-5-5"
-    assert [t["name"] for t in fake.calls[0]["tools"]] == ["meteo", "rispondi"]
+    assert fake.calls[1]["messages"][-1]["content"][0]["content"] == "Padova: 18 gradi"
+    # una risposta non valida viene rimandata all'IA con l'errore
+    assert "gradi" in fake.calls[2]["messages"][-1]["content"]
+    first = fake.calls[0]
+    assert first["model"] == "claude-sonnet-5-5" and first["max_tokens"] == 16000
+    # output strutturati nativi: niente strumento `rispondi`, schema nell'output_config
+    assert [t["name"] for t in first["tools"]] == ["meteo"] and first["tools"][0]["strict"] is True
+    assert first["output_config"]["format"]["schema"]["required"] == ["citta", "gradi"]
+    # caching: istruzioni e strumenti fissi, più la cache automatica della conversazione
+    assert first["system"][0]["cache_control"] == {"type": "ephemeral"} and first["cache_control"] == {"type": "ephemeral"}
+    assert first["fallbacks"] == "default" and first["betas"] == ["server-side-fallback-2026-07-01"]
+
+
+def test_free_dict_output_falls_back_to_answer_tool(monkeypatch):
+    src = 'type R:\n    dati: dict\n\nagent A:\n    instructions: "i"\n    model: "claude-haiku"\n    output: R\n'
+    fake = _FakeClient(_reply(_use("t1", "rispondi", dati={"k": 1}), stop="tool_use"))
+    ns = _agents(src, monkeypatch, fake)
+    assert ns["A"].ask("x").dati == {"k": 1}
+    call = fake.calls[0]
+    assert [t["name"] for t in call["tools"]] == ["rispondi"] and "output_config" not in call
+    assert "fallbacks" not in call  # Haiku non ha i fallback lato server
+
+
+def test_fallbacks_are_dropped_if_the_api_rejects_them(monkeypatch):
+    BadRequestError = type("BadRequestError", (Exception,), {})
+    src = 'agent A:\n    instructions: "i"\n    effort: "low"\n'
+    fake = _FakeClient(BadRequestError("fallbacks non supportati"), _reply(_text("uno")), _reply(_text("due")))
+    ns = _agents(src, monkeypatch, fake)
+    assert [ns["A"].ask("x"), ns["A"].ask("y")] == ["uno", "due"]
+    assert ["fallbacks" in c for c in fake.calls] == [True, False, False]
+    assert fake.calls[1]["output_config"] == {"effort": "low"}
+
+
+class _FakeBatches:
+    """Simula la Batch API: ogni batch risponde con le risposte preparate per custom_id, in ordine sparso."""
+
+    def __init__(self, rounds):
+        self.rounds = list(rounds)
+        self.created = []
+        self.retrieves = 0
+
+    def create(self, requests):
+        # copia, come fa l'SDK quando invia la richiesta: dopo i messaggi continuano a crescere
+        self.created.append([dict(r, params=dict(r["params"], messages=list(r["params"]["messages"]))) for r in requests])
+        return _Block(id=f"b{len(self.created)}", processing_status="in_progress",
+                      request_counts=_Block(succeeded=0, errored=0, canceled=0, expired=0, processing=len(requests)))
+
+    def retrieve(self, batch_id):
+        self.retrieves += 1
+        return _Block(id=batch_id, processing_status="ended")
+
+    def results(self, batch_id):
+        replies = self.rounds.pop(0)
+        for cid in sorted(replies, reverse=True):
+            reply = replies[cid]
+            if reply is None:
+                yield _Block(custom_id=cid, result=_Block(type="errored"))
+            else:
+                yield _Block(custom_id=cid, result=_Block(type="succeeded", message=reply))
+
+
+def test_ask_all_uses_the_batch_api(monkeypatch, capsys):
+    import tokyn.runtime as rt
+    monkeypatch.setattr(rt._time, "sleep", lambda s: None)
+    usage = _Block(input_tokens=100, output_tokens=10, cache_read_input_tokens=80, cache_creation_input_tokens=0)
+    batches = _FakeBatches([
+        {"0": _reply(_use("t1", "meteo", citta="Roma"), stop="tool_use"),
+         "1": _reply(_text('{"citta": "Bari", "gradi": 20}'), usage=usage),
+         "2": None},
+        {"0": _reply(_text('{"citta": "Roma", "gradi": 22}'))},
+    ])
+    fake = _FakeClient(_reply(_text('{"citta": "Lecce", "gradi": 25}')))  # chiamata normale per l'errore nel batch
+    fake.batches = batches
+    ns = _agents(METEO, monkeypatch, fake)
+    before = dict(rt._USAGE)
+    result = ns["A"].ask_all(["Roma?", "Bari?", "Lecce?"])
+    assert [(r.citta, r.gradi) for r in result] == [("Roma", 22), ("Bari", 20), ("Lecce", 25)]
+    # due turni di batch: il secondo solo per il testo che aveva chiesto uno strumento
+    assert [[r["custom_id"] for r in reqs] for reqs in batches.created] == [["0", "1", "2"], ["0"]]
+    params = batches.created[0][0]["params"]
+    assert "fallbacks" not in params and params["output_config"]["format"]["type"] == "json_schema"
+    assert batches.created[1][0]["params"]["messages"][-1]["content"][0]["content"] == "Roma: 18 gradi"
+    assert "risposte pronte" in capsys.readouterr().err
+    assert rt._USAGE["chiamate_batch"] - before["chiamate_batch"] == 3
+    assert rt._USAGE["cache_lette"] - before["cache_lette"] == 80
+
+
+def test_ask_all_in_mock_and_types(capsys):
+    src = (
+        'type T:\n    c: "a" | "b"\n\nagent A:\n    model: "mock"\n    instructions: "i"\n    output: T\n\n'
+        'main:\n    for t in A.ask_all(["x", "y"]):\n        print(t.c)\n'
+    )
+    rc, out, err = run(src, capsys)
+    assert rc == 0, err
+    assert out.split() == ["a", "b"]
+    assert "E171" in codes(src.replace("print(t.c)", "print(t.nessuno)"))
 
 
 def test_cli_check_json(tmp_path):

@@ -13,7 +13,7 @@ from .errors import TokynRuntimeError
 
 RUNTIME_BUILTINS = [
     "read_file", "write_file", "append_file", "http_get", "http_post",
-    "json_parse", "json_dump", "env", "now", "sleep",
+    "json_parse", "json_dump", "env", "now", "sleep", "to_number",
 ]
 
 
@@ -157,7 +157,7 @@ class CodeGen:
         name = str(n.children[0])
         fields = {str(af.children[0]): af.children[1] for af in n.children[1:]}
         parts = [f"name={name!r}"]
-        for key in ("model", "instructions", "tools", "output", "memory", "max_steps"):
+        for key in ("model", "instructions", "tools", "output", "memory", "max_steps", "effort"):
             if key in fields:
                 parts.append(f"{key}={self.expr(fields[key])}")
         self.emit(f"{name} = __rt.Agent(", src_line=n.meta.line)

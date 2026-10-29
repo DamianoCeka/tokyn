@@ -40,9 +40,11 @@ AGENT_FIELDS = {
     "output": "nome di un `type`: l'agente risponde con dati strutturati invece che testo",
     "memory": "True per ricordare la conversazione tra una ask e l'altra",
     "max_steps": "numero massimo di passaggi (chiamate a strumenti) per ogni ask",
+    "effort": "quanto ragiona l'IA: \"low\", \"medium\", \"high\", \"xhigh\" o \"max\"",
 }
 
-AGENT_METHODS = {"ask": (1, 1), "reset": (0, 0)}
+AGENT_METHODS = {"ask": (1, 1), "ask_all": (1, 1), "reset": (0, 0)}
+EFFORTS = ("low", "medium", "high", "xhigh", "max")
 
 # nome -> (min argomenti posizionali, max o None, tipo restituito)
 BUILTINS = {
@@ -73,6 +75,7 @@ BUILTINS = {
     "http_get": (1, 2, STR),
     "http_post": (2, 3, STR),
     "json_parse": (1, 2, ANY),
+    "to_number": (1, 2, ANY),
     "json_dump": (1, 1, STR),
     "env": (1, 2, STR),
     "now": (0, 0, STR),
@@ -470,6 +473,12 @@ class Checker:
                 if not (isinstance(value, Tree) and value.data == "number" and "." not in str(value.children[0])):
                     self.error("E136", "max_steps deve essere un numero intero", value, "Esempio: max_steps: 8")
 
+            if "effort" in fields:
+                tok, value = fields["effort"]
+                if not (isinstance(value, Tree) and value.data == "string" and string_value(value.children[0]) in EFFORTS):
+                    self.error("E145", "effort deve essere uno tra " + ", ".join(f'"{e}"' for e in EFFORTS), value,
+                               'Esempio: effort: "low" per classificare o estrarre (costa meno).')
+
             const_scope = Scope(self, kind="agent")
             for fname in ("model", "instructions"):
                 if fname in fields:
@@ -786,7 +795,8 @@ class Checker:
                 return STR
             if a not in AGENT_METHODS:
                 self.error("E170", f'gli agenti non hanno ".{a}"', attr,
-                           "Un agente ha solo .ask(testo), che restituisce la risposta, e .reset(), che cancella la memoria.")
+                           "Un agente ha solo .ask(testo), che restituisce la risposta, .ask_all(testi), che risponde a una lista "
+                           "a metà prezzo, e .reset(), che cancella la memoria.")
             return ANY
         if obj[0] == "typeobj":
             self.error("E173", f'"{obj[1]}" è un type: per crearne uno usa {obj[1]}(campo=valore, ...)', attr)
@@ -822,18 +832,18 @@ class Checker:
                 infer_args()
                 if method not in AGENT_METHODS:
                     self.error("E170", f'gli agenti non hanno ".{method}"', callee.children[1],
-                               "Un agente ha solo .ask(testo) e .reset().")
+                               "Un agente ha solo .ask(testo), .ask_all(lista_di_testi) e .reset().")
                     return ANY
                 lo, hi = AGENT_METHODS[method]
                 if kwargs or not (lo <= len(positional) <= hi):
-                    expected = "un solo argomento: il testo da chiedere" if method == "ask" else "nessun argomento"
+                    expected = {"ask": "un solo argomento: il testo da chiedere",
+                                "ask_all": "un solo argomento: la lista dei testi"}.get(method, "nessun argomento")
                     self.error("E186", f".{method}() vuole {expected}", node,
-                               f'Esempio: {obj[1]}.ask("...")' if method == "ask" else "")
-                if method == "ask":
+                               {"ask": f'Esempio: {obj[1]}.ask("...")', "ask_all": f"Esempio: {obj[1]}.ask_all(testi)"}.get(method, ""))
+                if method in ("ask", "ask_all"):
                     agent = self.prog.agents.get(obj[1])
-                    if agent is not None and agent.output:
-                        return ("record", agent.output)
-                    return STR
+                    answer = ("record", agent.output) if agent is not None and agent.output else STR
+                    return answer if method == "ask" else LIST(answer)
                 return NONE
             # altri metodi: controlla l'attributo come getattr
             self.infer_getattr(callee, scope) if obj[0] in ("record", "typeobj", "func") or obj in (STR, DICT) or obj[0] in ("list", "enum") else None

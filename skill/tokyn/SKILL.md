@@ -20,7 +20,8 @@ cartella di questo file) serve solo per dettagli rari.
    - Se il programma usa `input()`, passa le risposte una per riga:
      `printf 'ciao\nesci\n' | python <skill>/tokyn_cli.py run file.tokyn --mock`
    - In mock gli agenti non chiamano gli strumenti; `write_file`, `http_post` ecc. invece vengono eseguiti davvero.
-3. Esecuzione reale: `python <skill>/tokyn_cli.py run file.tokyn` (serve `ANTHROPIC_API_KEY`; se manca, fermati al passo 2).
+3. Esecuzione reale: `python <skill>/tokyn_cli.py run file.tokyn --usage` (serve `ANTHROPIC_API_KEY`; se manca,
+   fermati al passo 2). `--usage` mostra alla fine i token spesi e quelli letti dalla cache.
 4. Se l'utente vuole Python: `python <skill>/tokyn_cli.py build file.tokyn --standalone -o file.py`
    (file autonomo, serve solo `pip install anthropic`). Non scrivere il Python a mano.
 
@@ -51,6 +52,7 @@ def cerca_faq(domanda: str) -> str:
 
 agent Tecnico:
     instructions: "Risolvi problemi tecnici."
+    effort: "low"                              # facoltativo: "low" per classificare ed estrarre costa meno
 
 agent Supporto:
     model: "claude"                            # default "claude"; anche "claude-opus", "claude-haiku", "mock" o un id
@@ -80,6 +82,7 @@ main:                                          # punto di partenza, uno solo
         elif t.categoria not in ["commerciale"]:
             print(json_dump(t))
     Supporto.reset()                           # cancella la memoria
+    note = Tecnico.ask_all(["Il pc non parte", "Il wifi è lento"])  # molti testi: Batch API, metà prezzo
     nuovo = Ticket(categoria="altro", urgente=False, tag=[], righe=[])  # costruttore con i nomi dei campi
     nuovo.urgente = True
 ```
@@ -97,6 +100,7 @@ main:                                          # punto di partenza, uno solo
     `json_parse(testo, default)` → liste e dizionari (non `type`); `env(nome, default)`. Se qualcosa va storto
     (file mancante, rete, risposta HTTP 4xx/5xx, indirizzo o JSON non validi, variabile assente) restituiscono
     `default`; senza `default` il programma si ferma con un errore chiaro. `http_post` invia `dati` come JSON.
+  - `to_number(testo, default)` → numero da testo (`"42"`, `"4,50"`, `"1.234,56"`), `default` se non lo è.
   - `json_dump(valore)` → JSON indentato con gli accenti, anche di `type` e liste di `type`. `now()` →
     `"2026-10-28T14:30:00"` (la data è `now()[:10]`). A fine input `input()` ferma il programma con un errore:
     per leggere più righe usa un terminatore (es. riga vuota). I percorsi sono relativi alla cartella da cui si esegue.
@@ -123,8 +127,12 @@ main:                                          # punto di partenza, uno solo
 - In mock: testi `"esempio <campo>"`, numeri 1 e 1.0, dict vuoti, liste di 2 elementi; valori `"a" | "b"` e bool
   cambiano a ogni `ask` di quell'agente e da un elemento al successivo (si parte dal primo valore e da True).
   Senza `output` la risposta è `"[mock Nome] risposta a: ..."`.
-- Modelli: `"claude-haiku"` per classificare o estrarre molti testi semplici (costa meno), il default `"claude"`
-  per il resto, `"claude-opus"` solo per compiti difficili.
+- `Agente.ask_all(testi)` dà le stesse risposte di un ciclo di `ask`, nello stesso ordine, ma con la Batch API:
+  metà prezzo, più lento (di solito minuti, al massimo 24 ore), senza `memory`. Usalo per i lavori in blocco
+  (classificare 100 email), non per le chat.
+- Costi: `"claude-haiku"` per classificare o estrarre molti testi semplici, il default `"claude"` per il resto,
+  `"claude-opus"` solo per compiti difficili; `effort: "low"` riduce i token di ragionamento. Istruzioni e
+  strumenti restano in cache tra una chiamata e l'altra: tienili fissi e metti i dati che cambiano nel testo dell'`ask`.
 
 ## Non esistono
 
@@ -134,4 +142,4 @@ main:                                          # punto di partenza, uno solo
 (usa `for` e `.append()`), `a if c else b` (usa `if`/`else`), `is` (usa `==`), tuple e set (usa liste),
 `a, b = ...` e `return a, b` (usa una lista), campi facoltativi come `str | None` (usa `""`, `[]` o un valore
 come `"nessuno"`). Dentro una f-string usa le virgolette dell'altro tipo: `f"{d['k']}"`. Gli agenti hanno solo
-`.ask` e `.reset`. `True`, `False`, `None` con la maiuscola.
+`.ask`, `.ask_all` e `.reset`. `True`, `False`, `None` con la maiuscola.

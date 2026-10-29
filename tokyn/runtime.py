@@ -8,6 +8,7 @@ from __future__ import annotations
 import datetime as _dt
 import json as _json
 import os
+import sys
 import textwrap
 import time as _time
 import urllib.request as _urlreq
@@ -21,6 +22,11 @@ DEFAULT_MODELS = {
     "claude-haiku": "claude-haiku-5-5",
 }
 FINAL_TOOL = "rispondi"
+EFFORTS = ("low", "medium", "high", "xhigh", "max")
+MAX_TOKENS = 16000  # il thinking è sempre attivo sui modelli attuali e conta nei token della risposta
+# Se l'IA rifiuta una richiesta, l'API la riprova da sola su un altro modello (Claude API; Haiku non lo prevede).
+FALLBACK_MODELS = {"claude-sonnet-5-5", "claude-opus-5-5", "claude-opus-5", "claude-fable-5-1"}
+FALLBACK_BETA = "server-side-fallback-2026-07-01"
 
 _TYPES: dict[str, type] = {}
 
@@ -217,27 +223,47 @@ def tool(name: str, description: str | None, params: dict, returns: _Spec):
     return deco
 
 
+def strict_ok(spec: _Spec, seen=()) -> bool:
+    """Gli schemi rigidi (strict, output strutturati) vogliono oggetti con campi noti: niente `dict` liberi né ricorsione."""
+    k = spec.kind
+    if k in ("dict", "any"):
+        return False
+    if k == "list":
+        return strict_ok(spec.arg, seen)
+    if k == "ref":
+        if spec.arg in seen:
+            return False
+        return all(strict_ok(s, seen + (spec.arg,)) for s in _TYPES[spec.arg].__tokyn_specs__.values())
+    return True
+
+
 def _tool_schema(obj) -> dict:
     if isinstance(obj, Agent):
         return {
             "name": obj.name,
             "description": f"Chiede all'agente {obj.name}. " + obj.instructions[:300],
+            "strict": True,
             "input_schema": {
                 "type": "object",
                 "properties": {"richiesta": {"type": "string", "description": "il testo da passare all'agente"}},
                 "required": ["richiesta"],
+                "additionalProperties": False,
             },
         }
     meta = obj.__tokyn_tool__
-    return {
+    schema = {
         "name": meta["name"],
         "description": meta["description"],
         "input_schema": {
             "type": "object",
             "properties": {p: json_schema(s) for p, s in meta["params"].items()},
             "required": list(meta["params"]),
+            "additionalProperties": False,
         },
     }
+    if all(strict_ok(s) for s in meta["params"].values()):
+        schema["strict"] = True  # l'IA non può passare argomenti che non rispettano i tipi
+    return schema
 
 
 def _call_tool(obj, args: dict):
@@ -258,7 +284,7 @@ def _call_tool(obj, args: dict):
 
 
 class Agent:
-    def __init__(self, name, instructions, model="claude", tools=(), output=None, memory=False, max_steps=10):
+    def __init__(self, name, instructions, model="claude", tools=(), output=None, memory=False, max_steps=10, effort=None):
         self.name = name
         self.instructions = textwrap.dedent(str(instructions)).strip()
         self.model = model
@@ -266,9 +292,12 @@ class Agent:
         self.output = output
         self.memory = memory
         self.max_steps = max_steps
+        self.effort = effort
         self._history: list[dict] = []
         self._mock_calls = 0
         self._tools_by_name = {(t.name if isinstance(t, Agent) else t.__tokyn_tool__["name"]): t for t in self.tools}
+        # Output strutturati nativi dell'API quando lo schema lo permette, altrimenti lo strumento `rispondi`.
+        self._native_output = output is not None and strict_ok(T.ref(output.__name__))
 
     def __repr__(self):
         return f"<agent {self.name}>"
@@ -282,7 +311,7 @@ class Agent:
         if _use_mock(self.model):
             answer, final_text = _mock_answer(self, text)
         else:
-            answer, final_text = self._ask_anthropic(text)
+            answer, final_text = self._run(list(self._history) + [{"role": "user", "content": text}])
         if self.memory:
             self._history += [
                 {"role": "user", "content": text},
@@ -290,68 +319,188 @@ class Agent:
             ]
         return answer
 
+    def ask_all(self, texts):
+        """Come un ciclo di ask, ma con la Batch API: costa la metà e restituisce le risposte nello stesso ordine.
+
+        È più lento (di solito minuti) e non usa la memoria: ogni testo è una richiesta a sé.
+        """
+        texts = [str(t) for t in texts]
+        if _use_mock(self.model):
+            return [_mock_answer(self, t)[0] for t in texts]
+        return self._run_batch(texts) if texts else []
+
     def _system(self):
         system = self.instructions
-        if self.output is not None:
+        if self.output is not None and not self._native_output:
             system += (
                 f"\n\nQuando hai finito, chiama sempre lo strumento `{FINAL_TOOL}` con la risposta finale "
                 "nel formato richiesto. Non rispondere solo con testo."
             )
         return system
 
-    def _ask_anthropic(self, text):
-        client = _client()
-        model = DEFAULT_MODELS.get(self.model, self.model)
+    def _request(self, messages):
+        """Parametri di una chiamata all'IA, uguali per la chiamata normale e per la Batch API."""
+        params = dict(
+            model=DEFAULT_MODELS.get(self.model, self.model),
+            max_tokens=MAX_TOKENS,
+            # istruzioni e strumenti non cambiano: un punto di cache fisso, più la cache automatica della conversazione
+            system=[{"type": "text", "text": self._system(), "cache_control": {"type": "ephemeral"}}],
+            cache_control={"type": "ephemeral"},
+            messages=messages,
+        )
         tools = [_tool_schema(t) for t in self.tools]
+        output_config = {"effort": self.effort} if self.effort else {}
         if self.output is not None:
-            tools.append({
-                "name": FINAL_TOOL,
-                "description": "Consegna la risposta finale nel formato richiesto.",
-                "input_schema": self.output.__tokyn_schema__(),
-            })
-        messages = list(self._history) + [{"role": "user", "content": text}]
-        for _step in range(self.max_steps):
-            kwargs = dict(model=model, max_tokens=4096, system=self._system(), messages=messages)
-            if tools:
-                kwargs["tools"] = tools
-            response = _with_retry(lambda: client.messages.create(**kwargs), self.name)
-            messages.append({"role": "assistant", "content": response.content})
-            uses = [b for b in response.content if getattr(b, "type", "") == "tool_use"]
-            texts = "".join(b.text for b in response.content if getattr(b, "type", "") == "text").strip()
+            if self._native_output:
+                output_config["format"] = {"type": "json_schema", "schema": self.output.__tokyn_schema__()}
+            else:
+                tools.append({
+                    "name": FINAL_TOOL,
+                    "description": "Consegna la risposta finale nel formato richiesto.",
+                    "input_schema": self.output.__tokyn_schema__(),
+                })
+        if tools:
+            params["tools"] = tools
+        if output_config:
+            params["output_config"] = output_config
+        return params
 
-            if not uses:
-                if self.output is None:
-                    return texts, texts
-                messages.append({"role": "user", "content": f"Ora chiama lo strumento `{FINAL_TOOL}` con la risposta finale."})
-                continue
+    def _step(self, response, messages, batch=False):
+        """Elabora una risposta dell'IA: esegue gli strumenti richiesti o riconosce la risposta finale.
 
-            results = []
-            for use in uses:
-                if use.name == FINAL_TOOL and self.output is not None:
-                    try:
-                        value = self.output._from_dict(dict(use.input), self.output.__name__)
-                        return value, _json.dumps(to_plain(value), ensure_ascii=False)
-                    except ValueError as err:
-                        results.append({"type": "tool_result", "tool_use_id": use.id, "is_error": True,
-                                        "content": f"Formato non valido: {err}. Riprova."})
-                    continue
-                target = self._tools_by_name.get(use.name)
-                if target is None:
-                    results.append({"type": "tool_result", "tool_use_id": use.id, "is_error": True,
-                                    "content": f"Lo strumento {use.name} non esiste."})
-                    continue
+        Restituisce (finito, valore, testo da ricordare); se non ha finito, `messages` è pronto per il passaggio dopo.
+        """
+        _count_usage(response, batch)
+        if getattr(response, "stop_reason", None) == "refusal":
+            details = getattr(response, "stop_details", None)
+            category = getattr(details, "category", None) if details else None
+            raise TokynRuntimeError(
+                f"l'IA ha rifiutato la richiesta dell'agente {self.name}" + (f" (categoria: {category})" if category else ""),
+                hint="Riformula le instructions o il testo della richiesta.")
+        messages.append({"role": "assistant", "content": [_plain(b) for b in response.content]})
+        uses = [b for b in response.content if getattr(b, "type", "") == "tool_use"]
+        texts = "".join(b.text for b in response.content if getattr(b, "type", "") == "text").strip()
+
+        if not uses:
+            if getattr(response, "stop_reason", None) == "max_tokens":
+                raise TokynRuntimeError(f"la risposta dell'agente {self.name} è stata interrotta perché troppo lunga",
+                                        hint="Chiedi nelle instructions una risposta più breve.")
+            if self.output is None:
+                return True, texts, texts
+            if self._native_output:
                 try:
-                    content = _call_tool(target, dict(use.input))
-                    results.append({"type": "tool_result", "tool_use_id": use.id, "content": content})
-                except Exception as err:  # l'errore torna all'IA, che può correggersi
-                    results.append({"type": "tool_result", "tool_use_id": use.id, "is_error": True,
-                                    "content": f"Errore: {err}"})
-            messages.append({"role": "user", "content": results})
+                    return True, self.output._from_dict(_json.loads(texts), self.output.__name__), texts
+                except ValueError as err:  # anche JSON non valido
+                    messages.append({"role": "user", "content": f"La risposta non è nel formato richiesto ({err}). "
+                                                                 "Rispondi di nuovo solo con il JSON richiesto."})
+                    return False, None, None
+            messages.append({"role": "user", "content": f"Ora chiama lo strumento `{FINAL_TOOL}` con la risposta finale."})
+            return False, None, None
 
-        raise TokynRuntimeError(
+        results = []
+        for use in uses:
+            if use.name == FINAL_TOOL and self.output is not None and not self._native_output:
+                try:
+                    value = self.output._from_dict(dict(use.input), self.output.__name__)
+                    return True, value, _json.dumps(to_plain(value), ensure_ascii=False)
+                except ValueError as err:
+                    results.append({"type": "tool_result", "tool_use_id": use.id, "is_error": True,
+                                    "content": f"Formato non valido: {err}. Riprova."})
+                continue
+            target = self._tools_by_name.get(use.name)
+            if target is None:
+                results.append({"type": "tool_result", "tool_use_id": use.id, "is_error": True,
+                                "content": f"Lo strumento {use.name} non esiste."})
+                continue
+            try:
+                content = _call_tool(target, dict(use.input))
+                results.append({"type": "tool_result", "tool_use_id": use.id, "content": content})
+            except Exception as err:  # l'errore torna all'IA, che può correggersi
+                results.append({"type": "tool_result", "tool_use_id": use.id, "is_error": True,
+                                "content": f"Errore: {err}"})
+        messages.append({"role": "user", "content": results})
+        return False, None, None
+
+    def _too_many_steps(self):
+        return TokynRuntimeError(
             f"l'agente {self.name} non ha finito entro {self.max_steps} passaggi",
             hint="Aumenta max_steps nell'agente o rendi le instructions più precise.",
         )
+
+    def _run(self, messages, steps_done=0):
+        for _step in range(steps_done, self.max_steps):
+            done, value, final_text = self._step(_create(self._request(messages), self.name), messages)
+            if done:
+                return value, final_text
+        raise self._too_many_steps()
+
+    def _run_batch(self, texts):
+        """Un batch per ogni passaggio: i testi che chiedono strumenti proseguono nel batch successivo."""
+        client = _client()
+        pending = {str(i): [{"role": "user", "content": t}] for i, t in enumerate(texts)}
+        answers = {}
+        for step in range(self.max_steps):
+            if not pending:
+                break
+            requests = [{"custom_id": cid, "params": self._request(msgs)} for cid, msgs in pending.items()]
+            batch = _with_retry(lambda: client.messages.batches.create(requests=requests), self.name)
+            batch = _wait_batch(client, batch, self.name)
+            retry = []
+            for entry in client.messages.batches.results(batch.id):
+                cid = entry.custom_id
+                if entry.result.type != "succeeded":
+                    retry.append(cid)
+                    continue
+                done, value, _ = self._step(entry.result.message, pending[cid], batch=True)
+                if done:
+                    answers[cid] = value
+                    del pending[cid]
+            for cid in retry:  # errore o scadenza nel batch: si riprova con la chiamata normale
+                answers[cid], _ = self._run(pending.pop(cid), steps_done=step)
+        if pending:
+            raise self._too_many_steps()
+        return [answers[str(i)] for i in range(len(texts))]
+
+
+def _plain(block):
+    """Blocchi della risposta come dati semplici, da rimandare tali e quali all'API (anche dentro un batch)."""
+    return block.to_dict() if hasattr(block, "to_dict") else block
+
+
+def _wait_batch(client, batch, agent_name):
+    delay = 5.0
+    reported = None
+    while batch.processing_status != "ended":
+        counts = batch.request_counts
+        done = counts.succeeded + counts.errored + counts.canceled + counts.expired
+        total = done + counts.processing
+        if done != reported:
+            print(f"[tokyn] {agent_name}.ask_all: {done}/{total} risposte pronte…", file=sys.stderr, flush=True)
+            reported = done
+        _time.sleep(delay)
+        delay = min(delay * 1.5, 60.0)
+        batch = _with_retry(lambda: client.messages.batches.retrieve(batch.id), agent_name)
+    return batch
+
+
+_USAGE = {"chiamate": 0, "chiamate_batch": 0, "input": 0, "output": 0, "cache_lette": 0, "cache_scritte": 0}
+
+
+def _count_usage(response, batch=False):
+    _USAGE["chiamate_batch" if batch else "chiamate"] += 1
+    usage = getattr(response, "usage", None)
+    if usage is None:
+        return
+    _USAGE["input"] += getattr(usage, "input_tokens", 0) or 0
+    _USAGE["output"] += getattr(usage, "output_tokens", 0) or 0
+    _USAGE["cache_lette"] += getattr(usage, "cache_read_input_tokens", 0) or 0
+    _USAGE["cache_scritte"] += getattr(usage, "cache_creation_input_tokens", 0) or 0
+
+
+def usage_report() -> str:
+    u = _USAGE
+    return (f"token: {u['input']} in ingresso, {u['output']} in uscita, {u['cache_lette']} letti dalla cache, "
+            f"{u['cache_scritte']} scritti in cache ({u['chiamate']} chiamate, {u['chiamate_batch']} nella Batch API a metà prezzo)")
 
 
 def _use_mock(model) -> bool:
@@ -365,7 +514,7 @@ def _client():
     global _CLIENT
     if _CLIENT is not None:
         return _CLIENT
-    if not os.environ.get("ANTHROPIC_API_KEY"):
+    if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")):
         raise TokynRuntimeError(
             "manca la chiave ANTHROPIC_API_KEY",
             hint="Impostala come variabile d'ambiente, oppure prova il programma senza IA con: tokyn run file.tokyn --mock",
@@ -376,6 +525,23 @@ def _client():
         raise TokynRuntimeError("manca il pacchetto anthropic", hint="Installa con: pip install anthropic") from None
     _CLIENT = anthropic.Anthropic()
     return _CLIENT
+
+
+_FALLBACKS = {"attivi": True}
+
+
+def _create(params, agent_name):
+    """Una chiamata all'IA. Sui modelli che lo prevedono chiede all'API di riprovare su un altro modello se rifiuta."""
+    client = _client()
+    if _FALLBACKS["attivi"] and params["model"] in FALLBACK_MODELS:
+        try:
+            return _with_retry(lambda: client.beta.messages.create(**params, betas=[FALLBACK_BETA], fallbacks="default"),
+                               agent_name)
+        except TokynRuntimeError as err:
+            if not err.bad_request:
+                raise
+            _FALLBACKS["attivi"] = False  # l'API non accetta i fallback per questa chiave: si prosegue senza
+    return _with_retry(lambda: client.messages.create(**params), agent_name)
 
 
 def _with_retry(fn, agent_name, attempts=3):
@@ -392,7 +558,9 @@ def _with_retry(fn, agent_name, attempts=3):
                 if name == "NotFoundError":
                     raise TokynRuntimeError(f"modello non trovato per l'agente {agent_name}",
                                             hint='Usa model: "claude", "claude-opus" o "claude-haiku".') from None
-                raise TokynRuntimeError(f"chiamata all'IA fallita per l'agente {agent_name}: {err}") from None
+                failure = TokynRuntimeError(f"chiamata all'IA fallita per l'agente {agent_name}: {err}")
+                failure.bad_request = name == "BadRequestError"
+                raise failure from None
             _time.sleep(delay)
             delay *= 2
 
@@ -498,6 +666,31 @@ def json_parse(text, default=_NO_DEFAULT):
         detail = f"{err.msg}, riga {err.lineno}" if isinstance(err, _json.JSONDecodeError) else str(err)
         raise TokynRuntimeError(f"il testo non è JSON valido ({detail})",
                                 hint="Se può non esserlo, dai un valore di riserva: json_parse(testo, {})") from None
+
+
+def to_number(text, default=_NO_DEFAULT):
+    """Da testo a numero: "42" -> 42, "4,50" -> 4.5, "1.234,56" -> 1234.56. Se non è un numero restituisce default."""
+    if isinstance(text, (int, float)) and not isinstance(text, bool):
+        return text
+    s = str(text).strip().replace(" ", "")
+    if "," in s and "." in s:  # separatore delle migliaia: vale quello che viene prima
+        s = s.replace(".", "").replace(",", ".") if s.rfind(",") > s.rfind(".") else s.replace(",", "")
+    else:
+        s = s.replace(",", ".")
+    try:
+        return int(s)
+    except ValueError:
+        pass
+    try:
+        value = float(s)
+        if value == value and value not in (float("inf"), float("-inf")):  # niente "nan" o "inf"
+            return value
+    except ValueError:
+        pass
+    if default is not _NO_DEFAULT:
+        return default
+    raise TokynRuntimeError(f"{text!r} non è un numero",
+                            hint="Se può non esserlo, dai un valore di riserva: to_number(testo, 0)")
 
 
 def json_dump(value):

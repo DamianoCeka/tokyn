@@ -65,6 +65,10 @@ def cmd_run(args) -> int:
     except TokynError as err:
         print(err, file=sys.stderr)
         return 1
+    finally:
+        if args.usage:
+            from . import runtime
+            print(runtime.usage_report(), file=sys.stderr)
 
 
 def cmd_spec(args) -> int:
@@ -102,6 +106,7 @@ def main(argv=None) -> int:
     p = sub.add_parser("run", help="esegue un programma")
     p.add_argument("file")
     p.add_argument("--mock", action="store_true", help="risposte finte, senza chiamare l'IA")
+    p.add_argument("--usage", action="store_true", help="alla fine mostra i token spesi e quelli letti dalla cache")
     p.set_defaults(func=cmd_run)
 
     p = sub.add_parser("spec", help="stampa la specifica del linguaggio (utile da dare a un'IA)")
