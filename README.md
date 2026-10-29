@@ -271,4 +271,4 @@ A VS Code extension with Tokyn's colors and the same errors that guide Claude to
 
 ## License
 
-MIT. Tokyn is written by Damiano Ceka with a lot of help from Claude, which wrote much of the code.
+MIT. Tokyn is written by Damiano Ceka.
