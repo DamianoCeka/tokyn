@@ -7,6 +7,15 @@ pensato a un linguaggio fatto apposta per loro: sintassi di Python (che conoscon
 pochissimi concetti, agenti e output strutturati dentro il linguaggio, ed errori che
 spiegano esattamente cosa correggere.
 
+**In Claude Code, misurato dal vivo:** chiedi un programma Python con agenti IA e Claude lo scrive in Tokyn con
+**il 69% di costo in meno** e **il 54% di token in meno**, lo prova con l'IA vera usando il tuo Claude Code (senza
+chiave API) e ti consegna il file Python. Si installa come plugin, in una sessione di Claude Code:
+
+```text
+/plugin marketplace add DamianoCeka/tokyn
+/plugin install tokyn@tokyn
+```
+
 ```
 type Ticket:
     categoria: "tecnico" | "commerciale" | "altro"
