@@ -1,0 +1,40 @@
+import os
+
+FILES = sorted(os.listdir("docs"))
+
+def carica_documenti() -> str:
+    testo = ""
+    for nome in FILES:
+        testo += "=== FILE: " + nome + " ===\n" + read_file("docs/" + nome, "") + "\n\n"
+    return testo
+
+DOCUMENTI = carica_documenti()
+
+type Esito:
+    risposta: str "risposta breve e precisa in italiano, basata solo sui documenti; se i documenti non la contengono scrivi 'Non presente nei documenti'"
+    fonte: str "nome esatto del file (es. ferie.txt) da cui viene la risposta, senza cartella; stringa vuota se non presente"
+
+agent Assistente:
+    model: "claude-haiku"
+    effort: "low"
+    instructions: f"""
+        Rispondi alle domande dei colleghi usando solo i documenti aziendali seguenti.
+        Indica il nome del file da cui hai preso la risposta.
+
+        {DOCUMENTI}
+    """
+    output: Esito
+
+main:
+    domande = []
+    for riga in read_file("domande.txt", "").split("\n"):
+        if riga.strip() != "":
+            domande.append(riga.strip())
+    risultato = []
+    for d in domande:
+        e = Assistente.ask(d)
+        fonte = e.fonte.split("/")[-1]
+        if fonte not in FILES:
+            fonte = ""
+        risultato.append({"domanda": d, "risposta": e.risposta, "fonte": fonte})
+    write_file("risultato.json", json_dump(risultato))

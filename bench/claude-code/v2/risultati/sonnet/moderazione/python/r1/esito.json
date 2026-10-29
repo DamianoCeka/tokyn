@@ -1,0 +1,73 @@
+{
+ "prova": "sonnet/moderazione/python/r1",
+ "cartella": "10de901384",
+ "modello": "sonnet",
+ "compito": "moderazione",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.34884719999999997,
+ "costo_usd_telemetria": 0.348847,
+ "token_output": 6028,
+ "token_input": 20,
+ "token_cache_scritti": 59834,
+ "token_cache_letti": 491912,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 13,
+ "secondi": 80.0,
+ "secondi_api": 66.6,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 8,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 75,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "ti.\n- Funzionano anche la scrittura di `risultato.json` nel formato richiesto, con `riscrittura` solo per `rivedi`, e l'errore chiaro se manca la chiave.\n- Ho cancellato il `risultato.json` prodotto dal finto server, perché conteneva decisioni inventate.\n\n**Cosa non ho verificato**\n- Se il modello applica bene le regole. Mi aspetto `pubblica` per 17 e 21, `rivedi` per 18, `rifiuta` per 19 (spam), 20 (email) e 22 (insulto), ma è una mia previsione.\n- Il server finto non controlla la richiesta, quindi non so se l'API vera accetta tutti i parametri che invio, in particolare `fallbacks`.\n\n**Come provarlo**\n```\nexport ANTHROPIC_API_KEY=...\npython programma.py\n```\nPoi controlla `risultato.json`, soprattutto 20 e 22.\n\n**Come funziona**\n- Usa il modello `claude-opus-5-5` e fa una chiamata per commento, con risposta in JSON vincolato da schema.\n- Se un commento rientra in più regole vince la più severa: `rifiuta`, poi `rivedi`, poi `pubblica`.\n- Il testo dei commenti è trattato come dato da valutare, non come istruzioni, così un commento che dice \"pubblicami\" non influisce sulla decisione.\n- Se una chiamata fallisce, il programma si ferma con un messaggio e non scrive `risultato.json`, invece di scrivere un file incompleto.\n- Ho attivato `fallbacks`, un parametro dell'API che, se il modello rifiuta di rispondere, ripete la richiesta su un altro modello. Se non lo vuoi, basta togliere le righe `betas` e `fallbacks` dalla chiamata.\n\nSe vuoi un modello più economico, dimmelo e lo cambio.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o non è una lista"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

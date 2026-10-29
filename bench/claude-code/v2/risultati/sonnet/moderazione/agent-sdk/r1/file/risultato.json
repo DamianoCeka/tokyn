@@ -1,0 +1,33 @@
+[
+  {
+    "id": 17,
+    "decisione": "pubblica",
+    "motivo": "Si tratta di una domanda di giardinaggio scritta con un tono cortese, senza spam, insulti o dati personali."
+  },
+  {
+    "id": 18,
+    "decisione": "rivedi",
+    "motivo": "Il consiglio sul trattamento al rame è utile, ma il tono è aggressivo e pieno di rimproveri agli altri utenti, pur senza insulti veri e propri.",
+    "riscrittura": "Il rame contro la peronospora va distribuito con il tempo asciutto: se piove entro un'ora dal trattamento, l'effetto va perso."
+  },
+  {
+    "id": 19,
+    "decisione": "rifiuta",
+    "motivo": "Il commento è spam: pubblicizza la vendita di semi e bulbi con offerte a metà prezzo e invita a scrivere su WhatsApp, un canale esterno, per ricevere il catalogo."
+  },
+  {
+    "id": 20,
+    "decisione": "rifiuta",
+    "motivo": "Il commento contiene un dato personale, cioè un indirizzo email."
+  },
+  {
+    "id": 21,
+    "decisione": "pubblica",
+    "motivo": "Il commento è un ringraziamento cortese e pertinente, senza spam, insulti, dati personali o toni aggressivi."
+  },
+  {
+    "id": 22,
+    "decisione": "rifiuta",
+    "motivo": "Il commento offende direttamente un altro utente chiamandolo \"caso disperato\" e non dà nessuna informazione utile sulla differenza tra cactus e agave."
+  }
+]

@@ -1,0 +1,83 @@
+{
+ "prova": "sonnet/fattura/tokyn/r3",
+ "cartella": "101818f071",
+ "modello": "sonnet",
+ "compito": "fattura",
+ "condizione": "tokyn",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.09383920000000001,
+ "costo_usd_telemetria": 0.093839,
+ "token_output": 2619,
+ "token_input": 14,
+ "token_cache_scritti": 14225,
+ "token_cache_letti": 107212,
+ "prove_del_programma": {
+  "costo_usd": 0.000724,
+  "token_output": 690,
+  "chiamate": 2,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 9,
+ "secondi": 45.1,
+ "secondi_api": 37.3,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 842,
+ "righe_tokyn": 45,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "`programma.py` è pronto in `/srv/progetti/101818f071`. L'ho provato con Claude davvero, lanciando `python programma.py` dalla cartella con `fattura.txt`, e funziona.\n\nSulla tua fattura di prova (Ortofrutta Bassi) ha estratto fornitore, data `2026-03-05` e le 4 righe nell'ordine del documento. Il totale dichiarato è 226,40 €, quello ricalcolato dalle righe è 226,40 €, quindi `totale_corretto` è `true`. Il risultato è in `risultato.json`, nel formato che hai chiesto.\n\n- **Totale:** lo ricalcolo come somma di quantità per prezzo unitario e lo confronto con quello scritto in fattura in centesimi interi, così gli arrotondamenti dei decimali non falsano il confronto.\n- **Caso di errore:** ho provato solo la fattura corretta e una risposta finta di prova, che infatti dava un totale sbagliato. Non l'ho provato con una fattura vera che abbia il totale sbagliato.\n- **Chiave API:** ora gira con il tuo Claude Code, perché non c'è `ANTHROPIC_API_KEY`. Per usarlo da solo o per altre persone ti serve una chiave API.\n- **Modello:** per estrarre i dati uso `claude-haiku`, che costa poco. Se qualche fattura venisse letta male, prova a cambiarlo con `claude`.\n- **Sorgente:** `programma.py` è generato dal compilatore Tokyn e non dipende da altro. Accanto c'è `programma.tokyn`, il sorgente da modificare, da cui rigenerare il Python con `python /srv/plugin-tokyn/skills/tokyn/tokyn_cli.py build programma.tokyn --standalone -o programma.py`.",
+ "controllo": {
+  "ok": true,
+  "punti": 6,
+  "massimo": 6,
+  "dettagli": [
+   "fornitore: True ('CARTOLERIA MARCHETTI & FIGLI S.n.c.')",
+   "data 2026-02-18: True ('2026-02-18')",
+   "5 righe in ordine con quantità e prezzi giusti: True (5 giuste su 5)",
+   "totale_dichiarato 440.60: True (440.6)",
+   "totale_calcolato 439.60: True (439.6)",
+   "totale_corretto false: True (False)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.000394,
+   "token_output": 387,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

@@ -1,0 +1,83 @@
+{
+ "prova": "sonnet/scadenze/agent-sdk/r1",
+ "cartella": "a57f95e91f",
+ "modello": "sonnet",
+ "compito": "scadenze",
+ "condizione": "agent-sdk",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.29834730000000004,
+ "costo_usd_telemetria": 0.298347,
+ "token_output": 4349,
+ "token_input": 12,
+ "token_cache_scritti": 57440,
+ "token_cache_letti": 250733,
+ "prove_del_programma": {
+  "costo_usd": 0.145396,
+  "token_output": 4528,
+  "chiamate": 10,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 9,
+ "secondi": 67.7,
+ "secondi_api": 40.1,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 110,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "tato.json` con `giorni_mancanti`.\n- Le email vengono generate al massimo 4 alla volta. Claude gira senza strumenti, quindi non tocca file né comandi.\n\n**Cosa ho provato**\n- Con `2026-11-01` risultano 4 contratti: Ottica Ferri (Assistenza tecnica, 11 giorni), Autofficina Riva (17), Ottica Ferri (Licenza gestionale, 24) e Studio Moretti (30). Quest'ultimo è il caso limite: scade esattamente a 30 giorni ed è incluso.\n- Restano fuori correttamente Bar Centrale (già scaduto), Pasticceria Lombardi (38 giorni) e Agriturismo Le Querce.\n- Con `2026-10-20` Bar Centrale compare con `giorni_mancanti` 0.\n- Con `2026-10-31` Studio Moretti (31 giorni) è escluso.\n- Con una data lontana ottengo `{\"in_scadenza\": []}`.\n- Una data non valida o l'argomento mancante danno un messaggio d'errore chiaro.\n- Le email generate sono in italiano, si aprono con «Gentile Ottica Ferri,» e citano servizio e data.\n\n**Da sapere**\n- Un cliente con due contratti in scadenza riceve due email separate, come Ottica Ferri. Se preferite una sola email per cliente, posso cambiarlo.\n- Le righe con scadenza non valida vengono saltate con un avviso su stderr.\n- Se Claude non restituisce un'email per un contratto, il programma si ferma con un errore e non scrive `risultato.json` a metà.\n- Non ho impostato un modello: usa quello predefinito del Claude Agent SDK. Se ne volete uno preciso, basta aggiungere `model=...` in `ClaudeAgentOptions`.\n- `risultato.json` nella cartella ora contiene l'ultima prova, quella con data 2030.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "esattamente i 4 contratti in scadenza: True (['Panificio Russo', 'Farmacia Conti', 'Hotel Bellavista', 'Ferramenta Gallo Snc'])",
+   "scadenze come nel file e in ordine di scadenza: True (['2026-12-15', '2026-12-28', '2027-01-06', '2027-01-14'])",
+   "giorni_mancanti giusti: True ([0, 13, 22, 30])",
+   "email con oggetto e testo che nominano cliente e servizio: True",
+   "email scritte una per una (testi diversi anche senza nomi, servizi e date): True"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.057105,
+   "token_output": 2156,
+   "chiamate": 4,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

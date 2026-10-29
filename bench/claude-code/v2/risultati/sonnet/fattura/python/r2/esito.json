@@ -1,0 +1,71 @@
+{
+ "prova": "sonnet/fattura/python/r2",
+ "cartella": "8d79060e1a",
+ "modello": "sonnet",
+ "compito": "fattura",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2928638,
+ "costo_usd_telemetria": 0.292864,
+ "token_output": 4146,
+ "token_input": 14,
+ "token_cache_scritti": 55371,
+ "token_cache_letti": 298918,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 9,
+ "secondi": 38.7,
+ "secondi_api": 32.3,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 81,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "e non c'è nessuna chiave API (`ANTHROPIC_API_KEY` non è impostata). Quindi non so ancora se l'estrazione del testo funziona bene sulla tua fattura.\n\n**Cosa ho provato**\n- **Senza chiave:** il programma si ferma con il messaggio \"manca la chiave API\" invece di un errore lungo.\n- **Con una risposta simulata, al posto di Claude:** ho usato i dati della tua `fattura.txt` (Ortofrutta Bassi, 05/03/2026, quattro righe). Il totale ricalcolato è 226,40, uguale a quello scritto, quindi `totale_corretto` risulta `true`.\n- **Con un totale sbagliato di 1 centesimo (226,41):** `totale_corretto` risulta `false`.\n- **Cosa resta non provato:** la qualità dell'estrazione fatta davvero da Claude.\n\n**Come funziona**\n- Legge `fattura.txt` dalla cartella corrente e chiede a Claude fornitore, data (AAAA-MM-GG), righe nell'ordine della fattura e totale scritto in fattura.\n- Il totale lo ricalcolo io in Python, come somma di quantità per prezzo unitario, con aritmetica decimale. Non viene fatto da Claude e non ci sono errori di arrotondamento dei float. Il confronto è esatto al centesimo.\n- Scrive `risultato.json` nel formato che mi hai indicato.\n- Usa `claude-opus-5-5`, il modello predefinito che ho trovato nella documentazione dell'SDK Anthropic. La spesa per una fattura è minima.\n\n**Per provarlo davvero**\n```\npip install anthropic pydantic\nexport ANTHROPIC_API_KEY=...\npython programma.py\n```\nSe me la imposti qui, o mi dici di usare un'altra credenziale, lo lancio io e ti riporto il risultato vero.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 6,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

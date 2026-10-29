@@ -1,0 +1,84 @@
+{
+ "prova": "sonnet/riunione/agent-sdk/r1",
+ "cartella": "6550073acd",
+ "modello": "sonnet",
+ "compito": "riunione",
+ "condizione": "agent-sdk",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2753328,
+ "costo_usd_telemetria": 0.275333,
+ "token_output": 3561,
+ "token_input": 12,
+ "token_cache_scritti": 53900,
+ "token_cache_letti": 240988,
+ "prove_del_programma": {
+  "costo_usd": 0.02398,
+  "token_output": 607,
+  "chiamate": 2,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 9,
+ "secondi": 60.0,
+ "secondi_api": 45.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 83,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "i passaggi. Il programma ora legge tutto lo stream prima di restituire il risultato, così sparisce un errore rumoroso che compariva alla chiusura.\n\nAvviato con `python programma.py` dalla cartella del verbale, ha scritto `risultato.json` con 2 decisioni e 3 azioni, tutte corrette:\n\n- **Decisioni:**\n  - Partecipare alla fiera di Bologna con lo stand piccolo.\n  - Pubblicare la newsletter ogni due settimane invece che ogni mese.\n- **Azioni:**\n  - Paolo deve prenotare lo stand per la fiera di Bologna entro il 2026-10-30.\n  - Chiara deve preparare il calendario dei temi della newsletter entro il 2026-11-06.\n  - Roberto deve far stampare i volantini per lo stand entro il 2026-11-16.\n\nIl parcheggio che compare nel verbale non è finito tra le decisioni. Nel secondo giro ho controllato solo che il programma partisse e scrivesse il file: l'inizio del JSON era uguale al primo. Il contenuto completo l'ho letto solo nel primo giro.\n\n**Come funziona:**\n- Passa il testo a Claude tramite `claude-agent-sdk`, senza strumenti. Chiede una risposta con la struttura esatta che hai descritto.\n- Le scadenze relative, come \"venerdì prossimo\", le calcola dalla data della riunione scritta nel verbale.\n- Controlla che ogni scadenza sia nel formato AAAA-MM-GG prima di salvare.\n- Se `verbale.txt` manca o è vuoto, o se la risposta non è valida, stampa l'errore e non scrive `risultato.json`. L'ho provato lanciandolo da una cartella senza verbale.\n\nNon ho indicato un modello: usa quello predefinito dell'SDK.",
+ "controllo": {
+  "ok": true,
+  "punti": 6,
+  "massimo": 6,
+  "dettagli": [
+   "decisioni lista di stringhe e azioni lista di {cosa, chi, entro} stringhe: True",
+   "le 2 decisioni e nessuna chiacchiera: True (trovate: [\"lancio dell'app al 24 novembre\", 'budget pubblicitario dai giornali ai social']; chiacchiere: []; scritte: [\"Il lancio dell'app nuova slitta dal 10 al 24 novembre 2026.\", 'Da dicembre tutto il budget pubblicitario passa dai giornali ai social.'])",
+   "azione di Marco entro 2026-11-13: True ([{'cosa': 'Sistemare i due bug bloccanti del pagamento con carta', 'chi': 'Marco', 'entro': '2026-11-13'}])",
+   "azione di Sara entro 2026-11-18: True ([{'cosa': 'Scrivere le risposte pronte per il supporto sul nuovo lancio', 'chi': 'Sara', 'entro': '2026-11-18'}])",
+   "azione di Davide entro 2026-11-30: True ([{'cosa': 'Preparare il piano delle campagne social di dicembre', 'chi': 'Davide', 'entro': '2026-11-30'}])",
+   "esattamente 3 azioni: True (3)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.019477,
+   "token_output": 456,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

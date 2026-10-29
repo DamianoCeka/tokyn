@@ -1,0 +1,72 @@
+{
+ "prova": "sonnet/documenti/python/r3",
+ "cartella": "4333186b5d",
+ "modello": "sonnet",
+ "compito": "documenti",
+ "condizione": "python",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.28987019999999997,
+ "costo_usd_telemetria": 0.28987,
+ "token_output": 4406,
+ "token_input": 14,
+ "token_cache_scritti": 54042,
+ "token_cache_letti": 296142,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 10,
+ "secondi": 48.6,
+ "secondi_api": 43.7,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 87,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "a risposta;\n- scrive `risultato.json` nell'ordine di `domande.txt`, con `fonte` che è solo il nome del file;\n- scarta una `fonte` inventata, cioè un file che non esiste in `docs/`.\n\nNon so quindi se le risposte vere di Claude sono corrette. Per provarlo, esporta la chiave e lancia il programma:\n\n```\nexport ANTHROPIC_API_KEY=sk-ant-...\npython programma.py\n```\n\nPoi guarda `risultato.json`. Dai documenti dovresti trovare: 100 euro a notte (`regolamento_viaggi.txt`), 8 giorni al mese (`lavoro_da_remoto.txt`), bancale giallo vicino all'ingresso (`orari_magazzino.txt`) e it@azienda.example (`regole_informatiche.txt`). Se mi dai una chiave o fai il login, lo rilancio io e ti dico com'è andata.\n\n**Come funziona**\n- **Una chiamata per domanda:** ogni chiamata riceve tutti i documenti, ognuno col suo nome file, e Claude risponde in JSON con `risposta` e `fonte`. I documenti sono identici per ogni domanda, quindi li ho messi in cache.\n- **Modello:** `claude-opus-5-5`, con impegno di ragionamento basso, che basta per domande di questo tipo.\n- **Risposta non nei documenti:** se Claude non la trova, scrive \"Non risulta nei documenti.\" e mette `fonte` a `null`. Lo stesso succede se la richiesta viene rifiutata o tagliata: la domanda resta nel file con quella dicitura e il programma stampa un avviso.\n- **Errori di rete o di chiave:** fermano il programma con un messaggio.\n- **Righe vuote:** vengono ignorate.\n\nL'unica dipendenza è il pacchetto `anthropic`, già installato qui (versione 2.3.0).",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 5,
+  "dettagli": [
+   "risultato.json mancante o non è una lista"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

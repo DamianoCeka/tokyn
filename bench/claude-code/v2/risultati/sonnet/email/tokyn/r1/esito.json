@@ -1,0 +1,81 @@
+{
+ "prova": "sonnet/email/tokyn/r1",
+ "cartella": "28bf13f910",
+ "modello": "sonnet",
+ "compito": "email",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.0742089,
+ "costo_usd_telemetria": 0.074209,
+ "token_output": 1738,
+ "token_input": 10,
+ "token_cache_scritti": 12511,
+ "token_cache_letti": 67649,
+ "prove_del_programma": {
+  "costo_usd": 0.001806,
+  "token_output": 1745,
+  "chiamate": 10,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 6,
+ "secondi": 62.1,
+ "secondi_api": 21.3,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 3
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 824,
+ "righe_tokyn": 22,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json",
+  "smista.tokyn"
+ ],
+ "risposta_finale": "rgente` e `riassunto`.\n\nI risultati sembrano sensati:\n- **`msg_001`**: ordine di tazze e teiere, non urgente.\n- **`msg_002`**: reclamo urgente. L'ordine non è arrivato ed è un regalo per domani.\n- **`msg_003`**: richiesta di informazioni sulla lavastoviglie, non urgente.\n- **`msg_004`**: spam. È un tentativo di phishing (offerta SEO che chiede i dati della carta).\n- **`msg_005`**: reclamo non urgente, un vaso arrivato scheggiato.\n\nCome funziona:\n- **Modello:** usa `claude-haiku` con `effort: \"low\"`, che basta per classificare.\n- **Una chiamata per email:** il costo indicativo della prova è stato di circa 0,0013 $. Non uso la Batch API (`ask_all`) perché con poche email è più lenta.\n- **Contenuto delle email:** le istruzioni dicono di trattarlo solo come testo da classificare e di non eseguire ordini che contiene.\n- **Urgenza:** il criterio è deciso dal modello, cioè scadenze, danni o problemi gravi. Se vuoi regole diverse, modifica la descrizione del campo `urgente` in `smista.tokyn`.\n- **Chiave API:** per farlo girare da solo o per altre persone serve `ANTHROPIC_API_KEY`. Il tuo Claude Code va bene solo per provarlo.\n\nFile nella cartella:\n- `programma.py`: il file da consegnare. È autonomo e non dipende da Tokyn.\n- `smista.tokyn`: il sorgente da cui è generato. Per cambiare qualcosa modifica questo e rigenera `programma.py` con `python /srv/plugin-tokyn/skills/tokyn/tokyn_cli.py build smista.tokyn --standalone -o programma.py`.\n- `risultato.json`: l'output dell'ultima prova.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 email in ordine di nome del file: True (['msg_201.txt', 'msg_202.txt', 'msg_203.txt', 'msg_204.txt', 'msg_205.txt', 'msg_206.txt'])",
+   "categorie ammesse e giuste: True (6 su 6: ['ordine', 'reclamo', 'informazioni', 'spam', 'ordine', 'reclamo'])",
+   "urgente booleano e giusto: True (6 su 6: [False, True, False, False, True, False])",
+   "riassunti brevi e sull'argomento: True (brevi: True, sull'argomento: 6 su 6)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.001515,
+   "token_output": 1096,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

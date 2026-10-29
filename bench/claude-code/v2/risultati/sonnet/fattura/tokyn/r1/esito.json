@@ -1,0 +1,83 @@
+{
+ "prova": "sonnet/fattura/tokyn/r1",
+ "cartella": "86d0592317",
+ "modello": "sonnet",
+ "compito": "fattura",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.09662279999999998,
+ "costo_usd_telemetria": 0.096623,
+ "token_output": 2885,
+ "token_input": 12,
+ "token_cache_scritti": 14709,
+ "token_cache_letti": 89128,
+ "prove_del_programma": {
+  "costo_usd": 0.030744,
+  "token_output": 1756,
+  "chiamate": 3,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 73.1,
+ "secondi_api": 46.5,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 840,
+ "righe_tokyn": 44,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "* ha dato fornitore \"ORTOFRUTTA BASSI di Bassi Marco\", data `2026-03-05` e le 4 righe nell'ordine della fattura. Il totale ricalcolato è 226,40 €, uguale a quello scritto, quindi `totale_corretto` è `true`.\n- **Totale sbagliato:** ho cambiato il totale in 226,41 € su una copia in `/tmp`. Il programma ha messo `totale_corretto: false` e ha stampato la differenza.\n- **Ripetizione:** una seconda esecuzione sul file originale ha dato lo stesso `risultato.json`.\n\n**Come funziona**\n- Claude legge il testo e restituisce fornitore, data (già in formato AAAA-MM-GG), righe e totale dichiarato.\n- Il ricalcolo lo fa il programma, non Claude: somma quantità per prezzo unitario di ogni riga e confronta il risultato con il totale scritto in fattura, in centesimi interi, così non ci sono errori di arrotondamento.\n- Le quantità intere sono scritte come `4`, quelle con decimali come `2.5`.\n- A schermo stampa una riga con l'esito.\n\n**Cosa serve per usarlo**\n- Il file è stato generato dal compilatore Tokyn, ma non dipende da Tokyn. Il sorgente è `programma.tokyn`, accanto a `programma.py`: se vuoi modificare qualcosa, cambia quello e rigenera il Python.\n- Le mie prove sono passate dal Claude Code di questa macchina. Per farlo girare da solo o per altre persone serve `ANTHROPIC_API_KEY`, e le regole di Anthropic lo richiedono.\n\nIl totale dichiarato è quello scritto in fattura, non una somma degli importi di riga. Il confronto è con quanto risulta da quantità per prezzo unitario, come hai chiesto.",
+ "controllo": {
+  "ok": true,
+  "punti": 6,
+  "massimo": 6,
+  "dettagli": [
+   "fornitore: True ('CARTOLERIA MARCHETTI & FIGLI S.n.c.')",
+   "data 2026-02-18: True ('2026-02-18')",
+   "5 righe in ordine con quantità e prezzi giusti: True (5 giuste su 5)",
+   "totale_dichiarato 440.60: True (440.6)",
+   "totale_calcolato 439.60: True (439.6)",
+   "totale_corretto false: True (False)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.014343,
+   "token_output": 858,
+   "chiamate": 1,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

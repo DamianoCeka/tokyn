@@ -1,0 +1,40 @@
+import csv
+import sys
+import datetime
+
+type Email:
+    oggetto: str "oggetto breve dell'email, in italiano"
+    testo: str "testo completo dell'email, in italiano"
+
+agent Promemoria:
+    instructions: """
+        Scrivi in italiano un'email di promemoria per un cliente il cui contratto sta per scadere.
+        Ricevi cliente, servizio, data di scadenza e giorni mancanti.
+        Il testo si rivolge al cliente per nome (es. "Gentile <cliente>,"), cita il servizio in scadenza
+        e la data di scadenza, è cordiale e professionale, invita a contattarci per il rinnovo e finisce con una firma cordiale.
+        L'oggetto è breve e cita il servizio e la data (es. "Il contratto di assistenza tecnica scade il 12 novembre").
+    """
+    output: Email
+    effort: "low"
+
+def per_scadenza(c: dict) -> str:
+    return c["scadenza"]
+
+main:
+    if len(sys.argv) < 2:
+        print("Uso: python programma.py AAAA-MM-GG")
+        return
+    rif = datetime.date.fromisoformat(sys.argv[1])
+    righe = csv.DictReader(read_file("contratti.csv").splitlines())
+    trovati = []
+    for r in righe:
+        giorni = (datetime.date.fromisoformat(r["scadenza"]) - rif).days
+        if 0 <= giorni <= 30:
+            trovati.append({"cliente": r["cliente"], "servizio": r["servizio"], "scadenza": r["scadenza"], "giorni_mancanti": giorni})
+    trovati = sorted(trovati, key=per_scadenza)
+    for c in trovati:
+        e = Promemoria.ask(f"Cliente: {c['cliente']}\nServizio: {c['servizio']}\nScadenza: {c['scadenza']}\nGiorni mancanti: {c['giorni_mancanti']}")
+        c["oggetto"] = e.oggetto
+        c["testo"] = e.testo
+    write_file("risultato.json", json_dump({"in_scadenza": trovati}))
+    print(f"{len(trovati)} contratti in scadenza, scritti in risultato.json")

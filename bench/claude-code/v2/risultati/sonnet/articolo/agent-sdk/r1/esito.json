@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/articolo/agent-sdk/r1",
+ "cartella": "657a37aa9e",
+ "modello": "sonnet",
+ "compito": "articolo",
+ "condizione": "agent-sdk",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.27659890000000004,
+ "costo_usd_telemetria": 0.276599,
+ "token_output": 4050,
+ "token_input": 10,
+ "token_cache_scritti": 54329,
+ "token_cache_letti": 187629,
+ "prove_del_programma": {
+  "costo_usd": 0.057745,
+  "token_output": 1833,
+  "chiamate": 2,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 62.6,
+ "secondi_api": 39.7,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 106,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "ticolo e scrive `risultato.json`.\n\n**Cosa fa**\n- Passa l'articolo a Claude con il Claude Agent SDK, senza strumenti. Il testo dell'articolo è trattato come materiale da riassumere, non come istruzioni.\n- Chiede una scheda con titolo breve, cinque punti di una frase ciascuno e le persone e organizzazioni citate. La risposta deve rispettare uno schema JSON.\n- Controlla il risultato e riprova fino a 3 volte se i punti non sono esattamente cinque o mancano campi.\n- Toglie dai nomi citati i doppioni, ignorando maiuscole e spazi in più.\n- Se `articolo.txt` manca o è vuoto, stampa un errore ed esce con codice 1.\n\n**Prova**\n- L'ho eseguito due volte con esito corretto. Il risultato ha il titolo \"Al San Matteo di Castelrocca apre il pronto soccorso pediatrico\", 5 punti e 7 nomi citati, tutti diversi.\n- I nomi citati sono: Ospedale San Matteo, Azienda Sanitaria Territoriale, Fondazione Rinaldi, Marco Tessari, Chiara Valli, Genitori Insieme e Silvia Orlandi.\n- Ho provato anche il caso senza `articolo.txt`: messaggio di errore ed exit 1.\n- La prima esecuzione stampava un avviso sul chiuso del flusso asincrono. L'ho corretto e nella seconda esecuzione non compare più.\n\nNon ho impostato un modello: usa quello di default del Claude Agent SDK. Se vuoi fissarne uno, basta aggiungere `model=...` in `ClaudeAgentOptions`.\n\nAlcuni punti sono lunghi, a volte con due informazioni in una frase. Se li preferisci più corti, basta aggiungere una riga al prompt, ad esempio \"massimo 25 parole per punto\".",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "titolo sullo stabilimento: True ('Valtek Impianti investe 48 milioni per una fabbrica di pompe di calore a Montebrenna')",
+   "esattamente 5 punti (stringhe non vuote): True (5)",
+   "i 5 punti riportano almeno 3 fatti principali su 4: True (['investimento di 48 milioni', '320 posti di lavoro', 'produzione dal 2027', 'pompe di calore'])",
+   "citati (lista di stringhe senza doppioni) con almeno 5 su 6 in voci distinte: True (6 trovati: ['Elena Marchesini', 'Laura Benedetti', 'Paolo Ricci', 'Valtek Impianti', 'Comune di Montebrenna', 'Istituto Tecnico Volta']; doppioni: [])"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.036529,
+   "token_output": 1072,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

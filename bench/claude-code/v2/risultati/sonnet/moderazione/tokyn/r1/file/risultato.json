@@ -1,0 +1,33 @@
+[
+  {
+    "id": 17,
+    "decisione": "pubblica",
+    "motivo": "Il commento è una domanda di giardinaggio legittima, cordiale e senza spam, insulti o dati personali."
+  },
+  {
+    "id": 18,
+    "decisione": "rivedi",
+    "motivo": "Il contenuto è utile, ma il tono è aggressivo e polemico verso gli altri utenti, senza insulti veri e propri.",
+    "riscrittura": "Ho già segnalato più volte questo punto, ma forse non è stato notato: il rame contro la peronospora va applicato con tempo asciutto, perché se piove entro un'ora il trattamento perde efficacia. Vale la pena tenerlo presente prima di intervenire."
+  },
+  {
+    "id": 19,
+    "decisione": "rifiuta",
+    "motivo": "Il commento è spam promozionale che invita a contattare un numero WhatsApp per un catalogo gratuito, senza alcun contenuto utile per il forum di giardinaggio."
+  },
+  {
+    "id": 20,
+    "decisione": "rifiuta",
+    "motivo": "Il commento contiene un indirizzo email personale, che non è consentito nei commenti pubblici del forum."
+  },
+  {
+    "id": 21,
+    "decisione": "pubblica",
+    "motivo": "Il commento è un ringraziamento cortese e pertinente, senza spam, insulti, dati personali o toni aggressivi."
+  },
+  {
+    "id": 22,
+    "decisione": "rifiuta",
+    "motivo": "Il commento contiene un insulto diretto a un altro utente (\"caso disperato\") e un'espressione denigratoria (\"lascia perdere le piante\")."
+  }
+]

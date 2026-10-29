@@ -1,0 +1,34 @@
+type Esito:
+    categoria: "spesa alimentare" | "trasporti" | "casa" | "svago" | "altro" "categoria del movimento bancario"
+
+agent Classificatore:
+    model: "claude-haiku"
+    effort: "low"
+    instructions: """
+        Assegni una categoria a un movimento del conto corrente a partire dalla descrizione.
+        Categorie: spesa alimentare (supermercati, alimentari), trasporti (treni, carburante, taxi, pedaggi),
+        casa (affitto, bollette, utenze, arredamento), svago (ristoranti, cinema, abbonamenti, viaggi),
+        altro (tutto il resto, stipendi e movimenti non classificabili).
+    """
+    output: Esito
+
+main:
+    righe = read_file("movimenti.csv").splitlines()
+    movimenti = []
+    testi = []
+    for riga in righe[1:]:
+        if riga.strip() == "":
+            continue
+        campi = riga.split(";")
+        descrizione = ";".join(campi[1:-1])
+        importo = to_number(campi[-1].strip())
+        movimenti.append({"data": campi[0].strip(), "descrizione": descrizione, "importo": importo})
+        testi.append(descrizione)
+    esiti = Classificatore.ask_all(testi)
+    totali = {"spesa alimentare": 0, "trasporti": 0, "casa": 0, "svago": 0, "altro": 0}
+    for m, e in zip(movimenti, esiti):
+        m["categoria"] = e.categoria
+        totali[e.categoria] += m["importo"]
+    for k in totali:
+        totali[k] = round(totali[k], 2) + 0.0
+    write_file("risultato.json", json_dump({"movimenti": movimenti, "totali": totali}))

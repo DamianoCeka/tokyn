@@ -1,0 +1,84 @@
+{
+ "prova": "sonnet/fattura/agent-sdk/r1",
+ "cartella": "d4be3731e5",
+ "modello": "sonnet",
+ "compito": "fattura",
+ "condizione": "agent-sdk",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2870305000000001,
+ "costo_usd_telemetria": 0.287031,
+ "token_output": 4363,
+ "token_input": 10,
+ "token_cache_scritti": 56093,
+ "token_cache_letti": 190085,
+ "prove_del_programma": {
+  "costo_usd": 0.08156,
+  "token_output": 3052,
+  "chiamate": 3,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 71.9,
+ "secondi_api": 42.8,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 110,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "iarato. Chiede di copiare i numeri come scritti, senza ricalcolarli.\n- Il totale lo ricalcolo io in Python, con `Decimal`, sommando quantità per prezzo unitario. Lo arrotondo al centesimo e lo confronto con quello dichiarato, così non ci sono errori da virgola mobile.\n\n**Prove**\n- **Fattura reale** (Ortofrutta Bassi, 4 righe): data `2026-03-05`, totale 226,40 € calcolato e dichiarato, `totale_corretto: true`.\n- **Totale sbagliato**: ho copiato la fattura in `/tmp/t` con 226,04 al posto di 226,40. Il programma ha segnalato \"TOTALE ERRATO\", con `totale_corretto: false` nel JSON.\n- **Messaggio d'errore a fine esecuzione**: nella prima prova usciva un errore sul chiudersi dello stream dell'SDK. L'ho tolto facendo leggere tutto lo stream prima di uscire. Dopo la correzione ho rilanciato il programma su entrambe le fatture e l'errore non è più comparso.\n\n**Da sapere**\n- Il fornitore è quello che emette la fattura: nel tuo caso \"ORTOFRUTTA BASSI di Bassi Marco\", scritto com'è nel testo. Nel tuo esempio JSON c'era \"Rossi Forniture S.r.l.\", che era solo un esempio di formato.\n- Il programma non fissa il modello, quindi usa quello predefinito dell'SDK. Se vuoi un modello preciso, si aggiunge `model=...` in `ClaudeAgentOptions`.\n- Se `fattura.txt` manca, o Claude non restituisce dati validi, il programma esce con un errore e non scrive `risultato.json`.\n\nIl file `programma.py` risulta modificato su disco dopo che l'ho scritto. Ho preso il contenuto attuale come buono e non l'ho riletto.",
+ "controllo": {
+  "ok": true,
+  "punti": 6,
+  "massimo": 6,
+  "dettagli": [
+   "fornitore: True ('CARTOLERIA MARCHETTI & FIGLI S.n.c.')",
+   "data 2026-02-18: True ('2026-02-18')",
+   "5 righe in ordine con quantità e prezzi giusti: True (5 giuste su 5)",
+   "totale_dichiarato 440.60: True (440.6)",
+   "totale_calcolato 439.60: True (439.6)",
+   "totale_corretto false: True (False)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.031409,
+   "token_output": 1088,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

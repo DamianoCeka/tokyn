@@ -1,0 +1,73 @@
+{
+ "prova": "sonnet/recensioni/python/r3",
+ "cartella": "152e8a7f19",
+ "modello": "sonnet",
+ "compito": "recensioni",
+ "condizione": "python",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.31409059999999994,
+ "costo_usd_telemetria": 0.314091,
+ "token_output": 4730,
+ "token_input": 18,
+ "token_cache_scritti": 56180,
+ "token_cache_letti": 420346,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 12,
+ "secondi": 66.6,
+ "secondi_api": 56.5,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 8,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 46,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "oti finti). Ha scritto `risultato.json` nel formato che hai chiesto. Quel `risultato.json` contiene però i voti del finto server, non quelli di Claude. Non so se sentimento e voto reali saranno sensati, e non ho visto un errore vero dell'API.\n\n**Come funziona.** Per ogni recensione fa una chiamata a Claude con il modello `claude-opus-5-5`. Chiedo sentimento (positivo, negativo o neutro) e voto intero in formato strutturato, quindi la risposta è sempre JSON valido. Il programma controlla anche che il voto sia tra 1 e 5. Le chiamate vanno in parallelo (4 alla volta), ma l'ordine nell'output resta quello del file. La media è arrotondata a 2 decimali.\n\n**Comportamenti da conoscere:**\n- Le righe vuote vengono saltate.\n- Se un file è vuoto, `media` vale `null`.\n- Se una recensione dà errore o un voto fuori scala, il programma si ferma senza scrivere un risultato parziale.\n\n**Per usarlo.** Imposta `ANTHROPIC_API_KEY` (o fai `ant auth login`) e lancia `python programma.py` dalla cartella di `recensioni.txt`. Serve il pacchetto `anthropic`, che qui è già installato.\n\n**Costo.** Ho scelto `claude-opus-5-5` perché è il modello consigliato, con sforzo di ragionamento basso. Per classificare recensioni brevi, `claude-haiku-5-5` costa molto meno. Per usarlo basta cambiare la costante `MODELLO` in cima al file. Non l'ho cambiata perché la scelta è tua.\n\nLa porta 8765 di questa macchina è occupata da un altro processo che risponde come un finto server. Non l'ho avviato io e non l'ho toccato.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o senza la lista recensioni"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

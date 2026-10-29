@@ -1,0 +1,81 @@
+{
+ "prova": "sonnet/candidati/tokyn/r2",
+ "cartella": "40e419f1b8",
+ "modello": "sonnet",
+ "compito": "candidati",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.0938241,
+ "costo_usd_telemetria": 0.093824,
+ "token_output": 2319,
+ "token_input": 12,
+ "token_cache_scritti": 15416,
+ "token_cache_letti": 89461,
+ "prove_del_programma": {
+  "costo_usd": 0.057121,
+  "token_output": 1534,
+  "chiamate": 8,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 73.0,
+ "secondi_api": 29.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 835,
+ "righe_tokyn": 32,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "Ho scritto `programma.py` e l'ho provato sui 4 curriculum con risposte vere di Claude. Funziona e ha scritto `risultato.json` nel formato che volevi.\n\nPer ogni curriculum chiede a Claude un punteggio da 1 a 10 e una motivazione di una frase. Poi ordina i candidati dal punteggio più alto al più basso e scrive `risultato.json` con `migliore`. L'ho avviato con `python programma.py` dalla cartella con `annuncio.txt` e `cv/`.\n\nRisultato dell'ultima prova:\n\n| Candidato | Punteggio |\n|---|---|\n| `bianchi_elena.txt` | 9 |\n| `rizzo_davide.txt` | 6 |\n| `esposito_marco.txt` | 4 |\n| `ferraro_chiara.txt` | 1 |\n\nIl migliore è `bianchi_elena.txt`: ha circa 5 anni di vendita in telefonia, con garanzie, cassa, gestionale e weekend. In due prove successive l'ordine è rimasto uguale, ma i punteggi di Marco e Davide sono cambiati di un punto.\n\nIl programma ignora eventuali istruzioni scritte dentro un curriculum. Se un punteggio esce dall'intervallo da 1 a 10, lo riporta nei limiti.\n\nLa prova è girata senza chiave API, tramite il tuo Claude Code. Per usarlo da solo, o per altre persone, serve la variabile `ANTHROPIC_API_KEY`.\n\nHo scritto il programma in Tokyn, il linguaggio del plugin per questi programmi, e `programma.py` è il Python generato da lì. Funziona da solo. Il sorgente è `programma.tokyn`: se vuoi cambiare qualcosa, modifica quello e rigenera il Python.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "4 curriculum una volta ciascuno con punteggio intero da 1 a 10 e motivazione: True ([('ferrari_giulia.txt', 10), ('colombo_luca.txt', 3), ('ricci_paolo.txt', 3), ('gallo_andrea.txt', 1)])",
+   "in ordine di punteggio decrescente: True ([10, 3, 3, 1])",
+   "migliore ferrari_giulia.txt col punteggio più alto: True ('ferrari_giulia.txt')",
+   "gallo_andrea.txt col punteggio più basso: True"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.024612,
+   "token_output": 583,
+   "chiamate": 4,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

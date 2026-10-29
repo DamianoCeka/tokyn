@@ -1,0 +1,81 @@
+{
+ "prova": "sonnet/email/tokyn/r3",
+ "cartella": "4df57d55eb",
+ "modello": "sonnet",
+ "compito": "email",
+ "condizione": "tokyn",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.0765599,
+ "costo_usd_telemetria": 0.07656,
+ "token_output": 1802,
+ "token_input": 10,
+ "token_cache_scritti": 12928,
+ "token_cache_letti": 68079,
+ "prove_del_programma": {
+  "costo_usd": 0.001852,
+  "token_output": 1838,
+  "chiamate": 10,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 6,
+ "secondi": 62.1,
+ "secondi_api": 20.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 3
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 824,
+ "righe_tokyn": 22,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "ogramma.py` dalla cartella che contiene `email/`: ha scritto `risultato.json` con 5 elementi, in ordine di nome file.\n\nRisultato della prova con Claude vero:\n\n| File | Categoria | Urgente |\n|---|---|---|\n| `msg_001.txt` | ordine | no |\n| `msg_002.txt` | reclamo | sì (regalo per domani, risposta richiesta entro oggi) |\n| `msg_003.txt` | informazioni | no |\n| `msg_004.txt` | spam | no |\n| `msg_005.txt` | reclamo | no |\n\nLe categorie e le urgenze mi sembrano giuste. Qualche riassunto è lungo e un paio hanno due proposizioni, anche se restano una sola frase. Se li vuoi più corti, basta una riga in più nelle istruzioni: dimmelo.\n\n- **Come è fatto:** l'ho scritto in Tokyn (`programma.tokyn`) e il compilatore ha generato `programma.py`. Il file Python è standalone, quindi per usarlo basta lui. Sono quasi 1000 righe perché include il runtime. Se vuoi modificare la logica, conviene cambiare `programma.tokyn` e rigenerarlo.\n- **Modello e costo:** usa `claude-haiku` con ragionamento ridotto, che basta per classificare. La prova sulle 5 email è costata circa 0,0013 $ a prezzi API.\n- **Chiave API:** nella prova non c'era `ANTHROPIC_API_KEY`, quindi le risposte sono passate dal tuo Claude Code. Per farlo girare da solo o per altre persone serve la chiave API.\n- **Tempi:** le email vengono elaborate una alla volta. Con molte email conviene passare alla Batch API, che costa la metà ma impiega minuti.\n\nFile in `/srv/progetti/4df57d55eb`:\n- `programma.py`\n- `programma.tokyn`\n- `risultato.json`",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 email in ordine di nome del file: True (['msg_201.txt', 'msg_202.txt', 'msg_203.txt', 'msg_204.txt', 'msg_205.txt', 'msg_206.txt'])",
+   "categorie ammesse e giuste: True (6 su 6: ['ordine', 'reclamo', 'informazioni', 'spam', 'ordine', 'reclamo'])",
+   "urgente booleano e giusto: True (6 su 6: [False, True, False, False, True, False])",
+   "riassunti brevi e sull'argomento: True (brevi: True, sull'argomento: 6 su 6)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.001531,
+   "token_output": 1134,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

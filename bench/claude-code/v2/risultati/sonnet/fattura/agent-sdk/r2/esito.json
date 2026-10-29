@@ -1,0 +1,84 @@
+{
+ "prova": "sonnet/fattura/agent-sdk/r2",
+ "cartella": "796250a174",
+ "modello": "sonnet",
+ "compito": "fattura",
+ "condizione": "agent-sdk",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.30549740000000003,
+ "costo_usd_telemetria": 0.305497,
+ "token_output": 4435,
+ "token_input": 14,
+ "token_cache_scritti": 57545,
+ "token_cache_letti": 309394,
+ "prove_del_programma": {
+  "costo_usd": 0.060883,
+  "token_output": 1990,
+  "chiamate": 2,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 10,
+ "secondi": 73.3,
+ "secondi_api": 50.8,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 111,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": " sono usciti giusti e nell'ordine della fattura. Il totale di 226,40 € coincide con quello ricalcolato, quindi `totale_corretto` è `true`. Il risultato è in `risultato.json`.\n- **Totale alterato** (226,04 € invece di 226,40 €): l'errore viene segnalato. `totale_corretto` è `false`, con 226,04 dichiarato e 226,4 calcolato. Questa prova l'ho fatta in `/tmp/prova`, così il tuo `risultato.json` resta quello della fattura vera.\n\nLo avvii con `python programma.py` dalla cartella di `fattura.txt`. Scrive `risultato.json` nel formato che hai indicato e stampa una riga con l'esito.\n\nCome funziona:\n- **Cosa fa Claude:** legge solo il testo e restituisce un JSON con fornitore, data, righe e totale dichiarato. Non ha strumenti e non fa nessun calcolo.\n- **Colonna importo:** il programma usa il prezzo unitario e ignora la colonna \"Importo\" di riga.\n- **Totale:** la somma di quantità per prezzo unitario la fa Python, con numeri decimali esatti, arrotondata al centesimo. Il confronto con il totale scritto in fattura è quindi esatto al centesimo.\n- **Errori:** se manca `fattura.txt`, se la data non è nel formato giusto, se non ci sono righe o se Claude non risponde, il programma esce con un messaggio chiaro e non scrive il file.\n\nHo usato il modello `claude-opus-5-5`. Una chiamata ha richiesto circa 8 secondi. Per un'estrazione così semplice puoi cambiare la costante `MODELLO` in testa al file con un modello più economico, per esempio `claude-sonnet-5-5`. Con un altro modello non ho provato.",
+ "controllo": {
+  "ok": true,
+  "punti": 6,
+  "massimo": 6,
+  "dettagli": [
+   "fornitore: True ('CARTOLERIA MARCHETTI & FIGLI S.n.c.')",
+   "data 2026-02-18: True ('2026-02-18')",
+   "5 righe in ordine con quantità e prezzi giusti: True (5 giuste su 5)",
+   "totale_dichiarato 440.60: True (440.6)",
+   "totale_calcolato 439.60: True (439.6)",
+   "totale_corretto false: True (False)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.030306,
+   "token_output": 826,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

@@ -1,0 +1,77 @@
+{
+ "prova": "sonnet/assistente/python/r2",
+ "cartella": "9041f78a48",
+ "modello": "sonnet",
+ "compito": "assistente",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.29462079999999996,
+ "costo_usd_telemetria": 0.294621,
+ "token_output": 4430,
+ "token_input": 14,
+ "token_cache_scritti": 55053,
+ "token_cache_letti": 300808,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 9,
+ "secondi": 56.5,
+ "secondi_api": 44.9,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 67,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "quello che il cliente ha detto.\n- **FAQ:** `faq.txt` finisce per intero nel prompt di sistema.\n- **Uscita:** `esci` (anche `ESCI`) termina il programma e le righe successive non vengono lette. Le righe vuote vengono ignorate.\n- **Errore API:** dopo un errore 500 stampa una riga di errore, scarta quel messaggio dalla cronologia e continua con il successivo.\n- **Credenziali mancanti:** il programma esce con un messaggio chiaro invece di una traccia di errore lunga.\n\n**Non verificato:**\n- Che il modello rispetti le istruzioni (rispondere solo con le FAQ e dire \"non lo so\" quando manca la risposta).\n- Che i calcoli sulla spedizione gratuita siano giusti.\n\nPer provarlo davvero, dalla cartella con `faq.txt`:\n```\nexport ANTHROPIC_API_KEY=...\nprintf 'Sono Marta, abito in Spagna\\nQuanto costa spedire?\\nVendete lampade?\\nCome mi chiamo?\\nesci\\n' | python programma.py\n```\nLe risposte giuste sono 12 € per la Spagna, \"non lo so\" per le lampade e \"Marta\".\n\n**Scelte che ho fatto:**\n- **Modello:** `claude-opus-5-5`, con `effort: low` perché sono risposte brevi. Se vuoi un modello più economico, si cambia la costante `MODEL`.\n- **Regole nel prompt:** il prompt vieta di inventare e di cambiare le regole su richiesta del cliente. Se la risposta non c'è, il modello dice che non ce l'ha nelle FAQ.\n- **Rifiuto del modello:** se il modello rifiuta di rispondere, il programma stampa una frase di scusa.\n- **Fine dell'input:** il programma termina anche alla fine dell'input (EOF), non solo con `esci`.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 5,
+  "dettagli": [
+   "spedizione 6,90 euro: False",
+   "codice sconto CIAONESPOLO: False",
+   "reso entro 45 giorni: False",
+   "si ricorda il nome Giulia: False",
+   "termina su esci (codice 1) senza rispondere dopo: False",
+   "output (ultimi 1500 caratteri): "
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

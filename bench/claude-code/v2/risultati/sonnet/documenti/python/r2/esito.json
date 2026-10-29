@@ -1,0 +1,73 @@
+{
+ "prova": "sonnet/documenti/python/r2",
+ "cartella": "40be3a39bb",
+ "modello": "sonnet",
+ "compito": "documenti",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.33734149999999996,
+ "costo_usd_telemetria": 0.337341,
+ "token_output": 5131,
+ "token_input": 18,
+ "token_cache_scritti": 60810,
+ "token_cache_letti": 427555,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 12,
+ "secondi": 61.3,
+ "secondi_api": 49.7,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 8,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 68,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "dato i documenti a ogni richiesta e scritto `risultato.json` nel formato che volevi.\n- Senza chiave si ferma con un messaggio chiaro: «Credenziali mancanti (imposta ANTHROPIC_API_KEY)».\n- Non ho verificato la qualità delle risposte né l'accettazione dello schema da parte dell'API reale. Con questi documenti le risposte attese sono 100 € a notte (`regolamento_viaggi.txt`), 8 giorni (`lavoro_da_remoto.txt`), bancale giallo (`orari_magazzino.txt`) e `it@azienda.example` (`regole_informatiche.txt`).\n\n**Come funziona**\n- Legge tutti i `docs/*.txt` e li mette nel system prompt, con prompt caching. I documenti sono pochi e piccoli, quindi non servono ricerche o embedding.\n- Fa una chiamata per domanda con il modello `claude-opus-5-5`, che è il default consigliato dalla guida API (costa più di Sonnet 5.5 o Haiku 5.5). Per cambiarlo basta modificare `MODEL` in cima al file.\n- Chiede a Claude una risposta in JSON con `risposta` e `fonte`. `fonte` può essere solo uno dei nomi di file presenti in `docs/`, quindi non può inventarne uno.\n- Se la risposta non è nei documenti, `risposta` lo dice e `fonte` è `null`. Non l'hai chiesto, ma mi sembrava meglio che far inventare una fonte.\n- Se un'API fallisce, si ferma con errore e non scrive un `risultato.json` parziale.\n\nPer lanciarlo: `export ANTHROPIC_API_KEY=...` e poi `python programma.py`. Ha bisogno del pacchetto `anthropic`, già installato qui. Se me la dai, o se lo avvii tu e mi incolli l'output, lo provo e verifico le quattro risposte.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 5,
+  "dettagli": [
+   "risultato.json mancante o non è una lista"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

@@ -1,0 +1,72 @@
+{
+ "prova": "sonnet/riunione/python/r3",
+ "cartella": "326806d696",
+ "modello": "sonnet",
+ "compito": "riunione",
+ "condizione": "python",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.30998609999999993,
+ "costo_usd_telemetria": 0.309986,
+ "token_output": 4438,
+ "token_input": 14,
+ "token_cache_scritti": 58724,
+ "token_cache_letti": 306821,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 10,
+ "secondi": 53.1,
+ "secondi_api": 46.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 76,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "e hai indicato.\n- **Credenziali mancanti:** il programma esce con un messaggio chiaro, senza stack trace.\n\nNon ho quindi verificato che il modello estragga davvero le decisioni e le azioni giuste dal tuo verbale.\n\n**Come funziona:**\n- **Modello:** usa `claude-opus-5-5`, e il file si avvia con `python programma.py`.\n- **Formato garantito:** chiedo a Claude una risposta JSON con lo schema esatto (`decisioni` e `azioni` con `cosa`, `chi`, `entro`), quindi il file di output ha sempre quella forma.\n- **Cosa estrae:** le istruzioni dicono di includere solo decisioni davvero prese (non le discussioni, come il parcheggio) e solo compiti accettati.\n- **Date:** le date relative vengono risolte rispetto alla data della riunione scritta nel verbale. Se una scadenza non c'è, `entro` vale `null` invece di una data inventata.\n- **Fallback sui rifiuti:** non ho attivato l'opzione di Anthropic che ripete la richiesta su un altro modello se il primo rifiuta. Se Claude rifiuta di rispondere o la risposta viene troncata, il programma si ferma con un errore.\n\nPer provarlo davvero, imposta `ANTHROPIC_API_KEY` ed esegui `python programma.py` nella cartella con `verbale.txt`. Dal verbale d'esempio mi aspetto 2 decisioni (fiera di Bologna con lo stand piccolo, newsletter ogni due settimane) e 3 azioni: Paolo per lo stand entro il 2026-10-30, Chiara per il calendario entro il 2026-11-06, Roberto per i volantini entro il 2026-11-16. Se mi dai una chiave o fai il login, lo eseguo io e ti dico cosa esce.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 6,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

@@ -1,0 +1,73 @@
+{
+ "prova": "sonnet/spese/python/r3",
+ "cartella": "315d5baedb",
+ "modello": "sonnet",
+ "compito": "spese",
+ "condizione": "python",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.30723600000000006,
+ "costo_usd_telemetria": 0.307236,
+ "token_output": 5078,
+ "token_input": 12,
+ "token_cache_scritti": 57846,
+ "token_cache_letti": 250480,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 10,
+ "secondi": 44.5,
+ "secondi_api": 38.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 112,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "osto della chiamata vera, su una copia di `movimenti.csv` in `/tmp/prova`. In quel test legge i tuoi 11 movimenti, li scrive in `risultato.json` nello stesso ordine e con gli importi come numeri. Calcola anche i totali arrotondati al centesimo.\n- Senza chiave, il programma si ferma con un messaggio chiaro (\"imposta ANTHROPIC_API_KEY\") e non scrive nulla.\n- Le categorie nel test le ho decise io con una tabella di parole chiave, non le ha scelte Claude. Il test non dice quindi se Claude le assegna bene.\n- Non ho verificato nemmeno che l'API accetti la richiesta così com'è scritta (modello `claude-opus-5-5`, risposta vincolata alle cinque categorie).\n\n**Come funziona**\n- Il programma manda i movimenti a Claude, 100 per richiesta, e accetta solo le cinque categorie che hai indicato. Si ferma con un errore se la risposta è incompleta o ha id sbagliati.\n- Gli importi li somma in `Decimal`, per evitare errori di arrotondamento.\n- Nei totali compaiono sempre tutte e cinque le categorie, anche quelle a zero.\n- Gli accrediti entrano nei totali: lo stipendio finisce in `altro`, che nel test risulta quindi +1848,50. Se preferisci i soli totali delle uscite, è una modifica di due righe.\n\n**Come provarlo davvero**\n```\nexport ANTHROPIC_API_KEY=sk-ant-...\npython programma.py\n```\nPoi controlla in `risultato.json` che le categorie abbiano senso.\n\nNon ho aggiunto la ripetizione automatica su un altro modello nel caso Claude rifiuti di rispondere. Se succede, il programma si ferma con un errore.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 3,
+  "dettagli": [
+   "risultato.json mancante o senza la lista movimenti"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

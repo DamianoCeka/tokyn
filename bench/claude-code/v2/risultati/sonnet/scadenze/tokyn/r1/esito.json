@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/scadenze/tokyn/r1",
+ "cartella": "5526d241d7",
+ "modello": "sonnet",
+ "compito": "scadenze",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.09155350000000001,
+ "costo_usd_telemetria": 0.091554,
+ "token_output": 2725,
+ "token_input": 10,
+ "token_cache_scritti": 14317,
+ "token_cache_letti": 70155,
+ "prove_del_programma": {
+  "costo_usd": 0.06031,
+  "token_output": 3392,
+  "chiamate": 9,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 6,
+ "secondi": 126.1,
+ "secondi_api": 28.3,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 3
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 839,
+ "righe_tokyn": 36,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "1\n```\n\nCosa fa:\n- **Selezione:** prende i contratti con scadenza da 0 a 30 giorni dalla data di riferimento, estremi compresi, e li ordina dal più vicino.\n- **Risultato:** scrive `risultato.json` con cliente, servizio e scadenza come nel CSV, più `giorni_mancanti`. Per ogni contratto Claude scrive `oggetto` e `testo`, rivolti al cliente per nome e con il servizio in scadenza.\n- **Senza argomento:** stampa `Uso: python programma.py AAAA-MM-GG`.\n\nCosa ho provato:\n- **Con `2026-11-01`:** 4 contratti, il primo è Ottica Ferri – Assistenza tecnica con 11 giorni e l'oggetto \"Il contratto di assistenza tecnica scade il 12 novembre\". Il testo inizia con \"Gentile Ottica Ferri,\" e cita servizio e data.\n- **Con `2026-11-09`:** Pasticceria Lombardi, che scade il 9 dicembre, compare con 30 giorni, quindi l'estremo superiore è incluso.\n- **Con `2026-12-10`:** nessun contratto, perché il 9 dicembre è già passato.\n- **Contratti esclusi:** il Bar Centrale (scaduto il 20 ottobre) e l'Agriturismo Le Querce (2027) non sono mai entrati nei risultati.\n\nIl `risultato.json` che trovi ora è quello dell'ultima prova, con `2026-12-10`, quindi è vuoto. Rilancia il programma con la tua data.\n\nLe email le ho generate senza chiave API, tramite il tuo Claude Code, e va bene per provare. Se il programma deve girare da solo o per altre persone, serve `ANTHROPIC_API_KEY` come variabile d'ambiente.\n\nIl programma non usa la colonna `email`, perché richiedevi solo di scrivere i testi. Se vuoi, la aggiungo al JSON.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "esattamente i 4 contratti in scadenza: True (['Panificio Russo', 'Farmacia Conti', 'Hotel Bellavista', 'Ferramenta Gallo Snc'])",
+   "scadenze come nel file e in ordine di scadenza: True (['2026-12-15', '2026-12-28', '2027-01-06', '2027-01-14'])",
+   "giorni_mancanti giusti: True ([0, 13, 22, 30])",
+   "email con oggetto e testo che nominano cliente e servizio: True",
+   "email scritte una per una (testi diversi anche senza nomi, servizi e date): True"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.027173,
+   "token_output": 1670,
+   "chiamate": 4,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

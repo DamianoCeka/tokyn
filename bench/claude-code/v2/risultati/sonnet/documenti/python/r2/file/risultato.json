@@ -1,0 +1,22 @@
+[
+  {
+    "domanda": "Fino a quanto ci rimborsano l'albergo in trasferta?",
+    "risposta": "fake",
+    "fonte": "regolamento_viaggi.txt"
+  },
+  {
+    "domanda": "Quanti giorni al mese si può lavorare da remoto?",
+    "risposta": "fake",
+    "fonte": "regolamento_viaggi.txt"
+  },
+  {
+    "domanda": "Dove si lasciano i resi in magazzino?",
+    "risposta": "fake",
+    "fonte": "regolamento_viaggi.txt"
+  },
+  {
+    "domanda": "A chi vanno girate le email sospette?",
+    "risposta": "fake",
+    "fonte": "regolamento_viaggi.txt"
+  }
+]

@@ -1,0 +1,72 @@
+{
+ "prova": "sonnet/email/python/r2",
+ "cartella": "547bbd3b95",
+ "modello": "sonnet",
+ "compito": "email",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2725977,
+ "costo_usd_telemetria": 0.272598,
+ "token_output": 3658,
+ "token_input": 12,
+ "token_cache_scritti": 53082,
+ "token_cache_letti": 236657,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 9,
+ "secondi": 45.3,
+ "secondi_api": 38.9,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 63,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": " è partita e non so come Claude classifichi le 5 email di esempio.\n\nIl resto l'ho provato sostituendo il client Anthropic con uno finto che restituisce risposte fisse:\n- legge i file `.txt` in ordine di nome;\n- scrive `risultato.json` nel formato richiesto, con `file`, `categoria`, `urgente` e `riassunto`;\n- mantiene gli accenti.\n\nSenza credenziali, lanciato davvero, il programma si ferma con il messaggio \"Credenziali mancanti: imposta ANTHROPIC_API_KEY\".\n\nCome funziona:\n- **Una chiamata per email.** Usa il modello `claude-opus-5-5` (l'ho scelto io, non l'avevi indicato) e chiede una risposta JSON con la categoria limitata ai quattro valori. Il formato è quindi garantito dall'API.\n- **Criterio di urgenza.** Nel prompt è urgente una scadenza vicina o una minaccia concreta, come il rimborso o il regalo di domani. Lo spam non lo è mai.\n- **Contenuto delle email.** Il testo viene trattato come dato da classificare, non come istruzioni.\n- **Errori.** Se qualcosa va storto, il programma si ferma con un messaggio e non scrive un `risultato.json` parziale.\n\nPer provarlo:\n```\nexport ANTHROPIC_API_KEY=sk-ant-...\npython programma.py\n```\nMi aspetto questo risultato:\n\n| File | Categoria | Urgente |\n|---|---|---|\n| `msg_001.txt` | `ordine` | no |\n| `msg_002.txt` | `reclamo` | sì |\n| `msg_003.txt` | `informazioni` | no |\n| `msg_004.txt` | `spam` | no |\n| `msg_005.txt` | `reclamo` | no |\n\nÈ una previsione, non una verifica. Se mi dai una chiave o fai `ant auth login`, rilancio la prova vera.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o non è una lista"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

@@ -1,0 +1,47 @@
+type Riga:
+    descrizione: str
+    quantita: float "quantità acquistata"
+    prezzo_unitario: float "prezzo unitario in euro, come numero"
+
+type Fattura:
+    fornitore: str "ragione sociale di chi emette la fattura (non del cliente)"
+    data: str "data della fattura nel formato AAAA-MM-GG"
+    righe: list[Riga] "righe della fattura, nello stesso ordine del testo"
+    totale_dichiarato: float "totale scritto in fattura, in euro, come numero"
+
+agent Estrattore:
+    instructions: """
+        Estrai i dati da una fattura di un fornitore, scritta in testo semplice.
+        Il fornitore è chi emette la fattura, non il cliente. Dai la data come AAAA-MM-GG.
+        Riporta le righe nell'ordine della fattura, con quantità e prezzo unitario così come
+        scritti (non il prezzo di riga). Gli importi sono numeri in euro. Il totale dichiarato
+        è quello scritto in fattura, senza ricalcolarlo.
+    """
+    output: Fattura
+    effort: "low"
+
+main:
+    f = Estrattore.ask(read_file("fattura.txt"))
+    centesimi = 0.0
+    righe = []
+    for r in f.righe:
+        centesimi += r.quantita * r.prezzo_unitario * 100
+        q = r.quantita
+        if q == int(q):
+            q = int(q)
+        righe.append({"descrizione": r.descrizione, "quantita": q, "prezzo_unitario": r.prezzo_unitario})
+    calcolato = round(centesimi)
+    dichiarato = round(f.totale_dichiarato * 100)
+    esito = {
+        "fornitore": f.fornitore,
+        "data": f.data,
+        "righe": righe,
+        "totale_dichiarato": f.totale_dichiarato,
+        "totale_calcolato": calcolato / 100,
+        "totale_corretto": calcolato == dichiarato,
+    }
+    write_file("risultato.json", json_dump(esito))
+    if calcolato == dichiarato:
+        print("Totale corretto: " + str(calcolato / 100) + " €")
+    else:
+        print(f"Totale SBAGLIATO: in fattura {f.totale_dichiarato:.2f} €, dalle righe {calcolato / 100:.2f} €")

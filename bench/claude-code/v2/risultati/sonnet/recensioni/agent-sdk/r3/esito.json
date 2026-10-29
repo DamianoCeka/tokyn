@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/recensioni/agent-sdk/r3",
+ "cartella": "5b1e5778e3",
+ "modello": "sonnet",
+ "compito": "recensioni",
+ "condizione": "agent-sdk",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2590558,
+ "costo_usd_telemetria": 0.259056,
+ "token_output": 3010,
+ "token_input": 8,
+ "token_cache_scritti": 54035,
+ "token_cache_letti": 127998,
+ "prove_del_programma": {
+  "costo_usd": 0.045103,
+  "token_output": 546,
+  "chiamate": 6,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 7,
+ "secondi": 34.2,
+ "secondi_api": 22.9,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 3,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 71,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "ella media, niente di speciale. | neutro | 3 |\n| Ottimo rapporto qualità prezzo, lo consiglio a tutti. | positivo | 5 |\n| La batteria dura pochissimo e l'assistenza non risponde. | negativo | 1 |\n| Fa quello che promette, né più né meno. | neutro | 3 |\n\nI voti e i sentimenti sono coerenti col testo. Non ho provato altri casi, come un file vuoto, righe vuote o un errore di rete.\n\nCome funziona:\n- **Analisi:** usa `claude_agent_sdk.query`, con una chiamata per recensione, cinque in parallelo. Le risposte arrivano in un formato JSON fissato (sentimento `positivo`/`negativo`/`neutro`, voto intero da 1 a 5), e il programma controlla anche lui che siano valide.\n- **Ordine:** l'ordine delle recensioni in `risultato.json` è lo stesso del file.\n- **Media:** la calcola il programma, non Claude, arrotondata a 2 decimali.\n- **Errori:** se una risposta non è valida o c'è un errore di connessione, riprova fino a 3 volte. Se continua a fallire, il programma si ferma con un errore e non scrive un risultato incompleto.\n- **Righe vuote:** vengono ignorate. Se il file non ha recensioni, il programma si ferma con un messaggio.\n- **Testo delle recensioni:** il prompt lo tratta come semplice dato, quindi un'eventuale istruzione dentro una recensione non viene eseguita.\n\nL'SDK usa il modello predefinito di Claude Code, perché non ne ho impostato uno. Se ne vuoi uno preciso, aggiungi `model=\"...\"` a `ClaudeAgentOptions`.\n\nI file sono in `/srv/progetti/5b1e5778e3`:\n- `programma.py`\n- `risultato.json`",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 recensioni nell'ordine del file: True",
+   "sentimenti giusti: 6 su 6",
+   "voti interi da 1 a 5 e coerenti col sentimento: True ([5.0, 1.0, 3.0, 5.0, 1.0, 3.0])",
+   "media giusta dei voti: True (3.0)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.042442,
+   "token_output": 683,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

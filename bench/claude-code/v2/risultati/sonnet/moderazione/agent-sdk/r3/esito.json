@@ -1,0 +1,83 @@
+{
+ "prova": "sonnet/moderazione/agent-sdk/r3",
+ "cartella": "d727da5927",
+ "modello": "sonnet",
+ "compito": "moderazione",
+ "condizione": "agent-sdk",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2697274,
+ "costo_usd_telemetria": 0.269727,
+ "token_output": 3508,
+ "token_input": 8,
+ "token_cache_scritti": 55421,
+ "token_cache_letti": 129474,
+ "prove_del_programma": {
+  "costo_usd": 0.066022,
+  "token_output": 1576,
+  "chiamate": 6,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 7,
+ "secondi": 54.0,
+ "secondi_api": 42.5,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 3,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 87,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": " consiglio utile sul rame, tono polemico |\n| 19 | rifiuta | spam (semi e bulbi, WhatsApp) |\n| 20 | rifiuta | contiene un'email |\n| 21 | pubblica | ringraziamento per la guida sul compost |\n| 22 | rifiuta | insulto a un altro utente |\n\nPer il 18 la riscrittura mantiene il contenuto: il rame contro la peronospora va dato col tempo asciutto, perché se piove entro un'ora il trattamento è inutile. Toglie solo i rimproveri.\n\n**Come funziona**\n- Usa `claude-agent-sdk` con una chiamata per commento, quattro alla volta, senza strumenti né impostazioni di progetto. L'ordine del file resta quello originale.\n- La risposta deve rispettare uno schema JSON. Il programma controlla inoltre che la decisione sia valida e che `riscrittura` ci sia solo per `rivedi`.\n- Se una risposta è incompleta, ritenta fino a 3 volte. Se continua a fallire, esce con errore e non scrive `risultato.json`, così non finisce nel file una decisione inventata.\n- Il testo del commento è passato tra tag e il prompt dice di non eseguire eventuali istruzioni contenute nel commento.\n\n**Non verificato**\n- Non ho provato con commenti che cercano di manipolare il moderatore.\n- Non ho specificato il modello, quindi il programma usa quello predefinito dell'SDK. Se ne vuoi uno preciso, basta aggiungere `model=...` in `ClaudeAgentOptions`.\n\nHo rieseguito il programma una sola volta, quindi in `risultato.json` ci sono le decisioni di quell'esecuzione.\n\nI file sono in `/srv/progetti/d727da5927`:\n- `programma.py`\n- `risultato.json`",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 commenti nell'ordine del file con id e motivo: True ([201, 202, 203, 204, 205, 206])",
+   "decisioni ammesse e giuste: True (6 su 6: ['pubblica', 'rifiuta', 'rivedi', 'pubblica', 'rifiuta', 'rivedi'])",
+   "riscrittura per ogni commento da rivedere: True (2 da rivedere)",
+   "commento 203: riscrittura senza offese True, con il contenuto True (\"Questa domanda è già stata fatta altre volte: nella funzione di ricerca del forum si trovano diverse discussioni utili sull'argomento. In breve: le ortensie si potano a fine inverno, tagliando sopra la prima coppia di gemme gonfie, e mai in autunno.\")",
+   "commento 206: riscrittura senza offese True, con il contenuto True (\"Non sono d'accordo con il consiglio qui sopra, perché seguirlo rischia di far morire le piante. Le piante grasse non vanno annaffiate tutti i giorni: d'estate basta una volta ogni 10-15 giorni e d'inverno quasi mai, aspettando sempre che il terriccio sia asciutto.\")"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.060746,
+   "token_output": 1969,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

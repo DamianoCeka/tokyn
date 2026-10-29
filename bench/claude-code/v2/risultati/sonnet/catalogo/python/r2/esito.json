@@ -1,0 +1,72 @@
+{
+ "prova": "sonnet/catalogo/python/r2",
+ "cartella": "b0366fb3d0",
+ "modello": "sonnet",
+ "compito": "catalogo",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.3101527,
+ "costo_usd_telemetria": 0.310153,
+ "token_output": 4941,
+ "token_input": 14,
+ "token_cache_scritti": 57404,
+ "token_cache_letti": 310987,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 10,
+ "secondi": 63.7,
+ "secondi_api": 53.9,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 77,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "nno in parallelo, 4 alla volta, e l'ordine delle righe resta quello originale.\n- Scrive `catalogo_en.csv` solo quando tutte le traduzioni sono riuscite, così in caso di errore non resta un file a metà.\n\n**Come l'ho provato**\nHo fatto girare il programma contro un finto server locale che imita l'API di Anthropic, al posto di Claude.\n- L'esecuzione è andata a buon fine.\n- L'intestazione e le colonne codice, nome e prezzo sono identiche all'originale (controllate con `diff`).\n- La riga `TZ-014` è diventata esattamente `TZ-014;Tazza Aurora;Handmade ceramic mug, dishwasher safe;12,90`.\n- Senza credenziali il programma esce con un messaggio chiaro: \"Credenziali mancanti: imposta ANTHROPIC_API_KEY\".\n- Ho cancellato `catalogo_en.csv` generato dal test, perché conteneva testo finto. Nella cartella restano solo `catalogo.csv` e `programma.py`.\n\n**Per usarlo**\n```\npip install anthropic\nexport ANTHROPIC_API_KEY=...\npython programma.py\n```\nAlla prima esecuzione con la chiave controlla `catalogo_en.csv`. In particolare guarda come vengono rese le descrizioni con misure e unità, per esempio \"durata 40 ore\" e \"120 x 180 cm\".\n\n**Limiti**\n- Se la risposta di Claude non è completa o è vuota, il programma si ferma con un errore e non scrive il file. Non c'è un ripiego su un altro modello.\n- Se la traduzione contenesse un `;`, lo sostituisco con una virgola per non rompere il formato del file.\n- Se un campo del file originale era tra virgolette senza necessità, nel nuovo file perde le virgolette.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "catalogo_en.csv mancante"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

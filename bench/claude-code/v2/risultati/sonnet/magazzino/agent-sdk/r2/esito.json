@@ -1,0 +1,83 @@
+{
+ "prova": "sonnet/magazzino/agent-sdk/r2",
+ "cartella": "3751b28c15",
+ "modello": "sonnet",
+ "compito": "magazzino",
+ "condizione": "agent-sdk",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2843019,
+ "costo_usd_telemetria": 0.284302,
+ "token_output": 4388,
+ "token_input": 10,
+ "token_cache_scritti": 55389,
+ "token_cache_letti": 188459,
+ "prove_del_programma": {
+  "costo_usd": 0.113182,
+  "token_output": 1931,
+  "chiamate": 10,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 84.5,
+ "secondi_api": 34.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 104,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": " toner | 235,50 € |\n| Evidenziatori mancanti alla scorta minima | 12 |\n\n**Come funziona**\n- **Calcoli esatti:** Claude non calcola a mente. Ha a disposizione uno strumento, `calcola`, che esegue un'espressione Python sull'inventario con aritmetica decimale e restituisce il risultato. Il prompt gli impone di usarlo per ogni somma, differenza o filtro. Per questo il programma regge anche domande diverse dalle vostre.\n- **Nessun accesso ad altro:** Claude non può leggere file né eseguire comandi. Vede solo lo strumento `calcola` e l'inventario.\n- **Domande e risultato:** ogni domanda viene posta a Claude separatamente, senza memoria delle altre. Il risultato va in `risultato.json`, nello stesso ordine di `domande.txt`. Le righe vuote delle domande vengono ignorate.\n- **Errori:** se una domanda fallisce, nel risultato compare \"Errore: impossibile rispondere\" per quella riga e le altre proseguono.\n- **Formato delle risposte:** le risposte sono in italiano, brevi, senza Markdown. Dopo la prima prova c'erano dei grassetti, quindi ho aggiunto la regola nel prompt e ho rilanciato. Nell'ultimo `risultato.json` non ce ne sono più.\n\n**Da sapere**\n- **Modello:** uso `claude-opus-5-5`. Si cambia con la costante `MODELLO` in cima al file.\n- **Tempi:** una esecuzione completa su 5 domande ha richiesto circa 23 secondi.\n- **Dove lanciarlo:** il programma legge `inventario.json` e `domande.txt` dalla cartella da cui lo avvii.\n\nIl file `risultato.json` generato dalla prova è già nella cartella.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "4 elementi con le domande nell'ordine del file: True",
+   "martelli 37: True ('In magazzino abbiamo 37 martelli da carpentiere (codice FER-B).')",
+   "valore totale 2623,30: True ('Il valore totale della merce in magazzino è 2.623,30 €.')",
+   "sotto scorta nastro e silicone, nessun altro: True (nominati ['nastro', 'silicone'], di troppo [])",
+   "pezzi da ordinare 46: True ('Dobbiamo ordinare in totale 46 pezzi per riportare alla scorta minima i 2 articoli che sono sotto.')"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.040357,
+   "token_output": 986,
+   "chiamate": 4,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

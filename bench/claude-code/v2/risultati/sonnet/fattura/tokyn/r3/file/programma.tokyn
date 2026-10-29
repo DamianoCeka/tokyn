@@ -1,0 +1,49 @@
+type Riga:
+    descrizione: str "descrizione della riga così come scritta in fattura"
+    quantita: float "quantità della riga"
+    prezzo_unitario: float "prezzo unitario in euro, come numero"
+
+type Fattura:
+    fornitore: str "ragione sociale di chi emette la fattura (il fornitore, non il cliente)"
+    data: str "data della fattura nel formato AAAA-MM-GG"
+    righe: list[Riga] "righe della fattura, nello stesso ordine del documento"
+    totale_dichiarato: float "totale scritto in fattura, in euro, come numero"
+
+agent Estrattore:
+    model: "claude-haiku"
+    effort: "low"
+    instructions: """
+        Estrai da una fattura di un fornitore il fornitore (chi emette), la data (AAAA-MM-GG),
+        le righe (descrizione, quantità, prezzo unitario) nell'ordine del documento e il totale
+        dichiarato. Copia i numeri come scritti: non calcolare né correggere nulla.
+    """
+    output: Fattura
+
+def numero(x: float):
+    if x == int(x):
+        return int(x)
+    return x
+
+main:
+    testo = read_file("fattura.txt")
+    f = Estrattore.ask(testo)
+    calcolato = 0.0
+    righe = []
+    for r in f.righe:
+        calcolato += r.quantita * r.prezzo_unitario
+        righe.append({"descrizione": r.descrizione, "quantita": numero(r.quantita), "prezzo_unitario": r.prezzo_unitario})
+    centesimi = round(calcolato * 100)
+    corretto = centesimi == round(f.totale_dichiarato * 100)
+    risultato = {
+        "fornitore": f.fornitore,
+        "data": f.data,
+        "righe": righe,
+        "totale_dichiarato": f.totale_dichiarato,
+        "totale_calcolato": centesimi / 100,
+        "totale_corretto": corretto,
+    }
+    write_file("risultato.json", json_dump(risultato))
+    esito = "ERRATO"
+    if corretto:
+        esito = "corretto"
+    print(f"Totale dichiarato {f.totale_dichiarato:.2f} €, calcolato {centesimi / 100:.2f} €: {esito}")
