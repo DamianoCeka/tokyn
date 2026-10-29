@@ -128,9 +128,9 @@ main:                                          # entry point, only one
 - `memory` keeps questions and final answers (not tool results) for the whole run. Every AI call is one step:
   `max_steps` (default 10) must cover the tool calls plus the final answer, otherwise the program stops with an
   error (if the agent is used as a tool, the error goes back to the agent using it).
-- In mock: texts `"esempio <field>"`, numbers 1 and 1.0, empty dicts, lists of 2 items; `"a" | "b"` values and
+- In mock: texts `"example <field>"`, numbers 1 and 1.0, empty dicts, lists of 2 items; `"a" | "b"` values and
   bools change at every `ask` of that agent and from one item to the next (starting from the first value and True).
-  Without `output` the answer is `"[mock Name] risposta a: ..."`.
+  Without `output` the answer is `"[mock Name] answer to: ..."`.
 - With Claude Code (no API key) `ask_all` sends the requests one at a time, because the Batch API needs the key,
   and `max_steps` does not apply.
 - `Agent.ask_all(texts)` gives the same answers as a loop of `ask`, in the same order, but through the Batch API:

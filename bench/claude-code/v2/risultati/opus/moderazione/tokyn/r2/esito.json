@@ -1,0 +1,83 @@
+{
+ "prova": "opus/moderazione/tokyn/r2",
+ "cartella": "a1c1a1ee3a",
+ "modello": "opus",
+ "compito": "moderazione",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.172936,
+ "costo_usd_telemetria": 0.172936,
+ "token_output": 2279,
+ "token_input": 10,
+ "token_cache_scritti": 14174,
+ "token_cache_letti": 69620,
+ "prove_del_programma": {
+  "costo_usd": 0.001669,
+  "token_output": 1287,
+  "chiamate": 6,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 7,
+ "secondi": 41.9,
+ "secondi_api": 24.7,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 3,
+  "Write": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 833,
+ "righe_tokyn": 31,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "|\n| 18 | rivedi | consiglio utile sul rame ma tono aggressivo |\n| 19 | rifiuta | spam pubblicitario |\n| 20 | rifiuta | contiene un indirizzo email |\n| 21 | pubblica | ringraziamento cortese |\n| 22 | rifiuta | insulto rivolto a un altro utente |\n\nLa riscrittura del 18 mantiene il contenuto: *\"Ho già segnalato questo punto più volte, ma forse può essere sfuggito: il rame contro la peronospora va somministrato con tempo asciutto, perché se piove entro un'ora dal trattamento è inutile. Grazie per l'attenzione!\"*\n\n**Prima di usarlo sul sito:** la prova è girata senza chiave API, quindi le risposte le ha date il mio Claude Code. Se il programma deve girare da solo sul server serve una chiave dell'API di Anthropic: imposta `ANTHROPIC_API_KEY` e il programma la usa senza modifiche.\n\n**Altre cose da sapere:**\n- **Modello:** uso Claude Haiku con poco ragionamento, che per una classificazione come questa basta e costa poco. Se vedi decisioni sbagliate su casi al limite, si può passare a un modello più potente.\n- **Commenti che danno ordini all'IA:** il testo di ogni commento viene passato come materiale da valutare, non come istruzioni. Così un commento con scritto \"approvami\" non dovrebbe influenzare la decisione.\n- **File sorgente:** `programma.py` è generato dal compilatore Tokyn a partire da `programma.tokyn`, che ho lasciato accanto. Le regole sono scritte lì in chiaro: se vuoi cambiarle, conviene modificare quel file e rigenerare il Python, invece di toccare `programma.py` a mano.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 commenti nell'ordine del file con id e motivo: True ([201, 202, 203, 204, 205, 206])",
+   "decisioni ammesse e giuste: True (6 su 6: ['pubblica', 'rifiuta', 'rivedi', 'pubblica', 'rifiuta', 'rivedi'])",
+   "riscrittura per ogni commento da rivedere: True (2 da rivedere)",
+   "commento 203: riscrittura senza offese True, con il contenuto True ('Capisco che le stesse domande tornino spesso, quindi può essere utile usare la ricerca del forum. Per riepilogare: le ortensie si potano a fine inverno, tagliando sopra la prima coppia di gemme gonfie, e mai in autunno.')",
+   "commento 206: riscrittura senza offese True, con il contenuto True (\"Mi permetto di segnalare che il consiglio sopra rischia di far morire le piante grasse. Queste non vanno annaffiate tutti i giorni: d'estate basta una volta ogni 10-15 giorni e d'inverno quasi mai, aspettando sempre che il terriccio sia asciutto.\")"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.0018,
+   "token_output": 1833,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

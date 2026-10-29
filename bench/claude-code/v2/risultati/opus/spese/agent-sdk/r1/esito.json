@@ -1,0 +1,80 @@
+{
+ "prova": "opus/spese/agent-sdk/r1",
+ "cartella": "8cdea80754",
+ "modello": "opus",
+ "compito": "spese",
+ "condizione": "agent-sdk",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.6637406000000001,
+ "costo_usd_telemetria": 0.663741,
+ "token_output": 5388,
+ "token_input": 18,
+ "token_cache_scritti": 58506,
+ "token_cache_letti": 439303,
+ "prove_del_programma": {
+  "costo_usd": 0.03496,
+  "token_output": 260,
+  "chiamate": 3,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 11,
+ "secondi": 65.9,
+ "secondi_api": 48.9,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Bash": 7,
+  "Skill": 1,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 108,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "altro\": 1848.5}\n```\n\n**Seconda prova con un file inventato.** Conteneva un importo con il punto delle migliaia (`-1.200,00`), un affitto, carburante, un cinema, un bonifico, un abbonamento ATM e Spotify. Anche qui ogni movimento ha la categoria giusta e l'importo è letto correttamente. Ho anche controllato che le risposte vengano davvero dal modello (`claude-opus-5-5`) e non da altro.\n\n**Come funziona:**\n- Legge il CSV e converte gli importi dal formato italiano. Fa i conti con `Decimal`, così non ci sono errori di arrotondamento, e arrotonda i totali al centesimo.\n- Manda tutti i movimenti a Claude con una sola chiamata, attraverso il Claude Agent SDK. Ogni categoria è descritta brevemente. Claude deve rispondere con una lista che può contenere solo le cinque categorie, una per movimento.\n- Se la risposta non va bene (per esempio il numero di categorie è sbagliato), riprova fino a 3 volte e poi si ferma con un messaggio di errore. Non scrive mai un risultato parziale.\n- Nei totali compaiono sempre tutte e cinque le categorie, anche quelle a zero.\n\n**Una cosa da sapere:** il programma somma tutti gli importi, anche le entrate. Lo stipendio finisce in \"altro\", quindi quel totale viene **+1848,5** e non un numero negativo come nel tuo esempio. Se vuoi contare solo le uscite, basta escludere gli importi positivi.\n\nPer migliorare la classificazione su voci particolari che ricorrono spesso nei tuoi estratti conto, puoi aggiungere esempi alle descrizioni delle categorie nel prompt.",
+ "controllo": {
+  "ok": true,
+  "punti": 3,
+  "massimo": 3,
+  "dettagli": [
+   "8 movimenti nell'ordine del file con data, descrizione e importo giusti: True",
+   "categorie ammesse e giuste: True (8 su 8: ['spesa alimentare', 'trasporti', 'casa', 'svago', 'spesa alimentare', 'trasporti', 'casa', 'altro'])",
+   "totali arrotondati al centesimo e coerenti con le categorie assegnate: True (uguali ai totali attesi: True; {'spesa alimentare': -85.5, 'trasporti': -51.8, 'casa': -728.45, 'svago': -19.0, 'altro': -12.8})"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.014992,
+   "token_output": 92,
+   "chiamate": 1,
+   "modelli": [
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

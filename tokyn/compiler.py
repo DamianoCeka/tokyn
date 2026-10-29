@@ -93,7 +93,7 @@ def translate_exception(err: BaseException) -> tuple[str, str]:
     if isinstance(err, TokynRuntimeError):
         return err.message, err.hint
     if isinstance(err, KeyError):
-        return (tr(f"la chiave {err.args[0]!r} non esiste nel dizionario", f"the key {err.args[0]!r} does not exist in the dict"),
+        return (tr(f"la chiave {err.args[0]!r} non esiste nel dizionario", f"the key {err.args[0]!r} is not in the dictionary"),
                 tr("Controlla il nome della chiave, oppure usa d.get(chiave).", "Check the key name, or use d.get(key)."))
     if isinstance(err, IndexError):
         return (tr("posizione fuori dalla lista", "index out of range"),

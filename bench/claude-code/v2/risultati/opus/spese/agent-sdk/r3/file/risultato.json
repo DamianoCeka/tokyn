@@ -1,0 +1,77 @@
+{
+  "movimenti": [
+    {
+      "data": "01/09/2026",
+      "descrizione": "ACCREDITO STIPENDIO AGOSTO",
+      "importo": 1850.0,
+      "categoria": "altro"
+    },
+    {
+      "data": "02/09/2026",
+      "descrizione": "PAGAMENTO POS LIDL ITALIA",
+      "importo": -42.17,
+      "categoria": "spesa alimentare"
+    },
+    {
+      "data": "03/09/2026",
+      "descrizione": "ADDEBITO SDD A2A GAS",
+      "importo": -63.9,
+      "categoria": "casa"
+    },
+    {
+      "data": "04/09/2026",
+      "descrizione": "PAGAMENTO POS TRENORD BIGLIETTO",
+      "importo": -4.6,
+      "categoria": "trasporti"
+    },
+    {
+      "data": "06/09/2026",
+      "descrizione": "PAGAMENTO POS PIZZERIA DA GINO",
+      "importo": -38.5,
+      "categoria": "svago"
+    },
+    {
+      "data": "08/09/2026",
+      "descrizione": "PAGAMENTO POS CARREFOUR MARKET",
+      "importo": -27.85,
+      "categoria": "spesa alimentare"
+    },
+    {
+      "data": "10/09/2026",
+      "descrizione": "ADDEBITO NETFLIX ABBONAMENTO",
+      "importo": -13.99,
+      "categoria": "svago"
+    },
+    {
+      "data": "12/09/2026",
+      "descrizione": "PAGAMENTO POS LEROY MERLIN",
+      "importo": -56.3,
+      "categoria": "casa"
+    },
+    {
+      "data": "15/09/2026",
+      "descrizione": "ADDEBITO TELEPASS PEDAGGI",
+      "importo": -18.4,
+      "categoria": "trasporti"
+    },
+    {
+      "data": "20/09/2026",
+      "descrizione": "PAGAMENTO POS LIBRERIA FELTRINELLI",
+      "importo": -22.0,
+      "categoria": "svago"
+    },
+    {
+      "data": "25/09/2026",
+      "descrizione": "COMMISSIONE BONIFICO",
+      "importo": -1.5,
+      "categoria": "altro"
+    }
+  ],
+  "totali": {
+    "spesa alimentare": -70.02,
+    "trasporti": -23.0,
+    "casa": -120.2,
+    "svago": -74.49,
+    "altro": 1848.5
+  }
+}

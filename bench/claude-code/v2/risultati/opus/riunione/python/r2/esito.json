@@ -1,0 +1,73 @@
+{
+ "prova": "opus/riunione/python/r2",
+ "cartella": "bea6e8436c",
+ "modello": "opus",
+ "compito": "riunione",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.7528774,
+ "costo_usd_telemetria": 0.752877,
+ "token_output": 7618,
+ "token_input": 22,
+ "token_cache_scritti": 61149,
+ "token_cache_letti": 556187,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 14,
+ "secondi": 83.3,
+ "secondi_api": 72.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 8,
+  "Write": 1,
+  "Edit": 2
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 91,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "me funziona**\n- Manda la trascrizione a Claude e chiede la risposta in formato JSON strutturato. L'API rispetta lo schema, quindi `decisioni` e `azioni` con `cosa`, `chi` ed `entro` hanno sempre la forma giusta.\n- Le istruzioni chiedono di prendere solo le decisioni davvero prese. Per esempio, il parcheggio sotto l'ufficio nel vostro verbale va ignorato.\n- Le scadenze relative come \"venerdì prossimo\" vengono calcolate dalla data della riunione scritta nella trascrizione.\n- **Una scelta da confermare:** se una scadenza non viene detta, `entro` è `null` invece di una data inventata, e il programma lo segnala a schermo. Se preferisci che quelle azioni vengano tolte, si cambia facilmente.\n- Se una data non è nel formato AAAA-MM-GG, il programma stampa un avviso.\n\nNon ho attivato il passaggio automatico a un altro modello nel caso Claude rifiuti la richiesta, perché senza chiave non potevo provarlo. Se Claude rifiuta, il programma si ferma con un messaggio d'errore.\n\n**Per provarlo davvero**, dalla cartella con `verbale.txt`:\n```bash\nexport ANTHROPIC_API_KEY=la-tua-chiave\npython programma.py\n```\nCon il verbale attuale dovresti ottenere:\n- **2 decisioni:** la fiera di Bologna con lo stand piccolo e la newsletter ogni due settimane;\n- **3 azioni:** Paolo entro il 2026-10-30, Chiara entro il 2026-11-06 e Roberto entro il 2026-11-16.\n\nServono i pacchetti `anthropic` e `pydantic`, che qui sono già installati. Se mi dai accesso a una chiave, lo faccio girare io e controllo il risultato.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 6,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

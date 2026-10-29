@@ -1,0 +1,25 @@
+type Azione:
+    cosa: str "che cosa va fatto, frase breve all'infinito"
+    chi: str "nome di chi se ne occupa, come compare nella trascrizione"
+    entro: str "scadenza nel formato AAAA-MM-GG; stringa vuota se non è indicata"
+
+type Verbale:
+    decisioni: list[str] "decisioni prese nella riunione, una frase breve ciascuna"
+    azioni: list[Azione]
+
+agent Segretario:
+    instructions: """
+        Ricavi da una trascrizione di riunione le decisioni prese e le azioni da fare.
+        Decisioni: solo quelle approvate dal gruppo, non proposte, opinioni o chiacchiere fuori tema.
+        Azioni: solo compiti assegnati a una persona. Le scadenze vanno in AAAA-MM-GG; se sono relative
+        (es. "venerdì prossimo") calcolale rispetto alla data della riunione, o alla data di oggi se manca.
+        Scrivi in italiano.
+    """
+    output: Verbale
+    effort: "low"
+
+main:
+    testo = read_file("verbale.txt")
+    v = Segretario.ask(f"Data di oggi: {now()[:10]}\n\nTrascrizione:\n{testo}")
+    write_file("risultato.json", json_dump(v))
+    print(f"Scritto risultato.json: {len(v.decisioni)} decisioni, {len(v.azioni)} azioni.")

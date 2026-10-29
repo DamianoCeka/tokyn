@@ -1,0 +1,84 @@
+{
+ "prova": "opus/assistente/agent-sdk/r1",
+ "cartella": "56012828a6",
+ "modello": "opus",
+ "compito": "assistente",
+ "condizione": "agent-sdk",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.7487146,
+ "costo_usd_telemetria": 0.748715,
+ "token_output": 7156,
+ "token_input": 22,
+ "token_cache_scritti": 62723,
+ "token_cache_letti": 518613,
+ "prove_del_programma": {
+  "costo_usd": 0.169637,
+  "token_output": 4767,
+  "chiamate": 8,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 14,
+ "secondi": 162.8,
+ "secondi_api": 67.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Bash": 8,
+  "Skill": 1,
+  "Write": 1,
+  "Edit": 2
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 67,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": " dalle FAQ:** per i mobili da giardino e il negozio fisico a Milano risponde «questa informazione non è presente nelle nostre FAQ».\n- **Memoria:** il cliente scrive «mi chiamo Giulia e abito in Francia» e l'assistente poi usa nome e paese, per esempio nel calcolo della spedizione.\n- **Richiesta di leggere `/etc/passwd`:** rifiuta.\n- **Comportamento del programma:** dopo `esci` le righe successive vengono ignorate, finisce bene anche senza `esci`, e segnala l'errore se `faq.txt` non c'è.\n- Ogni risposta richiede circa 2–3 secondi.\n\n**Due correzioni fatte durante le prove**\n1. **Inferenze non scritte nelle FAQ.** All'inizio l'assistente affermava che «per l'estero non c'è soglia di gratuità», ma le FAQ non lo dicono. Ho reso più severe le istruzioni. Ora risponde che le FAQ non lo specificano. Ho verificato in due prove ripetute.\n2. **Una riga senza senso al posto di una risposta.** In un'esecuzione, alla domanda sul negozio di Milano ha stampato `antml:reasoning_effort=5` invece della risposta. Non si è ripetuto in 6 prove successive. Avevo impostato un livello di ragionamento basso (`effort=\"low\"`), che ho tolto per tornare al livello predefinito del modello. Dopo quella modifica non l'ho più visto. Non posso però escludere del tutto che ricapiti, perché la causa non è chiara.\n\nNota: una risposta può occupare più righe, con righe vuote tra un paragrafo e l'altro. Se il programma deve essere letto da un altro programma che si aspetta una riga per risposta, dimmelo e lo adatto.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "spedizione 6,90 euro: True",
+   "codice sconto CIAONESPOLO: True",
+   "reso entro 45 giorni: True",
+   "si ricorda il nome Giulia: True",
+   "termina su esci (codice 0) senza rispondere dopo: True",
+   "output (ultimi 1500 caratteri): Ciao Giulia, benvenuta da Casa Nespolo! Come posso aiutarti oggi? Posso darti informazioni su spedizioni, tempi di consegna, resi, metodi di pagamento, confezioni regalo, sconto sul primo ordine e sul nostro negozio di Bergamo.\nCiao Giulia! In Italia la spedizione standard costa 6,90 € ed è gratuita per ordini da 79 € in su.\n\nGli ordini partono entro 2 giorni lavorativi e arrivano in 3-5 giorni lavorativi.\nSì, Giulia! Con il codice CIAONESPOLO hai il 10% di sconto sul tuo primo ordine.\nPuoi restituire i prodotti entro 45 giorni dalla consegna. Il reso costa 7 €, tranne per i prodotti difettosi.\nTi chiami Giulia, me l'hai detto all'inizio della conversazione. Posso aiutarti con qualcos'altro?\n"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.030301,
+   "token_output": 492,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

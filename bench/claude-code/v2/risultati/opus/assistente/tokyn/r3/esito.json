@@ -1,0 +1,83 @@
+{
+ "prova": "opus/assistente/tokyn/r3",
+ "cartella": "83bb3f0ba1",
+ "modello": "opus",
+ "compito": "assistente",
+ "condizione": "tokyn",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.1803632,
+ "costo_usd_telemetria": 0.180363,
+ "token_output": 2566,
+ "token_input": 12,
+ "token_cache_scritti": 13959,
+ "token_cache_letti": 86616,
+ "prove_del_programma": {
+  "costo_usd": 0.041391,
+  "token_output": 912,
+  "chiamate": 9,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 94.7,
+ "secondi_api": 26.9,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 821,
+ "righe_tokyn": 20,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn"
+ ],
+ "risposta_finale": "€) e il contrassegno, che non è accettato.\n- **Fa semplici calcoli sui dati delle FAQ:** \"due pentole da 30 €\" → 60 €, sopra la soglia di 49 €, quindi spedizione gratuita.\n- **Non inventa:** a \"vendete elettrodomestici da incasso?\" e \"avete un negozio a Milano?\" ha risposto che l'informazione non è nelle FAQ.\n- **Ricorda la conversazione:** si è ricordato il nome del cliente e il paese in cui abita, che aveva detto qualche messaggio prima.\n- **Termina con `esci`:** si è fermato correttamente e la riga successiva non è stata letta.\n\n**Come funziona:** all'avvio legge `faq.txt` e lo passa a Claude insieme alle regole: rispondere in italiano, usare solo le FAQ e dire chiaramente quando la risposta non c'è. Così puoi aggiornare le FAQ modificando solo il file di testo, senza toccare il codice. Se `faq.txt` manca, il programma si ferma con un messaggio d'errore.\n\n**Chiave API:** ho fatto le prove senza chiave API, quindi le risposte arrivavano tramite il mio Claude Code. Per usarlo davvero con i clienti, imposta `ANTHROPIC_API_KEY` prima di avviarlo: le regole di Anthropic consentono Claude Code solo per le prove. Il programma usa la chiave da solo, senza modifiche. Nelle prove ogni messaggio è costato circa mezzo centesimo di dollaro a prezzi API.\n\nHo scritto il programma in `programma.tokyn`, che resta nella cartella. `programma.py` è generato da quel file e funziona senza Tokyn. Se in futuro vuoi cambiare il comportamento, conviene modificare il `.tokyn` e rigenerare il Python.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "spedizione 6,90 euro: True",
+   "codice sconto CIAONESPOLO: True",
+   "reso entro 45 giorni: True",
+   "si ricorda il nome Giulia: True",
+   "termina su esci (codice 0) senza rispondere dopo: True",
+   "output (ultimi 1500 caratteri): Ciao Giulia, benvenuta da Casa Nespolo! 😊 Come posso aiutarti oggi?\nIn Italia la spedizione standard costa 6,90 €, ed è gratuita per ordini da 79 € in su. 😊\n\nPosso aiutarti con altro, Giulia?\nSì, Giulia! Con il codice **CIAONESPOLO** hai il 10% di sconto sul primo ordine. 🎉\n\nPosso aiutarti con qualcos'altro?\nPuoi restituire i prodotti entro **45 giorni dalla consegna**, Giulia. Il reso costa 7 €, tranne per i prodotti difettosi. 😊\n\nPosso aiutarti con altro?\nTi chiami Giulia! 😊 Me l'hai detto all'inizio della conversazione.\n\nPosso aiutarti con altro?\n"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.020519,
+   "token_output": 297,
+   "chiamate": 5,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

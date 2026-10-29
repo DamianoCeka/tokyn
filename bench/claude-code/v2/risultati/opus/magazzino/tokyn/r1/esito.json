@@ -1,0 +1,84 @@
+{
+ "prova": "opus/magazzino/tokyn/r1",
+ "cartella": "6db37bf721",
+ "modello": "opus",
+ "compito": "magazzino",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.22317079999999997,
+ "costo_usd_telemetria": 0.223171,
+ "token_output": 3544,
+ "token_input": 12,
+ "token_cache_scritti": 16752,
+ "token_cache_letti": 91134,
+ "prove_del_programma": {
+  "costo_usd": 0.076464,
+  "token_output": 1214,
+  "chiamate": 10,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 9,
+ "secondi": 99.4,
+ "secondi_api": 33.6,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 846,
+ "righe_tokyn": 51,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "--|---|\n| Risme di carta A4 | 120 |\n| Valore totale del magazzino | 1.540,20 € (675 pezzi) |\n| Prodotti sotto la scorta minima | Toner (3 su 4), Evidenziatori gialli (18 su 30), Penne a sfera blu (150 su 200) |\n| Valore del toner | 235,50 € |\n| Evidenziatori mancanti | 12 |\n\n**Perché i numeri sono esatti:** Claude non fa nessun conto. Il programma ha due funzioni Python che leggono `inventario.json` e calcolano loro valori, totali e pezzi mancanti. Claude le usa per prendere i dati e riporta i numeri così come li riceve. Claude decide solo come formulare la frase, i numeri escono sempre dal codice.\n\n**Cose da sapere:**\n- **Chiave API:** per la prova ho usato il mio Claude Code, perché qui non c'era una chiave API. Le regole di Anthropic permettono di usarlo solo per provare. Per farlo girare voi serve una chiave API: impostate `ANTHROPIC_API_KEY` e il programma la usa senza modifiche. Ogni domanda costa più o meno un centesimo di dollaro.\n- **Formattazione:** alla prima prova una risposta usava il markdown con un elenco puntato. Ho chiesto nelle istruzioni testo semplice e alla seconda prova tutte le risposte sono arrivate in testo semplice.\n- **Righe vuote:** le righe vuote in `domande.txt` vengono saltate.\n- **Valute:** gli importi sono scritti come 1.540,20 €.\n- **Sorgente:** accanto c'è anche `programma.tokyn`, il sorgente da cui ho generato `programma.py`. Se vuoi modificare il programma conviene cambiare quello e rigenerare il Python, invece di toccare il Python a mano.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "4 elementi con le domande nell'ordine del file: True",
+   "martelli 37: True ('In magazzino ci sono 37 martelli da carpentiere (codice FER-B). Sono sopra la scorta minima di 10 pezzi e valgono 460,65 €.')",
+   "valore totale 2623,30: True ('Il magazzino vale in tutto 2.623,30 €, per un totale di 208 pezzi su 6 prodotti (da FER-A a FER-F).')",
+   "sotto scorta nastro e silicone, nessun altro: True (nominati ['nastro', 'silicone'], di troppo [])",
+   "pezzi da ordinare 46: True ('Per riportare tutto alla scorta minima servono 46 pezzi in totale: 32 di nastro isolante nero (FER-C) e 14 di silicone sigillante trasparente (FER-E).')"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.025291,
+   "token_output": 488,
+   "chiamate": 4,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

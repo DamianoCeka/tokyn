@@ -1,0 +1,48 @@
+from decimal import Decimal, ROUND_HALF_UP
+
+type Riga:
+    descrizione: str "descrizione della riga come scritta in fattura"
+    quantita: float
+    prezzo_unitario: float "prezzo unitario in euro"
+
+type Fattura:
+    fornitore: str "ragione sociale di chi emette la fattura (non il cliente)"
+    data: str "data della fattura nel formato AAAA-MM-GG"
+    righe: list[Riga] "tutte le righe di dettaglio, nell'ordine della fattura"
+    totale_dichiarato: float "totale finale da pagare scritto in fattura, in euro"
+
+agent Lettore:
+    instructions: """
+        Estrai i dati da una fattura di un fornitore in testo semplice.
+        Riporta i valori esattamente come scritti, senza correggere né ricalcolare nulla.
+        Gli importi in formato italiano (1.234,56) vanno convertiti in numeri (1234.56).
+    """
+    effort: "low"
+    output: Fattura
+
+def numero(x: float):
+    if x == int(x):
+        return int(x)
+    return x
+
+def centesimi(x):
+    return Decimal(str(x)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+
+main:
+    f = Lettore.ask(read_file("fattura.txt"))
+    totale = Decimal("0")
+    righe = []
+    for r in f.righe:
+        totale += Decimal(str(r.quantita)) * Decimal(str(r.prezzo_unitario))
+        righe.append({"descrizione": r.descrizione, "quantita": numero(r.quantita), "prezzo_unitario": r.prezzo_unitario})
+    calcolato = centesimi(totale)
+    risultato = {
+        "fornitore": f.fornitore,
+        "data": f.data,
+        "righe": righe,
+        "totale_dichiarato": f.totale_dichiarato,
+        "totale_calcolato": float(calcolato),
+        "totale_corretto": calcolato == centesimi(f.totale_dichiarato),
+    }
+    write_file("risultato.json", json_dump(risultato))
+    print(json_dump(risultato))

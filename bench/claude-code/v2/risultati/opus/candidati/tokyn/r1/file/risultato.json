@@ -1,0 +1,25 @@
+{
+  "candidati": [
+    {
+      "file": "bianchi_elena.txt",
+      "punteggio": 9,
+      "motivazione": "Oltre 5 anni di vendita, di cui 5 in elettronica/telefonia con garanzie, assicurazioni, cassa, gestionale e weekend; lacuna minima: esperienza su portatili e accessori meno documentata."
+    },
+    {
+      "file": "rizzo_davide.txt",
+      "punteggio": 5,
+      "motivazione": "Ha esperienza in vendita al dettaglio con cassa (circa 3 anni) e conosce gli smartphone, ma manca esperienza specifica in elettronica, upselling di servizi e gestionale di magazzino."
+    },
+    {
+      "file": "esposito_marco.txt",
+      "punteggio": 3,
+      "motivazione": "Buona conoscenza di informatica, gestionale di magazzino e disponibilità a turni; manca però esperienza di vendita al dettaglio, consulenza al cliente e uso della cassa."
+    },
+    {
+      "file": "ferraro_chiara.txt",
+      "punteggio": 1,
+      "motivazione": "Residente a Verona, ma esperienza solo infermieristica: nessuna vendita al dettaglio, elettronica, cassa o gestionale di magazzino richiesti dall'annuncio."
+    }
+  ],
+  "migliore": "bianchi_elena.txt"
+}

@@ -1,0 +1,83 @@
+{
+ "prova": "opus/documenti/tokyn/r1",
+ "cartella": "2dc79ff465",
+ "modello": "opus",
+ "compito": "documenti",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.1934314,
+ "costo_usd_telemetria": 0.193431,
+ "token_output": 2665,
+ "token_input": 14,
+ "token_cache_scritti": 14852,
+ "token_cache_letti": 106297,
+ "prove_del_programma": {
+  "costo_usd": 0.021154,
+  "token_output": 480,
+  "chiamate": 4,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 40.2,
+ "secondi_api": 25.6,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 849,
+ "righe_tokyn": 45,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "iallo vicino all'ingresso, con l'etichetta compilata | `orari_magazzino.txt` |\n| A chi vanno girate le email sospette? | All'indirizzo it@azienda.example, senza aprire gli allegati | `regole_informatiche.txt` |\n\n**Come funziona:**\n- Legge tutti i file `.txt` in `docs/` e li passa a Claude insieme alle istruzioni, ognuno con il suo nome.\n- Per ogni domanda Claude restituisce la risposta e il nome del file da cui viene.\n- Se nei documenti la risposta non c'è, il programma scrive \"Non trovato nei documenti\" con fonte `\"nessuna\"`, invece di inventarla.\n- Anche se Claude indica un file che non esiste in `docs/`, la fonte diventa `\"nessuna\"`.\n- Le righe vuote di `domande.txt` vengono saltate.\n\n**Cose da sapere:**\n- **Chiave API:** l'ho provato senza `ANTHROPIC_API_KEY`, quindi ha risposto il tuo Claude Code. Per provare va bene, ma se il programma deve girare da solo o lo usano altri colleghi serve una chiave dell'API di Anthropic: basta impostare `ANTHROPIC_API_KEY` e il programma la usa senza modifiche.\n- **Dimensione dei documenti:** Claude riceve ogni volta tutti i documenti. Con 4 file brevi va benissimo, ma se `docs/` diventasse molto grande (centinaia di pagine) bisognerebbe cambiare approccio.\n- **`programma.tokyn`:** accanto a `programma.py` c'è questo file, che è il sorgente da cui l'ho generato (con la skill tokyn che mi hai chiesto). Se vuoi modificare il programma conviene cambiare quello e poi rigenerare `programma.py`. Se lo cancelli, il programma funziona lo stesso.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "4 oggetti {domanda, risposta, fonte} nell'ordine di domande.txt: True",
+   "domanda 1: risposta giusta True, fonte trasferte.txt True ('0,42 euro per chilometro, calcolato sul percorso più breve; pedaggi e parcheggi si rimborsano a parte, con la ricevuta.', 'trasferte.txt')",
+   "domanda 2: risposta giusta True, fonte sicurezza_it.txt True ('La password va cambiata ogni 90 giorni (il sistema avvisa una settimana prima della scadenza).', 'sicurezza_it.txt')",
+   "domanda 3: risposta giusta True, fonte smart_working.txt True ('Fino a 2 giorni alla settimana (per i dipendenti a tempo indeterminato, dal 1° gennaio 2026). Il lunedì tutti lavorano in ufficio.', 'smart_working.txt')",
+   "domanda 4: risposta giusta True, fonte magazzino.txt True ('Il sabato il magazzino è aperto dalle 8:00 alle 11:00, solo per il ritiro delle merci già prenotate. Si può quindi ritirare fino alle 11:00.', 'magazzino.txt')"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.020167,
+   "token_output": 549,
+   "chiamate": 4,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

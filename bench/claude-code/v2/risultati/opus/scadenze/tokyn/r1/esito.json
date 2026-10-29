@@ -1,0 +1,85 @@
+{
+ "prova": "opus/scadenze/tokyn/r1",
+ "cartella": "b3a200a450",
+ "modello": "opus",
+ "compito": "scadenze",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.30463999999999997,
+ "costo_usd_telemetria": 0.30464,
+ "token_output": 5409,
+ "token_input": 22,
+ "token_cache_scritti": 19656,
+ "token_cache_letti": 195620,
+ "prove_del_programma": {
+  "costo_usd": 0.042348,
+  "token_output": 2557,
+  "chiamate": 8,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 14,
+ "secondi": 88.1,
+ "secondi_api": 48.5,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 7,
+  "Grep": 1,
+  "Write": 1,
+  "Edit": 2
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 869,
+ "righe_tokyn": 72,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "ombardi e Agriturismo Le Querce (scadono oltre i 30 giorni). Ogni email comincia con \"Gentile <cliente>,\" e cita il servizio e la data. L'oggetto è per esempio \"Assistenza tecnica in scadenza il 12 novembre 2026\", e il risultato completo è in `risultato.json`. L'esecuzione ha richiesto circa 19 secondi.\n\n**Altre prove:**\n- **Estremi compresi:** con la data 2026-11-12 Ottica Ferri risulta con 0 giorni mancanti; con la data 2026-11-01 lo Studio Moretti, che scade il 1° dicembre, risulta con 30 giorni ed è incluso.\n- **Nessun contratto in scadenza:** il file contiene `{\"in_scadenza\": []}`.\n- **Data mancante o non valida** (anche date inesistenti come 2026-02-30): il programma mostra come si usa ed esce con un errore.\n\n**Cosa sapere:**\n- **Chiave API:** nella prova le email le ha scritte Claude tramite il mio Claude Code, perché qui non c'era una chiave API. Per farlo girare da solo, sui vostri computer, imposta la variabile `ANTHROPIC_API_KEY` con una chiave API di Anthropic. Il programma non ha bisogno di altro.\n- **Controllo sulle email:** se un'email non contiene il nome del cliente o il servizio, il programma la fa riscrivere una volta.\n- **Righe con scadenza non valida:** le righe del CSV con una data non valida vengono saltate, con un avviso a schermo.\n- **Per modificarlo:** `programma.py` è stato generato con Tokyn dal file `programma.tokyn`, che trovi nella stessa cartella. È molto più corto, quindi per le modifiche conviene cambiare quello e generare di nuovo il Python.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "esattamente i 4 contratti in scadenza: True (['Panificio Russo', 'Farmacia Conti', 'Hotel Bellavista', 'Ferramenta Gallo Snc'])",
+   "scadenze come nel file e in ordine di scadenza: True (['2026-12-15', '2026-12-28', '2027-01-06', '2027-01-14'])",
+   "giorni_mancanti giusti: True ([0, 13, 22, 30])",
+   "email con oggetto e testo che nominano cliente e servizio: True",
+   "email scritte una per una (testi diversi anche senza nomi, servizi e date): True"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.025161,
+   "token_output": 1449,
+   "chiamate": 4,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

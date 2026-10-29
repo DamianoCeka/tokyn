@@ -3,11 +3,12 @@
 Ogni messaggio si scrive nelle due lingue nel punto in cui serve, con tr("italiano", "english").
 La lingua si sceglie così: la variabile TOKYN_LANG (it o en), poi l'opzione --lang della riga di comando,
 poi la lingua del plugin (il lanciatore della Skill), poi quella del sistema (LC_ALL, LC_MESSAGES, LANG,
-in quest'ordine): italiano se inizia con "it", altrimenti inglese.
+in quest'ordine, e se mancano tutte la lingua del sistema operativo): italiano se inizia con "it", altrimenti inglese.
 
 Questo file viene incluso anche nei programmi autonomi (tokyn build --standalone): niente import relativi.
 """
 
+import locale
 import os
 
 LINGUE = ("it", "en")
@@ -40,7 +41,11 @@ def lingua() -> str:
         valore = os.environ.get(nome)
         if valore:
             return "it" if valore.strip().lower().startswith("it") else "en"
-    return "en"
+    try:  # senza variabili (es. Windows) decide la lingua del sistema, come "Italian_Italy"
+        valore = locale.getlocale()[0] or ""
+    except (ValueError, TypeError):
+        valore = ""
+    return "it" if valore.lower().startswith("it") else "en"
 
 
 def tr(it: str, en: str) -> str:

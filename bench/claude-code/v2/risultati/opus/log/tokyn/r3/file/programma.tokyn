@@ -1,0 +1,36 @@
+agent Commentatore:
+    instructions: """
+        Commenti in italiano il traffico giornaliero di un sito web a partire dalle statistiche del suo log degli accessi.
+        Rispondi solo con esattamente due frasi brevi (al massimo 25 parole ciascuna), semplici e senza titoli, elenchi o formattazione:
+        la prima sull'andamento del traffico nelle ore della giornata, la seconda sugli errori.
+    """
+    effort: "low"
+
+def conta(d: dict, chiave: str):
+    d[chiave] = d.get(chiave, 0) + 1
+
+main:
+    per_ora = {}
+    errori = {}
+    per_ip = {}
+    for riga in read_file("access.log").splitlines():
+        if riga.strip() == "":
+            continue
+        conta(per_ip, riga.split()[0])
+        data = riga[riga.find("[") + 1:riga.find("]")]
+        conta(per_ora, data.split(":")[1])
+        stato = riga[riga.rfind("\"") + 1:].split()[0]
+        if int(stato) >= 400:
+            conta(errori, stato)
+    ore = {}
+    for h in sorted(per_ora.keys()):
+        ore[h] = per_ora[h]
+    codici = {}
+    for c in sorted(errori.keys()):
+        codici[c] = errori[c]
+    ip_top = sorted(per_ip.keys(), key=per_ip.get, reverse=True)[:3]
+    totale = sum(per_ip.values())
+    commento = Commentatore.ask(f"Richieste totali: {totale}\nRichieste per ora: {ore}\nErrori per codice di stato: {codici}\nIP con più richieste: {ip_top}")
+    risultato = {"richieste_per_ora": ore, "errori": codici, "ip_top": ip_top, "commento": " ".join(commento.split())}
+    write_file("risultato.json", json_dump(risultato))
+    print(json_dump(risultato))

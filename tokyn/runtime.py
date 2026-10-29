@@ -392,20 +392,20 @@ class Agent:
             details = getattr(response, "stop_details", None)
             category = getattr(details, "category", None) if details else None
             raise TokynRuntimeError(
-                tr(f"l'IA ha rifiutato la richiesta dell'agente {self.name}", f"the AI refused the request of agent {self.name}")
+                tr(f"l'IA ha rifiutato la richiesta dell'agente {self.name}", f"the AI refused agent {self.name}'s request")
                 + (tr(f" (categoria: {category})", f" (category: {category})") if category else ""),
                 hint=tr("Riformula le instructions o il testo della richiesta.", "Rephrase the instructions or the text of the request."))
         stop = getattr(response, "stop_reason", None)
         if stop == "model_context_window_exceeded":
             raise TokynRuntimeError(tr(f"la conversazione dell'agente {self.name} non sta più nel contesto del modello",
-                                       f"the conversation of agent {self.name} no longer fits in the model's context"),
+                                       f"agent {self.name}'s conversation no longer fits in the model's context"),
                                     hint=tr("Usa Agente.reset() più spesso, memory: False o testi più corti.",
                                             "Use Agent.reset() more often, memory: False or shorter texts."))
         if stop == "max_tokens":  # anche gli strumenti avrebbero un input troncato: non si eseguono
             thinking_only = not any(getattr(b, "type", "") in ("text", "tool_use") for b in response.content)
             raise TokynRuntimeError(
                 tr(f"la risposta dell'agente {self.name} è stata interrotta perché troppo lunga",
-                   f"the answer of agent {self.name} was cut off because it was too long"),
+                   f"agent {self.name}'s answer was cut off because it was too long"),
                 hint=tr("Usa un effort più basso.", "Use a lower effort.") if thinking_only
                 else tr("Chiedi nelle instructions una risposta più breve.", "Ask for a shorter answer in the instructions."))
         messages.append({"role": "assistant", "content": [_plain(b) for b in response.content]})
@@ -555,10 +555,11 @@ def usage_report() -> str:
     report = tr(f"token: {u['input']} in ingresso, {u['output']} in uscita, {u['cache_lette']} letti dalla cache, "
                 f"{u['cache_scritte']} scritti in cache ({u['chiamate']} chiamate, {u['chiamate_batch']} nella Batch API a metà prezzo)",
                 f"tokens: {u['input']} input, {u['output']} output, {u['cache_lette']} read from the cache, "
-                f"{u['cache_scritte']} written to the cache ({u['chiamate']} calls, {u['chiamate_batch']} in the Batch API at half price)")
+                f"{u['cache_scritte']} written to the cache ({u['chiamate']} call{'' if u['chiamate'] == 1 else 's'}, "
+                f"{u['chiamate_batch']} in the Batch API at half price)")
     if u["fallback"]:
         report += tr(f"; {u['fallback']} risposte da un modello di riserva dopo un rifiuto",
-                     f"; {u['fallback']} answers from a fallback model after a refusal")
+                     f"; {u['fallback']} answer{'' if u['fallback'] == 1 else 's'} from a fallback model after a refusal")
     if u["chiamate_claude_code"]:
         report += tr(f"; {u['chiamate_claude_code']} tramite Claude Code "
                      f"(valore indicativo a prezzi API: ${u['costo_claude_code']:.4f})",
@@ -743,7 +744,7 @@ def _claude_code_ask(agent, text, history):
         return agent.output._from_dict(data, agent.output.__name__), _json.dumps(data, ensure_ascii=False)
     except ValueError as err:
         raise TokynRuntimeError(tr(f"la risposta dell'agente {agent.name} non è nel formato richiesto: {err}",
-                                   f"the answer of agent {agent.name} is not in the requested format: {err}")) from None
+                                   f"agent {agent.name}'s answer is not in the requested format: {err}")) from None
 
 
 def _count_claude_code(result):
@@ -832,7 +833,7 @@ def _example(spec: _Spec, field: str = "", n: int = 0):
     """Valore finto per un campo. n (numero della chiamata) fa variare scelte e bool tra una ask e l'altra."""
     k = spec.kind
     if k == "str":
-        return f"esempio {field}".strip()
+        return tr(f"esempio {field}", f"example {field}").strip()
     if k == "int":
         return 1
     if k == "float":
@@ -861,7 +862,7 @@ def _mock_answer(agent: Agent, text: str):
         value = cls._from_dict(data)
         return value, _json.dumps(data, ensure_ascii=False)
     short = text if len(text) <= 60 else text[:57] + "..."
-    answer = f"[mock {agent.name}] risposta a: {short}"
+    answer = tr(f"[mock {agent.name}] risposta a: {short}", f"[mock {agent.name}] answer to: {short}")
     return answer, answer
 
 
@@ -929,7 +930,7 @@ def json_parse(text, default=_NO_DEFAULT):
         detail = tr(f"{err.msg}, riga {err.lineno}", f"{err.msg}, line {err.lineno}") if isinstance(err, _json.JSONDecodeError) else str(err)
         raise TokynRuntimeError(tr(f"il testo non è JSON valido ({detail})", f"the text is not valid JSON ({detail})"),
                                 hint=tr("Se può non esserlo, dai un valore di riserva: json_parse(testo, {})",
-                                        "If it may not be, give a fallback value: json_parse(text, {})")) from None
+                                        "If it may not be JSON, give a fallback value: json_parse(text, {})")) from None
 
 
 def to_number(text, default=_NO_DEFAULT):
@@ -957,7 +958,7 @@ def to_number(text, default=_NO_DEFAULT):
         return default
     raise TokynRuntimeError(tr(f"{text!r} non è un numero", f"{text!r} is not a number"),
                             hint=tr("Se può non esserlo, dai un valore di riserva: to_number(testo, 0)",
-                                    "If it may not be, give a fallback value: to_number(text, 0)"))
+                                    "If it may not be a number, give a fallback value: to_number(text, 0)"))
 
 
 def json_dump(value):

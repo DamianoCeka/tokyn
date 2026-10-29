@@ -1,0 +1,73 @@
+{
+ "prova": "opus/spese/python/r3",
+ "cartella": "586ff4b13a",
+ "modello": "opus",
+ "compito": "spese",
+ "condizione": "python",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.7973739999999999,
+ "costo_usd_telemetria": 0.797374,
+ "token_output": 8409,
+ "token_input": 26,
+ "token_cache_scritti": 61555,
+ "token_cache_letti": 683250,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 16,
+ "secondi": 89.0,
+ "secondi_api": 77.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 9,
+  "Write": 1,
+  "Edit": 3
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 126,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "a non ho potuto verificare:**\n- che il server vero accetti la richiesta così com'è;\n- quali categorie sceglie davvero Claude.\n\nPer la prova vera ti basta:\n\n```\nexport ANTHROPIC_API_KEY=la-tua-chiave\npython programma.py\n```\n\n**Come funziona:**\n- Legge il CSV e converte gli importi in modo esatto (accetta anche il punto delle migliaia, per esempio `1.850,00`).\n- Manda a Claude (modello `claude-opus-5-5`) tutti i movimenti numerati in un'unica richiesta, fino a 100 per volta. La risposta è vincolata a un formato JSON: ogni categoria deve essere una delle cinque. Se manca un movimento o la risposta è incompleta, il programma si ferma con un errore invece di scrivere un risultato sbagliato.\n- Nelle istruzioni do a Claude qualche esempio per categoria: bollette e bricolage in \"casa\", ristoranti, streaming e libri in \"svago\", pedaggi e carburante in \"trasporti\". Puoi cambiarli in `ISTRUZIONI` all'inizio del file.\n- Ho attivato il \"fallback\" automatico: se Claude rifiuta una richiesta, il server la ripete con un altro modello. Se non ti serve, togli le righe `betas=` e `fallbacks=`.\n- Ogni esecuzione costa una chiamata all'API, cioè pochi centesimi per un mese di movimenti.\n\n**Una cosa da sapere sui totali:** come hai chiesto, sommano tutti gli importi, quindi anche le entrate. Lo stipendio finisce in \"altro\", e con il tuo file \"altro\" verrebbe +1848,50 invece di un numero negativo. Se vuoi solo le uscite, o una categoria separata per le entrate, è una modifica di una riga: dimmi tu.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 3,
+  "dettagli": [
+   "risultato.json mancante o senza la lista movimenti"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

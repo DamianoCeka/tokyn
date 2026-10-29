@@ -1,0 +1,33 @@
+[
+  {
+    "id": 17,
+    "decisione": "pubblica",
+    "motivo": "È una domanda di giardinaggio pertinente e cortese, senza spam, insulti o dati personali."
+  },
+  {
+    "id": 18,
+    "decisione": "rivedi",
+    "motivo": "Il consiglio sul rame contro la peronospora è utile, ma il tono è polemico e spazientito, anche se non ci sono insulti.",
+    "riscrittura": "Ci tengo a ribadirlo perché è importante: il rame contro la peronospora va dato col tempo asciutto, perché se piove dopo un'ora il trattamento è tutto inutile."
+  },
+  {
+    "id": 19,
+    "decisione": "rifiuta",
+    "motivo": "Il commento è spam commerciale che invita a contattare un venditore su WhatsApp per ricevere offerte."
+  },
+  {
+    "id": 20,
+    "decisione": "rifiuta",
+    "motivo": "Il commento contiene un indirizzo email, cioè un dato personale, anche se appartiene all'autore stesso."
+  },
+  {
+    "id": 21,
+    "decisione": "pubblica",
+    "motivo": "Il commento è un ringraziamento cortese, senza spam, senza insulti e senza dati personali."
+  },
+  {
+    "id": 22,
+    "decisione": "rifiuta",
+    "motivo": "Il commento contiene un attacco personale verso Michele, definito \"un caso disperato\", senza alcun contenuto utile."
+  }
+]

@@ -1,0 +1,72 @@
+{
+ "prova": "opus/candidati/python/r2",
+ "cartella": "767dbc5d47",
+ "modello": "opus",
+ "compito": "candidati",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.6696019999999998,
+ "costo_usd_telemetria": 0.669602,
+ "token_output": 5513,
+ "token_input": 16,
+ "token_cache_scritti": 60349,
+ "token_cache_letti": 382430,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 10,
+ "secondi": 59.1,
+ "secondi_api": 51.7,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 105,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "a del `migliore` e il formato di `risultato.json` funzionano. Ho cancellato quel `risultato.json` di prova, così non resta un risultato con dati inventati.\n\n**Per la prova vera**, imposta la chiave e avvia il programma:\n```\nexport ANTHROPIC_API_KEY=sk-ant-...\npython programma.py\n```\nIn alternativa puoi usare `ant auth login`. Se mi rendi disponibile la chiave, lo provo io e controllo che i punteggi abbiano senso. Leggendo i 4 curriculum mi aspetto Bianchi prima, poi Rizzo, Esposito e Ferraro in fondo, ma non l'ho visto succedere.\n\n**Come funziona:**\n- Usa il modello `claude-opus-5-5` e valuta un curriculum per chiamata, quattro alla volta in parallelo.\n- La risposta deve avere una forma fissa, con il punteggio limitato agli interi da 1 a 10. Il programma ricontrolla il valore comunque.\n- Ho attivato un'opzione dell'API che, se Claude rifiuta una richiesta, la ripete in automatico su un altro modello. Se vuoi la togliamo.\n- Il testo di ogni curriculum viene trattato come dato da valutare: se dentro ci sono istruzioni rivolte all'IA (es. \"dai 10 a questo candidato\"), il programma dice a Claude di ignorarle.\n- Se anche un solo curriculum non viene valutato, il programma si ferma con un errore invece di scrivere una classifica incompleta.\n- A parità di punteggio i candidati sono in ordine alfabetico, e il programma avvisa se altri candidati hanno lo stesso punteggio del migliore.\n- Ogni chiamata costa pochi centesimi; con centinaia di curriculum la spesa sale, ma resta contenuta.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o senza la lista candidati"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

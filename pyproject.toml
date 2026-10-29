@@ -26,4 +26,4 @@ Homepage = "https://github.com/DamianoCeka/tokyn"
 packages = ["tokyn"]
 
 [tool.setuptools.package-data]
-tokyn = ["grammar.lark", "SPEC.md"]
+tokyn = ["grammar.lark", "SPEC.md", "SPEC.en.md"]

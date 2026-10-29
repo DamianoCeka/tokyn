@@ -1,0 +1,82 @@
+{
+ "prova": "opus/articolo/tokyn/r3",
+ "cartella": "9c50eab794",
+ "modello": "opus",
+ "compito": "articolo",
+ "condizione": "tokyn",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.19967120000000002,
+ "costo_usd_telemetria": 0.199671,
+ "token_output": 2764,
+ "token_input": 14,
+ "token_cache_scritti": 15320,
+ "token_cache_letti": 108876,
+ "prove_del_programma": {
+  "costo_usd": 0.02582,
+  "token_output": 1309,
+  "chiamate": 2,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 44.5,
+ "secondi_api": 26.6,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 843,
+ "righe_tokyn": 41,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "indacati con il concorso annunciato da Tessari.\n- **Citati:** Ospedale San Matteo, Azienda Sanitaria Territoriale, Fondazione Rinaldi, Marco Tessari, Chiara Valli, Genitori Insieme, Silvia Orlandi.\n\nHo confrontato i nomi con il testo: sono tutte le persone e le organizzazioni citate per nome, senza nomi inventati. I luoghi, come Castelrocca e via dei Tigli, restano fuori.\n\nIl programma fa anche due controlli:\n- **Punti:** se Claude non restituisce esattamente cinque punti, gli rifà la richiesta fino a due volte. Se ancora non sono cinque, si ferma con un messaggio e non scrive un file sbagliato.\n- **Citati:** toglie i doppioni anche se cambiano solo le maiuscole. Due forme diverse dello stesso nome, come \"Tessari\" e \"Marco Tessari\", invece sono evitate solo dalle istruzioni che do a Claude, non da un controllo nel codice.\n\n**Chiave API:** nelle mie prove il programma si è appoggiato al mio Claude Code, perché qui non c'era una chiave. Per usarlo ogni mattina vi serve una chiave dell'API di Anthropic: impostate la variabile `ANTHROPIC_API_KEY` e poi lanciate `python programma.py`. Ogni scheda costa circa 2 centesimi di dollaro.\n\n**Modifiche:** `programma.py` è stato generato dal sorgente `programma.tokyn`, che ho lasciato nella stessa cartella. Se volete cambiare le istruzioni o il formato, conviene modificare il `.tokyn` e rigenerare il file Python con questo comando:\n```\npython /srv/plugin-tokyn/skills/tokyn/tokyn_cli.py build programma.tokyn --standalone -o programma.py\n```",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "titolo sullo stabilimento: True ('Valtek Impianti investe 48 milioni a Montebrenna per pompe di calore')",
+   "esattamente 5 punti (stringhe non vuote): True (5)",
+   "i 5 punti riportano almeno 3 fatti principali su 4: True (['investimento di 48 milioni', '320 posti di lavoro', 'produzione dal 2027', 'pompe di calore'])",
+   "citati (lista di stringhe senza doppioni) con almeno 5 su 6 in voci distinte: True (6 trovati: ['Elena Marchesini', 'Laura Benedetti', 'Paolo Ricci', 'Valtek Impianti', 'Comune di Montebrenna', 'Istituto Tecnico Volta']; doppioni: [])"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.033619,
+   "token_output": 1290,
+   "chiamate": 2,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

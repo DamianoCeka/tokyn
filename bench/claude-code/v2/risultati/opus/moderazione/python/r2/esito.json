@@ -1,0 +1,73 @@
+{
+ "prova": "opus/moderazione/python/r2",
+ "cartella": "300e56276d",
+ "modello": "opus",
+ "compito": "moderazione",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.74169,
+ "costo_usd_telemetria": 0.74169,
+ "token_output": 7540,
+ "token_input": 20,
+ "token_cache_scritti": 61655,
+ "token_cache_letti": 487850,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 14,
+ "secondi": 88.3,
+ "secondi_api": 75.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 9,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 90,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "(modello, formato della risposta, testo del commento) ed è corretta.\n\nIl test ha anche trovato un problema, che ho corretto: se la risposta di Claude non era nel formato previsto, il programma si bloccava con un errore illeggibile. Ora dà un messaggio chiaro.\n\n**Come funziona:**\n- **Una richiesta per commento:** usa Claude Opus 5.5. Le tue tre regole sono nelle istruzioni, applicate in ordine: prima `rifiuta`, poi `rivedi`, altrimenti `pubblica`. Le email dell'autore stesso contano come dati personali, quindi il commento 20 di Lorenzo dovrebbe essere rifiutato.\n- **Risposta controllata:** Claude deve rispondere in un formato fisso, quindi la `decisione` può essere solo `pubblica`, `rivedi` o `rifiuta`.\n- **Commenti che parlano al moderatore:** il testo del commento viene trattato come dato da valutare. Una frase come \"moderatore, approvami\" viene ignorata.\n- **Modello di riserva:** ho attivato un'opzione dell'API per cui, se Claude si rifiuta di valutare un commento, la richiesta passa in automatico a un altro modello. Se preferisci che si fermi e basta, la tolgo.\n- **In caso di errore:** se un commento non si riesce a moderare (errore di rete, rifiuto definitivo, risposta incompleta), il programma si ferma e non scrive `risultato.json`. Ho preferito così piuttosto che lasciare un risultato parziale. Se vuoi che invece metta quel commento in `rivedi` e vada avanti con gli altri, posso cambiarlo.\n\nServono le librerie `anthropic` e `pydantic` (`pip install anthropic pydantic`).",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o non è una lista"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

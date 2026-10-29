@@ -1,0 +1,80 @@
+{
+ "prova": "opus/articolo/agent-sdk/r3",
+ "cartella": "c56fa2fa9a",
+ "modello": "opus",
+ "compito": "articolo",
+ "condizione": "agent-sdk",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.29654179999999997,
+ "costo_usd_telemetria": 0.296542,
+ "token_output": 6116,
+ "token_input": 16,
+ "token_cache_scritti": 18539,
+ "token_cache_letti": 129229,
+ "prove_del_programma": {
+  "costo_usd": 0.150949,
+  "token_output": 5426,
+  "chiamate": 6,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 9,
+ "secondi": 116.7,
+ "secondi_api": 54.9,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Bash": 6,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [],
+ "programma_consegnato": true,
+ "righe_programma": 134,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "ri Insieme, Silvia Orlandi.\n\n**Come funziona:**\n- Il programma passa a Claude il testo dell'articolo e chiede la risposta in un formato JSON fisso, con esattamente cinque punti. Claude non può aprire file, usare la shell o andare sul web: legge solo l'articolo.\n- Prima di salvare, il programma controlla il risultato. Toglie i nomi ripetuti, anche se scritti con maiuscole diverse, e verifica che ogni punto sia una sola frase. Se qualcosa non va, richiede la scheda a Claude indicandogli l'errore, fino a 3 tentativi. Se nessun tentativo va bene, esce con un messaggio di errore e non scrive il file.\n- Se `articolo.txt` manca o è vuoto, lo segnala e si ferma. Ho provato il caso del file mancante.\n\n**Cose da sapere:**\n- **Nomi dei citati:** nei primi test l'ospedale usciva una volta come \"San Matteo\" e una come \"Ospedale San Matteo\". Ho aggiunto alle istruzioni per Claude la regola di usare il nome proprio senza parole come \"ospedale\" davanti. Dopo la modifica le tre prove hanno dato sempre gli stessi nomi. Con altri articoli possono comunque capitare piccole differenze di forma.\n- **Ospedale tra i citati:** il San Matteo compare tra i citati perché è un'organizzazione con un nome proprio. Gruppi generici senza nome, come \"i sindacati\", restano fuori.\n- **Lunghezza dei punti:** ogni punto è una sola frase, ma a volte piuttosto lunga. Se le vuoi più brevi, posso aggiungere un limite di parole.\n\nPer usarlo basta lanciare `python programma.py` dalla cartella in cui c'è `articolo.txt`.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "titolo sullo stabilimento: True ('Valtek Impianti investe 48 milioni in una fabbrica a Montebrenna')",
+   "esattamente 5 punti (stringhe non vuote): True (5)",
+   "i 5 punti riportano almeno 3 fatti principali su 4: True (['investimento di 48 milioni', '320 posti di lavoro', 'produzione dal 2027', 'pompe di calore'])",
+   "citati (lista di stringhe senza doppioni) con almeno 5 su 6 in voci distinte: True (6 trovati: ['Elena Marchesini', 'Laura Benedetti', 'Paolo Ricci', 'Valtek Impianti', 'Comune di Montebrenna', 'Istituto Tecnico Volta']; doppioni: [])"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.035573,
+   "token_output": 749,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

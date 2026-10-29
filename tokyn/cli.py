@@ -118,8 +118,8 @@ def main(argv=None) -> int:
 
     comuni = argparse.ArgumentParser(add_help=False)
     comuni.add_argument("--lang", choices=lingua.LINGUE, default=argparse.SUPPRESS,
-                        help=tr("lingua dei messaggi (se non c'è la variabile TOKYN_LANG); di solito quella del sistema",
-                                "language of the messages (unless TOKYN_LANG is set); by default the system's"))
+                        help=tr("lingua dei messaggi (la variabile TOKYN_LANG ha la precedenza)",
+                                "language of the messages (the TOKYN_LANG variable takes precedence)"))
     parser = argparse.ArgumentParser(prog="tokyn", description=tr("Tokyn: il linguaggio per agenti IA.", "Tokyn: the language for AI agents."),
                                      parents=[comuni])
     parser.add_argument("--version", action="version", version=f"tokyn {__version__}")

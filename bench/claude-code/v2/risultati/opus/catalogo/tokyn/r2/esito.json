@@ -1,0 +1,82 @@
+{
+ "prova": "opus/catalogo/tokyn/r2",
+ "cartella": "ce7e6df002",
+ "modello": "opus",
+ "compito": "catalogo",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2067584,
+ "costo_usd_telemetria": 0.206758,
+ "token_output": 3191,
+ "token_input": 16,
+ "token_cache_scritti": 14698,
+ "token_cache_letti": 126452,
+ "prove_del_programma": {
+  "costo_usd": 0.026416,
+  "token_output": 850,
+  "chiamate": 12,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 9,
+ "secondi": 117.7,
+ "secondi_api": 31.9,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 831,
+ "righe_tokyn": 29,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "catalogo_en.csv",
+  "programma.py",
+  "programma.tokyn"
+ ],
+ "risposta_finale": "scrizione;prezzo\nTZ-014;Tazza Aurora;Handmade ceramic mug, dishwasher safe;12,90\nCU-207;Cuscino Nuvola;Memory foam pillow with removable bamboo cover;39,00\nPT-330;Padella Etna;28 cm non-stick frying pan, also suitable for induction hobs;34,50\nCA-118;Candela Lavanda;Lavender-scented candle in a glass jar, 40-hour burn time;15,90\nZA-402;Zaino Sentiero;30-liter hiking backpack with breathable back panel;79,00\nTP-509;Tappeto Duna;Hand-woven jute rug, 120 x 180 cm;89,90\n```\n\n**Come funziona:**\n- Legge il CSV con il modulo `csv` di Python, quindi gestisce correttamente anche descrizioni scritte tra virgolette. Se una traduzione contiene un `;`, viene messa tra virgolette in automatico.\n- Traduce una descrizione alla volta e a schermo mostra a che punto è (es. `[3/6] PT-330`). Le descrizioni vuote vengono lasciate come sono.\n- Mantiene il tipo di a capo del file originale.\n\n**Cosa ti serve per usarlo:**\n- **Chiave API:** nei miei test non c'era una chiave API di Anthropic, quindi le traduzioni sono passate dal mio Claude Code, che va bene solo per le prove. Per usarlo davvero imposta la variabile d'ambiente `ANTHROPIC_API_KEY` e installa la libreria con `pip install anthropic`. Per questo catalogo di prova il costo stimato è di circa 2 centesimi di dollaro.\n- **Modifiche:** `programma.py` è generato da un sorgente molto più corto, `programma.tokyn`, che ho lasciato nella stessa cartella. Per cambiare le istruzioni di traduzione conviene modificare quello e rigenerare il file Python.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "intestazione codice;nome;descrizione;prezzo: True (['codice', 'nome', 'descrizione', 'prezzo'])",
+   "5 prodotti con 4 colonne e codici nell'ordine del file: True (5 righe)",
+   "codice, nome e prezzo identici: True",
+   "descrizioni tradotte in inglese: 5 su 5"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.015931,
+   "token_output": 353,
+   "chiamate": 5,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

@@ -213,7 +213,7 @@ def _python_idiom(tok: Token, expected: set, line_text: str) -> tuple[str, str] 
     if tok.type == "COMMA" and expected == {"COLON"}:
         return (tr("i set `{a, b}` non esistono in Tokyn", "sets `{a, b}` do not exist in Tokyn"),
                 tr("Usa una lista: `[a, b]` (per togliere i doppioni controlla con `in`).",
-                   "Use a list: `[a, b]` (to skip duplicates check with `in`)."))
+                   "Use a list: `[a, b]` (to avoid duplicates, check with `in`)."))
     if tok.type == "COMMA" and expected == {"RPAR"}:
         return (tr("le tuple `(a, b)` non esistono in Tokyn", "tuples `(a, b)` do not exist in Tokyn"),
                 tr("Usa una lista: `[a, b]`.", "Use a list: `[a, b]`."))

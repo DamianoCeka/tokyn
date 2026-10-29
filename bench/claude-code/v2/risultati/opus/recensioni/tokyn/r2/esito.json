@@ -1,0 +1,82 @@
+{
+ "prova": "opus/recensioni/tokyn/r2",
+ "cartella": "b4dad1d98d",
+ "modello": "opus",
+ "compito": "recensioni",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.1525932,
+ "costo_usd_telemetria": 0.152593,
+ "token_output": 1889,
+ "token_input": 10,
+ "token_cache_scritti": 12664,
+ "token_cache_letti": 67306,
+ "prove_del_programma": {
+  "costo_usd": 0.001185,
+  "token_output": 645,
+  "chiamate": 6,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 7,
+ "secondi": 34.0,
+ "secondi_api": 19.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 3,
+  "Write": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 826,
+ "righe_tokyn": 24,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "\n| Recensione | Sentimento | Voto |\n|---|---|---|\n| Prodotto fantastico, arrivato in un giorno. | positivo | 5 |\n| Si è rotto dopo una settimana, deluso. | negativo | 1 |\n| Nella media, niente di speciale. | neutro | 3 |\n| Ottimo rapporto qualità prezzo, lo consiglio a tutti. | positivo | 5 |\n| La batteria dura pochissimo e l'assistenza non risponde. | negativo | 1 |\n| Fa quello che promette, né più né meno. | neutro | 3 |\n\nMedia: **3.0**, che è il conto giusto: (5+1+3+5+1+3)/6.\n\n**Come funziona:**\n- Legge `recensioni.txt` e salta le righe vuote.\n- Per ogni recensione chiede a Claude Haiku, il modello più economico, il sentimento (solo `positivo`, `negativo` o `neutro`) e il voto.\n- Se Claude desse un voto fuori dall'intervallo, il programma lo riporta tra 1 e 5.\n- La media è arrotondata a 2 decimali. Se il file non contiene recensioni vale 0.\n- Il file è autonomo: basta `python programma.py`.\n\n**Una cosa da sapere sulla chiave API:** sulla macchina non c'era una `ANTHROPIC_API_KEY`, quindi la prova è passata dal tuo Claude Code. Il programma lo fa da solo quando la chiave manca, ma le regole di Anthropic permettono di usarlo così solo per provare. Per usarlo davvero o farlo usare ad altri imposta prima la chiave: `export ANTHROPIC_API_KEY=...`.\n\nAccanto c'è anche `programma.tokyn`, il sorgente di circa 25 righe da cui il compilatore ha generato `programma.py`. Se vuoi cambiare qualcosa conviene modificare quello e rigenerare il Python, ma non serve per eseguire il programma.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 recensioni nell'ordine del file: True",
+   "sentimenti giusti: 6 su 6",
+   "voti interi da 1 a 5 e coerenti col sentimento: True ([5.0, 1.0, 3.0, 5.0, 1.0, 3.0])",
+   "media giusta dei voti: True (3.0)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.00115,
+   "token_output": 765,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

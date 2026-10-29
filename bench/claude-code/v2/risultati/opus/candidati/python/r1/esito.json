@@ -1,0 +1,75 @@
+{
+ "prova": "opus/candidati/python/r1",
+ "cartella": "6696a1f6a2",
+ "modello": "opus",
+ "compito": "candidati",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.7752814000000001,
+ "costo_usd_telemetria": 0.775281,
+ "token_output": 8419,
+ "token_input": 20,
+ "token_cache_scritti": 63283,
+ "token_cache_letti": 502787,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 14,
+ "secondi": 94.7,
+ "secondi_api": 76.9,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 7,
+  "Read": 1,
+  "Grep": 1,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 115,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "no lo stesso punteggio massimo, lo segnala, perché \"il migliore\" in quel caso è solo il primo in ordine alfabetico.\n- Ho attivato l'opzione di riserva di Anthropic (`fallbacks`): se Claude Opus 5.5 rifiuta una richiesta, la ripete in automatico con un altro modello.\n\n**Una scelta da confermare:** se anche un solo curriculum non viene valutato (errore di rete, rifiuto, punteggio non valido), il programma **non scrive** `risultato.json` ed esce con errore. Altrimenti indicherebbe un \"migliore\" su una classifica incompleta. Se preferisci, posso fargli scrivere comunque i risultati, con l'elenco dei curriculum saltati.\n\n**Cosa ho provato:** ho simulato l'API con un finto server locale che riceve le richieste e risponde nel formato reale. Ho verificato:\n- **Caso normale:** classifica in ordine e `risultato.json` corretto.\n- **Parità al primo posto:** viene segnalata.\n- **Punteggio fuori scala (12):** viene bloccato.\n- **Rifiuto:** viene bloccato anche questo, e in entrambi i casi il file non viene scritto.\n\nHo controllato anche il contenuto delle richieste inviate: modello, formato JSON, testo di annuncio e curriculum. Quello che resta da verificare con la chiave vera è che l'API accetti questa combinazione di parametri e che i punteggi siano sensati.\n\nA occhio, su questi 4 curriculum mi aspetto prima Bianchi (esperienza diretta in telefonia da MediaWorld), poi Rizzo, Esposito e infine Ferraro (infermiera, fuori ruolo).\n\nSe mi dai accesso a una chiave, faccio io la prova completa.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o senza la lista candidati"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

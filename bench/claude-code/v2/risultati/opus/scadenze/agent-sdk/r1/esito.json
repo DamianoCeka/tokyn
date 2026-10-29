@@ -1,0 +1,80 @@
+{
+ "prova": "opus/scadenze/agent-sdk/r1",
+ "cartella": "66f74d0421",
+ "modello": "opus",
+ "compito": "scadenze",
+ "condizione": "agent-sdk",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2704198,
+ "costo_usd_telemetria": 0.27042,
+ "token_output": 6045,
+ "token_input": 16,
+ "token_cache_scritti": 15781,
+ "token_cache_letti": 116039,
+ "prove_del_programma": {
+  "costo_usd": 0.160804,
+  "token_output": 6204,
+  "chiamate": 12,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 91.4,
+ "secondi_api": 52.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Bash": 6,
+  "Write": 1
+ },
+ "skill": [],
+ "programma_consegnato": true,
+ "righe_programma": 150,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "isulta con `giorni_mancanti: 0`. Con `2026-09-20` lo stesso contratto risulta a 30 giorni, quindi è incluso.\n- **Nessun contratto in scadenza:** con `2027-06-01` il file contiene `{\"in_scadenza\": []}`.\n- **Input sbagliato:** con una data non valida (`2026-13-01`) o senza argomento, il programma si ferma con un messaggio di errore chiaro.\n\nHo lasciato in `risultato.json` l'uscita della prova con `2026-11-01`, così potete leggere le email. Iniziano tutte con \"Gentile <cliente>,\", citano il servizio e la data scritta per esteso, invitano a contattarvi per il rinnovo e sono firmate \"Il nostro staff\".\n\n**Come funziona:**\n- Claude risponde in un formato fisso con due campi, oggetto e testo, che il programma legge direttamente.\n- Il programma controlla che ogni email contenga il nome del cliente e il servizio. Se uno dei due manca, la fa riscrivere, fino a 3 tentativi; se fallisce ancora si ferma con un errore invece di scrivere un risultato incompleto. Fa lo stesso in caso di errori di rete.\n- La data di scadenza arriva a Claude già scritta in italiano (\"12 novembre 2026\"), così non deve calcolarla da sé e non può sbagliarla.\n- Le email vengono generate fino a 4 alla volta.\n- Le righe con una scadenza non valida vengono saltate, con un avviso a schermo.\n\n**Da sapere:**\n- La firma è un generico \"Il nostro staff\" perché non so il nome della vostra azienda. Si cambia nella costante `ISTRUZIONI`.\n- La colonna `email` viene letta ma non usata: il programma scrive le email, non le invia.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "esattamente i 4 contratti in scadenza: True (['Panificio Russo', 'Farmacia Conti', 'Hotel Bellavista', 'Ferramenta Gallo Snc'])",
+   "scadenze come nel file e in ordine di scadenza: True (['2026-12-15', '2026-12-28', '2027-01-06', '2027-01-14'])",
+   "giorni_mancanti giusti: True ([0, 13, 22, 30])",
+   "email con oggetto e testo che nominano cliente e servizio: True",
+   "email scritte una per una (testi diversi anche senza nomi, servizi e date): True"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.061813,
+   "token_output": 2210,
+   "chiamate": 4,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

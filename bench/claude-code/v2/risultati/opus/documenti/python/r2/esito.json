@@ -1,0 +1,73 @@
+{
+ "prova": "opus/documenti/python/r2",
+ "cartella": "f884657180",
+ "modello": "opus",
+ "compito": "documenti",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.7822226000000001,
+ "costo_usd_telemetria": 0.782223,
+ "token_output": 7094,
+ "token_input": 20,
+ "token_cache_scritti": 66647,
+ "token_cache_letti": 535433,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 15,
+ "secondi": 77.9,
+ "secondi_api": 67.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 10,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 79,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "tato vero.\n\n**Per provarlo tu:**\n```\nexport ANTHROPIC_API_KEY=la-tua-chiave\npython programma.py\n```\nSu queste domande le risposte giuste sono: albergo 100 €/notte (`regolamento_viaggi.txt`), 8 giorni di lavoro da remoto (`lavoro_da_remoto.txt`), bancale giallo per i resi (`orari_magazzino.txt`), `it@azienda.example` per le email sospette (`regole_informatiche.txt`).\n\n**Come funziona:**\n- Usa il modello `claude-opus-5-5`. Fa una richiesta per ogni domanda e ogni volta passa a Claude tutti i documenti, ciascuno etichettato con il nome del suo file.\n- Claude deve rispondere in JSON con `risposta` e `fonte`. `fonte` può essere solo il nome di uno dei file in `docs/`, quindi non può inventarsi un file.\n- Se nessun documento contiene la risposta, Claude lo dice e mette `fonte: null` invece di inventare.\n- Ho attivato `fallbacks: \"default\"`: se Claude rifiuta una domanda per i suoi filtri di sicurezza, l'API la ripassa da sola a un altro modello. Con domande come queste è difficile che serva; se non lo vuoi si toglie con due righe.\n- Se c'è un errore temporaneo su una domanda, il programma lo annota in `risposta` e passa alla successiva. Se invece l'errore si ripeterebbe per tutte (chiave sbagliata, richiesta non valida), si ferma subito.\n\nTutti i documenti vengono inviati in ogni richiesta, quindi la soluzione va bene finché nell'insieme restano entro qualche centinaio di pagine. Se crescessero molto, servirebbe prima un passaggio che scelga i documenti pertinenti per ogni domanda.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 5,
+  "dettagli": [
+   "risultato.json mancante o non è una lista"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

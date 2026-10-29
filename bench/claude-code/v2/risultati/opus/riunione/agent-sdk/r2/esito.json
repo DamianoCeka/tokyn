@@ -1,0 +1,81 @@
+{
+ "prova": "opus/riunione/agent-sdk/r2",
+ "cartella": "b75e108a41",
+ "modello": "opus",
+ "compito": "riunione",
+ "condizione": "agent-sdk",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2139544,
+ "costo_usd_telemetria": 0.213954,
+ "token_output": 4825,
+ "token_input": 12,
+ "token_cache_scritti": 12814,
+ "token_cache_letti": 74472,
+ "prove_del_programma": {
+  "costo_usd": 0.047608,
+  "token_output": 1175,
+  "chiamate": 2,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 7,
+ "secondi": 63.9,
+ "secondi_api": 42.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Bash": 5,
+  "Write": 1
+ },
+ "skill": [],
+ "programma_consegnato": true,
+ "righe_programma": 110,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "a, e le tre scadenze corrispondono a quelle dette in riunione. Ci sono voluti circa 5 secondi.\n\n**Altre due prove:**\n- **Un verbale inventato più difficile:**\n  - Una proposta rimasta in sospeso (\"passiamo al cloud?… per ora non decidiamo\") non è finita tra le decisioni.\n  - \"Entro venerdì prossimo\" è diventato una data calcolata dal giorno della riunione.\n  - \"Quando hai tempo\" ha dato `\"entro\": null`.\n- **Una cartella senza `verbale.txt`:** il programma dà un messaggio di errore chiaro.\n\n**Come funziona:**\n- Il programma legge il verbale e lo manda a Claude tramite `claude-agent-sdk`. Claude non ha accesso a file né a internet.\n- Claude deve rispondere con un JSON che segue uno schema fisso, quindi i campi sono sempre `decisioni`, `cosa`, `chi` ed `entro`.\n- Prima di scrivere il file, il programma controlla che ogni scadenza sia una data reale nel formato AAAA-MM-GG.\n\n**Due cose da sapere:**\n- **Compito senza scadenza:** se in riunione non viene detta una scadenza, `entro` vale `null`. Ho preferito così piuttosto che far inventare una data a Claude. Se volete sempre una data (per esempio una scadenza predefinita), si può cambiare facilmente.\n- **Date relative ambigue:** frasi come \"venerdì prossimo\" vengono calcolate a partire dalla data della riunione scritta in cima al verbale. Nella prova, \"venerdì prossimo\" detto di giovedì 5 novembre è diventato il 13 e non il 6. In italiano entrambe le letture sono possibili, quindi conviene scrivere le date per esteso, come fate già.",
+ "controllo": {
+  "ok": true,
+  "punti": 6,
+  "massimo": 6,
+  "dettagli": [
+   "decisioni lista di stringhe e azioni lista di {cosa, chi, entro} stringhe: True",
+   "le 2 decisioni e nessuna chiacchiera: True (trovate: [\"lancio dell'app al 24 novembre\", 'budget pubblicitario dai giornali ai social']; chiacchiere: []; scritte: [\"Il lancio dell'app nuova slitta dal 10 al 24 novembre 2026.\", 'Da dicembre tutto il budget pubblicitario passa dai giornali ai social.'])",
+   "azione di Marco entro 2026-11-13: True ([{'cosa': 'Correggere i due bug bloccanti del pagamento con carta', 'chi': 'Marco', 'entro': '2026-11-13'}])",
+   "azione di Sara entro 2026-11-18: True ([{'cosa': 'Scrivere le risposte pronte per il supporto sul nuovo lancio', 'chi': 'Sara', 'entro': '2026-11-18'}])",
+   "azione di Davide entro 2026-11-30: True ([{'cosa': 'Preparare il piano delle campagne social di dicembre', 'chi': 'Davide', 'entro': '2026-11-30'}])",
+   "esattamente 3 azioni: True (3)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.021036,
+   "token_output": 525,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

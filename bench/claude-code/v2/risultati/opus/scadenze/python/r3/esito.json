@@ -1,0 +1,74 @@
+{
+ "prova": "opus/scadenze/python/r3",
+ "cartella": "ce73235b95",
+ "modello": "opus",
+ "compito": "scadenze",
+ "condizione": "python",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.8578916000000001,
+ "costo_usd_telemetria": 0.857892,
+ "token_output": 9619,
+ "token_input": 30,
+ "token_cache_scritti": 62746,
+ "token_cache_letti": 817118,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 20,
+ "secondi": 110.7,
+ "secondi_api": 87.6,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 13,
+  "Grep": 2,
+  "Read": 1,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 132,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "o il 20 ottobre no.\n- **Con la data 2026-11-12**, Ottica Ferri risulta con `giorni_mancanti: 0`.\n- **Senza contratti in scadenza**, il file contiene `{\"in_scadenza\": []}`.\n- **Email non valida:** il programma controlla che il testo contenga il nome del cliente e il servizio. Se mancano la fa riscrivere, fino a 3 tentativi, e questo l'ho provato.\n- **Errori:** se Claude rifiuta o l'API dà errore, il programma si ferma con un messaggio e lascia intatto il `risultato.json` precedente. Anche data non valida, argomento mancante e `contratti.csv` assente danno un messaggio chiaro.\n\n**Scelte che ho fatto io:**\n- **Modello:** Claude Opus 5.5. Le email sono in italiano, sotto le 120 parole, e iniziano con \"Gentile <cliente>,\". Hanno una firma generica (\"Il team assistenza clienti\") e il divieto di inventare prezzi o contatti. Se vuoi un'altra firma o un altro tono, si cambia nel testo `ISTRUZIONI` in cima al file.\n- **Modello di riserva:** ho attivato l'opzione dell'API che, se il modello rifiuta una richiesta, la passa automaticamente a un altro modello. Con email di questo tipo è improbabile che serva. Se preferisci toglierla, basta cancellare le righe `betas` e `fallbacks`.\n- **La colonna `email`** del CSV non finisce nel risultato, perché non era tra i campi richiesti.\n\nPer la prova vera ti basta una chiave:\n```\nexport ANTHROPIC_API_KEY=...\npython programma.py 2026-11-01\n```\nCon 4 contratti sono 4 chiamate. Ti consiglio di leggere qualche email in `risultato.json` prima di usarle.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 5,
+  "dettagli": [
+   "risultato.json mancante o senza la lista in_scadenza"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

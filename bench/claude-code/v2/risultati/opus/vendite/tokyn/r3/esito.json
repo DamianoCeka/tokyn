@@ -1,0 +1,84 @@
+{
+ "prova": "opus/vendite/tokyn/r3",
+ "cartella": "bde7476986",
+ "modello": "opus",
+ "compito": "vendite",
+ "condizione": "tokyn",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.34406220000000004,
+ "costo_usd_telemetria": 0.344062,
+ "token_output": 6857,
+ "token_input": 24,
+ "token_cache_scritti": 20213,
+ "token_cache_letti": 225611,
+ "prove_del_programma": {
+  "costo_usd": 0.017088,
+  "token_output": 866,
+  "chiamate": 2,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 15,
+ "secondi": 77.0,
+ "secondi_api": 63.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 7,
+  "Write": 1,
+  "Edit": 3,
+  "Grep": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 890,
+ "righe_tokyn": 91,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "i rischio da monitorare.\"\n}\n```\n\nHo ricontrollato fatturati e classifica con un calcolo separato e coincidono. Anche le cifre citate nel paragrafo sono corrette.\n\n**Come funziona:**\n- **Calcoli:** li fa il programma, non Claude. Somma gli importi in centesimi, così non ci sono errori di arrotondamento, e arrotonda al centesimo solo alla fine.\n- **Paragrafo:** Claude riceve i numeri già pronti in formato italiano (totali, percentuali, quota dei primi 3 clienti) e scrive solo il testo. Così non deve fare conti da solo e non rischia di sbagliarli.\n- **Nomi con virgole:** i nomi tra virgolette come `\"Verdi, Neri & C. Sas\"` vengono letti correttamente.\n- **Ordini anomali:** un ordine con un cliente che non esiste in `clienti.csv`, o con un importo non valido, viene saltato e il programma lo segnala con un avviso.\n- **Ordine nel JSON:** paesi e clienti sono ordinati dal fatturato più alto.\n\n**Prima di usarlo ogni trimestre:**\n- **Chiave API:** in questa prova il paragrafo l'ha scritto il Claude Code installato qui, perché non c'era una chiave API. Va bene per provarlo, ma per usarlo da solo servono `pip install anthropic` e la variabile d'ambiente `ANTHROPIC_API_KEY`. Il costo è di circa un centesimo di dollaro a trimestre.\n- **File sorgente:** accanto c'è `programma.tokyn`, il sorgente Tokyn da cui è stato generato `programma.py`. Se vuoi cambiare qualcosa, ad esempio il tono del paragrafo, conviene modificare quello e rigenerare il Python, invece di toccare `programma.py` a mano.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "fatturato_per_paese con i 4 paesi e gli importi giusti: True ({'Germania': 27143.37, 'Italia': 21476.62, 'Francia': 20713.08, 'Spagna': 7420.85})",
+   "fatturati arrotondati al centesimo: True",
+   "migliori_clienti giusti e in ordine: True (['Dupont Équipements SARL', 'Müller Werkzeuge GmbH', 'Ferretti Arredamenti Srl'])",
+   "riassunto di testo che nomina la Germania: True (1063 caratteri)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.009386,
+   "token_output": 493,
+   "chiamate": 1,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

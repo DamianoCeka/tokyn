@@ -1,0 +1,81 @@
+{
+ "prova": "opus/spese/tokyn/r3",
+ "cartella": "40db623c59",
+ "modello": "opus",
+ "compito": "spese",
+ "condizione": "tokyn",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.18970579999999998,
+ "costo_usd_telemetria": 0.189706,
+ "token_output": 2879,
+ "token_input": 10,
+ "token_cache_scritti": 14755,
+ "token_cache_letti": 70229,
+ "prove_del_programma": {
+  "costo_usd": 0.001928,
+  "token_output": 684,
+  "chiamate": 11,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 7,
+ "secondi": 52.3,
+ "secondi_api": 27.3,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 3,
+  "Write": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 850,
+ "righe_tokyn": 48,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "mma.py` e l'ho provato con Claude sul tuo `movimenti.csv`. Tutti gli 11 movimenti hanno ricevuto una categoria corretta:\n\n| Categoria | Movimenti | Totale |\n|---|---|---|\n| spesa alimentare | Lidl, Carrefour | -70,02 |\n| trasporti | Trenord, Telepass | -23,00 |\n| casa | A2A gas, Leroy Merlin | -120,20 |\n| svago | pizzeria, Netflix, Feltrinelli | -74,49 |\n| altro | stipendio, commissione bonifico | 1848,50 |\n\nHo controllato `risultato.json`: i movimenti sono nello stesso ordine del file e nel formato che hai chiesto. La somma dei totali (1560,79) è uguale alla somma di tutti gli importi.\n\n**Da sapere:**\n- **Lo stipendio finisce in `altro`.** Come hai chiesto, il programma somma tutti gli importi, quindi anche le entrate. Per questo `altro` risulta positivo. Se vuoi i totali delle sole uscite, basta una modifica di una riga.\n- **Chiave API.** L'ho provato senza chiave API, quindi le risposte sono arrivate dal tuo Claude Code. Per usarlo ogni mese in modo regolare, imposta `ANTHROPIC_API_KEY`: il programma la usa da solo, senza modifiche. Usa il modello più economico (Haiku) e fa una chiamata per ogni movimento.\n- **Righe scartate.** Le righe vuote vengono saltate. Le righe con un importo non valido vengono saltate con un avviso sul terminale.\n\nAccanto c'è anche `programma.tokyn`, il sorgente Tokyn da cui è stato generato `programma.py`. Il Python funziona anche da solo, ma se in futuro vuoi cambiare categorie o regole conviene modificare il `.tokyn` e rigenerare il file Python.",
+ "controllo": {
+  "ok": true,
+  "punti": 3,
+  "massimo": 3,
+  "dettagli": [
+   "8 movimenti nell'ordine del file con data, descrizione e importo giusti: True",
+   "categorie ammesse e giuste: True (8 su 8: ['spesa alimentare', 'trasporti', 'casa', 'svago', 'spesa alimentare', 'trasporti', 'casa', 'altro'])",
+   "totali arrotondati al centesimo e coerenti con le categorie assegnate: True (uguali ai totali attesi: True; {'spesa alimentare': -85.5, 'trasporti': -51.8, 'casa': -728.45, 'svago': -19.0, 'altro': -12.8})"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.001319,
+   "token_output": 517,
+   "chiamate": 8,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

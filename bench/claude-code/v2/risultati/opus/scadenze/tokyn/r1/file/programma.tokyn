@@ -1,0 +1,79 @@
+import sys
+import re
+import io
+import csv
+import calendar
+import datetime
+
+GIORNI_FINESTRA = 30
+MESI = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio",
+        "agosto", "settembre", "ottobre", "novembre", "dicembre"]
+
+type Email:
+    oggetto: str "oggetto breve dell'email, con il servizio e la data di scadenza"
+    testo: str "corpo dell'email, che inizia con 'Gentile <nome del cliente>,' e si chiude con una firma"
+
+agent Redattore:
+    instructions: """
+        Scrivi email di promemoria in italiano per i clienti di un'azienda di servizi, quando un loro contratto
+        sta per scadere. Rivolgiti al cliente per nome esattamente come ti viene dato, iniziando con
+        "Gentile <nome>,". Cita il servizio in scadenza con il suo nome e la data di scadenza, ricorda che
+        rinnovando per tempo il servizio continua senza interruzioni e invita a rispondere all'email o a
+        contattarci per il rinnovo. Tono cortese e professionale, al massimo 120 parole, niente segnaposto
+        tra parentesi. Firma: "Il team Assistenza Clienti".
+    """
+    output: Email
+    effort: "low"
+
+def data_valida(s: str) -> bool:
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", s):
+        return False
+    anno = int(s[:4])
+    mese = int(s[5:7])
+    giorno = int(s[8:])
+    if anno < 1 or mese < 1 or mese > 12 or giorno < 1:
+        return False
+    return giorno <= calendar.monthrange(anno, mese)[1]
+
+def data_in_parole(d) -> str:
+    giorno = str(d.day)
+    if d.day == 1:
+        giorno = "1º"
+    return f"{giorno} {MESI[d.month - 1]} {d.year}"
+
+def per_scadenza(c: dict) -> str:
+    return c["scadenza"]
+
+main:
+    if len(sys.argv) < 2 or not data_valida(sys.argv[1].strip()):
+        print("Uso: python programma.py AAAA-MM-GG   (es. python programma.py 2026-11-01)")
+        sys.exit(1)
+    riferimento = datetime.date.fromisoformat(sys.argv[1].strip())
+    testo_csv = read_file("contratti.csv").lstrip("﻿")
+    in_scadenza = []
+    for n, riga in enumerate(csv.DictReader(io.StringIO(testo_csv))):
+        scadenza = (riga.get("scadenza") or "").strip()
+        if not data_valida(scadenza):
+            print(f"Riga {n + 2} ignorata: scadenza non valida ({scadenza!r})")
+            continue
+        giorni = (datetime.date.fromisoformat(scadenza) - riferimento).days
+        if 0 <= giorni <= GIORNI_FINESTRA:
+            in_scadenza.append({
+                "cliente": riga["cliente"].strip(),
+                "servizio": riga["servizio"].strip(),
+                "scadenza": scadenza,
+                "giorni_mancanti": giorni,
+            })
+    in_scadenza = sorted(in_scadenza, key=per_scadenza)
+    for c in in_scadenza:
+        richiesta = (f"Cliente: {c['cliente']}\nServizio in scadenza: {c['servizio']}\n"
+                     + f"Data di scadenza: {data_in_parole(datetime.date.fromisoformat(c['scadenza']))}\n"
+                     + f"Giorni mancanti: {c['giorni_mancanti']}")
+        email = Redattore.ask(richiesta)
+        if c["cliente"].lower() not in email.testo.lower() or c["servizio"].lower() not in email.testo.lower():
+            email = Redattore.ask(richiesta + "\n\nIMPORTANTE: nel testo scrivi il nome del cliente e il nome del servizio esattamente come indicati sopra.")
+        c["oggetto"] = email.oggetto.strip()
+        c["testo"] = email.testo.strip()
+        print(f"{c['scadenza']}  {c['cliente']} - {c['servizio']} ({c['giorni_mancanti']} giorni)")
+    write_file("risultato.json", json_dump({"in_scadenza": in_scadenza}))
+    print(f"{len(in_scadenza)} contratti in scadenza scritti in risultato.json")

@@ -1,0 +1,36 @@
+{
+  "in_scadenza": [
+    {
+      "cliente": "Ottica Ferri",
+      "servizio": "Assistenza tecnica",
+      "scadenza": "2026-11-12",
+      "giorni_mancanti": 11,
+      "oggetto": "Assistenza tecnica: scadenza contratto il 12 novembre",
+      "testo": "Gentile Ottica Ferri,\n\nle ricordiamo che il suo contratto per il servizio \"Assistenza tecnica\" scadrà il 12 novembre 2026.\n\nPer garantirle la continuità del servizio senza interruzioni, la invitiamo a contattarci per il rinnovo. Saremo lieti di rispondere a eventuali domande e di valutare insieme le soluzioni più adatte alle sue esigenze.\n\nPuò rispondere direttamente a questa email o contattarci attraverso i consueti recapiti.\n\nLa ringraziamo per la fiducia accordataci.\n\nCordiali saluti,\nIl team clienti"
+    },
+    {
+      "cliente": "Autofficina Riva",
+      "servizio": "Manutenzione impianto antincendio",
+      "scadenza": "2026-11-18",
+      "giorni_mancanti": 17,
+      "oggetto": "Manutenzione impianto antincendio: scadenza il 18 novembre",
+      "testo": "Gentile Autofficina Riva,\n\nle ricordiamo che il contratto per il servizio \"Manutenzione impianto antincendio\" scadrà il 18 novembre 2026.\n\nPer continuare a usufruire del servizio senza interruzioni, la invitiamo a contattarci per il rinnovo. Saremo lieti di rispondere a ogni domanda e di valutare insieme eventuali esigenze.\n\nRestiamo a sua disposizione e la ringraziamo per la fiducia.\n\nCordiali saluti,\nIl team clienti"
+    },
+    {
+      "cliente": "Ottica Ferri",
+      "servizio": "Licenza gestionale",
+      "scadenza": "2026-11-25",
+      "giorni_mancanti": 24,
+      "oggetto": "Licenza gestionale in scadenza il 25 novembre 2026",
+      "testo": "Gentile Ottica Ferri,\n\nle ricordiamo che il suo servizio Licenza gestionale scadrà il 25 novembre 2026, tra 24 giorni.\n\nPer continuare a usare il gestionale senza interruzioni, la invitiamo a contattarci per il rinnovo. Può rispondere a questa email: saremo felici di aiutarla e di rispondere alle sue domande.\n\nGrazie per la fiducia che ci ha dato.\n\nCordiali saluti,\nIl team clienti"
+    },
+    {
+      "cliente": "Studio Dentistico Moretti",
+      "servizio": "Backup in cloud",
+      "scadenza": "2026-12-01",
+      "giorni_mancanti": 30,
+      "oggetto": "Promemoria: Backup in cloud in scadenza il 1º dicembre",
+      "testo": "Gentile Studio Dentistico Moretti,\n\nle ricordiamo che il suo contratto per il servizio Backup in cloud scadrà il 1º dicembre 2026.\n\nPer continuare a proteggere i dati del suo studio senza interruzioni, la invitiamo a contattarci per il rinnovo. Saremo lieti di rispondere alle sue domande e di valutare insieme eventuali esigenze di aggiornamento.\n\nPuò rispondere direttamente a questa email: la ricontatteremo al più presto.\n\nLa ringraziamo per la fiducia e restiamo a sua disposizione.\n\nCordiali saluti,\nIl team clienti"
+    }
+  ]
+}

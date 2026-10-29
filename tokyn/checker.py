@@ -625,7 +625,8 @@ class Checker:
                 kind = tr({"agent": "un agente", "func": "una funzione", "typeobj": "un type", "module": "un modulo importato"},
                           {"agent": "an agent", "func": "a function", "typeobj": "a type", "module": "an imported module"}).get(g[0])
                 if kind:
-                    self.error("E141", tr(f'"{name}" è {kind}: non puoi usarlo come variabile', f'"{name}" is {kind}: you cannot use it as a variable'),
+                    self.error("E141", tr(f'"{name}" è {kind}: non puoi usarlo come variabile',
+                                          f'"{name}" is {kind}: you cannot use it as a variable'),
                                name_tok, tr("Scegli un altro nome.", "Choose another name."))
                     return
             if name in BUILTINS and not scope.has_local(name):
@@ -788,7 +789,7 @@ class Checker:
         if all(t in (INT, FLOAT) for t in types):
             return FLOAT if FLOAT in types else INT
         if any(t == STR for t in types) and any(t in (INT, FLOAT) for t in types):
-            self.error("E194", tr("non si può sommare un testo con un numero", "cannot add a text and a number"), node,
+            self.error("E194", tr("non si può sommare un testo con un numero", "cannot add a text to a number"), node,
                        tr("Converti il numero con str(...) oppure usa una f-string: f\"totale: {n}\"",
                           "Convert the number with str(...) or use an f-string: f\"total: {n}\""))
         return ANY
@@ -836,7 +837,8 @@ class Checker:
         if obj == STR:
             return STR
         if obj[0] == "record":
-            self.error("E172", tr("i campi di un type si leggono con il punto, non con [ ]", "the fields of a type are read with a dot, not with [ ]"),
+            self.error("E172", tr("i campi di un type si leggono con il punto, non con [ ]",
+                                  "the fields of a type are read with a dot, not with [ ]"),
                        node, tr(f"Esempio: valore.campo invece di valore[\"campo\"]", "Example: value.field instead of value[\"field\"]"))
         return ANY
 
@@ -855,7 +857,8 @@ class Checker:
         if obj[0] == "list" or obj == STR:
             return obj
         if obj[0] == "record":
-            self.error("E172", tr("i campi di un type si leggono con il punto, non con [ ]", "the fields of a type are read with a dot, not with [ ]"),
+            self.error("E172", tr("i campi di un type si leggono con il punto, non con [ ]",
+                                  "the fields of a type are read with a dot, not with [ ]"),
                        node, tr(f"Esempio: valore.campo invece di valore[\"campo\"]", "Example: value.field instead of value[\"field\"]"))
         return ANY
 
@@ -965,9 +968,10 @@ class Checker:
                     elif lo == hi:
                         want = str(lo)
                     else:
-                        want = tr(f"da {lo} a {hi}", f"from {lo} to {hi}")
+                        want = tr(f"da {lo} a {hi}", f"{lo} or {hi}" if hi == lo + 1 else f"{lo} to {hi}")
+                    plural = "" if (hi if hi is not None else lo) == 1 else "s"
                     self.error("E180", tr(f"{name}() vuole {want} argomenti, ne ha ricevuti {n}",
-                                          f"{name}() takes {want} argument{'' if want == '1' else 's'}, it got {n}"), node)
+                                          f"{name}() takes {want} argument{plural}, got {n}"), node)
                 return ret
             return ANY
 
@@ -981,7 +985,7 @@ class Checker:
         if len(positional) > len(params):
             self.error("E180", tr(f'{info.name}() vuole al massimo {len(params)} argomenti, ne ha ricevuti {len(positional)}',
                                   f'{info.name}() takes at most {len(params)} argument{"" if len(params) == 1 else "s"}, '
-                                  f'it got {len(positional)}'), node,
+                                  f'got {len(positional)}'), node,
                        tr(f"Parametri: {', '.join(names) or 'nessuno'}", f"Parameters: {', '.join(names) or 'none'}"))
             return info.returns
         given = set(names[: len(positional)])
@@ -997,13 +1001,14 @@ class Checker:
         missing = [p[0] for p in params if not p[2] and p[0] not in given]
         if missing:
             self.error("E180", tr(f"{info.name}() senza il parametro obbligatorio: {', '.join(missing)}",
-                                  f"{info.name}() is missing the required parameter: {', '.join(missing)}"), node)
+                                  f"{info.name}() is missing the required parameter{'' if len(missing) == 1 else 's'}: "
+                                  f"{', '.join(missing)}"), node)
         return info.returns
 
     def check_constructor(self, tname, node, positional, kwargs, scope):
         info = self.prog.types[tname]
         if positional:
-            self.error("E182", tr(f"per creare un {tname} indica il nome di ogni campo", f"to create a {tname} give the name of every field"),
+            self.error("E182", tr(f"per creare un {tname} indica il nome di ogni campo", f"to create a {tname}, give the name of every field"),
                        node, tr(f"Esempio: {tname}(", f"Example: {tname}(") + ", ".join(f"{f}=..." for f in info.fields) + ")")
         seen = set()
         for k in kwargs:

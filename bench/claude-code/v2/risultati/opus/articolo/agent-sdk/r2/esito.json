@@ -1,0 +1,82 @@
+{
+ "prova": "opus/articolo/agent-sdk/r2",
+ "cartella": "238499059f",
+ "modello": "opus",
+ "compito": "articolo",
+ "condizione": "agent-sdk",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.6246046,
+ "costo_usd_telemetria": 0.624605,
+ "token_output": 4897,
+ "token_input": 16,
+ "token_cache_scritti": 56688,
+ "token_cache_letti": 365483,
+ "prove_del_programma": {
+  "costo_usd": 0.061383,
+  "token_output": 1788,
+  "chiamate": 2,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 10,
+ "secondi": 71.0,
+ "secondi_api": 43.5,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 117,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "nco dei citati.\n- Il programma ricontrolla comunque la risposta: devono esserci 5 punti e il titolo non può essere vuoto. Toglie anche i nomi ripetuti (ad esempio \"Marco Tessari\" e \"marco tessari\" diventano uno solo). Se qualcosa non va, riprova fino a 3 volte.\n- Nelle istruzioni dico a Claude di trattare l'articolo solo come testo da riassumere, quindi non esegue eventuali istruzioni scritte dentro l'articolo.\n\n**Cosa ho provato**\n- Su `articolo.txt`: ogni esecuzione dura circa 10 secondi. Esce un titolo breve, 5 punti di una frase ciascuno e 7 citati, ognuno una volta sola: Ospedale San Matteo di Castelrocca, Azienda Sanitaria Territoriale, Fondazione Rinaldi, Marco Tessari, Chiara Valli, Genitori Insieme, Silvia Orlandi. Esclude giustamente i gruppi senza un nome, come \"i sindacati\" o \"l'ospedale universitario del capoluogo\".\n- L'ho eseguito due volte: il titolo e le frasi cambiano un po', ma la struttura e i nomi restano gli stessi. Nella prima esecuzione l'ospedale era scritto con la \"o\" minuscola, nella seconda con la maiuscola.\n- Ho controllato anche i casi di errore: con 4 punti o un titolo vuoto la risposta viene rifiutata, e senza `articolo.txt` nella cartella il programma lo segnala ed esce con un errore.\n\nPer usarlo basta lanciare `python programma.py` dalla cartella dell'articolo. Serve il comando `claude` (Claude Code) installato e collegato a un account, perché il pacchetto `claude-agent-sdk` lo usa per parlare con Claude. Ogni scheda ha un piccolo costo d'uso.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "titolo sullo stabilimento: True ('Valtek Impianti investe 48 milioni in una fabbrica a Montebrenna')",
+   "esattamente 5 punti (stringhe non vuote): True (5)",
+   "i 5 punti riportano almeno 3 fatti principali su 4: True (['investimento di 48 milioni', '320 posti di lavoro', 'produzione dal 2027', 'pompe di calore'])",
+   "citati (lista di stringhe senza doppioni) con almeno 5 su 6 in voci distinte: True (6 trovati: ['Elena Marchesini', 'Laura Benedetti', 'Paolo Ricci', 'Valtek Impianti', 'Comune di Montebrenna', 'Istituto Tecnico Volta']; doppioni: [])"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.034509,
+   "token_output": 696,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

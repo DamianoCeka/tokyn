@@ -1,0 +1,43 @@
+import os
+
+CARTELLA = "docs"
+
+def carica_documenti() -> str:
+    testo = ""
+    for nome in sorted(os.listdir(CARTELLA)):
+        if nome.endswith(".txt"):
+            testo += f"=== FILE: {nome} ===\n{read_file(os.path.join(CARTELLA, nome))}\n\n"
+    return testo
+
+DOCUMENTI = carica_documenti()
+
+type Risposta:
+    risposta: str "risposta breve e precisa, in italiano, presa dai documenti"
+    fonte: str "nome esatto del file da cui viene la risposta (es. ferie.txt), oppure 'nessuna' se nessun documento risponde"
+
+agent Esperto:
+    instructions: f"""
+        Rispondi alle domande dei colleghi usando SOLO i documenti aziendali qui sotto.
+        Indica in 'fonte' il nome del file che contiene la risposta.
+        Se nessun documento contiene la risposta, scrivi 'Non trovato nei documenti' e fonte 'nessuna'.
+
+        {DOCUMENTI}
+    """
+    output: Risposta
+    effort: "low"
+
+main:
+    nomi = os.listdir(CARTELLA)
+    risultati = []
+    for riga in read_file("domande.txt").splitlines():
+        domanda = riga.strip()
+        if domanda == "":
+            continue
+        r = Esperto.ask(domanda)
+        fonte = os.path.basename(r.fonte.strip())
+        if fonte not in nomi:
+            fonte = "nessuna"
+        risultati.append({"domanda": domanda, "risposta": r.risposta, "fonte": fonte})
+        print(f"{domanda}\n  → {r.risposta} [{fonte}]")
+    write_file("risultato.json", json_dump(risultati))
+    print(f"Scritto risultato.json ({len(risultati)} risposte)")

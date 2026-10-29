@@ -1,0 +1,73 @@
+{
+ "prova": "opus/documenti/python/r1",
+ "cartella": "8265e9feac",
+ "modello": "opus",
+ "compito": "documenti",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.7276982000000001,
+ "costo_usd_telemetria": 0.727698,
+ "token_output": 6351,
+ "token_input": 24,
+ "token_cache_scritti": 59568,
+ "token_cache_letti": 620191,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 14,
+ "secondi": 70.7,
+ "secondi_api": 60.9,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 9,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 88,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "critta come solo nome del file.\n- Il caso \"nessun documento risponde\" diventa `\"fonte\": null`. Nella prova l'ho forzato apposta sulla quarta domanda, che in realtà ha risposta in `regole_informatiche.txt`.\n- Senza credenziali il programma esce con un messaggio chiaro invece di un traceback.\n\nQuel file di prova l'ho cancellato, quindi ora nella cartella non c'è nessun `risultato.json`.\n\n**Come funziona:**\n- Legge tutti i `.txt` in `docs/` e li manda a Claude (`claude-opus-5-5`) insieme a ogni domanda, una richiesta per domanda. I documenti sono marcati per la cache, così con documenti grandi le richieste dopo la prima costano meno.\n- La risposta deve rispettare uno schema JSON in cui `fonte` può essere solo il nome di uno dei file in `docs/`. Così Claude non può inventare nomi di file.\n- Gli ho detto di rispondere solo in base ai documenti, in una frase. Se l'informazione non c'è, lo dice e mette `fonte` a `null`.\n- Ho attivato il fallback automatico: se Claude rifiuta una domanda, l'API la ripete su un altro modello. Se preferisci farne a meno si toglie con due righe.\n- Se una singola domanda va in errore, il programma lo scrive nella risposta e passa alla successiva.\n\n**Per la prova vera:**\n```bash\nexport ANTHROPIC_API_KEY=sk-ant-...\npython programma.py\n```\nSe mi rendi disponibile la chiave in questo ambiente, lo eseguo io e controlliamo insieme le risposte. Mi aspetto per esempio 100 euro a notte da `regolamento_viaggi.txt` e it@azienda.example da `regole_informatiche.txt`.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 5,
+  "dettagli": [
+   "risultato.json mancante o non è una lista"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}
