@@ -20,6 +20,7 @@ import time as _time
 import urllib.request as _urlreq
 
 from .errors import TokynRuntimeError
+from .lingua import tr
 
 DEFAULT_MODELS = {
     "claude": "claude-sonnet-5-5",
@@ -95,45 +96,48 @@ def json_schema(spec: _Spec, description: str | None = None) -> dict:
     return s
 
 
-def convert(value, spec: _Spec, where: str = "valore"):
+def convert(value, spec: _Spec, where: str | None = None):
     """Valida e converte un valore (es. arrivato dall'IA) secondo il tipo dichiarato."""
+    where = tr("valore", "value") if where is None else where
     k = spec.kind
     if k == "any":
         return value
     if k == "str":
         if not isinstance(value, str):
-            raise ValueError(f"{where}: atteso un testo, ricevuto {value!r}")
+            raise ValueError(tr(f"{where}: atteso un testo, ricevuto {value!r}", f"{where}: expected a text, got {value!r}"))
         return value
     if k == "int":
         if isinstance(value, bool) or not isinstance(value, (int, float)) or int(value) != value:
-            raise ValueError(f"{where}: atteso un numero intero, ricevuto {value!r}")
+            raise ValueError(tr(f"{where}: atteso un numero intero, ricevuto {value!r}", f"{where}: expected a whole number, got {value!r}"))
         return int(value)
     if k == "float":
         if isinstance(value, bool) or not isinstance(value, (int, float)):
-            raise ValueError(f"{where}: atteso un numero, ricevuto {value!r}")
+            raise ValueError(tr(f"{where}: atteso un numero, ricevuto {value!r}", f"{where}: expected a number, got {value!r}"))
         return float(value)
     if k == "bool":
         if not isinstance(value, bool):
-            raise ValueError(f"{where}: atteso True/False, ricevuto {value!r}")
+            raise ValueError(tr(f"{where}: atteso True/False, ricevuto {value!r}", f"{where}: expected True/False, got {value!r}"))
         return value
     if k == "dict":
         if not isinstance(value, dict):
-            raise ValueError(f"{where}: atteso un oggetto, ricevuto {value!r}")
+            raise ValueError(tr(f"{where}: atteso un oggetto, ricevuto {value!r}", f"{where}: expected an object, got {value!r}"))
         return value
     if k == "enum":
         if value not in spec.arg:
-            raise ValueError(f"{where}: {value!r} non è tra i valori possibili {list(spec.arg)}")
+            raise ValueError(tr(f"{where}: {value!r} non è tra i valori possibili {list(spec.arg)}",
+                                f"{where}: {value!r} is not one of the possible values {list(spec.arg)}"))
         return value
     if k == "list":
         if not isinstance(value, list):
-            raise ValueError(f"{where}: attesa una lista, ricevuto {value!r}")
+            raise ValueError(tr(f"{where}: attesa una lista, ricevuto {value!r}", f"{where}: expected a list, got {value!r}"))
         return [convert(v, spec.arg, f"{where}[{i}]") for i, v in enumerate(value)]
     if k == "ref":
         cls = _TYPES[spec.arg]
         if isinstance(value, cls):
             return value
         if not isinstance(value, dict):
-            raise ValueError(f"{where}: atteso un oggetto {spec.arg}, ricevuto {value!r}")
+            raise ValueError(tr(f"{where}: atteso un oggetto {spec.arg}, ricevuto {value!r}",
+                                f"{where}: expected a {spec.arg} object, got {value!r}"))
         return cls._from_dict(value, where)
     return value
 
@@ -155,15 +159,15 @@ def make_type(name: str, fields: dict) -> type:
     def __init__(self, **kwargs):
         for fname, (spec, _d) in fields.items():
             if fname not in kwargs:
-                raise TokynRuntimeError(f'manca il campo "{fname}" per creare {name}')
+                raise TokynRuntimeError(tr(f'manca il campo "{fname}" per creare {name}', f'missing field "{fname}" to create {name}'))
             object.__setattr__(self, fname, convert(kwargs.pop(fname), spec, f"{name}.{fname}"))
         if kwargs:
             extra = ", ".join(kwargs)
-            raise TokynRuntimeError(f"{name} non ha i campi: {extra}")
+            raise TokynRuntimeError(tr(f"{name} non ha i campi: {extra}", f"{name} has no fields: {extra}"))
 
     def __setattr__(self, key, value):
         if key not in fields:
-            raise TokynRuntimeError(f'{name} non ha il campo "{key}"')
+            raise TokynRuntimeError(tr(f'{name} non ha il campo "{key}"', f'{name} has no field "{key}"'))
         object.__setattr__(self, key, convert(value, fields[key][0], f"{name}.{key}"))
 
     def __repr__(self):
@@ -177,11 +181,11 @@ def make_type(name: str, fields: dict) -> type:
     def _from_dict(cls, data: dict, where: str = name):
         unknown = [k for k in data if k not in fields]
         if unknown:
-            raise ValueError(f"{where}: campi sconosciuti {unknown}")
+            raise ValueError(tr(f"{where}: campi sconosciuti {unknown}", f"{where}: unknown fields {unknown}"))
         obj = cls.__new__(cls)
         for fname, (spec, _d) in fields.items():
             if fname not in data:
-                raise ValueError(f'{where}: manca il campo "{fname}"')
+                raise ValueError(tr(f'{where}: manca il campo "{fname}"', f'{where}: missing field "{fname}"'))
             object.__setattr__(obj, fname, convert(data[fname], spec, f"{where}.{fname}"))
         return obj
 
@@ -333,8 +337,8 @@ class Agent:
         È più lento (di solito minuti) e non usa la memoria: ogni testo è una richiesta a sé.
         """
         if isinstance(texts, (str, dict)) or not hasattr(texts, "__iter__"):
-            raise TokynRuntimeError(f"{self.name}.ask_all vuole una lista di testi",
-                                    hint=f"Per un testo solo usa {self.name}.ask(testo).")
+            raise TokynRuntimeError(tr(f"{self.name}.ask_all vuole una lista di testi", f"{self.name}.ask_all takes a list of texts"),
+                                    hint=tr(f"Per un testo solo usa {self.name}.ask(testo).", f"For a single text use {self.name}.ask(text)."))
         texts = [str(t) for t in texts]
         if _use_mock(self.model):
             return [_mock_answer(self, t)[0] for t in texts]

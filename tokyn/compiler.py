@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from .checker import check
 from .codegen import generate
 from .errors import Diagnostic, TokynError, TokynRuntimeError
+from .lingua import tr
 from .parser import parse
 
 
@@ -67,7 +68,7 @@ def run_source(source: str, filename: str = "<tokyn>", mock: bool = False) -> in
         namespace["__tokyn_main__"]()
         return 0
     except KeyboardInterrupt:
-        print("\ninterrotto.", file=sys.stderr)
+        print(tr("\ninterrotto.", "\ninterrupted."), file=sys.stderr)
         return 130
     except BaseException as err:  # noqa: BLE001 - qui traduciamo ogni errore
         if isinstance(err, SystemExit):
@@ -92,32 +93,40 @@ def translate_exception(err: BaseException) -> tuple[str, str]:
     if isinstance(err, TokynRuntimeError):
         return err.message, err.hint
     if isinstance(err, KeyError):
-        return f"la chiave {err.args[0]!r} non esiste nel dizionario", "Controlla il nome della chiave, oppure usa d.get(chiave)."
+        return (tr(f"la chiave {err.args[0]!r} non esiste nel dizionario", f"the key {err.args[0]!r} does not exist in the dict"),
+                tr("Controlla il nome della chiave, oppure usa d.get(chiave).", "Check the key name, or use d.get(key)."))
     if isinstance(err, IndexError):
-        return "posizione fuori dalla lista", "Controlla la lunghezza con len(lista) prima di leggere un elemento."
+        return (tr("posizione fuori dalla lista", "index out of range"),
+                tr("Controlla la lunghezza con len(lista) prima di leggere un elemento.",
+                   "Check the length with len(items) before reading an item."))
     if isinstance(err, EOFError):
-        return ("input() non ha ricevuto una riga: l'input è finito",
-                "Passa una riga per ogni input() che il programma chiede, compresa quella che lo fa terminare, es.: "
-                "printf 'ciao\\nesci\\n' | tokyn run file.tokyn --mock")
+        return (tr("input() non ha ricevuto una riga: l'input è finito", "input() got no line: the input has ended"),
+                tr("Passa una riga per ogni input() che il programma chiede, compresa quella che lo fa terminare, es.: "
+                   "printf 'ciao\\nesci\\n' | tokyn run file.tokyn --mock",
+                   "Pass one line for every input() the program asks for, including the one that makes it stop, e.g.: "
+                   "printf 'hello\\nquit\\n' | tokyn run file.tokyn --mock"))
     if isinstance(err, ZeroDivisionError):
-        return "divisione per zero", ""
+        return tr("divisione per zero", "division by zero"), ""
     if isinstance(err, FileNotFoundError):
-        return f"file non trovato: {err.filename}", ""
+        return tr(f"file non trovato: {err.filename}", f"file not found: {err.filename}"), ""
     if isinstance(err, ValueError):
-        return f"valore non valido: {err}", ""
+        return tr(f"valore non valido: {err}", f"invalid value: {err}"), ""
     if isinstance(err, TypeError):
-        return f"tipo di dato non valido: {err}", "Controlla i tipi dei valori usati in questa riga (es. testo + numero)."
+        return (tr(f"tipo di dato non valido: {err}", f"invalid data type: {err}"),
+                tr("Controlla i tipi dei valori usati in questa riga (es. testo + numero).",
+                   "Check the types of the values used in this line (e.g. text + number)."))
     if isinstance(err, AttributeError):
-        return f"attributo inesistente: {err}", ""
+        return tr(f"attributo inesistente: {err}", f"no such attribute: {err}"), ""
     if isinstance(err, ModuleNotFoundError):
-        return f"modulo Python non installato: {err.name}", f"Installalo con: pip install {err.name}"
+        return (tr(f"modulo Python non installato: {err.name}", f"Python module not installed: {err.name}"),
+                tr(f"Installalo con: pip install {err.name}", f"Install it with: pip install {err.name}"))
     return f"{type(err).__name__}: {err}", ""
 
 
 def format_runtime_error(err: BaseException, compiled: Compiled, pseudo: str) -> str:
     line = getattr(err, "line", 0) or _source_line(err, compiled, pseudo)
     message, hint = translate_exception(err)
-    out = [f"{compiled.filename}:{line} errore di esecuzione: {message}"]
+    out = [tr(f"{compiled.filename}:{line} errore di esecuzione: {message}", f"{compiled.filename}:{line} runtime error: {message}")]
     src = compiled.source.splitlines()
     if 1 <= line <= len(src):
         out.append(f"{line:>4} | {src[line - 1].rstrip()}")
