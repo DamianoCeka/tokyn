@@ -773,8 +773,7 @@ def test_claude_code_is_used_without_api_key(fake_claude, capsys):
     assert "Utente: ciao" in second[second.index("-p") + 1] and "Nuovo messaggio:\ne poi?" in second[second.index("-p") + 1]
 
 
-def test_claude_code_tools_run_inside_the_program(fake_claude, capsys):
-    src = '''
+METEO_STRUMENTI = '''
 CHIAMATE = []
 
 type Meteo:
@@ -796,12 +795,125 @@ main:
     m = A.ask("Padova?")
     print(m.citta, m.gradi, m.cielo, CHIAMATE)
 '''
-    rc, out, err = run(src, capsys, mock=False)
+
+
+def _mcp_server(call):
+    import json
+    return json.loads(call[call.index("--mcp-config") + 1])["mcpServers"]["tokyn"]
+
+
+def test_claude_code_tools_run_inside_the_program(fake_claude, capsys):
+    rc, out, err = run(METEO_STRUMENTI, capsys, mock=False)
     assert rc == 0, err
     # lo strumento è stato chiamato tramite il ponte MCP e ha modificato la lista del programma
     assert out.strip() == "Padova 18 nuvoloso ['Padova']"
     call = fake_claude()[0]
     assert call[call.index("--allowedTools") + 1] == "mcp__tokyn" and "--json-schema" in call
+    # il ponte è il file ponte_mcp.py del pacchetto, non codice scritto in una cartella temporanea
+    import tokyn
+    server = _mcp_server(call)
+    assert server["command"] == sys.executable
+    assert server["args"][0] == str(Path(tokyn.__file__).resolve().parent / "ponte_mcp.py")
+    assert len(server["args"]) == 2 and Path(server["args"][1]).name == "tools.json"
+
+
+def test_claude_code_writes_no_code_to_disk(fake_claude, capsys):
+    import builtins
+    import tokyn.runtime as rt
+    source = (ROOT / "tokyn" / "runtime.py").read_text(encoding="utf-8")
+    assert "_BRIDGE" not in source and "jsonrpc" not in source  # il ponte non è più una stringa nel runtime
+    written = []
+    real_open = builtins.open
+
+    def spy_open(file, mode="r", *args, **kwargs):
+        if any(m in mode for m in "wax"):
+            written.append(str(file))
+        return real_open(file, mode, *args, **kwargs)
+
+    builtins.open = spy_open
+    try:
+        rc, out, err = run(METEO_STRUMENTI, capsys, mock=False)
+    finally:
+        builtins.open = real_open
+    assert rc == 0, err
+    assert [Path(f).name for f in written if "tokyn-" in f] == ["tools.json"]  # solo dati
+    assert not [f for f in written if f.endswith((".py", ".pyw"))]
+    assert rt._PONTE is None
+
+
+def test_claude_code_tools_in_standalone_build(fake_claude, tmp_path):
+    # il programma autonomo fa da ponte MCP di se stesso: python prog.py --tokyn-ponte tools.json
+    py = tmp_path / "prog.py"
+    py.write_text(compile_source(METEO_STRUMENTI, "prog.tokyn", standalone=True).python, encoding="utf-8")
+    r = subprocess.run([sys.executable, "-S", str(py)], capture_output=True, text=True, cwd=tmp_path,
+                       env=dict(os.environ, PYTHONPATH=""))
+    assert r.returncode == 0, r.stderr
+    assert r.stdout.strip() == "Padova 18 nuvoloso ['Padova']"
+    server = _mcp_server(fake_claude()[0])
+    assert server["command"] == sys.executable
+    assert server["args"][:2] == [str(py), "--tokyn-ponte"] and Path(server["args"][2]).name == "tools.json"
+    assert not list(tmp_path.glob("*.json"))  # tools.json è stato scritto in una cartella temporanea e poi tolto
+
+
+def test_standalone_bridge_answers_mcp_requests(tmp_path):
+    # il ponte del programma autonomo, avviato da solo: risponde a initialize e tools/list senza eseguire il programma
+    import json
+    py = tmp_path / "prog.py"
+    py.write_text(compile_source(METEO_STRUMENTI, "prog.tokyn", standalone=True).python, encoding="utf-8")
+    tools = tmp_path / "tools.json"
+    tools.write_text(json.dumps({"port": 1, "token": "t", "tools": [{"name": "meteo"}]}), encoding="utf-8")
+    requests = [{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVersion": "2025-06-18"}},
+                {"jsonrpc": "2.0", "method": "notifications/initialized"},
+                {"jsonrpc": "2.0", "id": 2, "method": "tools/list"},
+                {"jsonrpc": "2.0", "id": 3, "method": "boh"}]
+    r = subprocess.run([sys.executable, "-S", str(py), "--tokyn-ponte", str(tools)], capture_output=True, text=True,
+                       input="".join(json.dumps(q) + "\n" for q in requests), env=dict(os.environ, PYTHONPATH=""))
+    assert r.returncode == 0, r.stderr
+    answers = [json.loads(line) for line in r.stdout.splitlines()]
+    assert [a["id"] for a in answers] == [1, 2, 3]
+    assert answers[0]["result"]["serverInfo"]["name"] == "tokyn"
+    assert answers[1]["result"]["tools"] == [{"name": "meteo"}]
+    assert answers[2]["error"]["code"] == -32601
+
+
+def test_package_bridge_forwards_tool_calls_in_utf8(tmp_path):
+    # il ponte del pacchetto, avviato come lo avvia Claude Code: passa la chiamata al socket con il token e
+    # legge stdin in UTF-8 anche se la codifica del sistema è un'altra (come su Windows)
+    import json
+    import socket
+    import threading
+    import tokyn
+    srv = socket.create_server(("127.0.0.1", 0))
+    received = []
+
+    def serve():
+        conn, _ = srv.accept()
+        with conn:
+            received.append(json.loads(conn.makefile(encoding="utf-8").readline()))
+            conn.sendall((json.dumps({"text": "ok " + received[0]["call"]["arguments"]["citta"], "error": False})
+                          + "\n").encode("utf-8"))
+
+    t = threading.Thread(target=serve, daemon=True)
+    t.start()
+    tools = tmp_path / "tools.json"
+    tools.write_text(json.dumps({"port": srv.getsockname()[1], "token": "segreto", "tools": []}), encoding="utf-8")
+    call = {"jsonrpc": "2.0", "id": 7, "method": "tools/call", "params": {"name": "meteo", "arguments": {"citta": "Forlì"}}}
+    ponte = Path(tokyn.__file__).resolve().parent / "ponte_mcp.py"
+    r = subprocess.run([sys.executable, str(ponte), str(tools)], capture_output=True, timeout=30,
+                       input=(json.dumps(call, ensure_ascii=False) + "\n").encode("utf-8"),
+                       env=dict(os.environ, PYTHONIOENCODING="latin-1", PYTHONUTF8="0"))
+    t.join(5)
+    srv.close()
+    assert r.returncode == 0, r.stderr
+    assert received == [{"token": "segreto", "call": {"name": "meteo", "arguments": {"citta": "Forlì"}}}]
+    answer = json.loads(r.stdout.decode("ascii"))
+    assert answer["id"] == 7 and answer["result"] == {"content": [{"type": "text", "text": "ok Forlì"}], "isError": False}
+
+
+def test_bridge_is_shipped_in_the_plugins():
+    for plugin in ("tokyn", "tokyn-en"):
+        ponte = ROOT / "plugins" / plugin / "skills" / "tokyn" / "tokyn" / "ponte_mcp.py"
+        assert ponte.read_bytes() == (ROOT / "tokyn" / "ponte_mcp.py").read_bytes()
 
 
 def test_backend_choice(monkeypatch, tmp_path):
