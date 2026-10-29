@@ -2,7 +2,8 @@
 
 Passa se catalogo_en.csv (separatore ";") ha l'intestazione codice;nome;descrizione;prezzo, i 5 prodotti nell'ordine
 del file con codice, nome e prezzo identici all'originale (spazi ai lati e virgolette CSV ignorati) e ogni descrizione
-tradotta in inglese: contiene le parole inglesi attese (con varianti) e nessuna delle parole italiane dell'originale.
+tradotta in inglese: contiene le parole inglesi attese (con varianti) e nessuna delle parole italiane dell'originale
+(il nome del prodotto, se ripetuto nella descrizione, non conta). Un CSV illeggibile è bocciato.
 """
 
 import csv
@@ -23,7 +24,7 @@ INGLESE = {
     "LN-220": [r"sheet|linen", r"cotton", r"\bwhite\b"],
     "BK-305": [r"bicycle|bike|cycle", r"basket", r"\bbell\b"],
     "OL-412": [r"\bolive\b", r"\boil\b", r"organic", r"bottle"],
-    "OR-518": [r"clock", r"\bwall\b", r"silen|quiet|noiseless|tick", r"lumin|glow|illuminat|fluoresc|phosphoresc"],
+    "OR-518": [r"clock", r"\bwall\b", r"silen|quiet|noiseless|tick", r"lumin|glow|illuminat|fluoresc|phosphoresc|\blight"],
 }
 ITALIANO = {
     "CF-101": ["caffettiera", "alluminio", "tazze", "fornelli", "adatta"],
@@ -32,16 +33,17 @@ ITALIANO = {
     "OL-412": ["olio", "extravergine", "oliva", "biologico", "bottiglia", "litro"],
     "OR-518": ["orologio", "parete", "silenzioso", "lancette", "luminose"],
 }
-COMUNI = ["con", "di", "da", "per", "della"]
+# "per" no: è anche inglese ("per litre")
+COMUNI = ["con", "di", "da", "della"]
 
 
 def leggi(testo):
-    righe = [r for r in csv.reader(io.StringIO(testo.lstrip("﻿")), delimiter=";") if any(c.strip() for c in r)]
+    righe = [r for r in csv.reader(io.StringIO(testo.lstrip("\ufeff")), delimiter=";") if any(c.strip() for c in r)]
     return [[c.strip() for c in r] for r in righe]
 
 
-def inglese(codice, descrizione):
-    t = norm(descrizione)
+def inglese(codice, nome, descrizione):
+    t = norm(descrizione).replace(norm(nome), " ")
     return (all(re.search(g, t) for g in INGLESE[codice])
             and not any(re.search(rf"\b{p}\b", t) for p in ITALIANO[codice] + COMUNI))
 
@@ -51,7 +53,10 @@ ex = esegui(sys.argv[1], QUI / "nascosti", uscite=("catalogo_en.csv",))
 testo = ex.file("catalogo_en.csv")
 if testo is None:
     esito(False, 0, 4, ["catalogo_en.csv mancante"], ex)
-righe = leggi(testo)
+try:
+    righe = leggi(testo)
+except csv.Error as e:
+    esito(False, 0, 4, [f"catalogo_en.csv non è un CSV leggibile: {e}"], ex)
 dettagli = []
 punti = 0
 
@@ -69,7 +74,7 @@ invariati = ordine and not diversi
 punti += invariati
 dettagli.append(f"codice, nome e prezzo identici: {invariati}" + (f" (diversi: {diversi})" if diversi else ""))
 
-tradotti = [o[0] for r, o in zip(prodotti, originale) if len(r) == 4 and inglese(o[0], r[2])]
+tradotti = [o[0] for r, o in zip(prodotti, originale) if len(r) == 4 and inglese(o[0], o[1], r[2])]
 traduzioni = ordine and len(tradotti) == 5
 punti += traduzioni
 dettagli.append(f"descrizioni tradotte in inglese: {len(tradotti)} su 5"

@@ -2,7 +2,7 @@
 esplicita (giorno, mese e anno) e alcune chiacchiere che non sono decisioni.
 
 Passa se risultato.json ha `decisioni` (lista di stringhe) con entrambe le decisioni (il lancio dell'app slitta al 24
-novembre; da dicembre il budget pubblicitario passa dai giornali ai social) e nessuna delle chiacchiere (macchinetta
+novembre, o di due settimane; da dicembre il budget pubblicitario passa dai giornali ai social) e nessuna delle chiacchiere (macchinetta
 del caffè, partita), e `azioni` con esattamente 3 oggetti {cosa, chi, entro}: Marco, bug del pagamento, 2026-11-13;
 Sara, risposte per il supporto, 2026-11-18; Davide, piano delle campagne social, 2026-11-30. Le date devono essere
 esattamente AAAA-MM-GG; chi e cosa si confrontano senza badare a maiuscole, accenti e parole in più.
@@ -16,7 +16,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from comune import esegui, esito, norm
 
 QUI = Path(__file__).resolve().parent
-DECISIONI = {"lancio dell'app al 24 novembre": [r"\b24\b", r"lanc|app|rilasc|uscit|slitt|rinvi|posticip|rimand"],
+DECISIONI = {"lancio dell'app al 24 novembre": [r"\b24\b|\b(due|2) settimane|\b(14|quattordici) giorni",
+                                                r"lanc|app|rilasc|uscit|slitt|rinvi|posticip|rimand"],
              "budget pubblicitario dai giornali ai social": [r"social", r"giornal|stampa|cartace|budget|pubblicit"]}
 CHIACCHIERE = r"caff|macchinett|partita|secondo tempo"
 AZIONI = [("marco", "2026-11-13", r"bug|pagament|carta"),

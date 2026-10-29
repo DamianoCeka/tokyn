@@ -14,7 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from comune import esegui, esito, norm
 
 QUI = Path(__file__).resolve().parent
-ATTESE = [(r"0[,.]42", "trasferte.txt"),
+ATTESE = [(r"0[,.]42|\b42 centesimi", "trasferte.txt"),
           (r"\b90\b|novanta", "sicurezza_it.txt"),
           (r"\b2\b|\bdue\b", "smart_working.txt"),
           (r"\b11\b|undici", "magazzino.txt")]
