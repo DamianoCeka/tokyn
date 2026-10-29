@@ -249,7 +249,7 @@ def test_billing_and_bad_requests_are_not_retried(server):
     server.reply((404, {"error": "model 'qwen3.8' not found"}, {}))
     with pytest.raises(rt.TokynRuntimeError, match="non trovato") as err:
         _agents('agent B:\n    model: "ollama:qwen3.8"\n    instructions: "i"\n')["B"].ask("x")
-    assert err.value.hint == "Scaricalo con: ollama pull qwen3.8"
+    assert err.value.hint == "Scarica il modello qwen3.8 con Ollama."
     assert server.sleeps == [] and len(server.requests) == 4
 
 
