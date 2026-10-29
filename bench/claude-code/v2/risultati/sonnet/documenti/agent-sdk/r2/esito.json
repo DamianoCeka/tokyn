@@ -1,0 +1,80 @@
+{
+ "prova": "sonnet/documenti/agent-sdk/r2",
+ "cartella": "327ca465e7",
+ "modello": "sonnet",
+ "compito": "documenti",
+ "condizione": "agent-sdk",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.084262,
+ "costo_usd_telemetria": 0.084262,
+ "token_output": 2835,
+ "token_input": 12,
+ "token_cache_scritti": 12067,
+ "token_cache_letti": 76200,
+ "prove_del_programma": {
+  "costo_usd": 0.051381,
+  "token_output": 772,
+  "chiamate": 5,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 7,
+ "secondi": 51.2,
+ "secondi_api": 28.6,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Bash": 5,
+  "Write": 1
+ },
+ "skill": [],
+ "programma_consegnato": true,
+ "righe_programma": 55,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "4 domande hanno avuto risposte corrette, ciascuna con il file giusto:\n\n| Domanda | Fonte |\n|---|---|\n| Albergo in trasferta (100 € a notte) | `regolamento_viaggi.txt` |\n| Lavoro da remoto (8 giorni al mese) | `lavoro_da_remoto.txt` |\n| Resi in magazzino (bancale giallo) | `orari_magazzino.txt` |\n| Email sospette (`it@azienda.example`) | `regole_informatiche.txt` |\n\nL'esecuzione completa è durata circa 14 secondi.\n\n- **Come funziona:** il programma mette tutti i documenti nel prompt, perché sono pochi e piccoli. Poi fa una chiamata a Claude per ogni domanda, senza strumenti, e chiede una risposta strutturata con `risposta` e `fonte`. `fonte` può essere solo il nome di uno dei file in `docs/`, quindi non può contenere un nome inventato. Le righe vuote di `domande.txt` vengono saltate.\n- **Domande senza risposta nei documenti:** `fonte` vale `null` e la risposta dice che l'informazione non c'è. L'ho provato con la domanda sulle ferie del tuo esempio, che nei documenti non compare: ha risposto proprio così, senza inventare niente. Quel `null` è un'aggiunta mia al formato che mi hai dato.\n- **Se i documenti crescono molto:** con decine di file lunghi il prompt diventerebbe troppo grande e servirebbe un'altra impostazione. Per l'uso attuale va bene così.\n\nIl file è `/srv/progetti/327ca465e7/programma.py`. Il `risultato.json` nella tua cartella è quello dell'esecuzione sulle 4 domande. La prova sulla domanda delle ferie l'ho fatta in una cartella temporanea, quindi non l'ha toccato.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "4 oggetti {domanda, risposta, fonte} nell'ordine di domande.txt: True",
+   "domanda 1: risposta giusta True, fonte trasferte.txt True (\"Chi va in trasferta con l'auto propria riceve un rimborso di 0,42 euro per chilometro, calcolato sul percorso più breve. Pedaggi e parcheggi vengono rimborsati a parte, presentando la ricevuta.\", 'trasferte.txt')",
+   "domanda 2: risposta giusta True, fonte sicurezza_it.txt True ('La password va cambiata ogni 90 giorni. Il sistema avvisa una settimana prima della scadenza.', 'sicurezza_it.txt')",
+   "domanda 3: risposta giusta True, fonte smart_working.txt True ('Dal 1° gennaio 2026 i dipendenti assunti a tempo indeterminato possono lavorare da casa fino a 2 giorni alla settimana. I giorni si concordano con il proprio responsabile e si segnano sul portale Presenze entro il giovedì della settimana prima. Il lunedì, giorno della riunione di reparto, tutti lavorano in ufficio.', 'smart_working.txt')",
+   "domanda 4: risposta giusta True, fonte magazzino.txt True ('Il sabato le merci si possono ritirare fino alle 11:00 (orario dalle 8:00 alle 11:00). Si possono ritirare solo le merci già prenotate. Il ritiro va prenotato almeno un giorno prima scrivendo a magazzino@azienda.example.', 'magazzino.txt')"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.047264,
+   "token_output": 755,
+   "chiamate": 4,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

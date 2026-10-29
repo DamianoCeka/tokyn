@@ -1,0 +1,77 @@
+{
+ "prova": "sonnet/assistente/python/r1",
+ "cartella": "c444417072",
+ "modello": "sonnet",
+ "compito": "assistente",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2962781,
+ "costo_usd_telemetria": 0.296278,
+ "token_output": 4748,
+ "token_input": 14,
+ "token_cache_scritti": 54647,
+ "token_cache_letti": 301821,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 9,
+ "secondi": 68.3,
+ "secondi_api": 55.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 65,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "funziona a livello di invio.\n- Se la chiamata fallisce (ho provato con un errore 500), stampa un errore e prosegue. Il messaggio non risposto viene tolto dalla cronologia, quindi la conversazione resta coerente.\n- Senza `faq.txt` nella cartella, si ferma con un messaggio chiaro.\n\n**Cosa non ho potuto verificare**\n- La qualità vera delle risposte, in particolare il \"non lo so\" quando la risposta non è nelle FAQ. È affidato alle istruzioni nel prompt, che dicono di usare solo le FAQ e di ammettere quando manca l'informazione.\n- Lo stesso vale per la memoria: ho visto che la cronologia viene inviata, non che Claude la usi bene.\n\nCon una chiave vera puoi provare così:\n```\nexport ANTHROPIC_API_KEY=...\nprintf 'Mi chiamo Marta\\nQuanto costa la spedizione?\\nVendete biciclette?\\nCome mi chiamo?\\nesci\\n' | python programma.py\n```\nLa terza domanda non è nelle FAQ e dovrebbe ricevere un \"non ho questa informazione\".\n\n**Scelte che ho fatto io**\n- Ho usato il modello `claude-opus-5-5` con sforzo di ragionamento `low`, per risposte veloci e poco costose. Per un servizio clienti `claude-sonnet-5-5` costerebbe meno: basta cambiare la costante `MODELLO`.\n- Le FAQ restano nella cache del prompt, così non vengono rielaborate da zero a ogni messaggio.\n- Non ho attivato il modello di riserva per i rifiuti di sicurezza (`fallbacks`). Se Claude rifiuta una richiesta, il cliente vede \"Non posso rispondere a questa richiesta.\"\n\nServe `pip install anthropic`. Nel mio ambiente c'è già la versione 2.3.0.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 5,
+  "dettagli": [
+   "spedizione 6,90 euro: False",
+   "codice sconto CIAONESPOLO: False",
+   "reso entro 45 giorni: False",
+   "si ricorda il nome Giulia: False",
+   "termina su esci (codice 1) senza rispondere dopo: False",
+   "output (ultimi 1500 caratteri): "
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

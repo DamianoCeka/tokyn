@@ -1,0 +1,80 @@
+{
+ "prova": "sonnet/vendite/tokyn/r2",
+ "cartella": "eb746ac46d",
+ "modello": "sonnet",
+ "compito": "vendite",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.080397,
+ "costo_usd_telemetria": 0.080397,
+ "token_output": 2565,
+ "token_input": 6,
+ "token_cache_scritti": 12845,
+ "token_cache_letti": 33550,
+ "prove_del_programma": {
+  "costo_usd": 0.006196,
+  "token_output": 304,
+  "chiamate": 1,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 4,
+ "secondi": 31.4,
+ "secondi_api": 22.1,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 847,
+ "righe_tokyn": 44,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn"
+ ],
+ "risposta_finale": "olette, un paese senza ordini e un ordine con un cliente inesistente. Ho lanciato `python programma.py` da quella cartella.\n- **Fatturati:** Francia 8120.0, Italia 6100.61, Germania 0.0.\n- **Migliori clienti:** Dupont SA, Rossi Srl, \"Bianchi, Figli\", in ordine di spesa.\n- **Riassunto:** Claude ha scritto un paragrafo corretto sui numeri, con la Francia come paese più alto e gli importi in formato italiano.\n- **File:** `risultato.json` è stato scritto con il formato richiesto.\n\n**La chiave API.** Senza `ANTHROPIC_API_KEY` il programma usa il tuo Claude Code per generare il riassunto. Va bene per provarlo, ma per farlo girare da solo ogni trimestre ti serve una chiave API di Anthropic.\n\n**Scelte mie dove la richiesta non diceva nulla:**\n- **Cliente sconosciuto:** un ordine con un `cliente_id` che non è in `clienti.csv` viene ignorato, e il programma stampa un avviso.\n- **Paesi senza ordini:** compaiono nel JSON con 0.0.\n- **Pochi clienti:** se i clienti con ordini sono meno di 3, la lista dei migliori ne contiene meno.\n- **Parità di spesa:** a parità di spesa resta l'ordine in cui compaiono i clienti.\n- **Errori sul formato:** un importo non numerico o un file mancante fermano il programma con un errore chiaro.\n\nUna cosa che ho notato nel riassunto di prova: Claude ha scritto che i dati non indicano gli importi individuali dei migliori clienti. Gli passo infatti solo i nomi, non quanto ha speso ciascuno. Se vuoi un commento più preciso sui clienti, posso aggiungere gli importi.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "fatturato_per_paese con i 4 paesi e gli importi giusti: True ({'Italia': 21476.62, 'Germania': 27143.37, 'Francia': 20713.08, 'Spagna': 7420.85})",
+   "fatturati arrotondati al centesimo: True",
+   "migliori_clienti giusti e in ordine: True (['Dupont Équipements SARL', 'Müller Werkzeuge GmbH', 'Ferretti Arredamenti Srl'])",
+   "riassunto di testo che nomina la Germania: True (829 caratteri)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.006924,
+   "token_output": 360,
+   "chiamate": 1,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

@@ -2020,9 +2020,1044 @@
      }
     }
    }
+  },
+  "sonnet": {
+   "compiti": {
+    "articolo": {
+     "python": {
+      "costo_totale": {
+       "mediana": 0.30722415000000003,
+       "min": 0.2964475,
+       "max": 0.3180008000000001
+      },
+      "costo_sessione": {
+       "mediana": 0.30722415000000003,
+       "min": 0.2964475,
+       "max": 0.3180008000000001
+      },
+      "costo_prove": {
+       "mediana": 0.0,
+       "min": 0,
+       "max": 0
+      },
+      "token_output": {
+       "mediana": 4839.0,
+       "min": 4592,
+       "max": 5086
+      },
+      "secondi": {
+       "mediana": 47.25,
+       "min": 43.5,
+       "max": 51.0
+      },
+      "turni": {
+       "mediana": 9.5,
+       "min": 9,
+       "max": 10
+      },
+      "ok": 0,
+      "eseguibili": 0,
+      "provati": 0,
+      "prove": 2,
+      "costo_esecuzione": null
+     },
+     "agent-sdk": {
+      "costo_totale": {
+       "mediana": 0.38106725,
+       "min": 0.3736172,
+       "max": 0.38851730000000007
+      },
+      "costo_sessione": {
+       "mediana": 0.30398625,
+       "min": 0.29819819999999997,
+       "max": 0.30977430000000006
+      },
+      "costo_prove": {
+       "mediana": 0.077081,
+       "min": 0.075419,
+       "max": 0.078743
+      },
+      "token_output": {
+       "mediana": 4379.5,
+       "min": 4262,
+       "max": 4497
+      },
+      "secondi": {
+       "mediana": 64.3,
+       "min": 60.6,
+       "max": 68.0
+      },
+      "turni": {
+       "mediana": 9.5,
+       "min": 9,
+       "max": 10
+      },
+      "ok": 2,
+      "eseguibili": 2,
+      "provati": 2,
+      "prove": 2,
+      "costo_esecuzione": 0.0358655
+     }
+    },
+    "assistente": {
+     "python": {
+      "costo_totale": {
+       "mediana": 0.2962781,
+       "min": 0.2962781,
+       "max": 0.2962781
+      },
+      "costo_sessione": {
+       "mediana": 0.2962781,
+       "min": 0.2962781,
+       "max": 0.2962781
+      },
+      "costo_prove": {
+       "mediana": 0,
+       "min": 0,
+       "max": 0
+      },
+      "token_output": {
+       "mediana": 4748,
+       "min": 4748,
+       "max": 4748
+      },
+      "secondi": {
+       "mediana": 68.3,
+       "min": 68.3,
+       "max": 68.3
+      },
+      "turni": {
+       "mediana": 9,
+       "min": 9,
+       "max": 9
+      },
+      "ok": 0,
+      "eseguibili": 0,
+      "provati": 0,
+      "prove": 1,
+      "costo_esecuzione": null
+     }
+    },
+    "catalogo": {
+     "tokyn": {
+      "costo_totale": {
+       "mediana": 0.07652170000000001,
+       "min": 0.07652170000000001,
+       "max": 0.07652170000000001
+      },
+      "costo_sessione": {
+       "mediana": 0.07568770000000001,
+       "min": 0.07568770000000001,
+       "max": 0.07568770000000001
+      },
+      "costo_prove": {
+       "mediana": 0.000834,
+       "min": 0.000834,
+       "max": 0.000834
+      },
+      "token_output": {
+       "mediana": 1888,
+       "min": 1888,
+       "max": 1888
+      },
+      "secondi": {
+       "mediana": 39.1,
+       "min": 39.1,
+       "max": 39.1
+      },
+      "turni": {
+       "mediana": 6,
+       "min": 6,
+       "max": 6
+      },
+      "ok": 1,
+      "eseguibili": 1,
+      "provati": 1,
+      "prove": 1,
+      "costo_esecuzione": 0.000693
+     },
+     "python": {
+      "costo_totale": {
+       "mediana": 0.26146169999999996,
+       "min": 0.26146169999999996,
+       "max": 0.26146169999999996
+      },
+      "costo_sessione": {
+       "mediana": 0.26146169999999996,
+       "min": 0.26146169999999996,
+       "max": 0.26146169999999996
+      },
+      "costo_prove": {
+       "mediana": 0,
+       "min": 0,
+       "max": 0
+      },
+      "token_output": {
+       "mediana": 3280,
+       "min": 3280,
+       "max": 3280
+      },
+      "secondi": {
+       "mediana": 34.9,
+       "min": 34.9,
+       "max": 34.9
+      },
+      "turni": {
+       "mediana": 7,
+       "min": 7,
+       "max": 7
+      },
+      "ok": 0,
+      "eseguibili": 0,
+      "provati": 0,
+      "prove": 1,
+      "costo_esecuzione": null
+     }
+    },
+    "documenti": {
+     "tokyn": {
+      "costo_totale": {
+       "mediana": 0.08605840000000001,
+       "min": 0.08605840000000001,
+       "max": 0.08605840000000001
+      },
+      "costo_sessione": {
+       "mediana": 0.08418540000000001,
+       "min": 0.08418540000000001,
+       "max": 0.08418540000000001
+      },
+      "costo_prove": {
+       "mediana": 0.001873,
+       "min": 0.001873,
+       "max": 0.001873
+      },
+      "token_output": {
+       "mediana": 1977,
+       "min": 1977,
+       "max": 1977
+      },
+      "secondi": {
+       "mediana": 54.5,
+       "min": 54.5,
+       "max": 54.5
+      },
+      "turni": {
+       "mediana": 7,
+       "min": 7,
+       "max": 7
+      },
+      "ok": 1,
+      "eseguibili": 1,
+      "provati": 1,
+      "prove": 1,
+      "costo_esecuzione": 0.001567
+     },
+     "agent-sdk": {
+      "costo_totale": {
+       "mediana": 0.135643,
+       "min": 0.135643,
+       "max": 0.135643
+      },
+      "costo_sessione": {
+       "mediana": 0.084262,
+       "min": 0.084262,
+       "max": 0.084262
+      },
+      "costo_prove": {
+       "mediana": 0.051381,
+       "min": 0.051381,
+       "max": 0.051381
+      },
+      "token_output": {
+       "mediana": 2835,
+       "min": 2835,
+       "max": 2835
+      },
+      "secondi": {
+       "mediana": 51.2,
+       "min": 51.2,
+       "max": 51.2
+      },
+      "turni": {
+       "mediana": 7,
+       "min": 7,
+       "max": 7
+      },
+      "ok": 1,
+      "eseguibili": 1,
+      "provati": 1,
+      "prove": 1,
+      "costo_esecuzione": 0.047264
+     }
+    },
+    "email": {
+     "tokyn": {
+      "costo_totale": {
+       "mediana": 0.0787125,
+       "min": 0.0787125,
+       "max": 0.0787125
+      },
+      "costo_sessione": {
+       "mediana": 0.0768785,
+       "min": 0.0768785,
+       "max": 0.0768785
+      },
+      "costo_prove": {
+       "mediana": 0.001834,
+       "min": 0.001834,
+       "max": 0.001834
+      },
+      "token_output": {
+       "mediana": 1642,
+       "min": 1642,
+       "max": 1642
+      },
+      "secondi": {
+       "mediana": 58.3,
+       "min": 58.3,
+       "max": 58.3
+      },
+      "turni": {
+       "mediana": 7,
+       "min": 7,
+       "max": 7
+      },
+      "ok": 1,
+      "eseguibili": 1,
+      "provati": 1,
+      "prove": 1,
+      "costo_esecuzione": 0.001554
+     },
+     "agent-sdk": {
+      "costo_totale": {
+       "mediana": 0.32103020000000004,
+       "min": 0.32103020000000004,
+       "max": 0.32103020000000004
+      },
+      "costo_sessione": {
+       "mediana": 0.26382120000000003,
+       "min": 0.26382120000000003,
+       "max": 0.26382120000000003
+      },
+      "costo_prove": {
+       "mediana": 0.057209,
+       "min": 0.057209,
+       "max": 0.057209
+      },
+      "token_output": {
+       "mediana": 2953,
+       "min": 2953,
+       "max": 2953
+      },
+      "secondi": {
+       "mediana": 38.1,
+       "min": 38.1,
+       "max": 38.1
+      },
+      "turni": {
+       "mediana": 8,
+       "min": 8,
+       "max": 8
+      },
+      "ok": 1,
+      "eseguibili": 1,
+      "provati": 1,
+      "prove": 1,
+      "costo_esecuzione": 0.061456
+     }
+    },
+    "log": {
+     "agent-sdk": {
+      "costo_totale": {
+       "mediana": 0.2914113,
+       "min": 0.2914113,
+       "max": 0.2914113
+      },
+      "costo_sessione": {
+       "mediana": 0.2751903,
+       "min": 0.2751903,
+       "max": 0.2751903
+      },
+      "costo_prove": {
+       "mediana": 0.016221,
+       "min": 0.016221,
+       "max": 0.016221
+      },
+      "token_output": {
+       "mediana": 3484,
+       "min": 3484,
+       "max": 3484
+      },
+      "secondi": {
+       "mediana": 46.6,
+       "min": 46.6,
+       "max": 46.6
+      },
+      "turni": {
+       "mediana": 9,
+       "min": 9,
+       "max": 9
+      },
+      "ok": 1,
+      "eseguibili": 1,
+      "provati": 1,
+      "prove": 1,
+      "costo_esecuzione": 0.016914
+     }
+    },
+    "magazzino": {
+     "agent-sdk": {
+      "costo_totale": {
+       "mediana": 0.3195173,
+       "min": 0.2951298,
+       "max": 0.3439048
+      },
+      "costo_sessione": {
+       "mediana": 0.28220880000000004,
+       "min": 0.2745298,
+       "max": 0.28988780000000003
+      },
+      "costo_prove": {
+       "mediana": 0.0373085,
+       "min": 0.0206,
+       "max": 0.054017
+      },
+      "token_output": {
+       "mediana": 4572.0,
+       "min": 4304,
+       "max": 4840
+      },
+      "secondi": {
+       "mediana": 58.25,
+       "min": 56.6,
+       "max": 59.9
+      },
+      "turni": {
+       "mediana": 7.5,
+       "min": 7,
+       "max": 8
+      },
+      "ok": 2,
+      "eseguibili": 2,
+      "provati": 2,
+      "prove": 2,
+      "costo_esecuzione": 0.0287925
+     }
+    },
+    "moderazione": {
+     "python": {
+      "costo_totale": {
+       "mediana": 0.2794556,
+       "min": 0.2794556,
+       "max": 0.2794556
+      },
+      "costo_sessione": {
+       "mediana": 0.2794556,
+       "min": 0.2794556,
+       "max": 0.2794556
+      },
+      "costo_prove": {
+       "mediana": 0,
+       "min": 0,
+       "max": 0
+      },
+      "token_output": {
+       "mediana": 3994,
+       "min": 3994,
+       "max": 3994
+      },
+      "secondi": {
+       "mediana": 38.6,
+       "min": 38.6,
+       "max": 38.6
+      },
+      "turni": {
+       "mediana": 8,
+       "min": 8,
+       "max": 8
+      },
+      "ok": 0,
+      "eseguibili": 0,
+      "provati": 0,
+      "prove": 1,
+      "costo_esecuzione": null
+     }
+    },
+    "recensioni": {
+     "agent-sdk": {
+      "costo_totale": {
+       "mediana": 0.29958629999999997,
+       "min": 0.29958629999999997,
+       "max": 0.29958629999999997
+      },
+      "costo_sessione": {
+       "mediana": 0.2555133,
+       "min": 0.2555133,
+       "max": 0.2555133
+      },
+      "costo_prove": {
+       "mediana": 0.044073,
+       "min": 0.044073,
+       "max": 0.044073
+      },
+      "token_output": {
+       "mediana": 2740,
+       "min": 2740,
+       "max": 2740
+      },
+      "secondi": {
+       "mediana": 49.1,
+       "min": 49.1,
+       "max": 49.1
+      },
+      "turni": {
+       "mediana": 7,
+       "min": 7,
+       "max": 7
+      },
+      "ok": 1,
+      "eseguibili": 1,
+      "provati": 1,
+      "prove": 1,
+      "costo_esecuzione": 0.041225
+     }
+    },
+    "riunione": {
+     "tokyn": {
+      "costo_totale": {
+       "mediana": 0.0912885,
+       "min": 0.0897163,
+       "max": 0.09286069999999998
+      },
+      "costo_sessione": {
+       "mediana": 0.07734349999999998,
+       "min": 0.0759633,
+       "max": 0.07872369999999998
+      },
+      "costo_prove": {
+       "mediana": 0.013944999999999999,
+       "min": 0.013753,
+       "max": 0.014137
+      },
+      "token_output": {
+       "mediana": 1752.5,
+       "min": 1616,
+       "max": 1889
+      },
+      "secondi": {
+       "mediana": 37.4,
+       "min": 36.4,
+       "max": 38.4
+      },
+      "turni": {
+       "mediana": 6.0,
+       "min": 6,
+       "max": 6
+      },
+      "ok": 2,
+      "eseguibili": 2,
+      "provati": 2,
+      "prove": 2,
+      "costo_esecuzione": 0.008150000000000001
+     },
+     "python": {
+      "costo_totale": {
+       "mediana": 0.2757363,
+       "min": 0.2757363,
+       "max": 0.2757363
+      },
+      "costo_sessione": {
+       "mediana": 0.2757363,
+       "min": 0.2757363,
+       "max": 0.2757363
+      },
+      "costo_prove": {
+       "mediana": 0,
+       "min": 0,
+       "max": 0
+      },
+      "token_output": {
+       "mediana": 3993,
+       "min": 3993,
+       "max": 3993
+      },
+      "secondi": {
+       "mediana": 36.5,
+       "min": 36.5,
+       "max": 36.5
+      },
+      "turni": {
+       "mediana": 8,
+       "min": 8,
+       "max": 8
+      },
+      "ok": 0,
+      "eseguibili": 0,
+      "provati": 0,
+      "prove": 1,
+      "costo_esecuzione": null
+     },
+     "agent-sdk": {
+      "costo_totale": {
+       "mediana": 0.2944087,
+       "min": 0.2944087,
+       "max": 0.2944087
+      },
+      "costo_sessione": {
+       "mediana": 0.2715387,
+       "min": 0.2715387,
+       "max": 0.2715387
+      },
+      "costo_prove": {
+       "mediana": 0.02287,
+       "min": 0.02287,
+       "max": 0.02287
+      },
+      "token_output": {
+       "mediana": 3196,
+       "min": 3196,
+       "max": 3196
+      },
+      "secondi": {
+       "mediana": 34.9,
+       "min": 34.9,
+       "max": 34.9
+      },
+      "turni": {
+       "mediana": 8,
+       "min": 8,
+       "max": 8
+      },
+      "ok": 1,
+      "eseguibili": 1,
+      "provati": 1,
+      "prove": 1,
+      "costo_esecuzione": 0.019877
+     }
+    },
+    "scadenze": {
+     "tokyn": {
+      "costo_totale": {
+       "mediana": 0.1431744,
+       "min": 0.1431744,
+       "max": 0.1431744
+      },
+      "costo_sessione": {
+       "mediana": 0.1023284,
+       "min": 0.1023284,
+       "max": 0.1023284
+      },
+      "costo_prove": {
+       "mediana": 0.040846,
+       "min": 0.040846,
+       "max": 0.040846
+      },
+      "token_output": {
+       "mediana": 3188,
+       "min": 3188,
+       "max": 3188
+      },
+      "secondi": {
+       "mediana": 71.8,
+       "min": 71.8,
+       "max": 71.8
+      },
+      "turni": {
+       "mediana": 7,
+       "min": 7,
+       "max": 7
+      },
+      "ok": 1,
+      "eseguibili": 1,
+      "provati": 1,
+      "prove": 1,
+      "costo_esecuzione": 0.021878
+     }
+    },
+    "vendite": {
+     "tokyn": {
+      "costo_totale": {
+       "mediana": 0.10573785,
+       "min": 0.086593,
+       "max": 0.1248827
+      },
+      "costo_sessione": {
+       "mediana": 0.09914885,
+       "min": 0.080397,
+       "max": 0.1179007
+      },
+      "costo_prove": {
+       "mediana": 0.006589,
+       "min": 0.006196,
+       "max": 0.006982
+      },
+      "token_output": {
+       "mediana": 3386.0,
+       "min": 2565,
+       "max": 4207
+      },
+      "secondi": {
+       "mediana": 38.5,
+       "min": 31.4,
+       "max": 45.6
+      },
+      "turni": {
+       "mediana": 6.5,
+       "min": 4,
+       "max": 9
+      },
+      "ok": 2,
+      "eseguibili": 2,
+      "provati": 2,
+      "prove": 2,
+      "costo_esecuzione": 0.009757
+     },
+     "python": {
+      "costo_totale": {
+       "mediana": 0.30369689999999994,
+       "min": 0.2999752,
+       "max": 0.30741859999999993
+      },
+      "costo_sessione": {
+       "mediana": 0.30369689999999994,
+       "min": 0.2999752,
+       "max": 0.30741859999999993
+      },
+      "costo_prove": {
+       "mediana": 0.0,
+       "min": 0,
+       "max": 0
+      },
+      "token_output": {
+       "mediana": 5053.0,
+       "min": 4823,
+       "max": 5283
+      },
+      "secondi": {
+       "mediana": 53.95,
+       "min": 49.2,
+       "max": 58.7
+      },
+      "turni": {
+       "mediana": 10.5,
+       "min": 10,
+       "max": 11
+      },
+      "ok": 0,
+      "eseguibili": 0,
+      "provati": 0,
+      "prove": 2,
+      "costo_esecuzione": null
+     },
+     "agent-sdk": {
+      "costo_totale": {
+       "mediana": 0.2925182,
+       "min": 0.2925182,
+       "max": 0.2925182
+      },
+      "costo_sessione": {
+       "mediana": 0.2732192,
+       "min": 0.2732192,
+       "max": 0.2732192
+      },
+      "costo_prove": {
+       "mediana": 0.019299,
+       "min": 0.019299,
+       "max": 0.019299
+      },
+      "token_output": {
+       "mediana": 3713,
+       "min": 3713,
+       "max": 3713
+      },
+      "secondi": {
+       "mediana": 43.6,
+       "min": 43.6,
+       "max": 43.6
+      },
+      "turni": {
+       "mediana": 8,
+       "min": 8,
+       "max": 8
+      },
+      "ok": 1,
+      "eseguibili": 1,
+      "provati": 1,
+      "prove": 1,
+      "costo_esecuzione": 0.021463
+     }
+    }
+   },
+   "condizioni": {
+    "tokyn": {
+     "somma_costo_totale": 0.5815,
+     "somma_costo_sessione": 0.5156,
+     "somma_costo_prove": 0.0659,
+     "somma_token_output": 13833.5,
+     "somma_secondi": 299.6,
+     "somma_turni": 39.5,
+     "prove": 8,
+     "ok": 8,
+     "ok_percento": 100.0,
+     "ok_intervallo": [
+      0.676,
+      1.0
+     ],
+     "eseguibili": 8,
+     "provati": 8,
+     "consegnati": 8,
+     "costo_esecuzione_mediano": 0.004858500000000001,
+     "con_claude_api": 0,
+     "costo_sessione_mediano_con_claude_api": null,
+     "costo_sessione_mediano_senza_claude_api": 0.0796
+    },
+    "python": {
+     "somma_costo_totale": 1.7239,
+     "somma_costo_sessione": 1.7239,
+     "somma_costo_prove": 0.0,
+     "somma_token_output": 25907.0,
+     "somma_secondi": 279.5,
+     "somma_turni": 52.0,
+     "prove": 8,
+     "ok": 0,
+     "ok_percento": 0.0,
+     "ok_intervallo": [
+      0.0,
+      0.324
+     ],
+     "eseguibili": 0,
+     "provati": 0,
+     "consegnati": 8,
+     "costo_esecuzione_mediano": null,
+     "con_claude_api": 8,
+     "costo_sessione_mediano_con_claude_api": 0.2964,
+     "costo_sessione_mediano_senza_claude_api": null
+    },
+    "agent-sdk": {
+     "somma_costo_totale": 2.3352,
+     "somma_costo_sessione": 2.0097,
+     "somma_costo_prove": 0.3254,
+     "somma_token_output": 27872.5,
+     "somma_secondi": 386.05,
+     "somma_turni": 64.0,
+     "prove": 10,
+     "ok": 10,
+     "ok_percento": 100.0,
+     "ok_intervallo": [
+      0.722,
+      1.0
+     ],
+     "eseguibili": 10,
+     "provati": 10,
+     "consegnati": 10,
+     "costo_esecuzione_mediano": 0.032329,
+     "con_claude_api": 9,
+     "costo_sessione_mediano_con_claude_api": 0.2745,
+     "costo_sessione_mediano_senza_claude_api": 0.0843
+    }
+   },
+   "confronti": {
+    "tokyn/python": {
+     "costo_totale": {
+      "rapporto": 0.323,
+      "intervallo": [
+       0.293,
+       0.348
+      ],
+      "riduzione_percento": 67.7,
+      "riduzione_intervallo": [
+       65.2,
+       70.7
+      ],
+      "compiti_vinti": 3,
+      "compiti": 3,
+      "per_compito": {
+       "catalogo": 0.293,
+       "riunione": 0.331,
+       "vendite": 0.348
+      }
+     },
+     "costo_sessione": {
+      "rapporto": 0.298,
+      "intervallo": [
+       0.28,
+       0.326
+      ],
+      "riduzione_percento": 70.2,
+      "riduzione_intervallo": [
+       67.4,
+       72.0
+      ],
+      "compiti_vinti": 3,
+      "compiti": 3,
+      "per_compito": {
+       "catalogo": 0.289,
+       "riunione": 0.28,
+       "vendite": 0.326
+      }
+     },
+     "token_output": {
+      "rapporto": 0.553,
+      "intervallo": [
+       0.439,
+       0.67
+      ],
+      "riduzione_percento": 44.7,
+      "riduzione_intervallo": [
+       33.0,
+       56.1
+      ],
+      "compiti_vinti": 3,
+      "compiti": 3,
+      "per_compito": {
+       "catalogo": 0.576,
+       "riunione": 0.439,
+       "vendite": 0.67
+      }
+     },
+     "secondi": {
+      "rapporto": 0.936,
+      "intervallo": [
+       0.714,
+       1.12
+      ],
+      "riduzione_percento": 6.4,
+      "riduzione_intervallo": [
+       -12.0,
+       28.6
+      ],
+      "compiti_vinti": 1,
+      "compiti": 3,
+      "per_compito": {
+       "catalogo": 1.12,
+       "riunione": 1.025,
+       "vendite": 0.714
+      }
+     }
+    },
+    "tokyn/agent-sdk": {
+     "costo_totale": {
+      "rapporto": 0.363,
+      "intervallo": [
+       0.27,
+       0.53
+      ],
+      "riduzione_percento": 63.7,
+      "riduzione_intervallo": [
+       47.0,
+       73.0
+      ],
+      "compiti_vinti": 4,
+      "compiti": 4,
+      "per_compito": {
+       "documenti": 0.634,
+       "email": 0.245,
+       "riunione": 0.31,
+       "vendite": 0.361
+      }
+     },
+     "costo_sessione": {
+      "rapporto": 0.417,
+      "intervallo": [
+       0.288,
+       0.734
+      ],
+      "riduzione_percento": 58.3,
+      "riduzione_intervallo": [
+       26.6,
+       71.2
+      ],
+      "compiti_vinti": 4,
+      "compiti": 4,
+      "per_compito": {
+       "documenti": 0.999,
+       "email": 0.291,
+       "riunione": 0.285,
+       "vendite": 0.363
+      }
+     },
+     "token_output": {
+      "rapporto": 0.664,
+      "intervallo": [
+       0.552,
+       0.806
+      ],
+      "riduzione_percento": 33.6,
+      "riduzione_intervallo": [
+       19.4,
+       44.8
+      ],
+      "compiti_vinti": 4,
+      "compiti": 4,
+      "per_compito": {
+       "documenti": 0.697,
+       "email": 0.556,
+       "riunione": 0.548,
+       "vendite": 0.912
+      }
+     },
+     "secondi": {
+      "rapporto": 1.114,
+      "intervallo": [
+       0.927,
+       1.397
+      ],
+      "riduzione_percento": -11.4,
+      "riduzione_intervallo": [
+       -39.7,
+       7.3
+      ],
+      "compiti_vinti": 1,
+      "compiti": 4,
+      "per_compito": {
+       "documenti": 1.064,
+       "email": 1.53,
+       "riunione": 1.072,
+       "vendite": 0.883
+      }
+     }
+    }
+   }
   }
  },
- "avvisi": [],
- "prove_concluse": 135,
+ "avvisi": [
+  "sonnet/articolo/tokyn: 0 prove invece di 3",
+  "sonnet/articolo/python: 2 prove invece di 3",
+  "sonnet/articolo/agent-sdk: 2 prove invece di 3",
+  "sonnet/assistente/tokyn: 0 prove invece di 3",
+  "sonnet/assistente/python: 1 prove invece di 3",
+  "sonnet/assistente/agent-sdk: 0 prove invece di 3",
+  "sonnet/catalogo/tokyn: 1 prove invece di 3",
+  "sonnet/catalogo/python: 1 prove invece di 3",
+  "sonnet/catalogo/agent-sdk: 0 prove invece di 3",
+  "sonnet/documenti/tokyn: 1 prove invece di 3",
+  "sonnet/documenti/python: 0 prove invece di 3",
+  "sonnet/documenti/agent-sdk: 1 prove invece di 3",
+  "sonnet/email/tokyn: 1 prove invece di 3",
+  "sonnet/email/python: 0 prove invece di 3",
+  "sonnet/email/agent-sdk: 1 prove invece di 3",
+  "sonnet/log/tokyn: 0 prove invece di 3",
+  "sonnet/log/python: 0 prove invece di 3",
+  "sonnet/log/agent-sdk: 1 prove invece di 3",
+  "sonnet/magazzino/tokyn: 0 prove invece di 3",
+  "sonnet/magazzino/python: 0 prove invece di 3",
+  "sonnet/magazzino/agent-sdk: 2 prove invece di 3",
+  "sonnet/moderazione/tokyn: 0 prove invece di 3",
+  "sonnet/moderazione/python: 1 prove invece di 3",
+  "sonnet/moderazione/agent-sdk: 0 prove invece di 3",
+  "sonnet/recensioni/tokyn: 0 prove invece di 3",
+  "sonnet/recensioni/python: 0 prove invece di 3",
+  "sonnet/recensioni/agent-sdk: 1 prove invece di 3",
+  "sonnet/riunione/tokyn: 2 prove invece di 3",
+  "sonnet/riunione/python: 1 prove invece di 3",
+  "sonnet/riunione/agent-sdk: 1 prove invece di 3",
+  "sonnet/scadenze/tokyn: 1 prove invece di 3",
+  "sonnet/scadenze/python: 0 prove invece di 3",
+  "sonnet/scadenze/agent-sdk: 0 prove invece di 3",
+  "sonnet/vendite/tokyn: 2 prove invece di 3",
+  "sonnet/vendite/python: 2 prove invece di 3",
+  "sonnet/vendite/agent-sdk: 1 prove invece di 3"
+ ],
+ "prove_concluse": 161,
  "da_rifare": 0
 }

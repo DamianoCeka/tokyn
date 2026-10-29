@@ -1,0 +1,48 @@
+import csv
+import io
+
+agent Analista:
+    instructions: """
+        Scrivi in italiano un breve paragrafo (3-4 frasi) per la direzione aziendale.
+        Indica qual è il paese con il fatturato più alto e commenta i numeri ricevuti
+        (confronto tra paesi, peso dei migliori clienti). Usa solo i dati forniti,
+        scrivi gli importi in formato italiano (es. 15.230,50 euro). Rispondi solo con il paragrafo.
+    """
+    effort: "low"
+
+def leggi(percorso: str) -> list:
+    testo = read_file(percorso).lstrip("﻿")
+    return list(csv.DictReader(io.StringIO(testo)))
+
+def per_speso(c: list) -> float:
+    return c[1]
+
+main:
+    paese_di = {}
+    nome_di = {}
+    fatturato = {}
+    for c in leggi("clienti.csv"):
+        paese_di[c["id"].strip()] = c["paese"]
+        nome_di[c["id"].strip()] = c["nome"]
+        if c["paese"] not in fatturato:
+            fatturato[c["paese"]] = 0.0
+    speso = {}
+    for o in leggi("ordini.csv"):
+        cid = o["cliente_id"].strip()
+        if cid not in paese_di:
+            print(f"Attenzione: ordine {o['id']} con cliente sconosciuto {cid}, ignorato")
+            continue
+        importo = float(o["importo"])
+        fatturato[paese_di[cid]] += importo
+        speso[cid] = speso.get(cid, 0.0) + importo
+    coppie = []
+    for cid, tot in speso.items():
+        coppie.append([nome_di[cid], tot])
+    migliori = []
+    for c in sorted(coppie, key=per_speso, reverse=True)[:3]:
+        migliori.append(c[0])
+    arrotondati = {}
+    for p, v in fatturato.items():
+        arrotondati[p] = round(v, 2)
+    riassunto = Analista.ask(f"Fatturato per paese (euro): {json_dump(arrotondati)}\nI 3 clienti che hanno speso di più, dal primo: {json_dump(migliori)}")
+    write_file("risultato.json", json_dump({"fatturato_per_paese": arrotondati, "migliori_clienti": migliori, "riassunto": riassunto}))

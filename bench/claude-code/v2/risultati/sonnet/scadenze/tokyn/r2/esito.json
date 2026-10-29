@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/scadenze/tokyn/r2",
+ "cartella": "afc6069520",
+ "modello": "sonnet",
+ "compito": "scadenze",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.0979833,
+ "costo_usd_telemetria": 0.097983,
+ "token_output": 3186,
+ "token_input": 12,
+ "token_cache_scritti": 14286,
+ "token_cache_letti": 89553,
+ "prove_del_programma": {
+  "costo_usd": 0.001245,
+  "token_output": 1182,
+  "chiamate": 4,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 7,
+ "secondi": 45.1,
+ "secondi_api": 31.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 842,
+ "righe_tokyn": 39,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "a con 0 giorni mancanti e il 1° dicembre con 30.\n- **Ordine:** i contratti sono dal più vicino al più lontano.\n- **Virgola nel nome:** un cliente con la virgola tra virgolette, come `\"Rossi, Bianchi & C.\"`, viene letto bene.\n- **Email:** con Claude vero ogni email inizia con \"Gentile <cliente>,\" e cita il servizio e la data. L'oggetto è del tipo \"Promemoria scadenza servizio di Assistenza tecnica – 12 novembre\". L'intera esecuzione ha richiesto circa 12 secondi per 4 email.\n\nCose da sapere:\n- **Chiave API:** per farlo girare da solo o per altre persone serve la chiave API di Anthropic, esportata come `ANTHROPIC_API_KEY`. Il Claude Code personale va bene solo per provare.\n- **Date non valide:** se una scadenza nel CSV non è nel formato AAAA-MM-GG, il programma si ferma con un errore invece di saltare la riga. Le righe con meno di 4 campi vengono invece saltate.\n- **Modello:** le email le scrive Claude Haiku, con poco ragionamento, perché il compito è semplice. Per cambiarlo, modifica `model` in `programma.tokyn` e rigenera il file.\n\nHo scritto il programma in Tokyn (`programma.tokyn`) e `programma.py` è il Python generato dal compilatore, che funziona anche senza Tokyn installato. Se vuoi modificare il comportamento, cambia il file `.tokyn` e rigenera il Python con:\n`python /srv/plugin-tokyn/skills/tokyn/tokyn_cli.py build programma.tokyn --standalone -o programma.py`\n\nFile in `/srv/progetti/afc6069520`:\n- `programma.py`\n- `programma.tokyn`\n- `contratti.csv`\n- `risultato.json`",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "esattamente i 4 contratti in scadenza: True (['Panificio Russo', 'Farmacia Conti', 'Hotel Bellavista', 'Ferramenta Gallo Snc'])",
+   "scadenze come nel file e in ordine di scadenza: True (['2026-12-15', '2026-12-28', '2027-01-06', '2027-01-14'])",
+   "giorni_mancanti giusti: True ([0, 13, 22, 30])",
+   "email con oggetto e testo che nominano cliente e servizio: True",
+   "email scritte una per una (testi diversi anche senza nomi, servizi e date): True"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.001079,
+   "token_output": 1106,
+   "chiamate": 4,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

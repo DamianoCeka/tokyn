@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/scadenze/tokyn/r3",
+ "cartella": "f1720fd525",
+ "modello": "sonnet",
+ "compito": "scadenze",
+ "condizione": "tokyn",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.1023284,
+ "costo_usd_telemetria": 0.102328,
+ "token_output": 3188,
+ "token_input": 12,
+ "token_cache_scritti": 15359,
+ "token_cache_letti": 89884,
+ "prove_del_programma": {
+  "costo_usd": 0.040846,
+  "token_output": 1982,
+  "chiamate": 7,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 7,
+ "secondi": 71.8,
+ "secondi_api": 31.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 846,
+ "righe_tokyn": 41,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "ggetto e testo dell'email. Poi scrive `risultato.json` nel formato che mi hai indicato, ordinato per scadenza.\n\nCosa ho provato:\n- **Con `2026-11-01`:** escono 4 contratti. Il Backup in cloud scade a +30 giorni (1 dicembre) ed è incluso. Il Bar Centrale, già scaduto il 20 ottobre, è escluso.\n- **Con `2026-10-20`:** il Bar Centrale compare con `giorni_mancanti` 0, quindi il giorno stesso viene trattato bene. La Licenza gestionale, a 36 giorni, resta fuori.\n- **Con `2026-01-01`:** nessun contratto in scadenza, e `risultato.json` contiene `{\"in_scadenza\": []}`.\n- **Testi delle email:** si rivolgono al cliente per nome (\"Gentile Ottica Ferri,\"), citano servizio e data di scadenza e si chiudono con la firma \"Il team clienti\". Quella firma l'ho scelta io: puoi cambiarla nelle istruzioni dell'agente in `programma.tokyn`.\n\nCose da sapere:\n- **Chiave API:** nel mio ambiente le email le ha scritte il Claude Code installato qui, perché non c'era `ANTHROPIC_API_KEY`. Se il programma deve girare da solo o per altre persone, imposta la chiave API: il file la usa automaticamente quando c'è.\n- **Dati non validi:** una data scritta male nel CSV fa fermare il programma con un errore. Non l'ho gestito perché il formato è fisso.\n- **File sorgente:** `programma.py` è generato da `programma.tokyn`, che è nella stessa cartella. Per modificare qualcosa conviene cambiare quel file e rigenerare con `python /srv/plugin-tokyn/skills/tokyn/tokyn_cli.py build programma.tokyn --standalone -o programma.py`.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "esattamente i 4 contratti in scadenza: True (['Panificio Russo', 'Farmacia Conti', 'Hotel Bellavista', 'Ferramenta Gallo Snc'])",
+   "scadenze come nel file e in ordine di scadenza: True (['2026-12-15', '2026-12-28', '2027-01-06', '2027-01-14'])",
+   "giorni_mancanti giusti: True ([0, 13, 22, 30])",
+   "email con oggetto e testo che nominano cliente e servizio: True",
+   "email scritte una per una (testi diversi anche senza nomi, servizi e date): True"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.021878,
+   "token_output": 1140,
+   "chiamate": 4,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="236" viewBox="0 0 880 236" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" role="img" aria-label="Cost of the Claude Code session, per program (Sonnet 5.5)">
+<rect x="0.5" y="0.5" width="879" height="235" rx="12" fill="#fcfcfb" stroke="rgba(11,11,11,0.10)"/>
+<text x="28" y="40" font-size="17" font-weight="600" fill="#0b0b0b">Cost of the Claude Code session, per program (Sonnet 5.5)</text>
+<text x="28" y="62" font-size="13" fill="#52514e">Median of 3 runs, at API list prices. Right: Tokyn compared with Python + Agent SDK.</text>
+<line x1="210" y1="100" x2="210" y2="210" stroke="#c3c2b7"/>
+<rect x="28" y="81" width="10" height="10" rx="2" fill="#2a78d6"/>
+<text x="44" y="90" font-size="12" fill="#52514e">With Tokyn</text>
+<rect x="120.0" y="81" width="10" height="10" rx="2" fill="#8f8e88"/>
+<text x="136.0" y="90" font-size="12" fill="#52514e">Python</text>
+<rect x="185.6" y="81" width="10" height="10" rx="2" fill="#c3c2b7"/>
+<text x="201.6" y="90" font-size="12" fill="#52514e">Python + Agent SDK</text>
+<text x="28" y="129.5" font-size="12.5" fill="#0b0b0b">Meeting minutes</text>
+<path d="M210,104 h151.7 a4,4 0 0 1 4,4 v5 a4,4 0 0 1 -4,4 h-151.7 z" fill="#2a78d6"/>
+<text x="371.7" y="114.5" font-size="11" fill="#52514e" font-variant-numeric="tabular-nums">$0.09</text>
+<path d="M210,119 h466.3 a4,4 0 0 1 4,4 v5 a4,4 0 0 1 -4,4 h-466.3 z" fill="#8f8e88"/>
+<text x="686.3" y="129.5" font-size="11" fill="#52514e" font-variant-numeric="tabular-nums">$0.28</text>
+<path d="M210,134 h498.2 a4,4 0 0 1 4,4 v5 a4,4 0 0 1 -4,4 h-498.2 z" fill="#c3c2b7"/>
+<text x="718.2" y="144.5" font-size="11" fill="#52514e" font-variant-numeric="tabular-nums">$0.29</text>
+<text x="852" y="130.5" font-size="13" font-weight="600" text-anchor="end" fill="#006300">−69%</text>
+<text x="28" y="188.5" font-size="12.5" fill="#0b0b0b">Sales report</text>
+<path d="M210,163 h176.4 a4,4 0 0 1 4,4 v5 a4,4 0 0 1 -4,4 h-176.4 z" fill="#2a78d6"/>
+<text x="396.4" y="173.5" font-size="11" fill="#52514e" font-variant-numeric="tabular-nums">$0.11</text>
+<path d="M210,178 h514.0 a4,4 0 0 1 4,4 v5 a4,4 0 0 1 -4,4 h-514.0 z" fill="#8f8e88"/>
+<text x="734.0" y="188.5" font-size="11" fill="#52514e" font-variant-numeric="tabular-nums">$0.30</text>
+<path d="M210,193 h494.9 a4,4 0 0 1 4,4 v5 a4,4 0 0 1 -4,4 h-494.9 z" fill="#c3c2b7"/>
+<text x="714.9" y="203.5" font-size="11" fill="#52514e" font-variant-numeric="tabular-nums">$0.29</text>
+<text x="852" y="189.5" font-size="13" font-weight="600" text-anchor="end" fill="#006300">−64%</text>
+</svg>
