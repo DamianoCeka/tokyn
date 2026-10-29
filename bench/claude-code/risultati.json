@@ -1,0 +1,54 @@
+{
+  "data": "2026-10-29",
+  "modello": "claude-opus-5-5",
+  "richieste": {
+    "recensioni": {
+      "con_tokyn": {
+        "costo_usd": 0.1879,
+        "token_output": 2058,
+        "secondi": 41,
+        "turni": 8,
+        "provato_con_ia_vera": true
+      },
+      "senza_tokyn": {
+        "costo_usd": 0.6643,
+        "token_output": 4676,
+        "secondi": 60,
+        "turni": 11,
+        "provato_con_ia_vera": false
+      }
+    },
+    "assistente": {
+      "con_tokyn": {
+        "costo_usd": 0.2362,
+        "token_output": 2881,
+        "secondi": 69,
+        "turni": 9,
+        "provato_con_ia_vera": true
+      },
+      "senza_tokyn": {
+        "costo_usd": 0.7041,
+        "token_output": 5701,
+        "secondi": 66,
+        "turni": 11,
+        "provato_con_ia_vera": false
+      }
+    },
+    "fattura": {
+      "con_tokyn": {
+        "costo_usd": 0.1867,
+        "token_output": 1992,
+        "secondi": 34,
+        "turni": 7,
+        "provato_con_ia_vera": true
+      },
+      "senza_tokyn": {
+        "costo_usd": 0.6169,
+        "token_output": 4602,
+        "secondi": 63,
+        "turni": 10,
+        "provato_con_ia_vera": false
+      }
+    }
+  }
+}
