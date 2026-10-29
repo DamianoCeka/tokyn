@@ -1,0 +1,74 @@
+{
+ "prova": "sonnet/recensioni/python/r1",
+ "cartella": "f6a1863304",
+ "modello": "sonnet",
+ "compito": "recensioni",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.3390186,
+ "costo_usd_telemetria": 0.339019,
+ "token_output": 5379,
+ "token_input": 16,
+ "token_cache_scritti": 61671,
+ "token_cache_letti": 385126,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 12,
+ "secondi": 55.7,
+ "secondi_api": 47.6,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Read": 1,
+  "Grep": 1,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 65,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": ", usando una chiave finta.\n- Il mock ha ricevuto 6 richieste, una per recensione, e la forma delle richieste era quella prevista.\n- `risultato.json` è uscito nel formato richiesto, con le recensioni nello stesso ordine del file e la media calcolata.\n- I voti in quel test li ha decisi il mio mock, non Claude. Quindi non ho visto come Claude giudica davvero le tue recensioni.\n\n**Cosa fa il programma**\n- Legge `recensioni.txt` dalla cartella corrente e salta le righe vuote.\n- Fa una chiamata a Claude per recensione, in parallelo ma con l'ordine del file mantenuto.\n- Ogni risposta è vincolata a un formato fisso: sentimento `positivo`, `negativo` o `neutro` e voto intero da 1 a 5.\n- Scrive `risultato.json` con la media arrotondata a 2 decimali.\n- Se una risposta arriva incompleta o rifiutata, si ferma con un messaggio chiaro invece di scrivere dati sbagliati.\n\n**Scelte che puoi cambiare**\n- Il modello è `claude-opus-5-5`. Per ridurre i costi si può passare a `claude-haiku-5-5` modificando la costante `MODELLO` in cima al file.\n- Ho impostato `effort` a `low`, perché per questo compito basta.\n\n**Per provarlo davvero.** Imposta una chiave con `export ANTHROPIC_API_KEY=...` e lancia `python programma.py` nella cartella con `recensioni.txt`. Se vuoi, mi dai la chiave o la configuri tu e rilancio io il test reale.\n\nHo lasciato un `risultato.json` di prova solo in `/tmp/prova`, non nella tua cartella di progetto. Nella cartella di progetto ci sono solo `programma.py` e `recensioni.txt`.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o senza la lista recensioni"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

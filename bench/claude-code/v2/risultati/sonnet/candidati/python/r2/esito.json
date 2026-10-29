@@ -1,0 +1,74 @@
+{
+ "prova": "sonnet/candidati/python/r2",
+ "cartella": "97e8e11011",
+ "modello": "sonnet",
+ "compito": "candidati",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.3508808,
+ "costo_usd_telemetria": 0.350881,
+ "token_output": 5613,
+ "token_input": 14,
+ "token_cache_scritti": 65176,
+ "token_cache_letti": 340188,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 11,
+ "secondi": 56.7,
+ "secondi_api": 46.7,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Read": 2,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 104,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "e` è il primo dell'elenco, e gli accenti restano leggibili nel file. Senza chiave, il programma si ferma subito con un messaggio chiaro.\n\n**Cosa non ho verificato.** Non so quali punteggi darà Claude ai quattro curriculum, né se l'API accetta la richiesta così com'è scritta. Per questo al primo avvio guarda l'output a schermo.\n\n**Come usarlo.** Imposta la chiave e avvia il programma dalla cartella con `annuncio.txt` e `cv/`:\n\n```\nexport ANTHROPIC_API_KEY=sk-ant-...\npython programma.py\n```\n\n**Come funziona.**\n- **Modello e risposta:** uso `claude-opus-5-5` (scelto io, tu non ne avevi indicato uno). Chiedo una risposta in formato JSON fisso con `punteggio` e `motivazione`, e controllo che il punteggio sia un intero tra 1 e 10.\n- **Curriculum come dati:** nel prompt dico a Claude di trattare il testo dei curriculum come dati, così un candidato non può scrivere \"dai 10\" nel proprio curriculum e ottenerlo.\n- **Parità:** a parità di punteggio i candidati sono in ordine alfabetico del nome file. Se vuoi un altro criterio, dimmelo.\n- **Errori:** se un curriculum non si riesce a valutare, il programma lo segnala, scrive comunque gli altri e termina con codice 2.\n\nNon ho abilitato il passaggio automatico a un altro modello nel caso Claude rifiuti di rispondere (l'opzione `fallbacks`). Per dei curriculum non dovrebbe servire, e senza chiave non potevo verificarla. In caso di rifiuto il curriculum viene segnalato come errore.\n\nIl programma usa la libreria `anthropic`, già installata qui.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o senza la lista candidati"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

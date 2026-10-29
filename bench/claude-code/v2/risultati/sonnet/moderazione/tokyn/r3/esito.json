@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/moderazione/tokyn/r3",
+ "cartella": "861fcddfbc",
+ "modello": "sonnet",
+ "compito": "moderazione",
+ "condizione": "tokyn",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.0869731,
+ "costo_usd_telemetria": 0.086973,
+ "token_output": 2435,
+ "token_input": 10,
+ "token_cache_scritti": 13916,
+ "token_cache_letti": 69391,
+ "prove_del_programma": {
+  "costo_usd": 0.043484,
+  "token_output": 2235,
+  "chiamate": 12,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 6,
+ "secondi": 84.1,
+ "secondi_api": 26.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 3
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 833,
+ "righe_tokyn": 31,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "\nI risultati sono quelli che mi aspettavo:\n\n| id | decisione | perché |\n|----|-----------|--------|\n| 17 | pubblica | domanda cortese |\n| 18 | rivedi | consiglio utile sul rame, tono aggressivo; c'è la `riscrittura` |\n| 19 | rifiuta | spam |\n| 20 | rifiuta | contiene un'email |\n| 21 | pubblica | ringraziamento |\n| 22 | rifiuta | insulto a un altro utente |\n\nCome funziona:\n- **Chiamate a Claude:** ogni commento passa da un agente che risponde con `decisione`, `motivo` e `riscrittura`.\n- **Campo `id`:** lo prendo dal file, non dalla risposta del modello. La `riscrittura` compare solo se la decisione è `rivedi`.\n- **Testo dei commenti:** le istruzioni dicono di trattarlo come materiale da valutare e di ignorare eventuali ordini scritti dentro.\n- **Dove è scritto:** il programma è in `programma.tokyn`, che è il sorgente da modificare. `programma.py` è stato generato da lì e non dipende da Tokyn.\n\nLo avvii con `python programma.py` dalla cartella di `commenti.json`. Le mie prove sono girate con il tuo Claude Code, senza chiave API. Per usarlo da solo, o per altre persone, ti serve `ANTHROPIC_API_KEY`. Con la chiave, i commenti vengono mandati alla Batch API a metà prezzo, ma le risposte arrivano più lentamente, di solito in qualche minuto.\n\nSe rigeneri `programma.py` dopo una modifica al `.tokyn`, usa `python /srv/plugin-tokyn/skills/tokyn/tokyn_cli.py build programma.tokyn --standalone -o programma.py`.\n\nFile nella cartella:\n- `programma.py`\n- `programma.tokyn`\n- `risultato.json`",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 commenti nell'ordine del file con id e motivo: True ([201, 202, 203, 204, 205, 206])",
+   "decisioni ammesse e giuste: True (6 su 6: ['pubblica', 'rifiuta', 'rivedi', 'pubblica', 'rifiuta', 'rivedi'])",
+   "riscrittura per ogni commento da rivedere: True (2 da rivedere)",
+   "commento 203: riscrittura senza offese True, con il contenuto True ('Questa domanda ritorna spesso, quindi può essere utile provare anche la funzione di ricerca del forum. Per rispondere: le ortensie si potano a fine inverno, tagliando sopra la prima coppia di gemme gonfie, e mai in autunno.')",
+   "commento 206: riscrittura senza offese True, con il contenuto True (\"Non sono d'accordo con il consiglio qui sopra: chi lo segue rischia di far morire le piante. Le piante grasse non vanno annaffiate tutti i giorni: d'estate basta una volta ogni 10-15 giorni e d'inverno quasi mai, aspettando sempre che il terriccio sia asciutto.\")"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.027957,
+   "token_output": 1098,
+   "chiamate": 6,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

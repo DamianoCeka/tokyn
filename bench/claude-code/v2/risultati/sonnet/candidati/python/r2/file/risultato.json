@@ -1,0 +1,25 @@
+{
+  "candidati": [
+    {
+      "file": "bianchi_elena.txt",
+      "punteggio": 9,
+      "motivazione": "finto àè"
+    },
+    {
+      "file": "rizzo_davide.txt",
+      "punteggio": 9,
+      "motivazione": "finto àè"
+    },
+    {
+      "file": "esposito_marco.txt",
+      "punteggio": 4,
+      "motivazione": "finto àè"
+    },
+    {
+      "file": "ferraro_chiara.txt",
+      "punteggio": 1,
+      "motivazione": "finto àè"
+    }
+  ],
+  "migliore": "bianchi_elena.txt"
+}

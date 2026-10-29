@@ -1,0 +1,81 @@
+{
+ "prova": "sonnet/articolo/tokyn/r2",
+ "cartella": "6078dba89d",
+ "modello": "sonnet",
+ "compito": "articolo",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.10527649999999998,
+ "costo_usd_telemetria": 0.105276,
+ "token_output": 2865,
+ "token_input": 16,
+ "token_cache_scritti": 15912,
+ "token_cache_letti": 129465,
+ "prove_del_programma": {
+  "costo_usd": 0.001709,
+  "token_output": 1167,
+  "chiamate": 2,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 9,
+ "secondi": 44.7,
+ "secondi_api": 35.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 839,
+ "righe_tokyn": 37,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "I). Ha scritto `risultato.json` con il titolo, 5 punti e 7 nomi citati, tutti diversi tra loro.\n\n**Come funziona.** Legge `articolo.txt`, chiede a Claude (modello haiku, più economico) titolo, cinque punti e nomi citati, poi scrive `risultato.json`.\n- **Cinque punti:** se Claude ne dà un numero diverso, il programma lo richiede fino a 3 volte. Se continua a sbagliare, stampa un errore e non scrive il file.\n- **Nomi citati:** ripulisco gli spazi e tolgo i doppioni, senza distinguere maiuscole e minuscole.\n- **Informazioni dell'articolo:** ho aggiunto una regola per non dedurre date che l'articolo non riporta. Alla prima prova Claude aveva scritto \"Nel 2025\" dove l'articolo dice \"l'anno scorso\". Dopo la correzione scrive \"Lo scorso anno\".\n\nIl risultato sul tuo articolo comincia così: titolo \"Castelrocca apre il pronto soccorso pediatrico al San Matteo\". Tra i citati ci sono Marco Tessari, Chiara Valli, Silvia Orlandi, Fondazione Rinaldi, Azienda Sanitaria Territoriale e Genitori Insieme.\n\n**Per usarlo ogni mattina.** Serve una chiave API di Anthropic, cioè la variabile `ANTHROPIC_API_KEY`. Il Claude Code personale va bene per provare, ma non per un programma che gira da solo. Sul tuo computer serve anche il pacchetto `anthropic`, se non c'è già.\n\nNella cartella trovi anche `programma.tokyn`, il sorgente da cui ho generato il Python. Se vuoi cambiare le istruzioni a Claude, modifica quel file e rigenera `programma.py`. Lo trovi accanto a `programma.py`, che funziona anche senza.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "titolo sullo stabilimento: True ('Valtek Impianti apre a Montebrenna uno stabilimento da 48 milioni')",
+   "esattamente 5 punti (stringhe non vuote): True (5)",
+   "i 5 punti riportano almeno 3 fatti principali su 4: True (['investimento di 48 milioni', '320 posti di lavoro', 'produzione dal 2027', 'pompe di calore'])",
+   "citati (lista di stringhe senza doppioni) con almeno 5 su 6 in voci distinte: True (6 trovati: ['Elena Marchesini', 'Laura Benedetti', 'Paolo Ricci', 'Valtek Impianti', 'Comune di Montebrenna', 'Istituto Tecnico Volta']; doppioni: [])"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.001151,
+   "token_output": 1262,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

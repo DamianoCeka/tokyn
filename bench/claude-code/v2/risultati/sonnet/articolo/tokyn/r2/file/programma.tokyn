@@ -1,0 +1,39 @@
+type Scheda:
+    titolo: str "titolo breve, al massimo 10 parole, in italiano"
+    punti: list[str] "esattamente cinque punti chiave, una frase ciascuno"
+    citati: list[str] "nomi di persone e organizzazioni citate nell'articolo, ognuno una sola volta"
+
+agent Redattore:
+    model: "claude-haiku"
+    effort: "low"
+    output: Scheda
+    instructions: """
+        Prepari la scheda di un articolo di giornale per dei colleghi. Rispondi in italiano.
+        Usa solo informazioni presenti nell'articolo: non dedurre anni o date che non vi compaiono.
+        - titolo: breve, informativo.
+        - punti: ESATTAMENTE cinque punti chiave, ognuno di una sola frase completa.
+        - citati: i nomi propri delle persone e delle organizzazioni (enti, aziende, fondazioni, associazioni,
+          ospedali, sindacati) citate nell'articolo, ognuno una volta sola, nella forma più completa che compare.
+          Non includere luoghi, né ruoli senza nome.
+    """
+
+main:
+    articolo = read_file("articolo.txt")
+    scheda = Redattore.ask(articolo)
+    for tentativo in range(3):
+        if len(scheda.punti) == 5:
+            break
+        scheda = Redattore.ask("Servono ESATTAMENTE cinque punti, non " + str(len(scheda.punti)) + ".\n\n" + articolo)
+    if len(scheda.punti) != 5:
+        print("Errore: il modello non ha prodotto cinque punti.")
+        return
+    citati = []
+    visti = []
+    for nome in scheda.citati:
+        pulito = nome.strip()
+        if pulito != "" and pulito.lower() not in visti:
+            visti.append(pulito.lower())
+            citati.append(pulito)
+    scheda.citati = citati
+    write_file("risultato.json", json_dump(scheda))
+    print("Scheda scritta in risultato.json")

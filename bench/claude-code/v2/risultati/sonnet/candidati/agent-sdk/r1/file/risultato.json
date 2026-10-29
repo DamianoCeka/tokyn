@@ -1,0 +1,25 @@
+{
+  "candidati": [
+    {
+      "file": "bianchi_elena.txt",
+      "punteggio": 9,
+      "motivazione": "Ha circa cinque anni di vendita in telefonia da MediaWorld, con garanzie e weekend; non dichiara esplicitamente il gestionale di magazzino né la vendita di portatili."
+    },
+    {
+      "file": "rizzo_davide.txt",
+      "punteggio": 6,
+      "motivazione": "Ha circa tre anni di vendita al dettaglio, conosce gli smartphone e usa la cassa, ma è debole sui computer e non cita gestionale né servizi aggiuntivi."
+    },
+    {
+      "file": "esposito_marco.txt",
+      "punteggio": 4,
+      "motivazione": "Usa già un gestionale di magazzino, è disponibile ai turni e appassionato di informatica, ma non ha esperienza nella vendita al dettaglio né nella proposta di servizi aggiuntivi."
+    },
+    {
+      "file": "ferraro_chiara.txt",
+      "punteggio": 1,
+      "motivazione": "Risiede a Verona e ha esperienza solida a contatto con le persone, ma non ha esperienza nella vendita al dettaglio né conoscenze di elettronica richieste."
+    }
+  ],
+  "migliore": "bianchi_elena.txt"
+}
