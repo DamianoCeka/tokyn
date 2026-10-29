@@ -941,6 +941,130 @@ def test_claude_code_chosen_automatically_warns_once(fake_claude, monkeypatch, c
     assert err.count("Tokyn: senza chiave API") == 1 and "legal-and-compliance" in err
 
 
+# Finto `claude -p` lento: il testo è "<parola> <secondi>"; dorme quei secondi, conta i processi in corso nello stesso
+# momento (un file per processo nella cartella FAKE_CLAUDE_RUNNING) e con la parola "errore" risponde con un errore.
+FAKE_CLAUDE_LENTO = r"""#!/usr/bin/env python3
+import json, os, sys, time, uuid
+
+args = sys.argv[1:]
+prompt = args[args.index("-p") + 1]
+word, seconds = prompt.split()
+running = os.environ["FAKE_CLAUDE_RUNNING"]
+me = os.path.join(running, uuid.uuid4().hex)
+open(me, "w").close()
+with open(os.environ["FAKE_CLAUDE_LOG"], "a", encoding="utf-8") as log:
+    log.write(json.dumps({"prompt": prompt, "insieme": len(os.listdir(running))}) + "\n")
+time.sleep(float(seconds))
+os.remove(me)
+out = {"type": "result", "subtype": "success", "is_error": False, "stop_reason": "end_turn",
+       "usage": {"input_tokens": 3, "output_tokens": 5}, "total_cost_usd": 0.25, "result": f"risposta a: {prompt}"}
+if word == "errore":
+    out.update(subtype="error_during_execution", is_error=True, result="guasto")
+print(json.dumps(out))
+"""
+
+
+@pytest.fixture
+def slow_claude(fake_claude, tmp_path, monkeypatch):
+    import json
+    exe = tmp_path / "bin" / "claude"
+    exe.write_text(FAKE_CLAUDE_LENTO.replace("#!/usr/bin/env python3", f"#!{sys.executable}"), encoding="utf-8")
+    running = tmp_path / "running"
+    running.mkdir()
+    monkeypatch.setenv("FAKE_CLAUDE_RUNNING", str(running))
+    monkeypatch.setenv("TOKYN_BACKEND", "claude-code")
+    monkeypatch.delenv("TOKYN_PARALLELO", raising=False)
+    log = tmp_path / "claude.log"
+    return lambda: [json.loads(line) for line in log.read_text(encoding="utf-8").splitlines()]
+
+
+def _agent_a():
+    ns = {"__name__": "x"}
+    exec(compile_source('agent A:\n    instructions: "i"\n').python, ns)
+    return ns["A"]
+
+
+def test_claude_code_ask_all_runs_in_parallel_in_order(slow_claude, monkeypatch):
+    import tokyn.runtime as rt
+    for key in ("chiamate_claude_code", "input", "output", "costo_claude_code"):
+        monkeypatch.setitem(rt._USAGE, key, 0)
+    texts = [f"t{i} {d}" for i, d in enumerate([0.8, 0.1, 0.5, 0, 0.3, 0.1, 0.6, 0])]
+    assert _agent_a().ask_all(texts) == [f"risposta a: {t}" for t in texts]  # l'ordine dei testi, non di arrivo
+    calls = slow_claude()
+    assert sorted(c["prompt"] for c in calls) == sorted(texts)
+    assert 2 <= max(c["insieme"] for c in calls) <= 4
+    assert (rt._USAGE["chiamate_claude_code"], rt._USAGE["input"], rt._USAGE["output"]) == (8, 24, 40)
+    assert rt._USAGE["costo_claude_code"] == 2.0  # 0.25 è esatto in binario: la somma non dipende dall'ordine
+
+
+def test_claude_code_ask_all_respects_tokyn_parallelo(slow_claude, monkeypatch):
+    monkeypatch.setenv("TOKYN_PARALLELO", "2")
+    texts = [f"t{i} 0.3" for i in range(5)]
+    assert _agent_a().ask_all(texts) == [f"risposta a: {t}" for t in texts]
+    assert max(c["insieme"] for c in slow_claude()) == 2
+    monkeypatch.setenv("TOKYN_PARALLELO", "1")
+    assert _agent_a().ask_all(["a 0.1", "b 0"]) == ["risposta a: a 0.1", "risposta a: b 0"]
+    assert [c["insieme"] for c in slow_claude()[5:]] == [1, 1]
+
+
+@pytest.mark.parametrize("value", ["0", "-2", "tre", "1.5"])
+def test_tokyn_parallelo_must_be_a_positive_integer(slow_claude, monkeypatch, value):
+    import tokyn.runtime as rt
+    monkeypatch.setenv("TOKYN_PARALLELO", value)
+    with pytest.raises(rt.TokynRuntimeError, match=f'TOKYN_PARALLELO deve essere un numero intero da 1 in su, non "{value}"'):
+        _agent_a().ask_all(["a 0"])
+    monkeypatch.setenv("TOKYN_LANG", "en")
+    with pytest.raises(rt.TokynRuntimeError, match="TOKYN_PARALLELO must be a whole number from 1 up") as err:
+        _agent_a().ask_all(["a 0"])
+    assert "TOKYN_PARALLELO=8" in err.value.hint
+    assert slow_claude() == []  # nessuna richiesta partita
+
+
+def test_claude_code_ask_all_reports_failures_after_all_requests(slow_claude):
+    import tokyn.runtime as rt
+    texts = ["ok 0.4", "errore 0.2", "ok 0", "errore 0", "ok 0.1", "ok 0.3"]
+    with pytest.raises(rt.TokynRuntimeError,
+                       match=r"2 testi su 6 senza risposta; il primo è testi\[1\] \('errore 0.2'\): Claude Code ha dato "
+                             r"un errore per l'agente A: guasto \(senza risposta: testi\[1\], testi\[3\]\)"):
+        _agent_a().ask_all(texts)
+    assert sorted(c["prompt"] for c in slow_claude()) == sorted(texts)  # anche quelle dopo gli errori
+
+
+def test_claude_code_ask_all_with_tools_and_sub_agents(fake_claude, monkeypatch, capsys, tmp_path):
+    # ogni richiesta ha il suo server degli strumenti e il suo tools.json; un agente usato come strumento chiama
+    # Claude Code da un altro thread, e l'avviso su Claude Code esce una volta sola
+    import tokyn.runtime as rt
+    monkeypatch.setattr(rt, "_AVVISO_CLAUDE_CODE", [])
+    src = METEO_STRUMENTI.split("main:")[0] + (
+        'agent Capo:\n    instructions: "Delega."\n    tools: [A]\n\n'
+        'main:\n    for m in A.ask_all(["1", "2", "3", "4", "5"]):\n        print(m.citta)\n'
+        '    print(sorted(CHIAMATE))\n    print(Capo.ask_all(["x", "y", "z"]))\n')
+    rc, out, err = run(src, capsys, mock=False)
+    assert rc == 0, err
+    lines = out.splitlines()
+    assert lines[:6] == ["Padova"] * 5 + [str(["Padova"] * 5)]
+    assert lines[6] == str(["risposta a: x", "risposta a: y", "risposta a: z"])
+    assert err.count("Tokyn: senza chiave API") == 1
+    calls = fake_claude()
+    paths = [_mcp_server(c)["args"][-1] for c in calls if "--mcp-config" in c]
+    # 5 per A, 3 per Capo e 3 per A usato da Capo: ognuna nella sua cartella
+    assert len(paths) == 11 and len(set(paths)) == 11
+    assert not any(Path(p).exists() for p in paths)  # e tutte tolte alla fine
+
+
+def test_ask_all_in_mock_is_unchanged(capsys, monkeypatch):
+    # in mock le risposte dipendono dall'ordine delle ask dello stesso agente: ask_all resta una alla volta
+    monkeypatch.setenv("TOKYN_PARALLELO", "8")
+    src = ('type T:\n    c: "a" | "b" | "c"\n    u: bool\n\nagent A:\n    model: "mock"\n    instructions: "i"\n'
+           '    output: T\n\nagent B:\n    model: "mock"\n    instructions: "i"\n\n'
+           'main:\n    for t in A.ask_all(["1", "2", "3", "4", "5"]):\n        print(t.c, t.u)\n'
+           '    print(A.ask("6").c)\n    print(B.ask_all(["x", "y"]))\n')
+    rc, out, err = run(src, capsys)
+    assert rc == 0, err
+    assert out.splitlines() == ["a True", "b False", "c True", "a False", "b True", "c",
+                                "['[mock B] risposta a: x', '[mock B] risposta a: y']"]
+
+
 # ------------------------------------------------------------ lingua dei messaggi
 
 def _no_language_env(monkeypatch):
