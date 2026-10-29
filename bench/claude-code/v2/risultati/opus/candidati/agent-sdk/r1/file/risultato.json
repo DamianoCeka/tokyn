@@ -1,0 +1,25 @@
+{
+  "candidati": [
+    {
+      "file": "bianchi_elena.txt",
+      "punteggio": 9,
+      "motivazione": "Cinque anni nella vendita in telefonia MediaWorld, con garanzie estese, cassa e weekend; non indica esplicitamente l'uso del gestionale di magazzino."
+    },
+    {
+      "file": "rizzo_davide.txt",
+      "punteggio": 6,
+      "motivazione": "Ha circa tre anni di vendita al dettaglio, uso della cassa e disponibilità nel weekend, ma conosce poco i computer e non indica gestionale né vendita di servizi."
+    },
+    {
+      "file": "esposito_marco.txt",
+      "punteggio": 4,
+      "motivazione": "Conosce il gestionale di magazzino, l'informatica ed è disponibile ai turni, ma non ha esperienza di vendita al dettaglio né di cassa."
+    },
+    {
+      "file": "ferraro_chiara.txt",
+      "punteggio": 1,
+      "motivazione": "Ha solida esperienza infermieristica ed è residente a Verona, ma non ha esperienza di vendita né conoscenze di elettronica."
+    }
+  ],
+  "migliore": "bianchi_elena.txt"
+}

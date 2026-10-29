@@ -1,0 +1,81 @@
+{
+ "prova": "opus/spese/tokyn/r2",
+ "cartella": "e798d98d7d",
+ "modello": "opus",
+ "compito": "spese",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2076652,
+ "costo_usd_telemetria": 0.207665,
+ "token_output": 3251,
+ "token_input": 12,
+ "token_cache_scritti": 15564,
+ "token_cache_letti": 90426,
+ "prove_del_programma": {
+  "costo_usd": 0.002464,
+  "token_output": 1412,
+  "chiamate": 22,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 80.2,
+ "secondi_api": 31.5,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 843,
+ "righe_tokyn": 41,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "| Totale |\n|---|---|---|\n| spesa alimentare | Lidl, Carrefour | -70.02 |\n| trasporti | Trenord, Telepass | -23.0 |\n| casa | A2A gas, Leroy Merlin | -120.2 |\n| svago | pizzeria, Netflix, libreria | -74.49 |\n| altro | stipendio, commissione bonifico | 1848.5 |\n\n**Lo stipendio è sommato in `altro`**, come hai chiesto (si sommano tutti gli importi), quindi quel totale viene positivo. Se vuoi contare solo le uscite basta una riga in più che salti gli importi positivi.\n\n**La chiave API:** l'ho provato senza chiave, quindi le risposte sono arrivate tramite il tuo Claude Code. Va bene per una prova, ma per usarlo ogni mese le regole di Anthropic chiedono una chiave: imposta `ANTHROPIC_API_KEY` e il programma la usa da solo. Il costo è praticamente nullo, circa 0,002 $ per questi 11 movimenti.\n\n**Come funziona:**\n- Legge il CSV e capisce gli importi con la virgola (anche con i punti delle migliaia, tipo `1.234,56`).\n- Chiede la categoria a Claude Haiku un movimento alla volta. La risposta può essere solo una delle 5 categorie.\n- Le righe vuote vengono saltate; quelle con un importo non leggibile vengono segnalate a schermo e ignorate.\n- Mentre lavora stampa ogni movimento con la sua categoria e alla fine i totali.\n\nL'ho scritto con la skill Tokyn: il sorgente è `programma.tokyn` e `programma.py` è generato da quello e funziona da solo, senza Tokyn. Se vuoi cambiare le regole delle categorie, la cosa più semplice è modificare `programma.tokyn` e rigenerare il Python, oppure chiedimelo.",
+ "controllo": {
+  "ok": true,
+  "punti": 3,
+  "massimo": 3,
+  "dettagli": [
+   "8 movimenti nell'ordine del file con data, descrizione e importo giusti: True",
+   "categorie ammesse e giuste: True (8 su 8: ['spesa alimentare', 'trasporti', 'casa', 'svago', 'spesa alimentare', 'trasporti', 'casa', 'altro'])",
+   "totali arrotondati al centesimo e coerenti con le categorie assegnate: True (uguali ai totali attesi: True; {'spesa alimentare': -85.5, 'trasporti': -51.8, 'casa': -728.45, 'svago': -19.0, 'altro': -12.8})"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.001334,
+   "token_output": 537,
+   "chiamate": 8,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

@@ -1,0 +1,82 @@
+{
+ "prova": "opus/recensioni/agent-sdk/r3",
+ "cartella": "9996847208",
+ "modello": "opus",
+ "compito": "recensioni",
+ "condizione": "agent-sdk",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.5440168,
+ "costo_usd_telemetria": 0.544017,
+ "token_output": 3218,
+ "token_input": 12,
+ "token_cache_scritti": 53893,
+ "token_cache_letti": 242324,
+ "prove_del_programma": {
+  "costo_usd": 0.042162,
+  "token_output": 718,
+  "chiamate": 6,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 40.3,
+ "secondi_api": 28.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 62,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "\n|---|---|---|\n| Prodotto fantastico, arrivato in un giorno. | positivo | 5 |\n| Si è rotto dopo una settimana, deluso. | negativo | 1 |\n| Nella media, niente di speciale. | neutro | 3 |\n| Ottimo rapporto qualità prezzo, lo consiglio a tutti. | positivo | 5 |\n| La batteria dura pochissimo e l'assistenza non risponde. | negativo | 1 |\n| Fa quello che promette, né più né meno. | neutro | 3 |\n\n**Voto medio: 3.0.** Le recensioni nel JSON sono nello stesso ordine del file e il formato è quello del tuo esempio.\n\n**Come funziona:**\n- Usa `claude-agent-sdk` con il modello `claude-opus-5-5` e fa una richiesta a Claude per ogni recensione, al massimo 5 alla volta.\n- Le risposte devono seguire uno schema JSON fisso: il sentimento può essere solo `positivo`, `negativo` o `neutro`, e il voto un numero intero da 1 a 5. Così il risultato si legge sempre senza errori.\n- Claude non ha strumenti a disposizione e non legge configurazioni dal disco: valuta solo il testo della recensione. Il prompt gli dice anche di ignorare eventuali istruzioni scritte dentro una recensione.\n- La media la calcola il programma, non Claude, ed è arrotondata a 2 decimali.\n- Le righe vuote vengono saltate. Se l'analisi di una recensione fallisce, il programma si ferma con un errore invece di scrivere un risultato parziale.\n\nSe le recensioni diventano molte e vuoi spendere meno, puoi cambiare `MODELLO` in cima al file (per esempio `claude-haiku-5-5`, più economico) e aumentare `MAX_IN_PARALLELO` per andare più veloce.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 recensioni nell'ordine del file: True",
+   "sentimenti giusti: 6 su 6",
+   "voti interi da 1 a 5 e coerenti col sentimento: True ([5.0, 1.0, 3.0, 5.0, 1.0, 3.0])",
+   "media giusta dei voti: True (3.0)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.04087,
+   "token_output": 601,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

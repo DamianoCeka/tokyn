@@ -1,0 +1,74 @@
+{
+ "prova": "opus/riunione/python/r1",
+ "cartella": "7e2355fc64",
+ "modello": "opus",
+ "compito": "riunione",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.739535,
+ "costo_usd_telemetria": 0.739535,
+ "token_output": 5907,
+ "token_input": 18,
+ "token_cache_scritti": 65644,
+ "token_cache_letti": 480855,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 11,
+ "secondi": 61.6,
+ "secondi_api": 54.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Grep": 1,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 93,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "ive `risultato.json` nel formato che mi hai chiesto. La risposta però l'ho scritta io, quindi questo test non dice nulla sulla qualità dell'estrazione.\n\n**Come funziona:**\n- Legge `verbale.txt` e lo manda a Claude Opus 5.5 (`claude-opus-5-5`). Con l'output strutturato, la risposta deve rispettare lo schema `decisioni` / `azioni` (`cosa`, `chi`, `entro`).\n- Le istruzioni chiedono di tenere solo le decisioni prese davvero e di ignorare le chiacchiere fuori tema, come la domanda sul parcheggio nel vostro verbale.\n- Le scadenze relative (\"venerdì prossimo\") vengono calcolate dalla data della riunione scritta nel verbale. Se il verbale non la riporta, si usa la data di oggi.\n- Il programma controlla che ogni scadenza sia una data valida nel formato AAAA-MM-GG. Se Claude rifiuta la richiesta, la risposta viene troncata o c'è un errore di rete o dell'API, mostra un messaggio leggibile.\n\n**Una scelta da confermare:** se per un compito non viene detta nessuna scadenza, `entro` vale `null` e compare un avviso. Ho preferito non far inventare una data a Claude. Se invece volete sempre una data, si cambia facilmente.\n\n**Per provarlo davvero:**\n```bash\nexport ANTHROPIC_API_KEY=sk-ant-...\npython programma.py\n```\nCon il verbale attuale mi aspetto 2 decisioni (fiera di Bologna con lo stand piccolo, newsletter ogni due settimane) e 3 azioni: Paolo entro il 2026-10-30, Chiara entro il 2026-11-06, Roberto entro il 2026-11-16. Se mi dai accesso a una chiave, lo lancio io e controllo il risultato.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 6,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

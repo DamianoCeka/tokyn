@@ -1,0 +1,73 @@
+{
+ "prova": "opus/articolo/python/r1",
+ "cartella": "fff4b765da",
+ "modello": "opus",
+ "compito": "articolo",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.7485269999999999,
+ "costo_usd_telemetria": 0.748527,
+ "token_output": 6964,
+ "token_input": 22,
+ "token_cache_scritti": 61822,
+ "token_cache_letti": 572915,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 14,
+ "secondi": 74.9,
+ "secondi_api": 64.3,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 9,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 107,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "\n- Con una risposta valida, `risultato.json` viene scritto nel formato del tuo esempio. Gli spazi superflui vengono tolti e i nomi ripetuti compaiono una volta sola (per esempio \"marco  tessari\" non duplica \"Marco Tessari\").\n- Se Claude restituisce un numero di punti diverso da cinque, il programma riprova. Dopo tre tentativi falliti si ferma con un messaggio e non scrive nessun file.\n- Senza chiave stampa \"Manca la chiave: imposta ANTHROPIC_API_KEY…\" invece di un errore incomprensibile.\n\n**Come funziona:**\n- Usa il modello Claude Opus 5.5 e chiede la risposta in JSON con i campi `titolo`, `punti` e `citati`.\n- Le istruzioni chiedono un titolo breve e cinque frasi in ordine di importanza. Chiedono anche persone e organizzazioni con nome e cognome completi: \"Tessari\" diventa \"Marco Tessari\". Vanno inclusi solo i soggetti con un nome proprio, quindi \"i sindacati\" resta fuori.\n- Ho attivato un'opzione dell'API: se Claude rifiuta la richiesta, l'API la ripete da sola con un altro modello. Puoi toglierla se non ti serve.\n\n**Per usarlo:**\n```\npip install anthropic\nexport ANTHROPIC_API_KEY=la-tua-chiave\npython programma.py\n```\n\nAl primo avvio controlla `risultato.json`, in particolare l'elenco `citati`. Su questo articolo mi aspetto Marco Tessari, Chiara Valli, Silvia Orlandi, Fondazione Rinaldi, Azienda Sanitaria Territoriale, Genitori Insieme e probabilmente l'ospedale San Matteo. Se vuoi che lo provi io con l'API vera, rendi disponibile la chiave in questo ambiente e lo rilancio.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

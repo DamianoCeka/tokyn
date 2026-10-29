@@ -1,0 +1,83 @@
+{
+ "prova": "opus/candidati/tokyn/r3",
+ "cartella": "6afe3a5250",
+ "modello": "opus",
+ "compito": "candidati",
+ "condizione": "tokyn",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.23086379999999998,
+ "costo_usd_telemetria": 0.230864,
+ "token_output": 3143,
+ "token_input": 16,
+ "token_cache_scritti": 17716,
+ "token_cache_letti": 131059,
+ "prove_del_programma": {
+  "costo_usd": 0.051564,
+  "token_output": 1666,
+  "chiamate": 8,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 10,
+ "secondi": 68.0,
+ "secondi_api": 30.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 846,
+ "righe_tokyn": 42,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "osito_marco.txt` | Appassionato di informatica e usa il gestionale di magazzino, ma non ha mai fatto vendita al dettaglio. |\n| 1 | `ferraro_chiara.txt` | È un'infermiera: non ha nessuno dei requisiti. |\n\n**Migliore: `bianchi_elena.txt`**\n\nNella prima prova le motivazioni erano lunghe, anche 4 o 5 frasi. Ho chiesto una sola frase di al massimo 25 parole e ho rifatto la prova: le motivazioni sono diventate più corte e i punteggi non sono cambiati.\n\n**Come funziona:**\n- Legge tutti i file `.txt` in `cv/` e manda ogni curriculum a Claude insieme all'annuncio.\n- Se Claude dà un voto fuori dall'intervallo, il programma lo riporta tra 1 e 10.\n- Mentre lavora mostra a che punto è; alla fine stampa la classifica e scrive `risultato.json`.\n- Se due candidati hanno lo stesso punteggio, restano in ordine alfabetico e come migliore indica il primo dei due.\n\n**Prima di usarlo da solo:**\n- **Chiave API:** nella prova ha risposto il tuo Claude Code, perché non c'era una chiave API. Va bene per provare, ma per usarlo regolarmente devi impostare `ANTHROPIC_API_KEY` (la chiave dell'API di Anthropic). Il programma la usa da solo, senza modifiche.\n- **Requisiti:** il programma richiede solo la libreria `anthropic` (`pip install anthropic`).\n- **Modifiche:** ho lasciato anche `programma.tokyn`, il sorgente da cui è stato generato `programma.py`. Se vuoi cambiare qualcosa, per esempio il criterio di valutazione, conviene modificare quel file e poi rigenerare il Python, invece di correggerlo a mano.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "4 curriculum una volta ciascuno con punteggio intero da 1 a 10 e motivazione: True ([('ferrari_giulia.txt', 10), ('colombo_luca.txt', 3), ('ricci_paolo.txt', 3), ('gallo_andrea.txt', 1)])",
+   "in ordine di punteggio decrescente: True ([10, 3, 3, 1])",
+   "migliore ferrari_giulia.txt col punteggio più alto: True ('ferrari_giulia.txt')",
+   "gallo_andrea.txt col punteggio più basso: True"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.021954,
+   "token_output": 614,
+   "chiamate": 4,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}
