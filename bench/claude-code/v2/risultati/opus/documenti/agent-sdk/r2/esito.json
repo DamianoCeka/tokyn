@@ -1,0 +1,83 @@
+{
+ "prova": "opus/documenti/agent-sdk/r2",
+ "cartella": "47a57bf4a6",
+ "modello": "opus",
+ "compito": "documenti",
+ "condizione": "agent-sdk",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.5892630000000001,
+ "costo_usd_telemetria": 0.589263,
+ "token_output": 4157,
+ "token_input": 14,
+ "token_cache_scritti": 55645,
+ "token_cache_letti": 304535,
+ "prove_del_programma": {
+  "costo_usd": 0.056155,
+  "token_output": 976,
+  "chiamate": 6,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 9,
+ "secondi": 63.0,
+ "secondi_api": 36.9,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Bash": 5,
+  "Skill": 1,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 75,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": " tuoi file. Alla domanda \"Quanti giorni di ferie abbiamo all'anno?\" il programma risponde che l'informazione non è nei documenti e mette `\"fonte\": null`, invece di inventare. Il file `ferie.txt` del tuo esempio infatti non c'è in `docs/`. Nella stessa prova ha anche risposto correttamente a \"Chi è il responsabile del magazzino?\".\n\n**Come funziona**\n- Legge tutti i `.txt` in `docs/` e li passa a Claude insieme alle istruzioni, poi fa una richiesta per ogni domanda, nell'ordine di `domande.txt`. Le righe vuote vengono saltate.\n- Usa `claude-agent-sdk` con il modello `claude-opus-5-5`. Ho disattivato gli strumenti di Claude, quindi non può leggere o modificare file né eseguire comandi. Le impostazioni locali vengono ignorate.\n- Claude deve rispondere in un formato JSON fisso, e la `fonte` può essere solo il nome di uno dei file in `docs/` oppure `null`. Così non può citare un file che non esiste. Se una domanda non riceve una risposta valida, il programma si ferma con un errore e non scrive un risultato a metà.\n\n**Due limiti da sapere**\n- **Una sola fonte per risposta:** se una risposta dipende da due documenti, ne viene indicato uno solo.\n- **Tutti i documenti in ogni richiesta:** con questi 4 file brevi va benissimo. Con molte centinaia di pagine diventerebbe lento e costoso, e bisognerebbe prima cercare i documenti pertinenti.\n\nLe risposte sono frasi complete, non brevi come \"26 giorni lavorativi\" del tuo esempio. Se le vuoi più brevi basta cambiare una riga delle istruzioni.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "4 oggetti {domanda, risposta, fonte} nell'ordine di domande.txt: True",
+   "domanda 1: risposta giusta True, fonte trasferte.txt True (\"Chi usa l'auto propria riceve un rimborso di 0,42 euro per chilometro, calcolato sul percorso più breve. Pedaggi e parcheggi vengono rimborsati a parte, presentando la ricevuta.\", 'trasferte.txt')",
+   "domanda 2: risposta giusta True, fonte sicurezza_it.txt True ('La password va cambiata ogni 90 giorni. Il sistema ti avvisa una settimana prima della scadenza. Inoltre deve avere almeno 12 caratteri ed essere diversa per ogni servizio.', 'sicurezza_it.txt')",
+   "domanda 3: risposta giusta True, fonte smart_working.txt True (\"Dal 1° gennaio 2026 i dipendenti assunti a tempo indeterminato possono lavorare da casa fino a 2 giorni alla settimana. I giorni si concordano con il proprio responsabile e vanno segnati sul portale Presenze entro il giovedì della settimana precedente. Il lunedì non si può lavorare da casa: c'è la riunione di reparto e tutti sono in ufficio.\", 'smart_working.txt')",
+   "domanda 4: risposta giusta True, fonte magazzino.txt True ('Il sabato si possono ritirare le merci fino alle 11:00, perché il magazzino è aperto dalle 8:00 alle 11:00. Si possono ritirare solo le merci già prenotate. La prenotazione va fatta almeno un giorno prima scrivendo a magazzino@azienda.example.', 'magazzino.txt')"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.044307,
+   "token_output": 822,
+   "chiamate": 4,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

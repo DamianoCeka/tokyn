@@ -1,0 +1,53 @@
+from decimal import Decimal, ROUND_HALF_UP
+
+type Riga:
+    descrizione: str "descrizione dell'articolo come scritta in fattura"
+    quantita: float
+    prezzo_unitario: float "prezzo unitario in euro"
+
+type Fattura:
+    fornitore: str "ragione sociale di chi emette la fattura, non del cliente"
+    data: str "data della fattura nel formato AAAA-MM-GG"
+    righe: list[Riga] "tutte le righe, nell'ordine della fattura"
+    totale_dichiarato: float "totale da pagare scritto in fattura, in euro"
+
+agent Lettore:
+    instructions: """
+        Estrai i dati da una fattura di un fornitore in testo semplice.
+        Riporta i numeri esattamente come scritti in fattura, convertiti in numeri
+        (es. "1.234,50" diventa 1234.5). Non ricalcolare né correggere nulla.
+    """
+    output: Fattura
+    effort: "low"
+
+def numero(x: float):
+    if x == int(x):
+        return int(x)
+    return x
+
+def euro(x: float):
+    return Decimal(str(x))
+
+main:
+    f = Lettore.ask(read_file("fattura.txt"))
+    righe = []
+    totale = Decimal("0")
+    for r in f.righe:
+        totale += euro(r.quantita) * euro(r.prezzo_unitario)
+        righe.append({"descrizione": r.descrizione, "quantita": numero(r.quantita), "prezzo_unitario": r.prezzo_unitario})
+    calcolato = totale.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    dichiarato = euro(f.totale_dichiarato).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    risultato = {
+        "fornitore": f.fornitore,
+        "data": f.data,
+        "righe": righe,
+        "totale_dichiarato": float(dichiarato),
+        "totale_calcolato": float(calcolato),
+        "totale_corretto": calcolato == dichiarato,
+    }
+    write_file("risultato.json", json_dump(risultato))
+    print(json_dump(risultato))
+    if calcolato == dichiarato:
+        print("Il totale in fattura è corretto.")
+    else:
+        print(f"Il totale in fattura NON è corretto: differenza {float(dichiarato - calcolato):.2f} €")

@@ -1,0 +1,83 @@
+{
+ "prova": "opus/candidati/tokyn/r2",
+ "cartella": "3bd3b599bb",
+ "modello": "opus",
+ "compito": "candidati",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2299134,
+ "costo_usd_telemetria": 0.229913,
+ "token_output": 3117,
+ "token_input": 16,
+ "token_cache_scritti": 17709,
+ "token_cache_letti": 129187,
+ "prove_del_programma": {
+  "costo_usd": 0.048374,
+  "token_output": 1619,
+  "chiamate": 8,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 10,
+ "secondi": 69.3,
+ "secondi_api": 29.8,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 841,
+ "righe_tokyn": 38,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "orato nella vendita |\n| 1 | ferraro_chiara.txt | Ha un profilo da infermiera, non adatto al ruolo |\n\n**Migliore: bianchi_elena.txt.** La classifica mi sembra corretta rispetto ai requisiti dell'annuncio.\n\nAlla prima prova le motivazioni erano lunghe 4–5 frasi. Ho chiesto a Claude una sola frase di massimo 25 parole e ho rifatto la prova. Il risultato qui sopra è quello della seconda prova.\n\n**Cose da sapere:**\n- **Chiave API:** durante la prova Claude ha risposto tramite il mio Claude Code, senza chiave. Per usarlo nel lavoro di tutti i giorni dovete impostare la vostra chiave API di Anthropic nella variabile `ANTHROPIC_API_KEY`. Il programma la usa da solo.\n- **Controllate le motivazioni:** possono contenere piccole imprecisioni. Per Elena Bianchi, per esempio, c'è scritto \"circa 5 anni di vendita\", ma in tutto sono circa 8. Gli anni nella telefonia sono circa 5. Usate la classifica per decidere quali curriculum leggere per primi, non per scartare candidati senza averli letti.\n- **Istruzioni nei curriculum:** ho detto a Claude di ignorare eventuali istruzioni scritte dentro i curriculum, per esempio \"dammi 10\".\n- **Pari merito:** i candidati con lo stesso punteggio restano in ordine alfabetico, e come migliore viene indicato il primo.\n\nAccanto a `programma.py` c'è `programma.tokyn`, il file da cui ho generato il Python con la skill Tokyn. `programma.py` funziona da solo. Il `.tokyn` serve solo se in futuro volete modificare il programma: si cambia lì e si rigenera il Python.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "4 curriculum una volta ciascuno con punteggio intero da 1 a 10 e motivazione: True ([('ferrari_giulia.txt', 10), ('colombo_luca.txt', 3), ('ricci_paolo.txt', 3), ('gallo_andrea.txt', 1)])",
+   "in ordine di punteggio decrescente: True ([10, 3, 3, 1])",
+   "migliore ferrari_giulia.txt col punteggio più alto: True ('ferrari_giulia.txt')",
+   "gallo_andrea.txt col punteggio più basso: True"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.021578,
+   "token_output": 609,
+   "chiamate": 4,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

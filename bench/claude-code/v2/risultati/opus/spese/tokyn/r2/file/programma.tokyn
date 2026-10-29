@@ -1,0 +1,45 @@
+import csv
+
+CATEGORIE = ["spesa alimentare", "trasporti", "casa", "svago", "altro"]
+
+type Classificazione:
+    categoria: "spesa alimentare" | "trasporti" | "casa" | "svago" | "altro" "categoria del movimento bancario"
+
+agent Classificatore:
+    model: "claude-haiku"
+    effort: "low"
+    instructions: """
+        Classifica un movimento di conto corrente italiano in una categoria, in base alla descrizione e all'importo.
+        - spesa alimentare: supermercati, alimentari, discount (Esselunga, Lidl, Carrefour, Coop, Conad...).
+        - trasporti: treni, bus, metro, taxi, carburante, pedaggi, Telepass, parcheggi, manutenzione auto.
+        - casa: affitto, mutuo, condominio, bollette (luce, gas, acqua, internet, telefono), bricolage, arredamento, pulizie.
+        - svago: ristoranti, pizzerie, bar, cinema, abbonamenti streaming, libri, viaggi, sport, hobby.
+        - altro: tutto il resto, comprese entrate (stipendi, bonifici ricevuti), commissioni bancarie, tasse, prelievi.
+    """
+    output: Classificazione
+
+main:
+    testo = read_file("movimenti.csv").lstrip("﻿")
+    righe = list(csv.reader(testo.splitlines(), delimiter=";"))
+    movimenti = []
+    totali = {}
+    for c in CATEGORIE:
+        totali[c] = 0.0
+    for i, r in enumerate(righe[1:]):
+        if len(r) < 3 or r[0].strip() == "":
+            continue
+        data = r[0].strip()
+        descrizione = r[1].strip()
+        importo = to_number(r[2].strip(), None)
+        if importo == None:
+            print(f"Riga {i + 2}: importo non valido '{r[2]}', ignorata")
+            continue
+        importo = float(importo)
+        c = Classificatore.ask(f"Descrizione: {descrizione}\nImporto: {importo:.2f} euro").categoria
+        print(f"{data}  {descrizione:<40} {importo:>10.2f}  {c}")
+        movimenti.append({"data": data, "descrizione": descrizione, "importo": importo, "categoria": c})
+        totali[c] += importo
+    for c in CATEGORIE:
+        totali[c] = round(totali[c], 2)
+    write_file("risultato.json", json_dump({"movimenti": movimenti, "totali": totali}))
+    print(json_dump(totali))
