@@ -47,8 +47,8 @@ I token sono contati con il tokenizer di Claude incluso in `anthropic==0.34.2`, 
 
 ## Il costo della Skill
 
-Per scrivere Tokyn, Claude deve prima leggere la Skill: `SKILL.md`, cioè **1.961 token di input**, una volta per conversazione.
-Contiene un riferimento compatto del linguaggio scritto per il modello; la specifica completa (`SPEC.md`, 2.851 token)
+Per scrivere Tokyn, Claude deve prima leggere la Skill: `SKILL.md`, cioè **2.562 token di input**, una volta per conversazione.
+Contiene un riferimento compatto del linguaggio scritto per il modello; la specifica completa (`SPEC.md`, 2.978 token)
 la legge solo se gli serve un dettaglio raro.
 
 Con i prezzi di Claude Sonnet 5.5 ($2 per milione di token di input, $10 per milione di output):
@@ -56,12 +56,12 @@ Con i prezzi di Claude Sonnet 5.5 ($2 per milione di token di input, $10 per mil
 | | Python libero | Tokyn |
 |---|---:|---:|
 | Codice dei 5 programmi (output) | $0,0540 | $0,0191 |
-| Lettura della Skill (input, una volta) | – | $0,0039 |
-| **Totale** | **$0,0540** | **$0,0230 (−57%)** |
+| Lettura della Skill (input, una volta) | – | $0,0051 |
+| **Totale** | **$0,0540** | **$0,0242 (−55%)** |
 
 - In media ogni programma fa risparmiare circa **700 token di output**.
-- In soldi, la Skill si ripaga già **dal primo programma** (circa $0,0070 risparmiati contro $0,0039 di lettura), e dal secondo è guadagno puro.
-- Rispetto alla prima versione della Skill (`SKILL.md` + `SPEC.md`, 3.737 token in due letture) la lettura costa circa la metà
+- In soldi, la Skill si ripaga già **dal primo programma** (circa $0,0070 risparmiati contro $0,0051 di lettura), e dal secondo è guadagno puro.
+- Rispetto alla prima versione della Skill (`SKILL.md` + `SPEC.md`, 3.737 token in due letture) la lettura costa il 31% in meno
   e serve una chiamata in meno. In più `run --mock` controlla e prova il programma con un solo comando.
 - Se la Skill resta in cache, rileggerla costa 20 volte meno ($0,10 per milione di token su Sonnet 5.5).
 - Con Opus 5.5 ($4 / $20) i rapporti sono gli stessi, i valori assoluti il doppio.

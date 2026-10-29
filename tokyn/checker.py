@@ -65,11 +65,11 @@ BUILTINS = {
     "any": (1, 1, BOOL),
     "all": (1, 1, BOOL),
     "input": (0, 1, STR),
-    "read_file": (1, 1, STR),
+    "read_file": (1, 2, STR),
     "write_file": (2, 2, NONE),
     "append_file": (2, 2, NONE),
-    "http_get": (1, 1, STR),
-    "http_post": (2, 2, STR),
+    "http_get": (1, 2, STR),
+    "http_post": (2, 3, STR),
     "json_parse": (1, 1, ANY),
     "json_dump": (1, 1, STR),
     "env": (1, 2, STR),
@@ -587,7 +587,7 @@ class Checker:
         return ANY
 
     def infer_number(self, node, scope):
-        return FLOAT if "." in str(node.children[0]) else INT
+        return FLOAT if any(c in str(node.children[0]) for c in ".eE") else INT
 
     def infer_string(self, node, scope):
         return STR

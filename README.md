@@ -57,9 +57,9 @@ Lasciato libero di scegliere, in Python Claude ha scritto **5.397 token**; in To
 | | Python (quello che Claude scrive di solito) | Tokyn |
 |---|---:|---:|
 | Token di codice per 5 programmi | 5.397 | **1.910 (−65%)** |
-| Costo con Sonnet 5.5, Skill compresa | $0,054 | **$0,023 (−57%)** |
+| Costo con Sonnet 5.5, Skill compresa | $0,054 | **$0,024 (−55%)** |
 
-La Skill (1.961 token da leggere una volta) si ripaga già dal primo programma.
+La Skill (2.562 token da leggere una volta) si ripaga già dal primo programma.
 Onestamente: con un framework come Pydantic AI il Python arriva allo stesso numero di token di Tokyn.
 Metodo completo, tutti i programmi e i limiti in [`bench/`](bench).
 
@@ -94,6 +94,7 @@ tokyn spec                   # stampa la specifica
 - **Agenti come strumenti**: un agente può delegare a un altro.
 - **Python ovunque**: `import` di qualsiasi libreria Python.
 - **Slice** di testi e liste: `testo[:200]`, `lista[-3:]`.
+- **Valori di riserva al posto di `try`**: `read_file(p, "")` e `http_get(url, "")` non fermano il programma se il file manca o la rete cade.
 - **Errori a runtime** riportati alla riga del file `.tokyn`, non del Python generato.
 - **Errori mirati per le abitudini di Python**: se un modello scrive una comprehension, `a if c else b`, `is None` o `a, b = ...`, il checker dice esattamente cosa scrivere al loro posto.
 

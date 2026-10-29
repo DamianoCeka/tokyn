@@ -33,7 +33,7 @@ def test_skill_reference_is_valid(capsys, monkeypatch):
     skill = (ROOT / "skill" / "tokyn" / "SKILL.md").read_text(encoding="utf-8")
     start = skill.index("```\nimport math") + 4
     src = skill[start:skill.index("```", start)]
-    monkeypatch.setattr(sys, "stdin", io.StringIO("il pc non parte\n"))
+    monkeypatch.setattr(sys, "stdin", io.StringIO("il pc non parte\nesci\n"))
     rc, _, err = run(src, capsys)
     assert rc == 0, err
 
@@ -109,6 +109,22 @@ def test_slices(capsys):
     assert out.strip() == "buon orno [2, 3] 2 BU"
 
 
+def test_number_formats(capsys):
+    rc, out, err = run("main:\n    x = 1_000 + 1\n    print(x, 2.5e3, 1e-3)\n", capsys)
+    assert rc == 0, err
+    assert out.strip() == "1001 2500.0 0.001"
+
+
+def test_defaults_for_missing_file_and_network(capsys, tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    src = 'main:\n    print(read_file("manca.txt", "vuoto"))\n    print(http_get("http://127.0.0.1:9/x", "giu"))\n'
+    rc, out, err = run(src, capsys)
+    assert rc == 0, err
+    assert out.split() == ["vuoto", "giu"]
+    rc, _, err = run('main:\n    print(http_get("http://127.0.0.1:9/x"))\n', capsys)
+    assert rc == 1 and "test.tokyn:2" in err and "http_get(..., \"\")" in err
+
+
 def test_python_interop(capsys):
     src = 'import math\nfrom statistics import mean\n\nmain:\n    print(math.sqrt(16), mean([1, 3]))\n'
     rc, out, err = run(src, capsys)
@@ -180,6 +196,7 @@ main:
     ("main:\n    x = None\n    if x is None:\n        pass\n", "E002"),
     ("main:\n    a, b = [1, 2]\n", "E002"),
     ("def f():\n    return 1, 2\n", "E002"),
+    ("main:\n    print((1, 2))\n", "E002"),
     ('main:\n    d = {"k": 1}\n    print(f"{d["k"]}")\n', "E002"),
 ])
 def test_static_errors(src, code):

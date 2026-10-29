@@ -100,6 +100,7 @@ Come in Python:
 - `if` / `elif` / `else`
 - `for x in lista:`, `for i in range(n):`, `for k, v in dizionario.items():`, `break`, `continue`
 - `return`, `pass`
+- Numeri: `3`, `2.5`, `1_000`, `1e-9`
 - Operatori: `+ - * / // %`, `== != < > <= >=`, `in`, `not in`, `and`, `or`, `not`
 - Liste `[1, 2]`, dizionari `{"a": 1}`, indici `x[0]`, attributi `x.y`, chiamate `f(a, b=1)`
 - Slice di testi e liste: `testo[:200]`, `lista[1:]`, `lista[-3:]`
@@ -109,7 +110,8 @@ Come in Python:
 Non esistono in Tokyn (il checker lo segnala e dice cosa usare): `while`, `class`, `lambda`,
 `try`/`except`, `with`, `async`/`await`, `yield`, `global`, `match`, le comprehension
 `[x for x in ...]` (usa `for` con `.append()`), `a if c else b` (usa `if`/`else`),
-`is` (usa `==` e `!=`), `a, b = ...` e `return a, b` (usa una lista).
+`is` (usa `==` e `!=`), le tuple, `a, b = ...` e `return a, b` (usa una lista).
+Al posto di `try`/`except`, `read_file`, `http_get` e `http_post` accettano un valore di riserva (`default`).
 
 ## Funzioni già presenti
 
@@ -118,11 +120,11 @@ Non esistono in Tokyn (il checker lo segnala e dice cosa usare): `while`, `class
 
 | Funzione | Cosa fa |
 |---|---|
-| `read_file(percorso)` | legge un file di testo |
+| `read_file(percorso, default)` | legge un file di testo; se non esiste restituisce `default` (senza `default` si ferma con un errore) |
 | `write_file(percorso, testo)` | scrive (sovrascrive) un file |
 | `append_file(percorso, testo)` | aggiunge in fondo a un file |
-| `http_get(url)` | scarica una pagina e restituisce il testo |
-| `http_post(url, dati)` | invia dati JSON e restituisce la risposta |
+| `http_get(url, default)` | scarica una pagina e restituisce il testo; se la rete fallisce restituisce `default` |
+| `http_post(url, dati, default)` | invia dati JSON e restituisce la risposta; se fallisce restituisce `default` |
 | `json_parse(testo)` | da testo JSON a liste/dizionari |
 | `json_dump(valore)` | da valore (anche `type`) a testo JSON |
 | `env(nome, default)` | legge una variabile d'ambiente |

@@ -65,30 +65,52 @@ def per_prezzo(r: Riga) -> float:
     return r.prezzo
 
 main:                                          # punto di partenza, uno solo
-    t = Supporto.ask(input("> "))              # un solo argomento; restituisce str o il type di output
-    if t.categoria == "tecnico" and t.urgente:
-        righe = sorted(t.righe, key=per_prezzo, reverse=True)   # ordinare per campo: def + key=
-        for i, r in enumerate(righe[:SOGLIA]):
-            print(f"{i + 1}. {r.prodotto}: {r.prezzo:.2f} €")
-    elif t.categoria not in ["commerciale"]:
-        print(json_dump(t))
+    for turno in range(20):                    # ciclo di chat: for + break
+        testo = input("Tu: ")
+        if testo.strip().lower() == "esci":
+            break
+        t = Supporto.ask(testo)                # un solo argomento; restituisce str o il type di output
+        if t.categoria == "tecnico" and t.urgente:
+            righe = sorted(t.righe, key=per_prezzo, reverse=True)   # ordinare per campo: def + key=
+            for i, r in enumerate(righe[:SOGLIA]):
+                print(f"{i + 1}. {r.prodotto}: {r.prezzo:.2f} €")
+        elif t.categoria not in ["commerciale"]:
+            print(json_dump(t))
     Supporto.reset()                           # cancella la memoria
     nuovo = Ticket(categoria="altro", urgente=False, righe=[])  # costruttore con i nomi dei campi
     nuovo.urgente = True
 ```
 
 - Istruzioni: `=`, `+=`, `-=`, `*=`, `/=`, `if`/`elif`/`else`, `for x in ...` (anche `for k, v in d.items()`),
-  `break`, `continue`, `return`, `pass`. Espressioni, f-string, indici `x[-1]`, slice `x[:200]` e metodi di
-  str/list/dict come in Python. Campi dei `type` con il punto (`t.campo`), chiavi dei dizionari con `d["k"]`.
+  `break`, `continue`, `return`, `pass`. Espressioni, numeri (`1_000`, `1e-9`), f-string, indici `x[-1]`,
+  slice `x[:200]` e metodi di str/list/dict come in Python. Campi dei `type` con il punto (`t.campo`), chiavi dei dizionari con `d["k"]`.
 - Funzioni già presenti: `print input len str int float bool list dict range enumerate zip sum min max sorted
-  reversed abs round any all`, `read_file(p)`, `write_file(p, testo)`, `append_file(p, testo)`, `http_get(url)`,
-  `http_post(url, dati)`, `json_parse(testo)`, `json_dump(valore)`, `env(nome, default)`, `now()`, `sleep(s)`.
-- Se uno strumento va in errore, l'errore torna all'IA, che può riprovare. Il valore restituito arriva all'IA come testo o JSON.
+  reversed abs round any all`, `write_file(p, testo)`, `append_file(p, testo)`, `sleep(s)` e:
+  - `read_file(p, default)`, `http_get(url, default)`, `http_post(url, dati, default)`: restituiscono testo.
+    Se il file manca o la rete fallisce restituiscono `default`; senza `default` il programma si ferma con un errore.
+  - `json_parse(testo)` → liste e dizionari (non `type`); `json_dump(valore)` → JSON indentato, anche di liste di `type`.
+  - `now()` → testo `"2026-10-28T14:30:00"` (la data è `now()[:10]`); `env(nome, default)` → variabile d'ambiente.
+- I percorsi sono relativi alla cartella da cui si esegue. Ogni modulo Python funziona: `import os`, `os.path.exists(p)`.
+
+## Comportamento
+
+- `def`: tipi e `->` facoltativi, tranne negli strumenti (tipo di ogni parametro e descrizione). Le funzioni
+  possono chiamarsi tra loro; l'ordine delle definizioni nel file non conta.
+- Tipi ammessi in campi, parametri e ritorni: `str int float bool dict list list[T]` e i `type`; la descrizione va
+  bene dopo qualsiasi campo. Il runtime controlla tipi e valori `"a" | "b"`: limiti come "da 1 a 5" vanno nella descrizione.
+- `output` è il nome di un solo `type`: per una lista usa un type contenitore con un campo `list[Voce]`.
+- Un agente usato come strumento riceve un testo e restituisce la sua risposta (JSON se ha `output`); chi lo usa
+  lo vede descritto dalle sue `instructions`. Se uno strumento va in errore, l'errore torna all'IA, che può riprovare.
+- `memory` dura per tutta l'esecuzione. `max_steps` (default 10) vale per ogni `ask` di quell'agente.
+- Le costanti non si riassegnano, ma liste e dizionari costanti si possono modificare (`LISTA.append(x)`).
+- Modelli: `"claude-haiku"` per classificare o estrarre molti testi semplici (costa meno), il default `"claude"`
+  per il resto, `"claude-opus"` solo per compiti difficili.
 
 ## Non esistono
 
-`while` (usa `for i in range(n):` con `break`), `class` (usa `type`/`agent`), `try`/`except`, `lambda` (usa `def`),
-`with`, `async`/`await`, `yield`, `global`, `match`, comprehension (usa `for` e `.append()`), `a if c else b`
-(usa `if`/`else`), `is` (usa `==`), `a, b = ...` e `return a, b` (usa una lista), campi facoltativi come
-`str | None` (usa `""`, `[]` o un valore come `"nessuno"`). Dentro una f-string usa le virgolette dell'altro
-tipo: `f"{d['k']}"`. Gli agenti hanno solo `.ask` e `.reset`. `True`, `False`, `None` con la maiuscola.
+`while` (usa `for i in range(n):` con `break`), `class` (usa `type`/`agent`), `try`/`except` (per file e rete
+usa il `default`), `lambda` (usa `def`), `with`, `async`/`await`, `yield`, `global`, `match`, comprehension
+(usa `for` e `.append()`), `a if c else b` (usa `if`/`else`), `is` (usa `==`), tuple, `a, b = ...` e `return a, b`
+(usa una lista), campi facoltativi come `str | None` (usa `""`, `[]` o un valore come `"nessuno"`).
+Dentro una f-string usa le virgolette dell'altro tipo: `f"{d['k']}"`. Gli agenti hanno solo `.ask` e `.reset`.
+`True`, `False`, `None` con la maiuscola.

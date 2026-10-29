@@ -174,6 +174,8 @@ def _python_idiom(tok: Token, expected: set, line_text: str) -> tuple[str, str] 
     if tok.type == "COMMA" and "EQUAL" in expected:
         return ("l'assegnazione multipla `a, b = ...` non esiste in Tokyn",
                 "Assegna una variabile alla volta, es. `r = f()`, poi `a = r[0]` e `b = r[1]`.")
+    if tok.type == "COMMA" and expected == {"RPAR"}:
+        return ("le tuple `(a, b)` non esistono in Tokyn", "Usa una lista: `[a, b]`.")
     if tok.type == "COMMA" and line_text.lstrip().startswith("return "):
         return ("una funzione restituisce un solo valore", "Per restituirne più di uno usa una lista: `return [a, b]`.")
     return None

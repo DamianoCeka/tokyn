@@ -436,12 +436,18 @@ def _mock_answer(agent: Agent, text: str):
 # ======================================================================= funzioni di base
 
 
-def read_file(path):
+_NO_DEFAULT = object()
+
+
+def read_file(path, default=_NO_DEFAULT):
     try:
         with open(path, encoding="utf-8") as f:
             return f.read()
     except FileNotFoundError:
-        raise TokynRuntimeError(f'il file "{path}" non esiste') from None
+        if default is not _NO_DEFAULT:
+            return default
+        raise TokynRuntimeError(f'il file "{path}" non esiste',
+                                hint=f'Se può mancare, dai un valore di riserva: read_file("{path}", "")') from None
 
 
 def write_file(path, text):
@@ -454,18 +460,28 @@ def append_file(path, text):
         f.write(str(text))
 
 
-def http_get(url):
+def _http(req, default, call):
+    try:
+        with _urlreq.urlopen(req, timeout=30) as r:
+            return r.read().decode("utf-8", errors="replace")
+    except (OSError, ValueError) as err:  # rete, HTTP 4xx/5xx, timeout, indirizzo non valido
+        if default is not _NO_DEFAULT:
+            return default
+        reason = getattr(err, "reason", None) or err
+        raise TokynRuntimeError(f"{call} fallita per {req.full_url}: {reason}",
+                                hint=f"Se può fallire, dai un valore di riserva come ultimo argomento: {call}(..., \"\")") from None
+
+
+def http_get(url, default=_NO_DEFAULT):
     req = _urlreq.Request(str(url), headers={"User-Agent": "tokyn/0.1"})
-    with _urlreq.urlopen(req, timeout=30) as r:
-        return r.read().decode("utf-8", errors="replace")
+    return _http(req, default, "http_get")
 
 
-def http_post(url, data):
+def http_post(url, data, default=_NO_DEFAULT):
     body = data if isinstance(data, str) else _json.dumps(to_plain(data))
     req = _urlreq.Request(str(url), data=body.encode("utf-8"), method="POST",
                           headers={"User-Agent": "tokyn/0.1", "Content-Type": "application/json"})
-    with _urlreq.urlopen(req, timeout=30) as r:
-        return r.read().decode("utf-8", errors="replace")
+    return _http(req, default, "http_post")
 
 
 def json_parse(text):
