@@ -1,0 +1,36 @@
+def cerca_faq(domanda: str) -> str:
+    """Cerca nelle FAQ del negozio le voci più pertinenti alla domanda del cliente."""
+    parole = []
+    for p in domanda.lower().replace("?", " ").replace("'", " ").split():
+        if len(p) > 3:
+            parole.append(p[:5])
+    trovate = []
+    for riga in read_file("faq.txt", "").splitlines():
+        testo = riga.lower()
+        for p in parole:
+            if p in testo:
+                trovate.append(riga)
+                break
+    if len(trovate) == 0:
+        return "Nessuna FAQ trovata. Ecco tutte le FAQ:\n" + read_file("faq.txt", "")
+    return "\n".join(trovate)
+
+agent Assistente:
+    instructions: """
+        Sei l'assistente clienti del negozio. Rispondi in italiano, in modo breve e cortese.
+        Usa sempre lo strumento cerca_faq per trovare le informazioni e rispondi solo in base alle FAQ.
+        Se le FAQ non coprono la domanda, dillo e suggerisci di contattare il negozio.
+    """
+    tools: [cerca_faq]
+    memory: True
+
+main:
+    print("Assistente clienti. Scrivi 'esci' per terminare.")
+    for turno in range(1000):
+        testo = input("Tu: ")
+        if testo.strip().lower() == "esci":
+            print("Arrivederci!")
+            break
+        if testo.strip() == "":
+            continue
+        print("Assistente: " + Assistente.ask(testo))

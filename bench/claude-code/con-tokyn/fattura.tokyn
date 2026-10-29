@@ -1,0 +1,32 @@
+type Riga:
+    descrizione: str
+    quantita: float
+    prezzo_unitario: float "prezzo unitario in euro"
+
+type Fattura:
+    fornitore: str
+    data: str "data in formato AAAA-MM-GG"
+    righe: list[Riga]
+    totale: float "totale dichiarato in fattura, in euro"
+
+agent Estrattore:
+    model: "claude-haiku"
+    instructions: "Estrai dalla fattura fornitore, data, righe e totale dichiarato, esattamente come scritti. Non correggere i numeri."
+    output: Fattura
+    effort: "low"
+
+main:
+    f = Estrattore.ask(read_file("fattura.txt"))
+    print(f"Fornitore: {f.fornitore}")
+    print(f"Data: {f.data}")
+    calcolato = 0.0
+    for r in f.righe:
+        importo = r.quantita * r.prezzo_unitario
+        calcolato += importo
+        print(f"  {r.descrizione}: {r.quantita:g} x {r.prezzo_unitario:.2f} = {importo:.2f} €")
+    print(f"Totale dichiarato: {f.totale:.2f} €")
+    print(f"Totale ricalcolato: {calcolato:.2f} €")
+    if abs(calcolato - f.totale) > 0.005:
+        print(f"ATTENZIONE: il totale non corrisponde (differenza {f.totale - calcolato:+.2f} €)")
+    else:
+        print("OK: il totale corrisponde")

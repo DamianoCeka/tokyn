@@ -68,6 +68,12 @@ a ciascuno. Risultato: **10 su 10 corretti al primo tentativo**. Poi, con la sol
 hanno scritto altri 80 programmi in quattro tornate, anche con la Skill in inglese: **80 su 80 corretti al primo
 tentativo**. Dettagli in [`eval/`](eval).
 
+**In Claude Code, dal vivo.** Ho chiesto a Claude Code (Opus 5.5) tre programmi Python con agenti IA, con il
+plugin Tokyn e senza. Con Tokyn ha speso **il 69% in meno** ($0,61 contro $1,99), con **il 54% di token di output in
+meno**, ci ha messo il 24% di tempo in meno e **ha provato davvero tutti e tre i programmi** con il Claude Code
+dell'utente; senza Tokyn non ha potuto provarne nessuno, perché mancava una chiave API. Dettagli in
+[`bench/claude-code/`](bench/claude-code).
+
 ## Usarlo in Claude Code
 
 Il modo principale per usare Tokyn è come **plugin di Claude Code**. In una sessione di Claude Code:

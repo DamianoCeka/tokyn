@@ -1,0 +1,3 @@
+D: Quali sono gli orari del negozio? R: Dal lunedì al sabato, dalle 9 alle 19.
+D: Fate spedizioni all'estero? R: Sì, in tutta Europa, in 5-7 giorni lavorativi.
+D: Come posso fare un reso? R: Entro 30 giorni, dalla pagina "I miei ordini".
