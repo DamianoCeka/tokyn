@@ -1,0 +1,43 @@
+import re
+
+agent Commentatore:
+    model: "claude-haiku"
+    effort: "low"
+    instructions: """
+        Sei un analista di traffico web. Ricevi le statistiche di una giornata di accessi a un sito
+        (richieste per ora, errori HTTP, indirizzi IP più attivi). Scrivi in italiano un commento di
+        esattamente due frasi sul traffico della giornata, basandoti solo sui numeri ricevuti. Rispondi solo con le due frasi.
+    """
+
+def per_conteggio(c: list) -> int:
+    return c[1]
+
+main:
+    per_ora = {}
+    errori = {}
+    ip_conteggi = {}
+    for riga in read_file("access.log", "").split("\n"):
+        m = re.match(r'^(\S+) \S+ \S+ \[[^:\]]+:(\d{2}):\d{2}:\d{2} [^\]]*\] "(?:[^"]*)" (\d{3}) ', riga + " ")
+        if m == None:
+            continue
+        ip = m.group(1)
+        ora = m.group(2)
+        stato = m.group(3)
+        per_ora[ora] = per_ora.get(ora, 0) + 1
+        ip_conteggi[ip] = ip_conteggi.get(ip, 0) + 1
+        if int(stato) >= 400:
+            errori[stato] = errori.get(stato, 0) + 1
+    ore = {}
+    for ora in sorted(per_ora.keys()):
+        ore[ora] = per_ora[ora]
+    codici = {}
+    for codice in sorted(errori.keys()):
+        codici[codice] = errori[codice]
+    ordinati = sorted(ip_conteggi.items(), key=per_conteggio, reverse=True)
+    ip_top = []
+    for coppia in ordinati[:3]:
+        ip_top.append(coppia[0])
+    tot_errori = sum(codici.values())
+    riepilogo = f"Totale richieste: {sum(ore.values())}\nTotale errori (400 e oltre): {tot_errori}\nRichieste per ora: {json_dump(ore)}\nErrori per codice: {json_dump(codici)}\nIP più attivi: {json_dump(ordinati[:3])}"
+    commento = Commentatore.ask(riepilogo).strip()
+    write_file("risultato.json", json_dump({"richieste_per_ora": ore, "errori": codici, "ip_top": ip_top, "commento": commento}))

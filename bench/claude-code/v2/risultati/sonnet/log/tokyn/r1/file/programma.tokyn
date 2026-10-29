@@ -1,0 +1,44 @@
+CONTI_IP = {}
+
+type Commento:
+    commento: str "esattamente due frasi in italiano sul traffico della giornata"
+
+agent Analista:
+    instructions: """
+        Sei un analista web. Ricevi le statistiche di una giornata di accessi a un sito.
+        Scrivi un commento breve in italiano di esattamente due frasi sul traffico
+        (andamento nelle ore, picco, errori, indirizzi più attivi), basandoti solo sui numeri ricevuti.
+    """
+    model: "claude-haiku"
+    effort: "low"
+    output: Commento
+
+def per_conteggio(ip: str) -> int:
+    return -CONTI_IP[ip]
+
+main:
+    ore = {}
+    errori = {}
+    for riga in read_file("access.log").splitlines():
+        if riga.strip() == "":
+            continue
+        ip = riga.split(" ")[0]
+        ora = riga.split("[")[1].split(":")[1]
+        stato = riga.rsplit('"', 1)[1].split()[0]
+        ore[ora] = ore.get(ora, 0) + 1
+        CONTI_IP[ip] = CONTI_IP.get(ip, 0) + 1
+        if int(stato) >= 400:
+            errori[stato] = errori.get(stato, 0) + 1
+    richieste_per_ora = {}
+    for ora in sorted(ore.keys()):
+        richieste_per_ora[ora] = ore[ora]
+    errori_ordinati = {}
+    for codice in sorted(errori.keys()):
+        errori_ordinati[codice] = errori[codice]
+    ip_top = sorted(list(CONTI_IP.keys()), key=per_conteggio)[:3]
+    top_con_conteggi = {}
+    for ip in ip_top:
+        top_con_conteggi[ip] = CONTI_IP[ip]
+    risposta = Analista.ask(f"Richieste per ora: {json_dump(richieste_per_ora)}\nErrori per codice: {json_dump(errori_ordinati)}\nIP più attivi (richieste): {json_dump(top_con_conteggi)}\nRichieste totali: {sum(ore.values())}")
+    risultato = {"richieste_per_ora": richieste_per_ora, "errori": errori_ordinati, "ip_top": ip_top, "commento": risposta.commento}
+    write_file("risultato.json", json_dump(risultato))

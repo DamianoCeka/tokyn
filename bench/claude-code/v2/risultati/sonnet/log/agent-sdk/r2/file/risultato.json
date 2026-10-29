@@ -1,0 +1,36 @@
+{
+  "richieste_per_ora": {
+    "00": 1,
+    "01": 1,
+    "06": 5,
+    "07": 2,
+    "08": 8,
+    "09": 12,
+    "10": 15,
+    "11": 10,
+    "12": 10,
+    "13": 4,
+    "14": 10,
+    "15": 9,
+    "16": 4,
+    "17": 5,
+    "18": 7,
+    "19": 4,
+    "20": 8,
+    "21": 6,
+    "22": 5,
+    "23": 4
+  },
+  "errori": {
+    "401": 1,
+    "403": 2,
+    "404": 6,
+    "408": 1
+  },
+  "ip_top": [
+    "203.0.113.5",
+    "192.0.2.200",
+    "198.51.100.31"
+  ],
+  "commento": "La giornata ha registrato 130 richieste, quasi nessuna di notte (zero tra le 02 e le 05), con il picco tra le 09 e le 12 (massimo di 15 alle 10) e un secondo aumento alle 14 e alle 20. Gli errori sono stati 10 (circa il 7,7%), soprattutto 404 (6), più due 403, un 401 e un 408; conviene controllare se i tentativi di accesso negati provengono dagli IP più attivi (203.0.113.5, 192.0.2.200 e 198.51.100.31)."
+}

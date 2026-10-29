@@ -1,0 +1,72 @@
+{
+ "prova": "sonnet/scadenze/python/r3",
+ "cartella": "7b121cdd2f",
+ "modello": "sonnet",
+ "compito": "scadenze",
+ "condizione": "python",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2716441,
+ "costo_usd_telemetria": 0.271644,
+ "token_output": 4137,
+ "token_input": 10,
+ "token_cache_scritti": 52968,
+ "token_cache_letti": 183821,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 7,
+ "secondi": 43.7,
+ "secondi_api": 35.7,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 3,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 82,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "scadenza.\n- **Riga con data non valida:** viene saltata, con un avviso su stderr.\n- **Errori e caso senza scadenze:** una data di riferimento non valida dà un errore chiaro. Se non c'è nessun contratto in scadenza, scrive `{\"in_scadenza\": []}` senza chiamare l'API.\n- **Chiamata a Claude:** per il test l'ho sostituita con un finto client. Quindi non ho visto la qualità delle email né verificato che la richiesta reale venga accettata dall'API.\n- **Senza credenziali:** il programma va in errore con il messaggio di autenticazione dell'SDK.\n\n**Per provarlo**\n```\nexport ANTHROPIC_API_KEY=...\npython programma.py 2026-11-01\n```\nCon il tuo CSV dovrebbe produrre 4 contratti: Ottica Ferri (assistenza, 11 giorni), Autofficina Riva (17), Ottica Ferri (licenza gestionale, 24) e Studio Dentistico Moretti (30).\n\n**Come funziona**\n- **Modello e richiesta:** usa `claude-opus-5-5` con effort `low`, una chiamata per contratto. Ho chiesto l'output in JSON (oggetto e testo), così non c'è nulla da estrarre a mano dal testo.\n- **Contenuto delle email:** il prompt chiede di aprire con «Gentile <cliente>,», citare il servizio, scrivere la scadenza per esteso e chiudere con «Cordiali saluti». Non devono comparire segnaposto né nomi o recapiti inventati.\n- **Se una chiamata fallisce:** il programma si interrompe senza scrivere `risultato.json`. Vedrai quindi o il file completo o nessun file.\n\nLa colonna `email` del CSV non viene usata, perché il formato che mi hai descritto non la prevede nel risultato.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 5,
+  "dettagli": [
+   "risultato.json mancante o senza la lista in_scadenza"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

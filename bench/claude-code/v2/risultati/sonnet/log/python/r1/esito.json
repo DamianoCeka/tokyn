@@ -1,0 +1,73 @@
+{
+ "prova": "sonnet/log/python/r1",
+ "cartella": "576f927af3",
+ "modello": "sonnet",
+ "compito": "log",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.3276451,
+ "costo_usd_telemetria": 0.327645,
+ "token_output": 5411,
+ "token_input": 18,
+ "token_cache_scritti": 57571,
+ "token_cache_letti": 432151,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 12,
+ "secondi": 64.3,
+ "secondi_api": 51.8,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 7,
+  "Read": 1,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 64,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "i dal solito, e il programma le conta tutte:\n  - una riga con richiesta `\"-\"` e stato 408;\n  - un indirizzo IPv6;\n  - due POST con un nome utente al posto del `-`.\n- Con il server finto, il programma manda la richiesta a `claude-opus-5-5` e scrive nel JSON il testo che riceve. Non ho visto il commento di un Claude vero.\n- Se una riga del log non si legge, il programma si ferma indicando il numero di riga. Se l'API non risponde, si ferma con un errore e non scrive `risultato.json`. Senza chiave, ora fallisce con un `TypeError` di autenticazione, non con un messaggio chiaro.\n\n**Cosa devi fare tu**\n- Prima di avviarlo serve `pip install anthropic` e la variabile `ANTHROPIC_API_KEY`. Poi lo lanci con `python programma.py` dalla cartella di `access.log`.\n- Alla prima esecuzione vera controlla che il commento sia di due frasi.\n\n**Altre cose da sapere**\n- In questo ambiente la porta 8765 era già occupata da un altro processo, che rispondeva alle richieste con un finto commento (`{\"sentimento\": \"neutro\", \"voto\": 3}`). Era una risposta estranea al mio programma. Ho rifatto la prova su un'altra porta.\n- A parità di richieste, gli IP si ordinano in ordine alfabetico. La consegna non diceva cosa fare in caso di parità, quindi l'ho scelto io.\n- Ho usato `claude-opus-5-5` con sforzo basso. Se preferisci un modello più economico per due frasi, basta cambiare la costante `MODEL`.\n- Nella cartella ho lasciato solo `programma.py`. `risultato.json` non c'è, perché la prova l'ho fatta in `/tmp`.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

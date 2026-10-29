@@ -1,0 +1,72 @@
+{
+ "prova": "sonnet/articolo/python/r3",
+ "cartella": "14cd709214",
+ "modello": "sonnet",
+ "compito": "articolo",
+ "condizione": "python",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.34396289999999996,
+ "costo_usd_telemetria": 0.343963,
+ "token_output": 5198,
+ "token_input": 16,
+ "token_cache_scritti": 63423,
+ "token_cache_letti": 382589,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 11,
+ "secondi": 74.9,
+ "secondi_api": 64.6,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 7,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 81,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "ece di 5. Il programma se ne è accorto, ha richiesto a Claude di correggere e ha accettato il secondo tentativo.\n- `risultato.json` è uscito nel formato giusto, con 5 punti.\n- Il finto server restituiva anche «Marco Tessari» e «marco tessari», e in `citati` il nome compare una volta sola.\n- Senza chiave il programma si ferma con «Credenziali mancanti: imposta ANTHROPIC_API_KEY».\n- Prima di quella prova un altro server già attivo sulla porta 8765 ha risposto con dati non miei e il programma è andato in errore. Quel risultato non dice nulla sul programma. Ho ripetuto la prova su un'altra porta.\n- Nella cartella `/srv/progetti/14cd709214` non ho lasciato nessun `risultato.json` finto.\n\n**Come funziona**\n- Legge `articolo.txt`, chiama Claude e scrive `risultato.json` in UTF-8, con gli accenti leggibili.\n- Il modello è `claude-opus-5-5`.\n- L'API non può imporre «esattamente cinque» punti, quindi lo controlla il programma. Dopo 3 tentativi sbagliati si ferma con un errore e non scrive il file.\n- Non ho abilitato la ripetizione automatica con un altro modello in caso di rifiuto di Claude. Se Claude rifiuta, il programma si ferma con un messaggio.\n\n**Per provarlo davvero**\n```bash\nexport ANTHROPIC_API_KEY=sk-ant-...\npython programma.py\n```\nServe il pacchetto `anthropic` (già installato qui, versione 2.3.0). Controlla soprattutto che `citati` contenga solo persone e organizzazioni, senza luoghi come Castelrocca, e che il titolo sia breve. Se non lo è, dimmelo e correggo le istruzioni.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

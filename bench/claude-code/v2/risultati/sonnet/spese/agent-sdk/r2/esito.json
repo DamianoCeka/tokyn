@@ -1,0 +1,79 @@
+{
+ "prova": "sonnet/spese/agent-sdk/r2",
+ "cartella": "d27ec6338c",
+ "modello": "sonnet",
+ "compito": "spese",
+ "condizione": "agent-sdk",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2729762,
+ "costo_usd_telemetria": 0.272976,
+ "token_output": 3185,
+ "token_input": 10,
+ "token_cache_scritti": 55522,
+ "token_cache_letti": 190182,
+ "prove_del_programma": {
+  "costo_usd": 0.018116,
+  "token_output": 255,
+  "chiamate": 1,
+  "modelli": [
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 41.2,
+ "secondi_api": 32.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 90,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "condi.\n\nHo controllato a mano che i totali tornino con i movimenti. Questi sono i totali che ha prodotto:\n\n| Categoria | Totale |\n|---|---|\n| spesa alimentare | -70,02 |\n| trasporti | -23,00 |\n| casa | -120,20 |\n| svago | -74,49 |\n| altro | 1848,50 |\n\n**Come funziona**\n- **Una chiamata per blocco:** Claude classifica fino a 100 movimenti per volta con il Claude Agent SDK. Tutti i movimenti di un file piccolo come il tuo vanno in una sola chiamata.\n- **Strumenti disattivati:** la chiamata non usa nessuno strumento, né file né shell.\n- **Output vincolato:** Claude può rispondere solo con una delle cinque categorie. Se manca una categoria o ne arriva una non valida, il programma si ferma con un errore invece di scrivere dati sbagliati.\n- **Importi esatti:** gli importi vengono letti in `Decimal` e sommati senza errori di arrotondamento, poi arrotondati al centesimo. Data e descrizione restano come nel file e l'ordine non cambia.\n\n**Scelte di classificazione**\n- **Entrate in \"altro\":** lo stipendio (+1850,00) finisce in `altro` e fa salire quel totale. Se vuoi i totali solo sulle uscite, basta escludere gli importi positivi dalla somma. Dimmelo e lo cambio.\n- **La pizzeria:** Claude l'ha messa in `svago`, anche se potresti preferire un'altra categoria. Per cambiare questo tipo di scelte si modifica il testo del prompt in `SYSTEM_PROMPT`.\n- **Risultati variabili:** la classificazione dipende da Claude, quindi su descrizioni ambigue due esecuzioni potrebbero dare categorie diverse.",
+ "controllo": {
+  "ok": true,
+  "punti": 3,
+  "massimo": 3,
+  "dettagli": [
+   "8 movimenti nell'ordine del file con data, descrizione e importo giusti: True",
+   "categorie ammesse e giuste: True (8 su 8: ['spesa alimentare', 'trasporti', 'casa', 'svago', 'spesa alimentare', 'trasporti', 'casa', 'altro'])",
+   "totali arrotondati al centesimo e coerenti con le categorie assegnate: True (uguali ai totali attesi: True; {'spesa alimentare': -85.5, 'trasporti': -51.8, 'casa': -728.45, 'svago': -19.0, 'altro': -12.8})"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.011356,
+   "token_output": 204,
+   "chiamate": 1,
+   "modelli": [
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

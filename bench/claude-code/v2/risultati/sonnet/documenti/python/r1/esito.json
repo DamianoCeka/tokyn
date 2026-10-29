@@ -1,0 +1,72 @@
+{
+ "prova": "sonnet/documenti/python/r1",
+ "cartella": "b8587999fd",
+ "modello": "sonnet",
+ "compito": "documenti",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.315154,
+ "costo_usd_telemetria": 0.315154,
+ "token_output": 4523,
+ "token_input": 16,
+ "token_cache_scritti": 58370,
+ "token_cache_letti": 364120,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 11,
+ "secondi": 76.2,
+ "secondi_api": 67.1,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 7,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 70,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": " né che l'API accetti il formato della richiesta. La prova vera la fai tu al primo avvio.\n\n**Un incidente durante la prova.** La prima volta avevo scelto la porta 8765, che era già occupata da un altro processo sulla macchina. Il programma gli ha mandato una richiesta con una chiave finta, e la risposta non era quella attesa. L'ho ripetuta su un'altra porta. Non ho indagato su cosa sia quel processo.\n\n**Per avviarlo:**\n```\nexport ANTHROPIC_API_KEY=sk-ant-...\npython programma.py\n```\nServe il pacchetto `anthropic`, già installato qui.\n\n**Come funziona:**\n- Tutti i documenti vanno nel prompt di sistema, uguale per ogni domanda, così dopo la prima chiamata viene riusato dalla cache. Con documenti così piccoli va bene. Se diventassero molto grandi servirebbe un'altra strategia.\n- Il modello è `claude-opus-5-5`, con impegno `low`. Puoi cambiare `MODELLO` in cima al file, ad esempio per costare meno.\n- Il formato della risposta è forzato: `fonte` può essere solo uno dei file in `docs/` oppure `null`. Non può inventare un nome di file.\n- Se la risposta non è nei documenti, il programma scrive che l'informazione non c'è e mette `fonte: null`.\n- Le righe vuote di `domande.txt` vengono ignorate.\n\nCon le tue 4 domande le risposte giuste dovrebbero essere 100 euro a notte, 8 giorni al mese, il bancale giallo vicino all'ingresso e `it@azienda.example`. Verificalo sull'output reale.\n\nSe mi dai una chiave, o fai `ant auth login` in questo ambiente, rilancio la prova vera e ti dico cosa esce.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 5,
+  "dettagli": [
+   "risultato.json mancante o non è una lista"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}
