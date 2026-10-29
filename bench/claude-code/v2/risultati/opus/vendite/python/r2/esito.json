@@ -1,0 +1,73 @@
+{
+ "prova": "opus/vendite/python/r2",
+ "cartella": "657f814ef1",
+ "modello": "opus",
+ "compito": "vendite",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.8162250000000002,
+ "costo_usd_telemetria": 0.816225,
+ "token_output": 9684,
+ "token_input": 24,
+ "token_cache_scritti": 61993,
+ "token_cache_letti": 632525,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 17,
+ "secondi": 104.6,
+ "secondi_api": 90.8,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 10,
+  "Write": 1,
+  "Edit": 3
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 141,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "lato. Nella cartella restano solo i due CSV e `programma.py`.\n- **Casi limite su file di prova:**\n  - un file che inizia con un BOM, cioè dei caratteri invisibili che alcuni gestionali aggiungono in testa;\n  - nomi con virgole tra virgolette;\n  - un ordine di un cliente che non esiste: il programma lo segnala e lo ignora;\n  - un paese senza ordini, che compare con 0;\n  - l'arrotondamento dei centesimi. Questo test ha trovato un'incoerenza tra clienti e paesi, che ho corretto.\n- **Senza credenziale:** il programma si ferma con un messaggio chiaro e non scrive `risultato.json`.\n\n**Come funziona:**\n- I numeri li calcola Python, contando i centesimi in modo esatto. Python stabilisce anche qual è il paese con il fatturato più alto. A Claude passo solo i dati già pronti, già scritti all'italiana (10.819,15) e con la quota di ogni paese sul totale. Gli chiedo un paragrafo di 3-5 frasi che usi quelle cifre e non inventi confronti. Così Claude non può sbagliare i conti, ma la frase finale conviene comunque rileggerla.\n- In caso di pareggio vince l'ordine alfabetico.\n- Il modello è Claude Opus 5.5. Ho attivato anche il fallback: se Claude rifiuta la richiesta, la passa da solo a un altro modello. Con dati come questi è molto improbabile, ma se non lo vuoi lo tolgo.\n\n**Per usarlo:**\n```\npip install anthropic\nexport ANTHROPIC_API_KEY=...    # su Windows: set ANTHROPIC_API_KEY=...\npython programma.py\n```\n\nOgni esecuzione fa una sola chiamata a Claude, quindi il costo è di pochi centesimi.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

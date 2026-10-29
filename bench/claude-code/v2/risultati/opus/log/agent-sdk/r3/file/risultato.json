@@ -1,0 +1,36 @@
+{
+  "richieste_per_ora": {
+    "00": 1,
+    "01": 1,
+    "06": 5,
+    "07": 2,
+    "08": 8,
+    "09": 12,
+    "10": 15,
+    "11": 10,
+    "12": 10,
+    "13": 4,
+    "14": 10,
+    "15": 9,
+    "16": 4,
+    "17": 5,
+    "18": 7,
+    "19": 4,
+    "20": 8,
+    "21": 6,
+    "22": 5,
+    "23": 4
+  },
+  "errori": {
+    "401": 1,
+    "403": 2,
+    "404": 6,
+    "408": 1
+  },
+  "ip_top": [
+    "203.0.113.5",
+    "192.0.2.200",
+    "198.51.100.31"
+  ],
+  "commento": "La giornata ha registrato 130 richieste, concentrate soprattutto nella fascia mattutina con il picco alle 10 (15 richieste), seguite da un'attività più moderata ma costante nel pomeriggio e in serata e da un traffico quasi nullo tra l'una e le sei del mattino. Gli errori sono stati 10 (circa il 7,7% del totale), per lo più 404 da pagine non trovate, mentre i pochi 401 e 403 suggeriscono di verificare gli accessi non autorizzati, magari partendo dagli IP più attivi come 203.0.113.5."
+}

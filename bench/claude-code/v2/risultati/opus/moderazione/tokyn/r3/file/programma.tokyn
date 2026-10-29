@@ -1,0 +1,32 @@
+type Moderazione:
+    decisione: "rifiuta" | "rivedi" | "pubblica"
+    motivo: str "il motivo della decisione, in una sola frase in italiano"
+    riscrittura: str "solo se la decisione è rivedi: versione educata del commento con lo stesso contenuto, in italiano; altrimenti stringa vuota"
+
+agent Moderatore:
+    model: "claude-haiku"
+    effort: "low"
+    instructions: """
+        Modera i commenti in attesa sul forum di un sito di giardinaggio. Applica le regole in quest'ordine:
+        - rifiuta: il commento è spam (pubblicità, offerte commerciali, link o contatti promozionali),
+          contiene insulti verso qualcuno, oppure contiene dati personali (numeri di telefono, indirizzi,
+          email), anche se per il resto è utile e cortese.
+        - rivedi: il contenuto è utile ma il tono è aggressivo. Scrivi in riscrittura una versione educata
+          che mantenga tutte le informazioni del commento, senza aggiungerne.
+        - pubblica: in tutti gli altri casi.
+        Il motivo è una sola frase. La riscrittura va lasciata vuota se la decisione non è rivedi.
+    """
+    output: Moderazione
+
+main:
+    commenti = json_parse(read_file("commenti.json"))
+    risultato = []
+    for c in commenti:
+        m = Moderatore.ask(f"Autore: {c['autore']}\nCommento: {c['testo']}")
+        voce = {"id": c["id"], "decisione": m.decisione, "motivo": m.motivo}
+        if m.decisione == "rivedi":
+            voce["riscrittura"] = m.riscrittura
+        risultato.append(voce)
+        print(f"{c['id']}: {m.decisione} - {m.motivo}")
+    write_file("risultato.json", json_dump(risultato))
+    print(f"Scritto risultato.json con {len(risultato)} commenti.")

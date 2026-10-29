@@ -1,0 +1,83 @@
+{
+ "prova": "opus/documenti/agent-sdk/r3",
+ "cartella": "3b09635ae8",
+ "modello": "opus",
+ "compito": "documenti",
+ "condizione": "agent-sdk",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.5676844,
+ "costo_usd_telemetria": 0.567684,
+ "token_output": 4162,
+ "token_input": 12,
+ "token_cache_scritti": 54475,
+ "token_cache_letti": 242982,
+ "prove_del_programma": {
+  "costo_usd": 0.095255,
+  "token_output": 832,
+  "chiamate": 6,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 9,
+ "secondi": 49.0,
+ "secondi_api": 37.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Bash": 5,
+  "Skill": 1,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 78,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "to_viaggi.txt` |\n| Lavoro da remoto: fino a 8 giorni al mese | `lavoro_da_remoto.txt` |\n| Resi in magazzino: sul bancale giallo vicino all'ingresso | `orari_magazzino.txt` |\n| Email sospette: inoltrate a it@azienda.example | `regole_informatiche.txt` |\n\n**Come funziona:**\n- Legge tutti i `.txt` in `docs/` e li mette nel prompt, ciascuno con il proprio nome di file. Claude non usa strumenti e non legge altri file: risponde solo dai documenti.\n- Fa una richiesta a Claude (modello `claude-opus-5-5`) per ogni domanda, fino a 4 insieme.\n- Claude deve rispondere con un JSON a formato fisso, e la `fonte` può essere solo uno dei nomi di file presenti. Così non può inventare un nome di documento.\n- Se la risposta non è nei documenti, lo dice e mette `\"fonte\": \"nessuna\"`. L'ho provato su una copia temporanea con la domanda sulle ferie, che nei documenti non c'è: ha risposto che l'informazione manca, con fonte `nessuna`. In quella prova il comando è terminato con codice 1, ma per colpa della pulizia della cartella temporanea fatta dopo, non del programma.\n- Se una singola domanda va in errore, nel file finisce `\"risposta\": \"Errore: ...\"` e le altre domande vengono comunque elaborate.\n\n**Cose da sapere:**\n- **Documenti nel prompt:** con questi file piccoli va benissimo. Se un giorno i documenti diventassero centinaia di pagine, converrebbe passare a una ricerca sui file.\n- **Fonte unica:** ogni risposta ha una sola fonte. Se una domanda richiede due documenti, ne verrà indicato uno solo.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "4 oggetti {domanda, risposta, fonte} nell'ordine di domande.txt: True",
+   "domanda 1: risposta giusta True, fonte trasferte.txt True (\"Chi va in trasferta con l'auto propria riceve un rimborso di 0,42 euro per chilometro. Il calcolo si fa sul percorso più breve. Pedaggi e parcheggi vengono rimborsati a parte, se si presenta la ricevuta.\", 'trasferte.txt')",
+   "domanda 2: risposta giusta True, fonte sicurezza_it.txt True ('La password va cambiata ogni 90 giorni. Il sistema ti avvisa una settimana prima della scadenza.', 'sicurezza_it.txt')",
+   "domanda 3: risposta giusta True, fonte smart_working.txt True ('Dal 1° gennaio 2026 i dipendenti assunti a tempo indeterminato possono lavorare da casa al massimo 2 giorni alla settimana. I giorni vanno concordati con il proprio responsabile e segnati sul portale Presenze entro il giovedì della settimana prima. Il lunedì però si lavora tutti in ufficio.', 'smart_working.txt')",
+   "domanda 4: risposta giusta True, fonte magazzino.txt True (\"Il sabato le merci si possono ritirare fino alle 11:00 (l'orario è dalle 8:00 alle 11:00). Si possono ritirare solo le merci già prenotate e la prenotazione va fatta almeno un giorno prima scrivendo a magazzino@azienda.example.\", 'magazzino.txt')"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.086763,
+   "token_output": 944,
+   "chiamate": 4,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

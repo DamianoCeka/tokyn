@@ -1,0 +1,75 @@
+{
+ "prova": "opus/scadenze/python/r1",
+ "cartella": "360de7b59a",
+ "modello": "opus",
+ "compito": "scadenze",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.813358,
+ "costo_usd_telemetria": 0.813358,
+ "token_output": 8515,
+ "token_input": 22,
+ "token_cache_scritti": 65703,
+ "token_cache_letti": 586730,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 15,
+ "secondi": 102.9,
+ "secondi_api": 77.6,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 7,
+  "Grep": 1,
+  "Read": 2,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 119,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "re Claude.\n- **Errori:** data sbagliata, argomento mancante o `contratti.csv` assente danno un messaggio chiaro.\n- **Righe del CSV:** le righe con una data illeggibile vengono saltate con un avviso, e le righe vuote ignorate. Un CSV salvato da Excel (con il BOM) si legge senza problemi.\n\n**Come scrive le email:**\n- Per ogni contratto il programma passa a Claude (modello `claude-opus-5-5`) il nome del cliente, il servizio e la data già scritta in italiano (\"12 novembre 2026\"), così Claude non deve convertirla.\n- Claude restituisce `oggetto` e `testo` in un formato strutturato fisso, quindi la risposta non può arrivare malformata.\n- Il programma controlla che il testo contenga davvero il nome del cliente e il servizio. Se mancano riprova una volta, poi si ferma con un errore.\n- Ho attivato l'opzione di Anthropic che, se Claude rifiuta una richiesta, la fa rifare a un altro modello. Con email di promemoria non dovrebbe mai servire; se preferisci, la tolgo.\n- Se una chiamata fallisce (rete, credenziali), `risultato.json` non viene scritto, così non resta un file a metà.\n\n**Per la prova vera**, imposta la chiave e lancialo:\n\n```bash\nexport ANTHROPIC_API_KEY=sk-ant-...\npython programma.py 2026-11-01\n```\n\nServe il pacchetto `anthropic` (`pip install anthropic`). Quando lo esegui, guarda testo e oggetto delle email in `risultato.json`: è la parte che non ho potuto verificare.\n\nLa colonna `email` del CSV viene letta ma non usata, perché il risultato che mi hai chiesto non la contiene.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 5,
+  "dettagli": [
+   "risultato.json mancante o senza la lista in_scadenza"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

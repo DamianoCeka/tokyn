@@ -1,17 +1,21 @@
 {
   "name": "tokyn",
-  "description": "Tokyn: il linguaggio per agenti IA che Claude scrive con molti meno token del Python.",
+  "description": "Tokyn: a language for programs that use Claude, which Claude writes with fewer tokens than Python. Plugins in Italian (tokyn) and English (tokyn-en).",
   "owner": { "name": "Damiano Ceka" },
   "plugins": [
     {
       "name": "tokyn",
       "source": "./plugins/tokyn",
-      "description": "Claude scrive in Tokyn i programmi con agenti IA (meno token), li prova con il tuo Claude Code e, se serve, ti dà il Python."
+      "description": "Claude scrive in Tokyn i programmi che usano Claude (agenti, chatbot, estrazione e classificazione di testi) con meno token del Python, li controlla e li prova con il compilatore incluso (prima con risposte finte, poi con il tuo Claude Code o una chiave API) e, se vuoi Python, ti dà il file generato dal compilatore. Messaggi in italiano.",
+      "category": "development",
+      "tags": ["ai-agents", "llm", "python", "compiler", "programming-language", "italian"]
     },
     {
       "name": "tokyn-en",
       "source": "./plugins/tokyn-en",
-      "description": "English version: Claude writes AI-agent programs in Tokyn (fewer tokens), runs them with your Claude Code and can hand you the Python."
+      "description": "Claude writes programs that use Claude (agents, chatbots, text extraction and classification) in Tokyn with fewer tokens than Python, checks and runs them with the bundled compiler (first with fake answers, then through your Claude Code or an API key) and, if you want Python, hands you the file the compiler generates. Messages in English.",
+      "category": "development",
+      "tags": ["ai-agents", "llm", "python", "compiler", "programming-language", "english"]
     }
   ]
 }

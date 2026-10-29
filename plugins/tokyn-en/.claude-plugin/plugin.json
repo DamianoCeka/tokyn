@@ -1,5 +1,14 @@
 {
   "name": "tokyn-en",
-  "description": "Claude writes AI-agent programs in Tokyn (fewer tokens), runs them with your Claude Code and can hand you the Python.",
-  "author": { "name": "Damiano Ceka" }
+  "displayName": "Tokyn (English)",
+  "version": "0.1.0",
+  "description": "Claude writes programs that use Claude (agents, chatbots, text extraction and classification) in Tokyn with fewer tokens than Python, checks and runs them with the bundled compiler (first with fake answers, then through your Claude Code or an API key) and, if you want Python, hands you the file the compiler generates. Messages in English.",
+  "author": { "name": "Damiano Ceka" },
+  "homepage": "https://github.com/DamianoCeka/tokyn",
+  "repository": "https://github.com/DamianoCeka/tokyn",
+  "license": "MIT",
+  "keywords": ["tokyn", "ai-agents", "llm", "claude-api", "python", "compiler", "programming-language", "structured-output", "chatbot"],
+  "icon": "./assets/icon.png",
+  "documentationUrl": "https://github.com/DamianoCeka/tokyn/blob/main/plugins/tokyn-en/README.md",
+  "supportUrl": "https://github.com/DamianoCeka/tokyn/issues"
 }

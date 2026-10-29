@@ -1,0 +1,74 @@
+{
+ "prova": "opus/vendite/python/r3",
+ "cartella": "63ce2a58ab",
+ "modello": "opus",
+ "compito": "vendite",
+ "condizione": "python",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.8812500000000001,
+ "costo_usd_telemetria": 0.88125,
+ "token_output": 10401,
+ "token_input": 26,
+ "token_cache_scritti": 65951,
+ "token_cache_letti": 727590,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 18,
+ "secondi": 114.2,
+ "secondi_api": 93.8,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 9,
+  "Write": 1,
+  "Edit": 4,
+  "Read": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 147,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "ti fermano il programma con un messaggio chiaro, senza produrre numeri falsi.\n  - Ordine di un cliente che non è in `clienti.csv`.\n  - Data non nel formato AAAA-MM-GG.\n  - Riga con campi in più o in meno.\n  - File con BOM, file mancanti o avvio dalla cartella sbagliata.\n- **Bug trovato e corretto durante le prove:** un importo scritto `100,50` senza virgolette veniva contato in silenzio come 100 €. Ora il programma si ferma e indica la riga.\n\n**Per completare la prova** basta lanciarlo con la tua chiave:\n```\nexport ANTHROPIC_API_KEY=...\npython programma.py\n```\nPoi conviene rileggere il primo riassunto.\n\n**Come funziona:**\n- Tutti i conti li fa Python, con aritmetica decimale esatta. A Claude passo solo i numeri già calcolati e scritti all'italiana (10.819,15), con le percentuali sul totale, e chiedo di usarli così come sono. Se il testo non nomina il paese con il fatturato più alto, il programma stampa un avviso.\n- **Modello:** `claude-opus-5-5`, con effort basso perché il paragrafo è breve. Ho attivato il fallback automatico: se Claude rifiutasse la richiesta, l'API la ripassa da sola a un altro modello.\n- **Se la chiamata a Claude fallisce,** `risultato.json` non viene scritto, per non lasciare un file senza riassunto.\n- **Pareggi:** a parità di spesa i clienti vanno in ordine alfabetico. I paesi che hanno clienti ma nessun ordine compaiono con 0.\n\nUna cosa che il riassunto metterà in luce: il primo cliente è svizzero, anche se il paese con il fatturato più alto è l'Italia.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}
