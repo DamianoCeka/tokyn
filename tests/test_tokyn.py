@@ -28,6 +28,16 @@ def test_examples_are_valid():
         assert result.ok, f"{path.name}: {[d.to_dict() for d in result.diagnostics]}"
 
 
+def test_skill_reference_is_valid(capsys, monkeypatch):
+    import io
+    skill = (ROOT / "skill" / "tokyn" / "SKILL.md").read_text(encoding="utf-8")
+    start = skill.index("```\nimport math") + 4
+    src = skill[start:skill.index("```", start)]
+    monkeypatch.setattr(sys, "stdin", io.StringIO("il pc non parte\n"))
+    rc, _, err = run(src, capsys)
+    assert rc == 0, err
+
+
 def test_hello(capsys):
     rc, out, _ = run('main:\n    print("ciao")\n', capsys)
     assert rc == 0 and out == "ciao\n"
@@ -90,6 +100,13 @@ main:
     rc, out, err = run(src, capsys)
     assert rc == 0, err
     assert '"eta": 31' in out
+
+
+def test_slices(capsys):
+    src = 'main:\n    s = "buongiorno"\n    xs = [1, 2, 3, 4]\n    print(s[:4], s[-4:], xs[1:3], len(xs[2:]), s[:2].upper())\n'
+    rc, out, err = run(src, capsys)
+    assert rc == 0, err
+    assert out.strip() == "buon orno [2, 3] 2 BU"
 
 
 def test_python_interop(capsys):
@@ -156,9 +173,27 @@ main:
     ('type T:\n    c: "a" | "b"\nagent A:\n    instructions: "i"\n    output: T\nmain:\n    t = A.ask("x")\n    if t.c == "z":\n        pass\n', "E190"),
     ('main:\n    print(f"{nome}")\n', "E160"),
     ('main:\n    x = "a" + 1\n', "E194"),
+    ('main:\n    s = "abc"\n    print(s["a":])\n', "E176"),
+    # costrutti Python che Tokyn non ha: errore mirato con l'alternativa
+    ("main:\n    ys = [x * 2 for x in [1, 2]]\n", "E002"),
+    ('main:\n    x = 1\n    y = "a" if x > 0 else "b"\n', "E002"),
+    ("main:\n    x = None\n    if x is None:\n        pass\n", "E002"),
+    ("main:\n    a, b = [1, 2]\n", "E002"),
+    ("def f():\n    return 1, 2\n", "E002"),
+    ('main:\n    d = {"k": 1}\n    print(f"{d["k"]}")\n', "E002"),
 ])
 def test_static_errors(src, code):
     assert code in codes(src)
+
+
+def test_python_idiom_hint():
+    d = check_source("main:\n    ys = [x * 2 for x in [1, 2]]\n").diagnostics[0]
+    assert "comprehension" in d.message and ".append(" in d.hint
+
+
+def test_else_if_is_not_a_ternary():
+    src = "main:\n    x = 1\n    if x:\n        pass\n    else if x:\n        pass\n"
+    assert codes(src) == ["E008"]
 
 
 def test_suggestions_present():
@@ -185,6 +220,19 @@ def test_runtime_error_maps_to_source_line(capsys):
     rc, _, err = run(src, capsys)
     assert rc == 1
     assert "test.tokyn:3" in err and "posizione fuori dalla lista" in err
+
+
+def test_runtime_error_line_after_multiline_string(capsys):
+    src = 'agent A:\n    model: "mock"\n    instructions: """\n        Riga uno.\n        Riga due.\n    """\n\nmain:\n    x = [1]\n    print(x[3])\n'
+    rc, _, err = run(src, capsys)
+    assert rc == 1 and "test.tokyn:10" in err
+
+
+def test_missing_input_explains_how_to_pass_it(capsys, monkeypatch):
+    import io
+    monkeypatch.setattr(sys, "stdin", io.StringIO(""))
+    rc, _, err = run('main:\n    x = input("> ")\n    print(x)\n', capsys)
+    assert rc == 1 and "test.tokyn:2" in err and "printf" in err
 
 
 def test_missing_api_key(capsys, monkeypatch):
@@ -288,3 +336,40 @@ def test_cli_check_json(tmp_path):
                        capture_output=True, text=True, cwd=ROOT)
     assert r.returncode == 1
     assert '"code": "E160"' in r.stdout
+
+
+# ------------------------------------------------------------ distribuzione
+
+def _lark_only_env():
+    """Ambiente in cui Python vede lark ma non il pacchetto tokyn installato."""
+    import lark
+    return dict(os.environ, PYTHONPATH=str(Path(lark.__file__).resolve().parent.parent), TOKYN_MOCK="1")
+
+
+def test_build_standalone_runs_without_tokyn(tmp_path):
+    src = 'type T:\n    a: str\n\nagent A:\n    instructions: "i"\n    output: T\n\nmain:\n    print(A.ask("x").a, read_file != None)\n'
+    py = tmp_path / "prog.py"
+    py.write_text(compile_source(src, "prog.tokyn", standalone=True).python, encoding="utf-8")
+    # -S: niente site-packages, quindi né tokyn né lark né anthropic
+    r = subprocess.run([sys.executable, "-S", str(py)], capture_output=True, text=True, cwd=tmp_path,
+                       env=dict(os.environ, TOKYN_MOCK="1", PYTHONPATH=""))
+    assert r.returncode == 0, r.stderr
+    assert r.stdout.strip() == "esempio a True"
+
+
+def test_skill_bundle_works_from_any_folder(tmp_path):
+    import zipfile
+    subprocess.run([sys.executable, str(ROOT / "scripts" / "build_skill.py"), str(tmp_path / "skill.zip")],
+                   check=True, capture_output=True)
+    zipfile.ZipFile(tmp_path / "skill.zip").extractall(tmp_path / "skills")
+    cli = tmp_path / "skills" / "tokyn" / "tokyn_cli.py"
+    work = tmp_path / "lavoro"
+    work.mkdir()
+    (work / "a.tokyn").write_text('main:\n    print("ciao " + input())\n', encoding="utf-8")
+    env = _lark_only_env()
+    r = subprocess.run([sys.executable, "-S", str(cli), "check", "--json", "a.tokyn"],
+                       capture_output=True, text=True, cwd=work, env=env)
+    assert r.returncode == 0 and '"ok": true' in r.stdout, r.stdout + r.stderr
+    r = subprocess.run([sys.executable, "-S", str(cli), "run", "a.tokyn", "--mock"],
+                       input="mondo\n", capture_output=True, text=True, cwd=work, env=env)
+    assert r.returncode == 0 and r.stdout.strip() == "ciao mondo", r.stderr

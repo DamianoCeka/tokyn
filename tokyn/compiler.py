@@ -42,12 +42,12 @@ def check_source(source: str, filename: str = "<tokyn>") -> CheckResult:
     return CheckResult(diags, source, filename)
 
 
-def compile_source(source: str, filename: str = "<tokyn>") -> Compiled:
+def compile_source(source: str, filename: str = "<tokyn>", standalone: bool = False) -> Compiled:
     tree = parse(source, filename)
     prog, diags = check(tree)
     if any(d.severity == "errore" for d in diags):
         raise TokynError(diags, source, filename)
-    code, linemap = generate(tree, prog, os.path.basename(filename))
+    code, linemap = generate(tree, prog, os.path.basename(filename), standalone)
     return Compiled(code, linemap, diags, source, filename)
 
 
@@ -92,6 +92,10 @@ def translate_exception(err: BaseException) -> tuple[str, str]:
         return f"la chiave {err.args[0]!r} non esiste nel dizionario", "Controlla il nome della chiave, oppure usa d.get(chiave)."
     if isinstance(err, IndexError):
         return "posizione fuori dalla lista", "Controlla la lunghezza con len(lista) prima di leggere un elemento."
+    if isinstance(err, EOFError):
+        return ("il programma aspetta un input (input()) ma non ne ha ricevuti",
+                "Per provarlo senza tastiera passa le risposte una per riga, es.: "
+                "printf 'ciao\\nesci\\n' | tokyn run file.tokyn --mock")
     if isinstance(err, ZeroDivisionError):
         return "divisione per zero", ""
     if isinstance(err, FileNotFoundError):

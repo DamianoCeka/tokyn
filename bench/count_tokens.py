@@ -66,7 +66,8 @@ def main():
         print(f"{task:<12}" + "".join(f"{results['tasks'][task][n]['tokens']:>20}" for n in SETS))
     print(f"{'TOTALE':<12}" + "".join(f"{results['totals'][n]['tokens']:>20}" for n in SETS))
     print("\nrighe:      " + "".join(f"{results['totals'][n]['lines']:>20}" for n in SETS))
-    print(f"\ncosto fisso della Skill (lettura): SKILL.md {results['fixed']['SKILL.md']}, SPEC.md {results['fixed']['SPEC.md']} token")
+    print(f"\ncosto fisso della Skill (lettura): SKILL.md {results['fixed']['SKILL.md']} token "
+          f"(SPEC.md {results['fixed']['SPEC.md']}, letta solo per dettagli rari)")
     if args.json:
         Path(args.json).write_text(json.dumps(results, indent=2), encoding="utf-8")
 

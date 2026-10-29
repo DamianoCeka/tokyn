@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from functools import lru_cache
 from pathlib import Path
 
@@ -121,6 +122,10 @@ def _syntax_diagnostic(err: UnexpectedInput, source: str) -> Diagnostic:
 
         src_lines = source.splitlines()
 
+        line_text = src_lines[line - 1] if 1 <= line <= len(src_lines) else ""
+        idiom = _python_idiom(tok, expected, line_text)
+        if idiom:
+            return Diagnostic("E002", idiom[0], line, column, length, idiom[1])
         if "COLON" in expected and tok.type == "_NL":
             return Diagnostic("E003", "manca ':' alla fine della riga", line, column, 1,
                               "Le righe con def, if, elif, else, for, agent, type e main finiscono con ':'.")
@@ -151,6 +156,27 @@ def _syntax_diagnostic(err: UnexpectedInput, source: str) -> Diagnostic:
                           "Controlla parentesi e stringhe non chiuse.")
 
     return Diagnostic("E000", f"errore di sintassi: {err}", line, column, 1)
+
+
+def _python_idiom(tok: Token, expected: set, line_text: str) -> tuple[str, str] | None:
+    """Riconosce i costrutti Python più comuni che Tokyn non ha e dice cosa scrivere al loro posto."""
+    if re.search(r'f"[^"\n]*\{[^}\n]*"', line_text) or re.search(r"f'[^'\n]*\{[^}\n]*'", line_text):
+        return ("dentro una f-string non si possono usare le stesse virgolette della f-string",
+                "Usa le virgolette dell'altro tipo dentro le graffe, es. f\"{d['chiave']}\".")
+    if tok.type == "FOR":
+        return ("le comprehension `[... for x in ...]` non esistono in Tokyn",
+                "Usa un ciclo: risultato = [], poi `for x in lista:` e dentro `risultato.append(...)`.")
+    if tok.type == "IF" and not expected <= {"COLON", "_NL"}:
+        return ("l'espressione `a if condizione else b` non esiste in Tokyn",
+                "Scrivi un if/else su più righe che assegna la variabile in entrambi i rami.")
+    if tok.type == "NAME" and str(tok) == "is":
+        return ("`is` non esiste in Tokyn", "Usa == e !=, es. `if x == None:` oppure `if x != None:`.")
+    if tok.type == "COMMA" and "EQUAL" in expected:
+        return ("l'assegnazione multipla `a, b = ...` non esiste in Tokyn",
+                "Assegna una variabile alla volta, es. `r = f()`, poi `a = r[0]` e `b = r[1]`.")
+    if tok.type == "COMMA" and line_text.lstrip().startswith("return "):
+        return ("una funzione restituisce un solo valore", "Per restituirne più di uno usa una lista: `return [a, b]`.")
+    return None
 
 
 def _code_lines(src_lines):
@@ -220,8 +246,6 @@ def _unclosed_bracket(source: str, line: int, column: int) -> str:
 
 def _unsupported_scan(source: str) -> list[Diagnostic]:
     """Trova costrutti Python non presenti in Tokyn prima del parsing."""
-    import re
-
     found = []
     for i, raw in enumerate(source.splitlines(), 1):
         stripped = raw.lstrip()

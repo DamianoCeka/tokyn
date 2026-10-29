@@ -2,10 +2,14 @@
 
 from __future__ import annotations
 
+import inspect
+from pathlib import Path
+
 from lark import Token, Tree
 
 from . import __version__
 from .checker import BUILTINS, PREC, Program, string_value
+from .errors import TokynRuntimeError
 
 RUNTIME_BUILTINS = [
     "read_file", "write_file", "append_file", "http_get", "http_post",
@@ -13,25 +17,44 @@ RUNTIME_BUILTINS = [
 ]
 
 
+def standalone_runtime() -> str:
+    """Il sorgente del runtime senza import relativi, da includere in un file autonomo."""
+    src = (Path(__file__).parent / "runtime.py").read_text(encoding="utf-8")
+    src = src.replace("from .errors import TokynRuntimeError\n", inspect.getsource(TokynRuntimeError), 1)
+    if "from ." in src or "'''" in src:
+        raise ValueError("runtime.py non si può includere: contiene import relativi o '''")
+    return src
+
+
 class CodeGen:
-    def __init__(self, tree: Tree, prog: Program, filename: str):
+    def __init__(self, tree: Tree, prog: Program, filename: str, standalone: bool = False):
         self.tree = tree
         self.prog = prog
         self.filename = filename
+        self.standalone = standalone
         self.lines: list[str] = []
+        self.py_line = 0  # ultima riga python scritta (un testo può contenere più righe)
         self.linemap: dict[int, int] = {}  # riga python -> riga tokyn
 
     def emit(self, text: str, indent: int = 0, src_line: int | None = None):
         self.lines.append("    " * indent + text)
         if src_line:
-            self.linemap[len(self.lines)] = src_line
+            self.linemap[self.py_line + 1] = src_line
+        self.py_line += text.count("\n") + 1
 
     # ------------------------------------------------------------ programma
     def generate(self) -> tuple[str, dict[int, int]]:
         self.emit(f"# Generato da Tokyn {__version__} a partire da {self.filename}.")
         self.emit("# Non modificare questo file: modifica il sorgente .tokyn e ricompila.")
-        self.emit("from tokyn import runtime as __rt")
-        self.emit("from tokyn.runtime import " + ", ".join(RUNTIME_BUILTINS))
+        if self.standalone:
+            self.emit("# File autonomo: il runtime di Tokyn è incluso qui sotto, serve solo `pip install anthropic`.")
+            self.emit("import types as __types")
+            self.emit("__rt = __types.ModuleType('tokyn_runtime')")
+            self.emit(f"exec(compile(r'''{standalone_runtime()}''', 'tokyn_runtime', 'exec'), __rt.__dict__)")
+            self.emit(", ".join(RUNTIME_BUILTINS) + " = " + ", ".join(f"__rt.{b}" for b in RUNTIME_BUILTINS))
+        else:
+            self.emit("from tokyn import runtime as __rt")
+            self.emit("from tokyn.runtime import " + ", ".join(RUNTIME_BUILTINS))
         nodes = [c for c in self.tree.children if isinstance(c, Tree)]
 
         for n in nodes:
@@ -242,8 +265,11 @@ class CodeGen:
             return f"{self.wrap(c[0], 8)}.{c[1]}"
         if k == "getitem":
             return f"{self.wrap(c[0], 8)}[{self.expr(c[1])}]"
+        if k == "slice":
+            lo, hi = (self.expr(x) if x is not None else "" for x in c[1:])
+            return f"{self.wrap(c[0], 8)}[{lo}:{hi}]"
         raise ValueError(f"espressione sconosciuta: {k}")
 
 
-def generate(tree: Tree, prog: Program, filename: str) -> tuple[str, dict[int, int]]:
-    return CodeGen(tree, prog, filename).generate()
+def generate(tree: Tree, prog: Program, filename: str, standalone: bool = False) -> tuple[str, dict[int, int]]:
+    return CodeGen(tree, prog, filename, standalone).generate()

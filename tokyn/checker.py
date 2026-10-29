@@ -707,6 +707,19 @@ class Checker:
                        f"Esempio: valore.campo invece di valore[\"campo\"]")
         return ANY
 
+    def infer_slice(self, node, scope):
+        obj = self.infer(node.children[0], scope)
+        for bound in node.children[1:]:
+            if bound is not None and self.infer(bound, scope) not in (INT, ANY):
+                self.error("E176", "gli estremi di una slice devono essere numeri interi", bound,
+                           "Esempio: testo[:200], lista[1:], lista[-3:]")
+        if obj[0] == "list" or obj == STR:
+            return obj
+        if obj[0] == "record":
+            self.error("E172", "i campi di un type si leggono con il punto, non con [ ]", node,
+                       f"Esempio: valore.campo invece di valore[\"campo\"]")
+        return ANY
+
     def infer_getattr(self, node, scope):
         obj_node, attr = node.children
         obj = self.infer(obj_node, scope)

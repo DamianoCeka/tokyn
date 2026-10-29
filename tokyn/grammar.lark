@@ -93,6 +93,7 @@ MULOP: "*" | "/" | "//" | "%"
 ?atom_expr: atom_expr "(" [args] ")"            -> call
           | atom_expr "." NAME                  -> getattr
           | atom_expr "[" expr "]"              -> getitem
+          | atom_expr "[" [expr] ":" [expr] "]" -> slice
           | atom
 
 ?atom: NAME                                     -> name

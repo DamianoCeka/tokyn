@@ -48,7 +48,7 @@ def cmd_check(args) -> int:
 def cmd_build(args) -> int:
     source = _read(args.file)
     try:
-        compiled = compile_source(source, args.file)
+        compiled = compile_source(source, args.file, standalone=args.standalone)
     except TokynError as err:
         print(err, file=sys.stderr)
         return 1
@@ -95,6 +95,8 @@ def main(argv=None) -> int:
     p = sub.add_parser("build", help="traduce in Python")
     p.add_argument("file")
     p.add_argument("-o", "--output")
+    p.add_argument("--standalone", action="store_true",
+                   help="include il runtime nel file: non serve installare tokyn, solo anthropic")
     p.set_defaults(func=cmd_build)
 
     p = sub.add_parser("run", help="esegue un programma")

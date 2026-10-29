@@ -102,11 +102,14 @@ Come in Python:
 - `return`, `pass`
 - Operatori: `+ - * / // %`, `== != < > <= >=`, `in`, `not in`, `and`, `or`, `not`
 - Liste `[1, 2]`, dizionari `{"a": 1}`, indici `x[0]`, attributi `x.y`, chiamate `f(a, b=1)`
+- Slice di testi e liste: `testo[:200]`, `lista[1:]`, `lista[-3:]`
 - Stringhe `"..."`, `'...'`, `"""..."""` e f-string `f"Ciao {nome}"`
 - Metodi di stringhe, liste e dizionari di Python: `.upper()`, `.split()`, `.append()`, `.get()`, `.items()`…
 
 Non esistono in Tokyn (il checker lo segnala e dice cosa usare): `while`, `class`, `lambda`,
-`try`/`except`, `with`, `async`/`await`, `yield`, `global`, `match`.
+`try`/`except`, `with`, `async`/`await`, `yield`, `global`, `match`, le comprehension
+`[x for x in ...]` (usa `for` con `.append()`), `a if c else b` (usa `if`/`else`),
+`is` (usa `==` e `!=`), `a, b = ...` e `return a, b` (usa una lista).
 
 ## Funzioni già presenti
 
@@ -161,6 +164,7 @@ main:
 | `tokyn run file.tokyn` | esegue (serve `ANTHROPIC_API_KEY`) |
 | `tokyn run file.tokyn --mock` | esegue con risposte finte, senza chiamare l'IA |
 | `tokyn build file.tokyn` | genera il file Python equivalente |
+| `tokyn build file.tokyn --standalone` | genera un file Python autonomo (serve solo `anthropic`) |
 | `tokyn spec` | stampa questa specifica |
 | `tokyn new nome` | crea un file di partenza |
 
@@ -168,7 +172,7 @@ main:
 
 | Codice | Significato |
 |---|---|
-| E002 | costrutto Python che Tokyn non ha (`while`, `class`…) |
+| E002 | costrutto Python che Tokyn non ha (`while`, `class`, comprehension…) |
 | E003 / E004 / E005 / E009 | manca `:` / manca il blocco indentato / indentazione sbagliata |
 | E101 | nome definito due volte |
 | E110 | tipo sconosciuto |

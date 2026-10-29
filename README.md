@@ -57,9 +57,9 @@ Lasciato libero di scegliere, in Python Claude ha scritto **5.397 token**; in To
 | | Python (quello che Claude scrive di solito) | Tokyn |
 |---|---:|---:|
 | Token di codice per 5 programmi | 5.397 | **1.910 (−65%)** |
-| Costo con Sonnet 5.5, Skill compresa | $0,054 | **$0,027 (−51%)** |
+| Costo con Sonnet 5.5, Skill compresa | $0,054 | **$0,023 (−57%)** |
 
-La Skill (3.737 token da leggere una volta) si ripaga già dal primo programma.
+La Skill (1.961 token da leggere una volta) si ripaga già dal primo programma.
 Onestamente: con un framework come Pydantic AI il Python arriva allo stesso numero di token di Tokyn.
 Metodo completo, tutti i programmi e i limiti in [`bench/`](bench).
 
@@ -82,6 +82,7 @@ tokyn check primo.tokyn      # controlla e spiega gli errori
 tokyn run primo.tokyn --mock # prova senza chiamare l'IA (gratis)
 tokyn run primo.tokyn        # esegue davvero (serve ANTHROPIC_API_KEY)
 tokyn build primo.tokyn      # genera il Python equivalente
+tokyn build primo.tokyn --standalone  # ...in un file unico che non richiede Tokyn
 tokyn spec                   # stampa la specifica
 ```
 
@@ -92,7 +93,9 @@ tokyn spec                   # stampa la specifica
 - **`type`**: dati strutturati, anche annidati, con valori ammessi (`"a" | "b"`) e descrizioni per l'IA.
 - **Agenti come strumenti**: un agente può delegare a un altro.
 - **Python ovunque**: `import` di qualsiasi libreria Python.
+- **Slice** di testi e liste: `testo[:200]`, `lista[-3:]`.
 - **Errori a runtime** riportati alla riga del file `.tokyn`, non del Python generato.
+- **Errori mirati per le abitudini di Python**: se un modello scrive una comprehension, `a if c else b`, `is None` o `a, b = ...`, il checker dice esattamente cosa scrivere al loro posto.
 
 La specifica completa è in [`tokyn/SPEC.md`](tokyn/SPEC.md). Gli esempi sono in [`examples/`](examples).
 
@@ -102,12 +105,15 @@ Il modo principale per usare Tokyn è come **Skill di Claude**: quando chiedi un
 Claude lo scrive in Tokyn, lo controlla con `tokyn check` finché non ci sono errori, e lo esegue.
 
 1. Crea lo zip: `python scripts/build_skill.py` (oppure scaricalo dalle Release).
-2. Caricalo in Claude, nelle impostazioni delle Skill.
+2. Caricalo in Claude, nelle impostazioni delle Skill. In Claude Code, invece, estrailo in `~/.claude/skills/`
+   (o nella cartella `.claude/skills/` del progetto).
 
-Lo zip contiene anche il compilatore, quindi non serve installare niente oltre a `lark`.
+Lo zip contiene anche il compilatore, che Claude usa con `python <skill>/tokyn_cli.py ...` da qualsiasi
+cartella: non serve installare niente oltre a `lark`.
 
 **Compatibile con tutto:** se ti serve Python, Claude scrive in Tokyn e poi genera il Python con
-`tokyn build`. Quel codice lo produce il compilatore, non il modello, quindi non costa token, e gira ovunque giri Python.
+`tokyn build --standalone`. Quel codice lo produce il compilatore, non il modello, quindi non costa token,
+ed è un file unico che richiede solo `pip install anthropic`.
 
 ## Come funziona
 
