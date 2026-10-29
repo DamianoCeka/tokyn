@@ -57,8 +57,8 @@ def main():
             "lines": sum(results["tasks"][t][name]["lines"] for t in TASKS),
         }
     repo = ROOT.parent
-    results["fixed"]["SKILL.md"] = count((repo / "skill/tokyn/SKILL.md").read_text(encoding="utf-8"))
-    results["fixed"]["SKILL.md (inglese)"] = count((repo / "skill/tokyn-en/SKILL.md").read_text(encoding="utf-8"))
+    results["fixed"]["SKILL.md"] = count((repo / "plugins/tokyn/skills/tokyn/SKILL.md").read_text(encoding="utf-8"))
+    results["fixed"]["SKILL.md (inglese)"] = count((repo / "plugins/tokyn-en/skills/tokyn/SKILL.md").read_text(encoding="utf-8"))
     results["fixed"]["SPEC.md"] = count((repo / "tokyn/SPEC.md").read_text(encoding="utf-8"))
 
     header = f"{'compito':<12}" + "".join(f"{n:>20}" for n in SETS)

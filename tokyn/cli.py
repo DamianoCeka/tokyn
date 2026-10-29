@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -60,6 +61,8 @@ def cmd_build(args) -> int:
 
 def cmd_run(args) -> int:
     source = _read(args.file)
+    if args.backend:
+        os.environ["TOKYN_BACKEND"] = args.backend
     try:
         return run_source(source, args.file, mock=args.mock)
     except TokynError as err:
@@ -107,6 +110,8 @@ def main(argv=None) -> int:
     p.add_argument("file")
     p.add_argument("--mock", action="store_true", help="risposte finte, senza chiamare l'IA")
     p.add_argument("--usage", action="store_true", help="alla fine mostra i token spesi e quelli letti dalla cache")
+    p.add_argument("--backend", choices=["api", "claude-code"],
+                   help="chi risponde agli agenti (di solito si sceglie da solo: API con la chiave, altrimenti Claude Code)")
     p.set_defaults(func=cmd_run)
 
     p = sub.add_parser("spec", help="stampa la specifica del linguaggio (utile da dare a un'IA)")

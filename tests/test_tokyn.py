@@ -28,10 +28,10 @@ def test_examples_are_valid():
         assert result.ok, f"{path.name}: {[d.to_dict() for d in result.diagnostics]}"
 
 
-@pytest.mark.parametrize("folder,answers", [("tokyn", "il pc non parte\nesci\n"), ("tokyn-en", "the pc won't start\nquit\n")])
-def test_skill_reference_is_valid(capsys, monkeypatch, folder, answers):
+@pytest.mark.parametrize("plugin,answers", [("tokyn", "il pc non parte\nesci\n"), ("tokyn-en", "the pc won't start\nquit\n")])
+def test_skill_reference_is_valid(capsys, monkeypatch, plugin, answers):
     import io
-    skill = (ROOT / "skill" / folder / "SKILL.md").read_text(encoding="utf-8")
+    skill = (ROOT / "plugins" / plugin / "skills" / "tokyn" / "SKILL.md").read_text(encoding="utf-8")
     start = skill.index("```\nimport math") + 4
     src = skill[start:skill.index("```", start)]
     monkeypatch.setattr(sys, "stdin", io.StringIO(answers))
@@ -662,6 +662,11 @@ def test_build_standalone_runs_without_tokyn(tmp_path):
     assert r.stdout.strip() == "esempio a True"
 
 
+def test_plugins_are_up_to_date():
+    r = subprocess.run([sys.executable, str(ROOT / "scripts" / "build_skill.py"), "--check"], capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+
+
 def test_skill_bundle_works_from_any_folder(tmp_path):
     import zipfile
     subprocess.run([sys.executable, str(ROOT / "scripts" / "build_skill.py"), str(tmp_path / "skill.zip")],
@@ -678,3 +683,120 @@ def test_skill_bundle_works_from_any_folder(tmp_path):
     r = subprocess.run([sys.executable, "-S", str(cli), "run", "a.tokyn", "--mock"],
                        input="mondo\n", capture_output=True, text=True, cwd=work, env=env)
     assert r.returncode == 0 and r.stdout.strip() == "ciao mondo", r.stderr
+
+
+# ------------------------------------------------------------ Claude Code al posto dell'API
+
+FAKE_CLAUDE = r'''#!/usr/bin/env python3
+"""Finto `claude -p`: fa da client MCP verso il ponte di Tokyn e risponde come Claude Code (--output-format json)."""
+import json, os, subprocess, sys
+
+args = sys.argv[1:]
+opt = lambda name: args[args.index(name) + 1] if name in args else None
+with open(os.environ["FAKE_CLAUDE_LOG"], "a", encoding="utf-8") as log:
+    log.write(json.dumps(args) + "\n")
+tool_text = ""
+if opt("--mcp-config"):
+    server = json.loads(opt("--mcp-config"))["mcpServers"]["tokyn"]
+    bridge = subprocess.Popen([server["command"], *server["args"]], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+    def rpc(rid, method, params):
+        bridge.stdin.write(json.dumps({"jsonrpc": "2.0", "id": rid, "method": method, "params": params}) + "\n")
+        bridge.stdin.flush()
+        return json.loads(bridge.stdout.readline())["result"]
+    rpc(1, "initialize", {"protocolVersion": "2025-06-18"})
+    tool = rpc(2, "tools/list", {})["tools"][0]
+    result = rpc(3, "tools/call", {"name": tool["name"], "arguments": {k: "Padova" for k in tool["inputSchema"]["properties"]}})
+    tool_text = result["content"][0]["text"]
+    bridge.stdin.close()
+    bridge.wait()
+out = {"type": "result", "subtype": "success", "is_error": False, "stop_reason": "end_turn",
+       "usage": {"input_tokens": 3, "output_tokens": 5}, "total_cost_usd": 0.001}
+schema = opt("--json-schema")
+if schema:
+    props = json.loads(schema)["properties"]
+    out["structured_output"] = {k: (p["enum"][0] if "enum" in p else 18 if p["type"] == "integer" else tool_text)
+                                for k, p in props.items()}
+    out["result"] = json.dumps(out["structured_output"])
+else:
+    out["result"] = f"risposta a: {args[args.index('-p') + 1]}"
+print(json.dumps(out))
+'''
+
+
+@pytest.fixture
+def fake_claude(tmp_path, monkeypatch):
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    exe = bin_dir / "claude"
+    exe.write_text(FAKE_CLAUDE.replace("#!/usr/bin/env python3", f"#!{sys.executable}"), encoding="utf-8")
+    exe.chmod(0o755)
+    log = tmp_path / "claude.log"
+    log.write_text("", encoding="utf-8")
+    monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ['PATH']}")
+    monkeypatch.setenv("FAKE_CLAUDE_LOG", str(log))
+    monkeypatch.delenv("TOKYN_BACKEND", raising=False)
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.delenv("ANTHROPIC_AUTH_TOKEN", raising=False)
+    monkeypatch.delenv("TOKYN_MOCK", raising=False)
+    import json
+    return lambda: [json.loads(line) for line in log.read_text(encoding="utf-8").splitlines()]
+
+
+def test_claude_code_is_used_without_api_key(fake_claude, capsys):
+    import tokyn.runtime as rt
+    assert rt._backend() == "claude-code"
+    src = ('agent A:\n    model: "claude-haiku"\n    instructions: "Rispondi breve."\n    effort: "low"\n    memory: True\n\n'
+           'main:\n    print(A.ask("ciao"))\n    print(A.ask("e poi?"))\n')
+    rc, out, err = run(src, capsys, mock=False)
+    assert rc == 0, err
+    assert out.splitlines()[0] == "risposta a: ciao"
+    first, second = fake_claude()
+    for flag, value in [("--model", "haiku"), ("--effort", "low"), ("--system-prompt", "Rispondi breve."),
+                        ("--tools", ""), ("--setting-sources", ""), ("--output-format", "json")]:
+        assert first[first.index(flag) + 1] == value
+    # la memoria passa la conversazione precedente nel testo della richiesta
+    assert "Utente: ciao" in second[second.index("-p") + 1] and "Nuovo messaggio:\ne poi?" in second[second.index("-p") + 1]
+
+
+def test_claude_code_tools_run_inside_the_program(fake_claude, capsys):
+    src = '''
+CHIAMATE = []
+
+type Meteo:
+    citta: str
+    gradi: int
+    cielo: "nuvoloso" | "sereno"
+
+def meteo(citta: str) -> str:
+    """Restituisce il meteo di una città."""
+    CHIAMATE.append(citta)
+    return citta
+
+agent A:
+    instructions: "Usa lo strumento."
+    tools: [meteo]
+    output: Meteo
+
+main:
+    m = A.ask("Padova?")
+    print(m.citta, m.gradi, m.cielo, CHIAMATE)
+'''
+    rc, out, err = run(src, capsys, mock=False)
+    assert rc == 0, err
+    # lo strumento è stato chiamato tramite il ponte MCP e ha modificato la lista del programma
+    assert out.strip() == "Padova 18 nuvoloso ['Padova']"
+    call = fake_claude()[0]
+    assert call[call.index("--allowedTools") + 1] == "mcp__tokyn" and "--json-schema" in call
+
+
+def test_backend_choice(monkeypatch, tmp_path):
+    import tokyn.runtime as rt
+    monkeypatch.delenv("TOKYN_BACKEND", raising=False)
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "x")
+    assert rt._backend() == "api"
+    monkeypatch.delenv("ANTHROPIC_API_KEY")
+    monkeypatch.delenv("ANTHROPIC_AUTH_TOKEN", raising=False)
+    monkeypatch.setenv("PATH", str(tmp_path))  # niente `claude`
+    assert rt._backend() == "api"
+    monkeypatch.setenv("TOKYN_BACKEND", "claude-code")
+    assert rt._backend() == "claude-code"

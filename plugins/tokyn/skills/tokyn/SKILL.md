@@ -1,34 +1,32 @@
 ---
 name: tokyn
-description: Scrive agenti IA, chatbot e automazioni con LLM nel linguaggio Tokyn (file .tokyn), che richiede molti meno token del Python equivalente, e li controlla ed esegue con il compilatore incluso. Usala quando l'utente chiede un agente IA, un bot, un'estrazione o classificazione di testi con IA o un'automazione con Claude, quando nomina Tokyn, o quando nel progetto ci sono file .tokyn. Non usarla se l'utente chiede un altro linguaggio o framework (SDK Anthropic, LangChain, TypeScript…) o se il codice va dentro un progetto esistente scritto in un altro linguaggio.
+description: Scrive in Tokyn (file .tokyn) i programmi con agenti IA, chatbot, estrazioni o classificazioni di testi con Claude, che richiedono molti meno token del Python equivalente; li controlla e li prova con il compilatore incluso e, se serve, li trasforma in un file Python. Usala quando l'utente chiede un programma o uno script con agenti IA o automazioni con Claude, anche in Python, quando nomina Tokyn, o quando nel progetto ci sono file .tokyn. Non usarla se l'utente chiede esplicitamente un altro framework (SDK Anthropic, LangChain…) o se il codice va in un progetto scritto in un linguaggio diverso da Python.
 ---
 
 # Tokyn
 
-Linguaggio con la sintassi di Python in cui agenti, strumenti e output strutturati fanno parte
-del linguaggio: ciclo degli strumenti, schema JSON, validazione e retry li fa il runtime.
-Tutto quello che serve per scriverlo è in questo file; `<skill>/SPEC.md` (dove `<skill>` è la
-cartella di questo file) serve solo per dettagli rari.
+Linguaggio con la sintassi di Python in cui agenti, strumenti e output strutturati fanno parte del linguaggio:
+ciclo degli strumenti, schema JSON, validazione, retry e caching li fa il runtime. Lo stesso programma costa circa
+un terzo dei token del Python. Tutto quello che serve per scriverlo è in questo file; la specifica completa,
+`${CLAUDE_SKILL_DIR}/tokyn/SPEC.md`, serve solo per dettagli rari.
 
 ## Procedura
 
-1. Scrivi il programma in un file `.tokyn` seguendo il riferimento qui sotto.
-2. Controlla e prova in un solo comando, gratis (risposte finte, nessuna chiamata all'IA):
-   `python <skill>/tokyn_cli.py run file.tokyn --mock`
+1. Scrivi il programma in un file `.tokyn`, anche se l'utente vuole Python: il Python si genera al passo 4.
+2. Controlla e prova gratis, con risposte finte: `python ${CLAUDE_SKILL_DIR}/tokyn_cli.py run file.tokyn --mock`
    - Se ci sono errori, li elenca con riga, colonna e correzione (`→`) e non esegue nulla.
      Correggi con modifiche puntuali, senza riscrivere il file, e ripeti finché gira.
    - Se il programma usa `input()`, passa le risposte una per riga:
-     `printf 'ciao\nesci\n' | python <skill>/tokyn_cli.py run file.tokyn --mock`
+     `printf 'ciao\nesci\n' | python ${CLAUDE_SKILL_DIR}/tokyn_cli.py run file.tokyn --mock`
    - In mock gli agenti non chiamano gli strumenti; `write_file`, `http_post` ecc. invece vengono eseguiti davvero.
-3. Esecuzione reale: `python <skill>/tokyn_cli.py run file.tokyn --usage` (serve `ANTHROPIC_API_KEY`; se manca,
-   fermati al passo 2). `--usage` mostra alla fine i token spesi e quelli letti dalla cache.
-4. Se l'utente vuole Python: `python <skill>/tokyn_cli.py build file.tokyn --standalone -o file.py`
-   (file autonomo, serve solo `pip install anthropic`). Non scrivere il Python a mano.
-
-Se il comando dice che manca `lark`: `pip install lark anthropic` (con `--break-system-packages` se pip lo chiede).
-
-Per l'utente: `pip install git+https://github.com/DamianoCeka/tokyn`, poi `tokyn run file.tokyn`
-con `ANTHROPIC_API_KEY` impostata.
+   - Se manca `lark`: `pip install lark` (con `--break-system-packages` se pip lo chiede).
+3. Quando serve vedere risposte vere: `python ${CLAUDE_SKILL_DIR}/tokyn_cli.py run file.tokyn --usage`.
+   Senza `ANTHROPIC_API_KEY` gli agenti rispondono con il Claude Code dell'utente (`claude -p`: nessuna chiave,
+   qualche secondo per ogni `ask`); con la chiave usano l'API. Se il programma fa molte chiamate, avvisa l'utente
+   prima e lancialo in background. `--usage` mostra alla fine i token spesi.
+4. Se l'utente vuole Python: `python ${CLAUDE_SKILL_DIR}/tokyn_cli.py build file.tokyn --standalone -o file.py`.
+   Il file non dipende da Tokyn e funziona con la chiave API o con Claude Code. Non scrivere il Python a mano:
+   costerebbe i token che Tokyn fa risparmiare.
 
 ## Riferimento del linguaggio
 
@@ -130,6 +128,8 @@ main:                                          # punto di partenza, uno solo
 - In mock: testi `"esempio <campo>"`, numeri 1 e 1.0, dict vuoti, liste di 2 elementi; valori `"a" | "b"` e bool
   cambiano a ogni `ask` di quell'agente e da un elemento al successivo (si parte dal primo valore e da True).
   Senza `output` la risposta è `"[mock Nome] risposta a: ..."`.
+- Con Claude Code (senza chiave API) `ask_all` fa le richieste una alla volta, perché la Batch API c'è solo con la
+  chiave, e `max_steps` non si applica.
 - `Agente.ask_all(testi)` dà le stesse risposte di un ciclo di `ask`, nello stesso ordine, ma con la Batch API:
   metà prezzo, più lento (di solito minuti, al massimo 24 ore), senza `memory`. Usalo per i lavori in blocco
   (classificare 100 email); per pochi testi o se servono subito usa un ciclo di `ask`. In mock è immediato. Se un

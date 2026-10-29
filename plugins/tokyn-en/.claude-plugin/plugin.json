@@ -1,0 +1,5 @@
+{
+  "name": "tokyn-en",
+  "description": "Claude writes AI-agent programs in Tokyn (fewer tokens), runs them with your Claude Code and can hand you the Python.",
+  "author": { "name": "Damiano Ceka" }
+}

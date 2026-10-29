@@ -1,35 +1,33 @@
 ---
 name: tokyn
-description: Writes AI agents, chatbots and LLM automations in the Tokyn language (.tokyn files), which takes far fewer tokens than the equivalent Python, and checks and runs them with the bundled compiler. Use it when the user asks for an AI agent, a bot, AI-based text extraction or classification, or an automation with Claude, when they mention Tokyn, or when the project contains .tokyn files. Do not use it when the user asks for another language or framework (Anthropic SDK, LangChain, TypeScript…) or when the code goes into an existing project written in another language.
+description: Writes AI-agent programs, chatbots and AI text extraction or classification with Claude in Tokyn (.tokyn files), which take far fewer tokens than the equivalent Python; checks and runs them with the bundled compiler and, when needed, turns them into a Python file. Use it when the user asks for a program or script with AI agents or Claude automations, Python included, when they mention Tokyn, or when the project contains .tokyn files. Do not use it when the user explicitly asks for another framework (Anthropic SDK, LangChain…) or when the code goes into a project written in a language other than Python.
 ---
 
 # Tokyn
 
-A language with Python syntax in which agents, tools and structured outputs are part of the
-language: the tool loop, JSON schemas, validation and retries are handled by the runtime.
-Everything you need to write it is in this file; `<skill>/SPEC.md` (where `<skill>` is the
-folder of this file, written in Italian) is only for rare details. Compiler messages are in Italian
-and each one comes with the fix (`→`).
+A language with Python syntax in which agents, tools and structured outputs are part of the language: the tool
+loop, JSON schemas, validation, retries and caching are handled by the runtime. The same program takes about a
+third of the tokens of Python. Everything you need to write it is in this file; the full spec,
+`${CLAUDE_SKILL_DIR}/tokyn/SPEC.md` (in Italian), is only for rare details. Compiler messages are in Italian and
+each one comes with the fix (`→`).
 
 ## Procedure
 
-1. Write the program in a `.tokyn` file following the reference below.
-2. Check and try it with one command, for free (fake answers, no AI calls):
-   `python <skill>/tokyn_cli.py run file.tokyn --mock`
+1. Write the program in a `.tokyn` file, even if the user wants Python: the Python is generated at step 4.
+2. Check and try it for free, with fake answers: `python ${CLAUDE_SKILL_DIR}/tokyn_cli.py run file.tokyn --mock`
    - If there are errors, it lists them with line, column and fix (`→`) and runs nothing.
      Fix them with targeted edits, without rewriting the file, and repeat until it runs.
    - If the program uses `input()`, pass the answers one per line:
-     `printf 'hello\nquit\n' | python <skill>/tokyn_cli.py run file.tokyn --mock`
+     `printf 'hello\nquit\n' | python ${CLAUDE_SKILL_DIR}/tokyn_cli.py run file.tokyn --mock`
    - In mock, agents do not call tools; `write_file`, `http_post` etc. do run for real.
-3. Real run: `python <skill>/tokyn_cli.py run file.tokyn --usage` (needs `ANTHROPIC_API_KEY`; if it is missing,
-   stop at step 2). `--usage` prints the tokens spent and those read from the cache at the end.
-4. If the user wants Python: `python <skill>/tokyn_cli.py build file.tokyn --standalone -o file.py`
-   (a self-contained file, only needs `pip install anthropic`). Do not write the Python by hand.
-
-If the command says `lark` is missing: `pip install lark anthropic` (with `--break-system-packages` if pip asks).
-
-For the user: `pip install git+https://github.com/DamianoCeka/tokyn`, then `tokyn run file.tokyn`
-with `ANTHROPIC_API_KEY` set.
+   - If `lark` is missing: `pip install lark` (with `--break-system-packages` if pip asks).
+3. When you need real answers: `python ${CLAUDE_SKILL_DIR}/tokyn_cli.py run file.tokyn --usage`.
+   Without `ANTHROPIC_API_KEY` the agents answer through the user's Claude Code (`claude -p`: no key, a few
+   seconds per `ask`); with the key they use the API. If the program makes many calls, tell the user first and run
+   it in the background. `--usage` prints the tokens spent at the end.
+4. If the user wants Python: `python ${CLAUDE_SKILL_DIR}/tokyn_cli.py build file.tokyn --standalone -o file.py`.
+   The file does not depend on Tokyn and works with the API key or with Claude Code. Do not write the Python by
+   hand: it would cost the tokens Tokyn saves.
 
 ## Language reference
 
@@ -131,6 +129,8 @@ main:                                          # entry point, only one
 - In mock: texts `"esempio <field>"`, numbers 1 and 1.0, empty dicts, lists of 2 items; `"a" | "b"` values and
   bools change at every `ask` of that agent and from one item to the next (starting from the first value and True).
   Without `output` the answer is `"[mock Name] risposta a: ..."`.
+- With Claude Code (no API key) `ask_all` sends the requests one at a time, because the Batch API needs the key,
+  and `max_steps` does not apply.
 - `Agent.ask_all(texts)` gives the same answers as a loop of `ask`, in the same order, but through the Batch API:
   half price, slower (usually minutes, at most 24 hours), no `memory`. Use it for bulk jobs (classifying 100 emails);
   for a few texts, or when you need them right away, use a loop of `ask`. In mock it is instant. If a text gets no

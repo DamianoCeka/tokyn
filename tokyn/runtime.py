@@ -8,8 +8,14 @@ from __future__ import annotations
 import datetime as _dt
 import json as _json
 import os
+import secrets
+import shutil
+import socket
+import subprocess
 import sys
+import tempfile
 import textwrap
+import threading
 import time as _time
 import urllib.request as _urlreq
 
@@ -310,6 +316,8 @@ class Agent:
         text = str(text)
         if _use_mock(self.model):
             answer, final_text = _mock_answer(self, text)
+        elif _backend() == "claude-code":
+            answer, final_text = _claude_code_ask(self, text, self._history)
         else:
             answer, final_text = self._run(list(self._history) + [{"role": "user", "content": text}])
         if self.memory:
@@ -330,6 +338,8 @@ class Agent:
         texts = [str(t) for t in texts]
         if _use_mock(self.model):
             return [_mock_answer(self, t)[0] for t in texts]
+        if _backend() == "claude-code":  # la Batch API c'è solo con la chiave: una richiesta alla volta
+            return [_claude_code_ask(self, t, [])[0] for t in texts]
         return self._run_batch(texts) if texts else []
 
     def _system(self):
@@ -507,7 +517,7 @@ def _wait_batch(client, batch, agent_name):
     return batch
 
 
-_USAGE = {"chiamate": 0, "chiamate_batch": 0, "fallback": 0,
+_USAGE = {"chiamate": 0, "chiamate_batch": 0, "chiamate_claude_code": 0, "costo_claude_code": 0.0, "fallback": 0,
           "input": 0, "output": 0, "cache_lette": 0, "cache_scritte": 0}
 
 
@@ -532,7 +542,177 @@ def usage_report() -> str:
               f"{u['cache_scritte']} scritti in cache ({u['chiamate']} chiamate, {u['chiamate_batch']} nella Batch API a metà prezzo)")
     if u["fallback"]:
         report += f"; {u['fallback']} risposte da un modello di riserva dopo un rifiuto"
+    if u["chiamate_claude_code"]:
+        report += (f"; {u['chiamate_claude_code']} tramite Claude Code "
+                   f"(valore indicativo a prezzi API: ${u['costo_claude_code']:.4f})")
     return report
+
+
+# ======================================================================= Claude Code
+#
+# Senza chiave API gli agenti rispondono con il Claude Code di chi programma (`claude -p`): niente chiave,
+# usa il suo account. Gli strumenti arrivano a Claude Code tramite un piccolo server MCP che passa ogni
+# chiamata al programma Tokyn, così vengono eseguiti nel suo processo e vedono le stesse variabili.
+
+CLAUDE_CODE_MODELS = {"claude": "sonnet", "claude-sonnet": "sonnet", "claude-opus": "opus", "claude-haiku": "haiku"}
+
+# Server MCP minimo, senza dipendenze, avviato da Claude Code: legge le richieste JSON-RPC da stdin.
+_BRIDGE = r"""
+import json, socket, sys
+
+cfg = json.load(open(sys.argv[1], encoding="utf-8"))
+
+
+def reply(rid, result=None, error=None):
+    msg = {"jsonrpc": "2.0", "id": rid}
+    msg.update({"error": error} if error else {"result": result})
+    sys.stdout.write(json.dumps(msg) + "\n")
+    sys.stdout.flush()
+
+
+for line in sys.stdin:
+    if not line.strip():
+        continue
+    req = json.loads(line)
+    rid, method = req.get("id"), req.get("method")
+    if rid is None:
+        continue
+    if method == "initialize":
+        version = req.get("params", {}).get("protocolVersion", "2025-06-18")
+        reply(rid, {"protocolVersion": version, "capabilities": {"tools": {}},
+                    "serverInfo": {"name": "tokyn", "version": "1"}})
+    elif method == "tools/list":
+        reply(rid, {"tools": cfg["tools"]})
+    elif method == "tools/call":
+        with socket.create_connection(("127.0.0.1", cfg["port"])) as conn:
+            conn.sendall((json.dumps({"token": cfg["token"], "call": req["params"]}) + "\n").encode("utf-8"))
+            answer = json.loads(conn.makefile(encoding="utf-8").readline())
+        reply(rid, {"content": [{"type": "text", "text": answer["text"]}], "isError": answer["error"]})
+    elif method == "ping":
+        reply(rid, {})
+    else:
+        reply(rid, error={"code": -32601, "message": "metodo sconosciuto: " + str(method)})
+"""
+
+
+def _backend() -> str:
+    """Chi risponde agli agenti: l'API se c'è la chiave, altrimenti Claude Code se è installato."""
+    choice = os.environ.get("TOKYN_BACKEND", "").strip().lower()
+    if choice in ("api", "claude-code"):
+        return choice
+    if os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN"):
+        return "api"
+    return "claude-code" if shutil.which("claude") else "api"
+
+
+class _ToolServer:
+    """Esegue nel processo del programma gli strumenti che Claude Code chiama tramite il ponte MCP."""
+
+    def __init__(self, agent):
+        self.agent = agent
+        self.token = secrets.token_hex(16)  # solo il ponte di questa chiamata può usare gli strumenti
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.bind(("127.0.0.1", 0))
+        self.sock.listen()
+        self.port = self.sock.getsockname()[1]
+        threading.Thread(target=self._serve, daemon=True).start()
+
+    def _serve(self):
+        while True:
+            try:
+                conn, _ = self.sock.accept()
+            except OSError:  # server chiuso a fine chiamata
+                return
+            with conn:
+                request = _json.loads(conn.makefile(encoding="utf-8").readline() or "{}")
+                if request.get("token") != self.token:
+                    continue
+                call = request.get("call", {})
+                target = self.agent._tools_by_name.get(call.get("name"))
+                try:
+                    if target is None:
+                        raise ValueError(f"lo strumento {call.get('name')} non esiste")
+                    text, error = _call_tool(target, call.get("arguments") or {}), False
+                except Exception as err:  # l'errore torna all'IA, che può correggersi
+                    text, error = f"Errore: {err}", True
+                conn.sendall((_json.dumps({"text": text, "error": error}) + "\n").encode("utf-8"))
+
+    def close(self):
+        self.sock.close()
+
+
+def _claude_code_ask(agent, text, history):
+    prompt = text
+    if history:  # la memoria: domande e risposte precedenti
+        lines = [("Utente: " if m["role"] == "user" else "Tu: ") + str(m["content"]) for m in history]
+        prompt = "Conversazione finora:\n" + "\n".join(lines) + "\n\nNuovo messaggio:\n" + text
+    cmd = ["claude", "-p", prompt, "--output-format", "json", "--no-session-persistence",
+           "--system-prompt", agent.instructions, "--model", CLAUDE_CODE_MODELS.get(agent.model, agent.model),
+           # niente strumenti, impostazioni, hook e comandi di Claude Code: solo l'agente Tokyn
+           "--tools", "", "--setting-sources", "", "--disable-slash-commands", "--strict-mcp-config"]
+    if agent.effort:
+        cmd += ["--effort", agent.effort]
+    if agent.output is not None:
+        cmd += ["--json-schema", _json.dumps(agent.output.__tokyn_schema__())]
+    server = workdir = None
+    try:
+        if agent.tools:
+            server = _ToolServer(agent)
+            workdir = tempfile.mkdtemp(prefix="tokyn-")
+            files = {
+                "bridge.py": _BRIDGE,
+                "tools.json": _json.dumps({"port": server.port, "token": server.token, "tools": [
+                    {"name": s["name"], "description": s["description"], "inputSchema": s["input_schema"]}
+                    for s in (_tool_schema(t) for t in agent.tools)]}),
+            }
+            for name, content in files.items():
+                with open(os.path.join(workdir, name), "w", encoding="utf-8") as f:
+                    f.write(content)
+            mcp = {"mcpServers": {"tokyn": {"command": sys.executable, "args": [
+                os.path.join(workdir, "bridge.py"), os.path.join(workdir, "tools.json")]}}}
+            cmd += ["--mcp-config", _json.dumps(mcp), "--allowedTools", "mcp__tokyn"]
+        try:
+            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=900)
+        except FileNotFoundError:
+            raise TokynRuntimeError("Claude Code non è installato (manca il comando `claude`)",
+                                    hint="Installa Claude Code, oppure imposta ANTHROPIC_API_KEY per usare l'API.") from None
+        except subprocess.TimeoutExpired:
+            raise TokynRuntimeError(f"Claude Code non ha risposto entro 15 minuti per l'agente {agent.name}") from None
+    finally:
+        if server is not None:
+            server.close()
+        if workdir is not None:
+            shutil.rmtree(workdir, ignore_errors=True)
+    try:
+        result = _json.loads(proc.stdout)
+    except ValueError:
+        detail = (proc.stderr or proc.stdout).strip()[:300]
+        raise TokynRuntimeError(f"Claude Code non ha risposto per l'agente {agent.name}: {detail}",
+                                hint="Controlla di aver fatto il login: apri `claude` una volta e segui le istruzioni.") from None
+    _count_claude_code(result)
+    if result.get("is_error") or result.get("subtype") != "success" or result.get("stop_reason") == "refusal":
+        raise TokynRuntimeError(f"Claude Code ha dato un errore per l'agente {agent.name}: "
+                                f"{result.get('result') or result.get('subtype')}")
+    if agent.output is None:
+        answer = (result.get("result") or "").strip()
+        return answer, answer
+    data = result.get("structured_output")
+    try:
+        if data is None:
+            data = _json.loads(result.get("result") or "")
+        return agent.output._from_dict(data, agent.output.__name__), _json.dumps(data, ensure_ascii=False)
+    except ValueError as err:
+        raise TokynRuntimeError(f"la risposta dell'agente {agent.name} non è nel formato richiesto: {err}") from None
+
+
+def _count_claude_code(result):
+    usage = result.get("usage") or {}
+    _USAGE["chiamate_claude_code"] += 1
+    _USAGE["input"] += usage.get("input_tokens") or 0
+    _USAGE["output"] += usage.get("output_tokens") or 0
+    _USAGE["cache_lette"] += usage.get("cache_read_input_tokens") or 0
+    _USAGE["cache_scritte"] += usage.get("cache_creation_input_tokens") or 0
+    _USAGE["costo_claude_code"] += result.get("total_cost_usd") or 0
 
 
 def _use_mock(model) -> bool:
@@ -549,7 +729,8 @@ def _client():
     if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")):
         raise TokynRuntimeError(
             "manca la chiave ANTHROPIC_API_KEY",
-            hint="Impostala come variabile d'ambiente, oppure prova il programma senza IA con: tokyn run file.tokyn --mock",
+            hint="Impostala come variabile d'ambiente, oppure installa Claude Code (Tokyn lo usa da solo quando manca "
+                 "la chiave), oppure prova il programma senza IA con: tokyn run file.tokyn --mock",
         )
     try:
         import anthropic
