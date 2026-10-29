@@ -47,20 +47,20 @@ I token sono contati con il tokenizer di Claude incluso in `anthropic==0.34.2`, 
 
 ## Il costo della Skill
 
-Per scrivere Tokyn, Claude deve prima leggere la Skill: `SKILL.md`, cioè **3.705 token di input** (2.888 nella versione
+Per scrivere Tokyn, Claude deve prima leggere la Skill: `SKILL.md`, cioè **3.826 token di input** (2.976 nella versione
 inglese), una volta per conversazione. Contiene un riferimento compatto del linguaggio scritto per il modello; la
-specifica completa (`SPEC.md`, 3.550 token) la legge solo se gli serve un dettaglio raro.
+specifica completa (`SPEC.md`, 3.626 token) la legge solo se gli serve un dettaglio raro.
 
 Con i prezzi di Claude Sonnet 5.5 ($2 per milione di token di input, $10 per milione di output):
 
 | | Python libero | Tokyn |
 |---|---:|---:|
 | Codice dei 5 programmi (output) | $0,0540 | $0,0191 |
-| Lettura della Skill (input, una volta) | – | $0,0074 |
-| **Totale** | **$0,0540** | **$0,0265 (−51%)** |
+| Lettura della Skill (input, una volta) | – | $0,0077 |
+| **Totale** | **$0,0540** | **$0,0268 (−50%)** |
 
 - In media ogni programma fa risparmiare circa **700 token di output**.
-- In soldi, il primo programma ripaga il 94% della lettura della Skill (il 120% con la versione inglese, $0,0058),
+- In soldi, il primo programma ripaga il 91% della lettura della Skill (il 117% con la versione inglese, $0,0060),
   e dal secondo è guadagno puro.
 - Rispetto alla prima versione della Skill (`SKILL.md` + `SPEC.md`, 3.737 token in due letture) la lettura costa
   quanto prima ma in una chiamata sola, e risponde ai dubbi che i modelli avevano scrivendo Tokyn (vedi [`eval/`](../eval)).

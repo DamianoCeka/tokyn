@@ -173,7 +173,8 @@ main:
 |---|---|
 | `tokyn check file.tokyn` | controlla il file e mostra gli errori con il suggerimento per correggerli |
 | `tokyn check --json file.tokyn` | stessa cosa in JSON (per IA e strumenti) |
-| `tokyn run file.tokyn` | esegue (serve `ANTHROPIC_API_KEY`) |
+| `tokyn run file.tokyn` | esegue: gli agenti rispondono con l'API se c'è `ANTHROPIC_API_KEY`, altrimenti con Claude Code (`claude -p`, l'account di chi lo usa) |
+| `tokyn run file.tokyn --backend claude-code` | sceglie chi risponde agli agenti (`claude-code` o `api`) |
 | `tokyn run file.tokyn --mock` | esegue con risposte finte, senza chiamare l'IA |
 | `tokyn run file.tokyn --usage` | alla fine mostra i token spesi e quelli letti dalla cache |
 | `tokyn build file.tokyn` | genera il file Python equivalente |
