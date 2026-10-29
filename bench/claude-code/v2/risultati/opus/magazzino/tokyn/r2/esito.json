@@ -1,0 +1,84 @@
+{
+ "prova": "opus/magazzino/tokyn/r2",
+ "cartella": "9f42ff7492",
+ "modello": "opus",
+ "compito": "magazzino",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.260586,
+ "costo_usd_telemetria": 0.260586,
+ "token_output": 4135,
+ "token_input": 16,
+ "token_cache_scritti": 18776,
+ "token_cache_letti": 138070,
+ "prove_del_programma": {
+  "costo_usd": 0.09398,
+  "token_output": 999,
+  "chiamate": 10,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 11,
+ "secondi": 118.9,
+ "secondi_api": 40.3,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 856,
+ "righe_tokyn": 68,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "totale del magazzino | 1.540,20 € |\n| Prodotti sotto la scorta minima | toner (ne manca 1), evidenziatori gialli (ne mancano 12), penne a sfera blu (ne mancano 50) |\n| Valore della scorta di toner | 235,50 € (3 pezzi da 78,50 €) |\n| Evidenziatori mancanti alla scorta minima | 12 |\n\n**Come garantisce numeri esatti:** Claude non fa i conti a mente. Il programma legge `inventario.json` e calcola da sé, in modo esatto, il valore di ogni prodotto, i pezzi che mancano alla scorta minima e i totali del magazzino. Claude riceve questi dati già pronti e li riporta. Se una domanda chiede un conto non previsto (per esempio la somma di due prodotti), Claude usa una calcolatrice esatta inclusa nel programma; l'ho provata a parte e funziona. Se un dato non c'è nell'inventario, è istruito a dirlo.\n\n**Da sapere:**\n- **Chiave API:** nelle prove il programma ha risposto tramite il mio Claude Code, perché qui non c'è una chiave API di Anthropic. Per farlo girare voi, soprattutto se lo usano anche i colleghi, va impostata la variabile `ANTHROPIC_API_KEY`. Il file non ha bisogno d'altro.\n- **Formato delle risposte:** nella prima prova alcune risposte contenevano grassetti ed elenchi. Ho chiesto testo semplice nelle istruzioni e nella seconda prova le risposte erano frasi brevi e pulite.\n- **File sorgente:** accanto c'è `programma.tokyn`, da cui ho generato `programma.py`. Se volete modificare il programma conviene cambiare quello e rigenerare il Python, invece di modificare `programma.py` a mano.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "4 elementi con le domande nell'ordine del file: True",
+   "martelli 37: True ('In magazzino ci sono 37 martelli da carpentiere (FER-B), sopra la scorta minima di 10 pezzi.')",
+   "valore totale 2623,30: True ('La merce in magazzino vale in tutto 2623,30 €. Il valore copre 6 prodotti e 208 pezzi.')",
+   "sotto scorta nastro e silicone, nessun altro: True (nominati ['nastro', 'silicone'], di troppo [])",
+   "pezzi da ordinare 46: True ('Bisogna ordinare 46 pezzi in totale: 32 di nastro isolante nero e 14 di silicone sigillante trasparente.')"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.031493,
+   "token_output": 407,
+   "chiamate": 4,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

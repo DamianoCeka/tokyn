@@ -1,0 +1,25 @@
+{
+  "candidati": [
+    {
+      "file": "bianchi_elena.txt",
+      "punteggio": 9,
+      "motivazione": "Oltre 5 anni di vendita al dettaglio, di cui circa 5 in telefonia da MediaWorld, con garanzie, cassa, gestionale e weekend; residente vicino a Verona."
+    },
+    {
+      "file": "rizzo_davide.txt",
+      "punteggio": 6,
+      "motivazione": "Circa 3 anni di vendita al dettaglio (non elettronica) più stage in telefonia, buona conoscenza smartphone e disponibilità weekend; mancano esperienza su portatili e vendita di servizi aggiuntivi."
+    },
+    {
+      "file": "esposito_marco.txt",
+      "punteggio": 4,
+      "motivazione": "Nessuna esperienza di vendita al dettaglio richiesta (2 anni); positivi la passione per l'informatica, il gestionale di magazzino, la residenza a Verona e la disponibilità a turni."
+    },
+    {
+      "file": "ferraro_chiara.txt",
+      "punteggio": 1,
+      "motivazione": "Candidata infermiera senza alcuna esperienza di vendita, elettronica o uso di cassa e gestionale; unico punto in comune è la residenza a Verona."
+    }
+  ],
+  "migliore": "bianchi_elena.txt"
+}

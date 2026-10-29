@@ -1,5 +1,9 @@
 # Benchmark: quanti token risparmio con Tokyn?
 
+> **Benchmark vecchio, tenuto come storia.** I token sono contati con il tokenizer del pacchetto `anthropic==0.34.2`,
+> che è quello dei modelli Claude 2 e per i modelli di oggi è solo una stima grossolana. Il benchmark attuale, con
+> sessioni vere di Claude Code, test nascosti e analisi decisa prima, è in [`claude-code/v2/`](claude-code/v2).
+
 Ho misurato quanti token servono a un'IA per scrivere **lo stesso programma** in Tokyn e in Python.
 I token di output sono quelli che si pagano di più (5 volte quelli di input), e sono proprio quelli del codice scritto.
 

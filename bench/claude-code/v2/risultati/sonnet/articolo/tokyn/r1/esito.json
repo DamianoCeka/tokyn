@@ -1,0 +1,81 @@
+{
+ "prova": "sonnet/articolo/tokyn/r1",
+ "cartella": "c6f3f74fc8",
+ "modello": "sonnet",
+ "compito": "articolo",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.0846162,
+ "costo_usd_telemetria": 0.084616,
+ "token_output": 1791,
+ "token_input": 12,
+ "token_cache_scritti": 14460,
+ "token_cache_letti": 88422,
+ "prove_del_programma": {
+  "costo_usd": 0.024305,
+  "token_output": 1187,
+  "chiamate": 2,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 7,
+ "secondi": 39.8,
+ "secondi_api": 20.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 831,
+ "righe_tokyn": 29,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json",
+  "scheda.tokyn"
+ ],
+ "risposta_finale": "`programma.py` è pronto e l'ho provato davvero. Con `python programma.py` dalla cartella di `articolo.txt` scrive `risultato.json`.\n\nNella prova ho ottenuto:\n- **Titolo:** \"A Castelrocca apre il pronto soccorso pediatrico\".\n- **Punti:** esattamente cinque, una frase ciascuno.\n- **Citati:** sette nomi senza ripetizioni, tra cui Marco Tessari, Chiara Valli, Silvia Orlandi, la Fondazione Rinaldi e Genitori Insieme.\n\nSe Claude restituisce un numero diverso di punti, il programma ripete la richiesta fino a tre volte. Se ne arrivano comunque di più, tiene i primi cinque. I nomi vuoti e quelli doppi vengono tolti.\n\nLa prova è andata con il tuo Claude Code, perché in questo ambiente non c'era `ANTHROPIC_API_KEY`. Per farlo girare ogni mattina da solo o per i colleghi serve una chiave API di Anthropic.\n\nHo usato la skill tokyn come richiesto. Accanto a `programma.py` c'è `scheda.tokyn`, il sorgente da modificare. `programma.py` è generato da lì e non dipende da Tokyn. Se cambi `scheda.tokyn`, rigenera `programma.py` con `python /srv/plugin-tokyn/skills/tokyn/tokyn_cli.py build scheda.tokyn --standalone -o programma.py`.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "titolo sullo stabilimento: True ('Valtek Impianti investe 48 milioni a Montebrenna')",
+   "esattamente 5 punti (stringhe non vuote): True (5)",
+   "i 5 punti riportano almeno 3 fatti principali su 4: True (['investimento di 48 milioni', '320 posti di lavoro', 'produzione dal 2027', 'pompe di calore'])",
+   "citati (lista di stringhe senza doppioni) con almeno 5 su 6 in voci distinte: True (6 trovati: ['Elena Marchesini', 'Laura Benedetti', 'Paolo Ricci', 'Valtek Impianti', 'Comune di Montebrenna', 'Istituto Tecnico Volta']; doppioni: [])"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.016866,
+   "token_output": 656,
+   "chiamate": 1,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

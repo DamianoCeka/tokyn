@@ -1,0 +1,32 @@
+import csv
+import io
+
+type Traduzione:
+    testo: str "la descrizione tradotta in inglese, senza commenti né virgolette"
+
+agent Traduttore:
+    instructions: """
+        Traduci dall'italiano all'inglese la descrizione di un prodotto di un negozio online.
+        Usa un inglese naturale da catalogo e conserva misure, numeri, materiali e nomi propri.
+        Restituisci solo la traduzione, su una riga.
+    """
+    output: Traduzione
+    effort: "low"
+
+main:
+    testo = read_file("catalogo.csv")
+    fine_riga = "\n"
+    if "\r\n" in testo:
+        fine_riga = "\r\n"
+    righe = list(csv.reader(io.StringIO(testo, newline=""), delimiter=";"))
+    uscita = io.StringIO()
+    scrittore = csv.writer(uscita, delimiter=";", lineterminator=fine_riga)
+    scrittore.writerow(righe[0])
+    totale = len(righe) - 1
+    for i, riga in enumerate(righe[1:]):
+        if len(riga) >= 3 and riga[2].strip() != "":
+            print(f"[{i + 1}/{totale}] {riga[0]}")
+            riga[2] = Traduttore.ask(riga[2]).testo.replace("\n", " ").strip()
+        scrittore.writerow(riga)
+    write_file("catalogo_en.csv", uscita.getvalue())
+    print(f"Scritto catalogo_en.csv ({totale} prodotti)")

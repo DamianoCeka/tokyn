@@ -1,0 +1,25 @@
+{
+  "candidati": [
+    {
+      "file": "bianchi_elena.txt",
+      "punteggio": 9,
+      "motivazione": "Oltre 5 anni di vendita, di cui 4 in elettronica (MediaWorld, telefonia), con garanzie, assicurazioni, cassa, gestionale e weekend; lacuna minore: nessuna menzione esplicita di computer portatili in vendita."
+    },
+    {
+      "file": "rizzo_davide.txt",
+      "punteggio": 6,
+      "motivazione": "Circa 3 anni di vendita al dettaglio con cassa, stage in telefonia e disponibilità nel weekend; mancano esperienza nell'elettronica, competenze informatiche solide, vendita di servizi aggiuntivi e gestionale di magazzino."
+    },
+    {
+      "file": "esposito_marco.txt",
+      "punteggio": 3,
+      "motivazione": "Buona passione per l'informatica, uso del gestionale di magazzino e disponibilità a turni; mancano però esperienza nella vendita al dettaglio, consulenza al cliente, servizi aggiuntivi e uso della cassa."
+    },
+    {
+      "file": "ferraro_chiara.txt",
+      "punteggio": 1,
+      "motivazione": "Residente a Verona, ma esperienza solo infermieristica: nessuna vendita al dettaglio, conoscenza di elettronica, uso di cassa o gestionale, né proposta di servizi aggiuntivi."
+    }
+  ],
+  "migliore": "bianchi_elena.txt"
+}

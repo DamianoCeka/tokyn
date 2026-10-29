@@ -1,0 +1,80 @@
+{
+ "prova": "sonnet/spese/tokyn/r2",
+ "cartella": "a71ef8150a",
+ "modello": "sonnet",
+ "compito": "spese",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.0878193,
+ "costo_usd_telemetria": 0.087819,
+ "token_output": 2913,
+ "token_input": 8,
+ "token_cache_scritti": 13360,
+ "token_cache_letti": 52333,
+ "prove_del_programma": {
+  "costo_usd": 0.001121,
+  "token_output": 554,
+  "chiamate": 10,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 5,
+ "secondi": 53.5,
+ "secondi_api": 31.6,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 2
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 842,
+ "righe_tokyn": 39,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "usato un `movimenti.csv` di prova con 5 movimenti, tra cui uno stipendio con un `;` nella descrizione e un importo `1.500,00`.\n- Con Claude vero (tramite il tuo Claude Code, perché qui non c'è `ANTHROPIC_API_KEY`) i 5 movimenti sono finiti ciascuno nella categoria giusta. L'esecuzione è durata circa 10 secondi.\n- Ho lasciato nella cartella il `movimenti.csv` di prova e il `risultato.json` che ne è uscito. Il tuo `movimenti.csv` vero sostituisce il mio.\n\n**Come funziona**\n- Usa il modello `claude-haiku` e manda tutti i movimenti in un'unica richiesta in blocco. Con la chiave API costa metà prezzo ma può metterci qualche minuto. Con Claude Code, come nella mia prova, le richieste partono una alla volta.\n- Gli importi sono letti con la virgola decimale e il punto delle migliaia. Se una descrizione contiene `;`, resta intera. Le righe vuote sono ignorate.\n- Una riga con un importo non numerico ferma il programma con un errore, invece di essere saltata in silenzio.\n- I totali sono sommati e arrotondati al centesimo alla fine. Le uscite sono negative, e un'entrata come lo stipendio finisce in `altro`.\n- Per avviarlo, lancia `python programma.py` dalla cartella con `movimenti.csv`. Se lo usi da solo o lo dai ad altri, serve `ANTHROPIC_API_KEY`.\n\n`programma.py` è generato dal compilatore Tokyn e non dipende da Tokyn. Il sorgente, `programma.tokyn`, è nella stessa cartella: per cambiare le categorie o le regole di classificazione conviene modificare quello e rigenerare `programma.py`.",
+ "controllo": {
+  "ok": true,
+  "punti": 3,
+  "massimo": 3,
+  "dettagli": [
+   "8 movimenti nell'ordine del file con data, descrizione e importo giusti: True",
+   "categorie ammesse e giuste: True (8 su 8: ['spesa alimentare', 'trasporti', 'casa', 'svago', 'spesa alimentare', 'trasporti', 'casa', 'altro'])",
+   "totali arrotondati al centesimo e coerenti con le categorie assegnate: True (uguali ai totali attesi: True; {'spesa alimentare': -85.5, 'trasporti': -51.8, 'casa': -728.45, 'svago': -19.0, 'altro': -12.8})"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.001318,
+   "token_output": 535,
+   "chiamate": 8,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

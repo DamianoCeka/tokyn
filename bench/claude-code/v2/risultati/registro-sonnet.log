@@ -1,0 +1,272 @@
+13:29:53 135 prove, 4 alla volta
+13:29:53 sonnet/catalogo/python/r3: sessione avviata
+13:29:53 sonnet/magazzino/agent-sdk/r1: sessione avviata
+13:29:53 sonnet/log/agent-sdk/r3: sessione avviata
+13:29:53 sonnet/documenti/tokyn/r1: sessione avviata
+13:30:41 sonnet/catalogo/python/r3: $0.26 + prove $0.00, 3280 token, 35 s, controllo NO
+13:30:41 sonnet/vendite/python/r2: sessione avviata
+13:30:59 sonnet/log/agent-sdk/r3: $0.28 + prove $0.02, 3484 token, 47 s, controllo ok
+13:30:59 sonnet/articolo/python/r1: sessione avviata
+13:31:08 sonnet/documenti/tokyn/r1: $0.08 + prove $0.00, 1977 token, 54 s, controllo ok
+13:31:08 sonnet/riunione/agent-sdk/r3: sessione avviata
+13:31:21 sonnet/magazzino/agent-sdk/r1: $0.29 + prove $0.05, 4840 token, 60 s, controllo ok
+13:31:21 sonnet/email/tokyn/r2: sessione avviata
+13:31:53 sonnet/vendite/python/r2: $0.31 + prove $0.00, 5283 token, 59 s, controllo NO
+13:31:53 sonnet/articolo/python/r2: sessione avviata
+13:31:56 sonnet/articolo/python/r1: $0.30 + prove $0.00, 4592 token, 44 s, controllo NO
+13:31:56 sonnet/vendite/tokyn/r1: sessione avviata
+13:32:01 sonnet/riunione/agent-sdk/r3: $0.27 + prove $0.02, 3196 token, 35 s, controllo ok
+13:32:01 sonnet/vendite/python/r1: sessione avviata
+13:32:47 sonnet/email/tokyn/r2: $0.08 + prove $0.00, 1642 token, 58 s, controllo ok
+13:32:47 sonnet/recensioni/agent-sdk/r2: sessione avviata
+13:32:58 sonnet/articolo/python/r2: $0.32 + prove $0.00, 5086 token, 51 s, controllo NO
+13:32:58 sonnet/catalogo/tokyn/r2: sessione avviata
+13:33:04 sonnet/vendite/python/r1: $0.30 + prove $0.00, 4823 token, 49 s, controllo NO
+13:33:04 sonnet/articolo/agent-sdk/r2: sessione avviata
+13:33:06 sonnet/vendite/tokyn/r1: $0.12 + prove $0.01, 4207 token, 46 s, controllo ok
+13:33:06 sonnet/riunione/tokyn/r1: sessione avviata
+13:33:54 sonnet/recensioni/agent-sdk/r2: $0.26 + prove $0.04, 2740 token, 49 s, controllo ok
+13:33:54 sonnet/moderazione/python/r3: sessione avviata
+13:34:01 sonnet/riunione/tokyn/r1: $0.08 + prove $0.01, 1616 token, 36 s, controllo ok
+13:34:01 sonnet/email/agent-sdk/r2: sessione avviata
+13:34:04 sonnet/catalogo/tokyn/r2: $0.08 + prove $0.00, 1888 token, 39 s, controllo ok
+13:34:04 sonnet/riunione/python/r1: sessione avviata
+13:34:24 sonnet/articolo/agent-sdk/r2: $0.30 + prove $0.08, 4262 token, 61 s, controllo ok
+13:34:24 sonnet/vendite/agent-sdk/r1: sessione avviata
+13:34:47 sonnet/moderazione/python/r3: $0.28 + prove $0.00, 3994 token, 39 s, controllo NO
+13:34:47 sonnet/scadenze/tokyn/r3: sessione avviata
+13:34:54 sonnet/riunione/python/r1: $0.28 + prove $0.00, 3993 token, 36 s, controllo NO
+13:34:54 sonnet/articolo/agent-sdk/r3: sessione avviata
+13:34:58 sonnet/email/agent-sdk/r2: $0.26 + prove $0.06, 2953 token, 38 s, controllo ok
+13:34:58 sonnet/magazzino/agent-sdk/r3: sessione avviata
+13:35:29 sonnet/vendite/agent-sdk/r1: $0.27 + prove $0.02, 3713 token, 44 s, controllo ok
+13:35:29 sonnet/documenti/agent-sdk/r2: sessione avviata
+13:36:24 sonnet/articolo/agent-sdk/r3: $0.31 + prove $0.08, 4497 token, 68 s, controllo ok
+13:36:24 sonnet/candidati/tokyn/r1: sessione avviata
+13:36:30 sonnet/magazzino/agent-sdk/r3: $0.27 + prove $0.02, 4304 token, 57 s, controllo ok
+13:36:30 sonnet/riunione/tokyn/r3: sessione avviata
+13:36:33 sonnet/scadenze/tokyn/r3: $0.10 + prove $0.04, 3188 token, 72 s, controllo ok
+13:36:33 sonnet/vendite/tokyn/r2: sessione avviata
+13:36:47 sonnet/documenti/agent-sdk/r2: $0.08 + prove $0.05, 2835 token, 51 s, controllo ok
+13:36:47 sonnet/assistente/python/r1: sessione avviata
+13:37:21 sonnet/vendite/tokyn/r2: $0.08 + prove $0.01, 2565 token, 31 s, controllo ok
+13:37:21 sonnet/log/tokyn/r2: sessione avviata
+13:37:29 sonnet/riunione/tokyn/r3: $0.08 + prove $0.01, 1889 token, 38 s, controllo ok
+13:37:29 sonnet/scadenze/tokyn/r2: sessione avviata
+13:38:09 sonnet/assistente/python/r1: $0.30 + prove $0.00, 4748 token, 68 s, controllo NO
+13:38:09 sonnet/catalogo/python/r1: sessione avviata
+13:38:30 sonnet/log/tokyn/r2: $0.09 + prove $0.01, 2575 token, 44 s, controllo ok
+13:38:30 sonnet/magazzino/python/r3: sessione avviata
+13:38:36 sonnet/candidati/tokyn/r1: $0.10 + prove $0.04, 2689 token, 98 s, controllo ok
+13:38:36 sonnet/assistente/agent-sdk/r1: sessione avviata
+13:38:38 sonnet/scadenze/tokyn/r2: $0.10 + prove $0.00, 3186 token, 45 s, controllo ok
+13:38:38 sonnet/catalogo/tokyn/r3: sessione avviata
+13:39:11 sonnet/catalogo/python/r1: $0.29 + prove $0.00, 4076 token, 48 s, controllo NO
+13:39:11 sonnet/candidati/tokyn/r3: sessione avviata
+13:39:36 sonnet/assistente/agent-sdk/r1: $0.25 + prove $0.03, 2907 token, 39 s, controllo ok
+13:39:36 sonnet/riunione/tokyn/r2: sessione avviata
+13:39:41 sonnet/magazzino/python/r3: $0.32 + prove $0.00, 5190 token, 58 s, controllo NO
+13:39:41 sonnet/candidati/python/r3: sessione avviata
+13:40:03 sonnet/catalogo/tokyn/r3: $0.08 + prove $0.00, 1792 token, 63 s, controllo ok
+13:40:03 sonnet/spese/python/r1: sessione avviata
+13:40:30 sonnet/riunione/tokyn/r2: $0.07 + prove $0.00, 1652 token, 39 s, controllo ok
+13:40:30 sonnet/candidati/agent-sdk/r2: sessione avviata
+13:40:38 sonnet/candidati/python/r3: $0.30 + prove $0.00, 4676 token, 43 s, controllo NO
+13:40:38 sonnet/vendite/tokyn/r3: sessione avviata
+13:40:43 sonnet/candidati/tokyn/r3: $0.10 + prove $0.05, 2804 token, 67 s, controllo ok
+13:40:43 sonnet/log/python/r1: sessione avviata
+13:41:15 sonnet/spese/python/r1: $0.33 + prove $0.00, 4957 token, 59 s, controllo NO
+13:41:15 sonnet/assistente/agent-sdk/r2: sessione avviata
+13:41:27 sonnet/vendite/tokyn/r3: $0.10 + prove $0.01, 3467 token, 43 s, controllo NO
+13:41:27 sonnet/documenti/agent-sdk/r1: sessione avviata
+13:41:48 sonnet/candidati/agent-sdk/r2: $0.30 + prove $0.17, 4446 token, 59 s, controllo ok
+13:41:48 sonnet/log/tokyn/r3: sessione avviata
+13:42:01 sonnet/log/python/r1: $0.33 + prove $0.00, 5411 token, 64 s, controllo NO
+13:42:01 sonnet/documenti/tokyn/r3: sessione avviata
+13:42:34 sonnet/documenti/agent-sdk/r1: $0.28 + prove $0.11, 3535 token, 48 s, controllo ok
+13:42:34 sonnet/magazzino/tokyn/r1: sessione avviata
+13:42:36 sonnet/assistente/agent-sdk/r2: $0.26 + prove $0.02, 3152 token, 54 s, controllo ok
+13:42:36 sonnet/riunione/agent-sdk/r2: sessione avviata
+13:43:02 sonnet/log/tokyn/r3: $0.11 + prove $0.00, 3541 token, 60 s, controllo ok
+13:43:02 sonnet/candidati/agent-sdk/r3: sessione avviata
+13:43:34 sonnet/documenti/tokyn/r3: $0.09 + prove $0.03, 2289 token, 60 s, controllo ok
+13:43:34 sonnet/documenti/python/r1: sessione avviata
+13:43:44 sonnet/riunione/agent-sdk/r2: $0.27 + prove $0.03, 3657 token, 49 s, controllo ok
+13:43:44 sonnet/scadenze/python/r3: sessione avviata
+13:44:19 sonnet/candidati/agent-sdk/r3: $0.29 + prove $0.08, 4127 token, 60 s, controllo ok
+13:44:19 sonnet/log/tokyn/r1: sessione avviata
+13:44:41 sonnet/scadenze/python/r3: $0.27 + prove $0.00, 4137 token, 44 s, controllo NO
+13:44:41 sonnet/log/agent-sdk/r1: sessione avviata
+13:45:01 sonnet/magazzino/tokyn/r1: $0.09 + prove $0.05, 2268 token, 115 s, controllo ok
+13:45:01 sonnet/spese/agent-sdk/r2: sessione avviata
+13:45:03 sonnet/documenti/python/r1: $0.32 + prove $0.00, 4523 token, 76 s, controllo NO
+13:45:03 sonnet/log/agent-sdk/r2: sessione avviata
+13:45:38 sonnet/log/tokyn/r1: $0.10 + prove $0.00, 3027 token, 62 s, controllo ok
+13:45:38 sonnet/magazzino/tokyn/r2: sessione avviata
+13:45:59 sonnet/spese/agent-sdk/r2: $0.27 + prove $0.02, 3185 token, 41 s, controllo ok
+13:45:59 sonnet/recensioni/tokyn/r1: sessione avviata
+13:46:01 sonnet/log/agent-sdk/r2: $0.25 + prove $0.13, 2712 token, 39 s, controllo ok
+13:46:01 sonnet/articolo/python/r3: sessione avviata
+13:46:11 sonnet/log/agent-sdk/r1: $0.27 + prove $0.01, 3646 token, 71 s, controllo ok
+13:46:11 sonnet/spese/agent-sdk/r1: sessione avviata
+13:47:02 sonnet/spese/agent-sdk/r1: $0.26 + prove $0.02, 3109 token, 35 s, controllo ok
+13:47:02 sonnet/assistente/tokyn/r1: sessione avviata
+13:47:27 sonnet/recensioni/tokyn/r1: $0.07 + prove $0.00, 1585 token, 56 s, controllo ok
+13:47:27 sonnet/documenti/agent-sdk/r3: sessione avviata
+13:47:30 sonnet/articolo/python/r3: $0.34 + prove $0.00, 5198 token, 75 s, controllo NO
+13:47:30 sonnet/recensioni/tokyn/r3: sessione avviata
+13:47:36 sonnet/magazzino/tokyn/r2: $0.08 + prove $0.03, 2367 token, 82 s, controllo ok
+13:47:36 sonnet/scadenze/tokyn/r1: sessione avviata
+13:48:18 sonnet/documenti/agent-sdk/r3: $0.25 + prove $0.08, 3010 token, 34 s, controllo ok
+13:48:18 sonnet/fattura/agent-sdk/r1: sessione avviata
+13:48:30 sonnet/assistente/tokyn/r1: $0.07 + prove $0.02, 1563 token, 49 s, controllo ok
+13:48:30 sonnet/fattura/tokyn/r2: sessione avviata
+13:49:23 sonnet/recensioni/tokyn/r3: $0.08 + prove $0.00, 2002 token, 88 s, controllo ok
+13:49:23 sonnet/magazzino/python/r1: sessione avviata
+13:49:27 sonnet/fattura/tokyn/r2: $0.09 + prove $0.02, 2446 token, 41 s, controllo ok
+13:49:27 sonnet/moderazione/agent-sdk/r3: sessione avviata
+13:49:52 sonnet/fattura/agent-sdk/r1: $0.29 + prove $0.08, 4363 token, 72 s, controllo ok
+13:49:52 sonnet/documenti/python/r3: sessione avviata
+13:50:18 sonnet/scadenze/tokyn/r1: $0.09 + prove $0.06, 2725 token, 126 s, controllo ok
+13:50:18 sonnet/fattura/tokyn/r1: sessione avviata
+13:50:42 sonnet/moderazione/agent-sdk/r3: $0.27 + prove $0.07, 3508 token, 54 s, controllo ok
+13:50:42 sonnet/log/python/r3: sessione avviata
+13:50:43 sonnet/magazzino/python/r1: $0.31 + prove $0.00, 4954 token, 66 s, controllo NO
+13:50:43 sonnet/email/agent-sdk/r1: sessione avviata
+13:50:54 sonnet/documenti/python/r3: $0.29 + prove $0.00, 4406 token, 49 s, controllo NO
+13:50:54 sonnet/spese/tokyn/r2: sessione avviata
+13:51:52 sonnet/fattura/tokyn/r1: $0.10 + prove $0.03, 2885 token, 73 s, controllo ok
+13:51:52 sonnet/email/python/r2: sessione avviata
+13:51:52 sonnet/log/python/r3: $0.30 + prove $0.00, 4999 token, 56 s, controllo NO
+13:51:52 sonnet/email/tokyn/r1: sessione avviata
+13:52:01 sonnet/email/agent-sdk/r1: $0.26 + prove $0.06, 2936 token, 57 s, controllo ok
+13:52:01 sonnet/recensioni/agent-sdk/r1: sessione avviata
+13:52:15 sonnet/spese/tokyn/r2: $0.09 + prove $0.00, 2913 token, 54 s, controllo ok
+13:52:15 sonnet/spese/python/r3: sessione avviata
+13:52:51 sonnet/email/python/r2: $0.27 + prove $0.00, 3658 token, 45 s, controllo NO
+13:52:51 sonnet/scadenze/python/r1: sessione avviata
+13:53:03 sonnet/recensioni/agent-sdk/r1: $0.26 + prove $0.04, 3081 token, 44 s, controllo ok
+13:53:03 sonnet/candidati/python/r1: sessione avviata
+13:53:14 sonnet/spese/python/r3: $0.31 + prove $0.00, 5078 token, 44 s, controllo NO
+13:53:14 sonnet/assistente/python/r3: sessione avviata
+13:53:20 sonnet/email/tokyn/r1: $0.07 + prove $0.00, 1738 token, 62 s, controllo ok
+13:53:20 sonnet/moderazione/agent-sdk/r2: sessione avviata
+13:54:06 sonnet/scadenze/python/r1: $0.32 + prove $0.00, 5282 token, 62 s, controllo NO
+13:54:06 sonnet/articolo/agent-sdk/r1: sessione avviata
+13:54:20 sonnet/candidati/python/r1: $0.34 + prove $0.00, 5407 token, 63 s, controllo NO
+13:54:20 sonnet/fattura/tokyn/r3: sessione avviata
+13:54:26 sonnet/moderazione/agent-sdk/r2: $0.27 + prove $0.07, 3543 token, 45 s, controllo ok
+13:54:26 sonnet/spese/agent-sdk/r3: sessione avviata
+13:54:33 sonnet/assistente/python/r3: $0.31 + prove $0.00, 5150 token, 66 s, controllo NO
+13:54:33 sonnet/moderazione/tokyn/r2: sessione avviata
+13:55:20 sonnet/fattura/tokyn/r3: $0.09 + prove $0.00, 2619 token, 45 s, controllo ok
+13:55:20 sonnet/riunione/python/r2: sessione avviata
+13:55:24 sonnet/spese/agent-sdk/r3: $0.28 + prove $0.02, 3702 token, 42 s, controllo ok
+13:55:24 sonnet/riunione/python/r3: sessione avviata
+13:55:29 sonnet/articolo/agent-sdk/r1: $0.28 + prove $0.06, 4050 token, 63 s, controllo ok
+13:55:29 sonnet/email/python/r3: sessione avviata
+13:56:22 sonnet/moderazione/tokyn/r2: $0.08 + prove $0.00, 2066 token, 80 s, controllo ok
+13:56:22 sonnet/scadenze/agent-sdk/r1: sessione avviata
+13:56:29 sonnet/email/python/r3: $0.27 + prove $0.00, 3705 token, 46 s, controllo NO
+13:56:29 sonnet/vendite/python/r3: sessione avviata
+13:56:31 sonnet/riunione/python/r3: $0.31 + prove $0.00, 4438 token, 53 s, controllo NO
+13:56:31 sonnet/assistente/tokyn/r3: sessione avviata
+13:56:32 sonnet/riunione/python/r2: $0.34 + prove $0.00, 4871 token, 59 s, controllo NO
+13:56:32 sonnet/email/python/r1: sessione avviata
+13:57:31 sonnet/vendite/python/r3: $0.29 + prove $0.00, 4470 token, 49 s, controllo NO
+13:57:31 sonnet/assistente/python/r2: sessione avviata
+13:57:49 sonnet/scadenze/agent-sdk/r1: $0.30 + prove $0.15, 4349 token, 68 s, controllo ok
+13:57:49 sonnet/articolo/tokyn/r3: sessione avviata
+13:57:56 sonnet/email/python/r1: $0.28 + prove $0.00, 3923 token, 70 s, controllo NO
+13:57:56 sonnet/spese/tokyn/r3: sessione avviata
+13:58:09 sonnet/assistente/tokyn/r3: $0.07 + prove $0.01, 1501 token, 51 s, controllo ok
+13:58:09 sonnet/recensioni/python/r2: sessione avviata
+13:58:41 sonnet/assistente/python/r2: $0.29 + prove $0.00, 4430 token, 56 s, controllo NO
+13:58:41 sonnet/moderazione/python/r1: sessione avviata
+13:59:06 sonnet/recensioni/python/r2: $0.30 + prove $0.00, 3977 token, 44 s, controllo NO
+13:59:06 sonnet/assistente/tokyn/r2: sessione avviata
+13:59:09 sonnet/articolo/tokyn/r3: $0.09 + prove $0.03, 2143 token, 58 s, controllo ok
+13:59:09 sonnet/recensioni/tokyn/r2: sessione avviata
+13:59:40 sonnet/spese/tokyn/r3: $0.08 + prove $0.00, 2217 token, 74 s, controllo ok
+13:59:40 sonnet/vendite/agent-sdk/r2: sessione avviata
+14:00:15 sonnet/moderazione/python/r1: $0.35 + prove $0.00, 6028 token, 80 s, controllo NO
+14:00:15 sonnet/moderazione/python/r2: sessione avviata
+14:00:27 sonnet/recensioni/tokyn/r2: $0.07 + prove $0.00, 1739 token, 48 s, controllo ok
+14:00:27 sonnet/riunione/agent-sdk/r1: sessione avviata
+14:00:28 sonnet/assistente/tokyn/r2: $0.07 + prove $0.02, 1697 token, 52 s, controllo ok
+14:00:28 sonnet/recensioni/python/r3: sessione avviata
+14:01:06 sonnet/vendite/agent-sdk/r2: $0.28 + prove $0.02, 3983 token, 64 s, controllo ok
+14:01:06 sonnet/moderazione/tokyn/r1: sessione avviata
+14:01:36 sonnet/moderazione/python/r2: $0.35 + prove $0.00, 5765 token, 68 s, controllo NO
+14:01:36 sonnet/email/agent-sdk/r3: sessione avviata
+14:01:45 sonnet/riunione/agent-sdk/r1: $0.28 + prove $0.02, 3561 token, 60 s, controllo ok
+14:01:45 sonnet/spese/tokyn/r1: sessione avviata
+14:01:49 sonnet/recensioni/python/r3: $0.31 + prove $0.00, 4730 token, 67 s, controllo NO
+14:01:49 sonnet/catalogo/agent-sdk/r3: sessione avviata
+14:02:36 sonnet/moderazione/tokyn/r1: $0.08 + prove $0.00, 2177 token, 50 s, controllo ok
+14:02:36 sonnet/scadenze/python/r2: sessione avviata
+14:02:43 sonnet/email/agent-sdk/r3: $0.27 + prove $0.06, 2784 token, 46 s, controllo ok
+14:02:43 sonnet/magazzino/python/r2: sessione avviata
+14:02:56 sonnet/catalogo/agent-sdk/r3: $0.27 + prove $0.04, 3340 token, 50 s, controllo ok
+14:02:56 sonnet/log/python/r2: sessione avviata
+14:03:08 sonnet/spese/tokyn/r1: $0.09 + prove $0.00, 3104 token, 54 s, controllo ok
+14:03:08 sonnet/catalogo/agent-sdk/r2: sessione avviata
+14:03:52 sonnet/scadenze/python/r2: $0.30 + prove $0.00, 5188 token, 62 s, controllo NO
+14:03:52 sonnet/catalogo/tokyn/r1: sessione avviata
+14:04:10 sonnet/magazzino/python/r2: $0.29 + prove $0.00, 5565 token, 74 s, controllo NO
+14:04:10 sonnet/moderazione/agent-sdk/r1: sessione avviata
+14:04:15 sonnet/log/python/r2: $0.31 + prove $0.00, 4880 token, 65 s, controllo NO
+14:04:15 sonnet/catalogo/python/r2: sessione avviata
+14:04:45 sonnet/catalogo/agent-sdk/r2: $0.28 + prove $0.04, 3900 token, 77 s, controllo ok
+14:04:45 sonnet/candidati/tokyn/r2: sessione avviata
+14:05:07 sonnet/catalogo/tokyn/r1: $0.08 + prove $0.00, 1984 token, 54 s, controllo ok
+14:05:07 sonnet/articolo/tokyn/r1: sessione avviata
+14:05:14 sonnet/moderazione/agent-sdk/r1: $0.27 + prove $0.07, 3482 token, 43 s, controllo ok
+14:05:14 sonnet/magazzino/tokyn/r3: sessione avviata
+14:05:32 sonnet/catalogo/python/r2: $0.31 + prove $0.00, 4941 token, 64 s, controllo NO
+14:05:32 sonnet/email/tokyn/r3: sessione avviata
+14:06:08 sonnet/articolo/tokyn/r1: $0.08 + prove $0.02, 1791 token, 40 s, controllo ok
+14:06:08 sonnet/fattura/agent-sdk/r2: sessione avviata
+14:06:28 sonnet/candidati/tokyn/r2: $0.09 + prove $0.06, 2319 token, 73 s, controllo ok
+14:06:28 sonnet/fattura/python/r3: sessione avviata
+14:07:01 sonnet/email/tokyn/r3: $0.08 + prove $0.00, 1802 token, 62 s, controllo ok
+14:07:01 sonnet/fattura/python/r2: sessione avviata
+14:07:06 sonnet/magazzino/tokyn/r3: $0.08 + prove $0.04, 2380 token, 69 s, controllo ok
+14:07:06 sonnet/documenti/python/r2: sessione avviata
+14:07:37 sonnet/fattura/python/r3: $0.30 + prove $0.00, 5099 token, 55 s, controllo NO
+14:07:37 sonnet/magazzino/agent-sdk/r2: sessione avviata
+14:07:43 sonnet/fattura/agent-sdk/r2: $0.31 + prove $0.06, 4435 token, 73 s, controllo ok
+14:07:43 sonnet/recensioni/agent-sdk/r3: sessione avviata
+14:07:53 sonnet/fattura/python/r2: $0.29 + prove $0.00, 4146 token, 39 s, controllo NO
+14:07:53 sonnet/documenti/tokyn/r2: sessione avviata
+14:08:21 sonnet/documenti/python/r2: $0.34 + prove $0.00, 5131 token, 61 s, controllo NO
+14:08:21 sonnet/scadenze/agent-sdk/r3: sessione avviata
+14:08:37 sonnet/recensioni/agent-sdk/r3: $0.26 + prove $0.05, 3010 token, 34 s, controllo ok
+14:08:37 sonnet/catalogo/agent-sdk/r1: sessione avviata
+14:09:21 sonnet/documenti/tokyn/r2: $0.09 + prove $0.00, 2342 token, 66 s, controllo ok
+14:09:21 sonnet/recensioni/python/r1: sessione avviata
+14:09:33 sonnet/magazzino/agent-sdk/r2: $0.28 + prove $0.11, 4388 token, 84 s, controllo ok
+14:09:33 sonnet/moderazione/tokyn/r3: sessione avviata
+14:09:54 sonnet/catalogo/agent-sdk/r1: $0.27 + prove $0.04, 3582 token, 58 s, controllo ok
+14:09:54 sonnet/articolo/tokyn/r2: sessione avviata
+14:09:56 sonnet/scadenze/agent-sdk/r3: $0.29 + prove $0.17, 4616 token, 75 s, controllo ok
+14:09:56 sonnet/assistente/agent-sdk/r3: sessione avviata
+14:10:30 sonnet/recensioni/python/r1: $0.34 + prove $0.00, 5379 token, 56 s, controllo NO
+14:10:30 sonnet/vendite/agent-sdk/r3: sessione avviata
+14:10:57 sonnet/articolo/tokyn/r2: $0.11 + prove $0.00, 2865 token, 45 s, controllo ok
+14:10:57 sonnet/spese/python/r2: sessione avviata
+14:11:01 sonnet/assistente/agent-sdk/r3: $0.27 + prove $0.02, 3145 token, 42 s, controllo ok
+14:11:01 sonnet/fattura/agent-sdk/r3: sessione avviata
+14:11:32 sonnet/moderazione/tokyn/r3: $0.09 + prove $0.04, 2435 token, 84 s, controllo ok
+14:11:32 sonnet/scadenze/agent-sdk/r2: sessione avviata
+14:11:40 sonnet/vendite/agent-sdk/r3: $0.27 + prove $0.02, 3654 token, 50 s, controllo ok
+14:11:40 sonnet/candidati/agent-sdk/r1: sessione avviata
+14:12:16 sonnet/spese/python/r2: $0.38 + prove $0.00, 6208 token, 66 s, controllo NO
+14:12:16 sonnet/candidati/python/r2: sessione avviata
+14:12:33 sonnet/fattura/agent-sdk/r3: $0.28 + prove $0.08, 3961 token, 71 s, controllo ok
+14:12:33 sonnet/fattura/python/r1: sessione avviata
+14:12:45 sonnet/scadenze/agent-sdk/r2: $0.28 + prove $0.10, 4217 token, 56 s, controllo ok
+14:12:55 sonnet/candidati/agent-sdk/r1: $0.31 + prove $0.15, 4196 token, 58 s, controllo ok
+14:13:27 sonnet/candidati/python/r2: $0.35 + prove $0.00, 5613 token, 57 s, controllo NO
+14:14:03 sonnet/fattura/python/r1: $0.35 + prove $0.00, 5865 token, 76 s, controllo NO
+14:14:03 concluse 135 su 135; da rifare per l'infrastruttura: 0

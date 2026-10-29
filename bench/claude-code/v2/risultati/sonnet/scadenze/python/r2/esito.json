@@ -1,0 +1,72 @@
+{
+ "prova": "sonnet/scadenze/python/r2",
+ "cartella": "4c0bcdd2f6",
+ "modello": "sonnet",
+ "compito": "scadenze",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2985769,
+ "costo_usd_telemetria": 0.298577,
+ "token_output": 5188,
+ "token_input": 12,
+ "token_cache_scritti": 55516,
+ "token_cache_letti": 246089,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 8,
+ "secondi": 62.2,
+ "secondi_api": 49.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 105,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": " Anthropic con uno finto che restituisce una risposta fissa. In questo modo ho verificato il filtro, l'ordinamento, i giorni mancanti e il formato del file, ma non la qualità delle email.\n- Con riferimento 2026-11-01 escono 4 contratti. Il Backup in cloud, che scade il 1 dicembre a 30 giorni esatti, è incluso.\n- Con riferimento 2026-10-20 il Bar Centrale esce con `giorni_mancanti` 0.\n- Con 2026-12-31 la lista è vuota e non viene fatta nessuna chiamata.\n- I contratti già scaduti non compaiono. Per esempio, con 2026-11-01 il Bar Centrale (scaduto il 20 ottobre) è escluso.\n- Senza chiave API il programma si ferma con un messaggio chiaro.\n- Con una data non valida o senza argomento stampa un errore e si ferma.\n- Ho cancellato il `risultato.json` di prova, quindi nella cartella ci sono solo `contratti.csv` e `programma.py`.\n\n**Scelte e limiti**\n- Se una chiamata fallisce o la risposta è incompleta, il programma si ferma senza scrivere `risultato.json`, così non resta un file a metà.\n- Le righe del CSV con scadenza non valida vengono saltate, con un avviso su stderr.\n- Il prompt chiede email di massimo 120 parole, che non inventino prezzi o recapiti e che si chiudano con \"Il team assistenza clienti\". Se hai una firma diversa, cambiala nella costante `SYSTEM`.\n- Non ho attivato il fallback lato server in caso di rifiuto del modello, perché non potevo verificarlo senza chiave. Se Claude rifiuta una richiesta, il programma si ferma con un errore. Per email di promemoria è improbabile.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 5,
+  "dettagli": [
+   "risultato.json mancante o senza la lista in_scadenza"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

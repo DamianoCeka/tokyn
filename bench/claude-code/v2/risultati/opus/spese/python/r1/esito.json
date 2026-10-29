@@ -1,0 +1,72 @@
+{
+ "prova": "opus/spese/python/r1",
+ "cartella": "8dfe5f9856",
+ "modello": "opus",
+ "compito": "spese",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.8322715999999999,
+ "costo_usd_telemetria": 0.832272,
+ "token_output": 8168,
+ "token_input": 26,
+ "token_cache_scritti": 65540,
+ "token_cache_letti": 722438,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 15,
+ "secondi": 88.0,
+ "secondi_api": 76.7,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 11,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 132,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "varlo davvero**, dalla cartella con `movimenti.csv`:\n```\nexport ANTHROPIC_API_KEY=la-tua-chiave\npython programma.py\n```\n(oppure `ant auth login` una volta sola). Serve il pacchetto `anthropic` (`pip install anthropic`).\n\n**Come funziona**\n- Legge il CSV. Accetta anche i file salvati da Excel e gli importi con il punto delle migliaia, tipo `1.850,00`.\n- Manda a Claude Opus 5.5 i movimenti numerati, 100 per richiesta. La risposta può contenere solo le cinque categorie. Se ne manca una per qualche movimento, il programma si ferma con un errore invece di scrivere un risultato incompleto.\n- Fa le somme in Python, senza errori di arrotondamento, e arrotonda i totali al centesimo.\n\n**Scelte da confermare**\n- **Le entrate finiscono in `altro`.** Lo stipendio da 1.850 € viene sommato lì, quindi in quella prova il totale di `altro` era +1848,5. Se vuoi solo le uscite, basta escludere gli importi positivi.\n- **Ci sono sempre tutte e cinque le categorie nei totali**, anche quelle a zero.\n- **Nelle istruzioni a Claude ho scritto io cosa va in ogni categoria.** Per esempio, bollette e bricolage in `casa`, Netflix e ristoranti in `svago`. Si cambiano in cima al file, nel testo `ISTRUZIONI`.\n- **Se Claude rifiuta la richiesta**, Anthropic la ripete in automatico con un altro modello (opzione `fallbacks`). Se non la vuoi, la tolgo.\n- **Ho usato il livello di ragionamento più basso** (`low`) perché costa meno e di solito basta per classificare. Se la prova vera dà categorie sbagliate, si alza.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 3,
+  "dettagli": [
+   "risultato.json mancante o senza la lista movimenti"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

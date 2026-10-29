@@ -1,0 +1,22 @@
+[
+  {
+    "domanda": "Quante risme di carta A4 abbiamo?",
+    "risposta": "Abbiamo 120 risme di carta A4 in magazzino, sopra la scorta minima di 50."
+  },
+  {
+    "domanda": "Qual è il valore totale del magazzino?",
+    "risposta": "Il valore totale del magazzino è 1.540,20 €."
+  },
+  {
+    "domanda": "Quali prodotti sono sotto la scorta minima?",
+    "risposta": "Tre prodotti sono sotto la scorta minima: il toner per stampante laser (ne manca 1 pezzo), gli evidenziatori gialli (ne mancano 12) e le penne a sfera blu (ne mancano 50)."
+  },
+  {
+    "domanda": "Quanto vale la scorta di toner che abbiamo?",
+    "risposta": "La scorta di toner per stampante laser vale 235,50 € (3 pezzi da 78,50 € l'uno)."
+  },
+  {
+    "domanda": "Quanti evidenziatori mancano per arrivare alla scorta minima?",
+    "risposta": "Mancano 12 evidenziatori gialli per arrivare alla scorta minima: ne hai 18 e la scorta minima è 30."
+  }
+]

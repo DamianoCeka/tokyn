@@ -1,0 +1,80 @@
+{
+ "prova": "sonnet/spese/tokyn/r1",
+ "cartella": "a6eb85c971",
+ "modello": "sonnet",
+ "compito": "spese",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.0937377,
+ "costo_usd_telemetria": 0.093738,
+ "token_output": 3104,
+ "token_input": 10,
+ "token_cache_scritti": 13891,
+ "token_cache_letti": 71137,
+ "prove_del_programma": {
+  "costo_usd": 0.000813,
+  "token_output": 277,
+  "chiamate": 5,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 6,
+ "secondi": 54.5,
+ "secondi_api": 33.5,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 3
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 846,
+ "righe_tokyn": 44,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "` dalla cartella di `movimenti.csv` e scrive `risultato.json` nel formato che mi hai indicato. Le cinque righe di prova hanno avuto categorie giuste e nello stesso ordine del file, con importi come numeri e totali arrotondati al centesimo.\n\nIl file di prova conteneva anche tre casi un po' particolari, che il programma ha gestito bene:\n- un importo con il separatore delle migliaia (`-1.200,30`);\n- un `;` dentro la descrizione;\n- una riga vuota.\n\nCose da sapere:\n- **Chiave API:** nella prova non c'era `ANTHROPIC_API_KEY`, quindi ha risposto il tuo Claude Code (circa 19 secondi per 5 righe). Per usarlo da solo ogni mese ti serve la chiave API di Anthropic: con la chiave il programma la usa da sé.\n- **Modello:** per classificare uso `claude-haiku`, che costa poco.\n- **Batch API:** con la chiave le richieste vanno in blocco con la Batch API, a metà prezzo. Di solito ci mette qualche minuto, ma può arrivare a 24 ore. Se vuoi il risultato subito, dimmelo e passo a una richiesta per riga.\n- **Righe scartate:** le righe con meno di tre campi o con un importo non numerico vengono saltate, e il programma stampa un avviso con la riga.\n- **Codifica:** il file viene letto come UTF-8. Non ho provato un export in un'altra codifica, per esempio Latin-1.\n\nHo scritto il programma in Tokyn e `programma.py` è il Python generato dal compilatore, che funziona da solo. Accanto trovi `programma.tokyn`, il sorgente da modificare. Ho lasciato anche il `movimenti.csv` di prova: sostituiscilo con il tuo.",
+ "controllo": {
+  "ok": true,
+  "punti": 3,
+  "massimo": 3,
+  "dettagli": [
+   "8 movimenti nell'ordine del file con data, descrizione e importo giusti: True",
+   "categorie ammesse e giuste: True (8 su 8: ['spesa alimentare', 'trasporti', 'casa', 'svago', 'spesa alimentare', 'trasporti', 'casa', 'altro'])",
+   "totali arrotondati al centesimo e coerenti con le categorie assegnate: True (uguali ai totali attesi: True; {'spesa alimentare': -85.5, 'trasporti': -51.8, 'casa': -728.45, 'svago': -19.0, 'altro': -12.8})"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.001279,
+   "token_output": 446,
+   "chiamate": 8,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

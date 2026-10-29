@@ -1,0 +1,51 @@
+from decimal import Decimal, ROUND_HALF_UP
+
+type Riga:
+    descrizione: str "descrizione dell'articolo come scritta in fattura"
+    quantita: float
+    prezzo_unitario: float "prezzo unitario in euro"
+
+type Fattura:
+    fornitore: str "ragione sociale di chi emette la fattura (non il cliente)"
+    data: str "data della fattura nel formato AAAA-MM-GG"
+    righe: list[Riga] "tutte le righe articolo, nell'ordine della fattura"
+    totale_dichiarato: float "totale finale da pagare scritto in fattura, in euro"
+
+agent Lettore:
+    model: "claude-haiku"
+    effort: "low"
+    instructions: """
+        Estrai i dati da una fattura di un fornitore in testo semplice.
+        Gli importi italiani usano la virgola per i decimali e il punto per le migliaia: "1.234,56" vale 1234.56.
+        Riporta i valori come scritti in fattura, senza correggerli.
+    """
+    output: Fattura
+
+def numero(x: float):
+    if x == int(x):
+        return int(x)
+    return x
+
+def euro(x):
+    return Decimal(str(x))
+
+main:
+    f = Lettore.ask(read_file("fattura.txt"))
+    righe = []
+    totale = Decimal("0")
+    for r in f.righe:
+        totale += euro(r.quantita) * euro(r.prezzo_unitario)
+        righe.append({"descrizione": r.descrizione, "quantita": numero(r.quantita), "prezzo_unitario": r.prezzo_unitario})
+    centesimi = Decimal("0.01")
+    calcolato = totale.quantize(centesimi, rounding=ROUND_HALF_UP)
+    dichiarato = euro(f.totale_dichiarato).quantize(centesimi, rounding=ROUND_HALF_UP)
+    risultato = {
+        "fornitore": f.fornitore,
+        "data": f.data,
+        "righe": righe,
+        "totale_dichiarato": float(dichiarato),
+        "totale_calcolato": float(calcolato),
+        "totale_corretto": calcolato == dichiarato,
+    }
+    write_file("risultato.json", json_dump(risultato))
+    print(json_dump(risultato))

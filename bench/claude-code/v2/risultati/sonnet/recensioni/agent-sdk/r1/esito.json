@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/recensioni/agent-sdk/r1",
+ "cartella": "bcbd114968",
+ "modello": "sonnet",
+ "compito": "recensioni",
+ "condizione": "agent-sdk",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2605146,
+ "costo_usd_telemetria": 0.260515,
+ "token_output": 3081,
+ "token_input": 8,
+ "token_cache_scritti": 54223,
+ "token_cache_letti": 127966,
+ "prove_del_programma": {
+  "costo_usd": 0.044173,
+  "token_output": 590,
+  "chiamate": 6,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 7,
+ "secondi": 43.5,
+ "secondi_api": 33.5,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 3,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 71,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": " con voto medio 3.0.\n\nI risultati sono sensati e nello stesso ordine del file:\n- **Positive:** \"Prodotto fantastico…\" e \"Ottimo rapporto qualità prezzo…\" hanno preso 5.\n- **Negative:** \"Si è rotto dopo una settimana…\" e \"La batteria dura pochissimo…\" hanno preso 1.\n- **Neutre:** \"Nella media…\" e \"Fa quello che promette…\" hanno preso 3.\n\nCome funziona:\n- **Una richiesta a Claude per recensione**, fatte in parallelo (4 alla volta). L'ordine nel JSON resta quello del file.\n- **Output vincolato:** la risposta deve avere un sentimento tra positivo, negativo o neutro e un voto intero da 1 a 5. In più il programma ricontrolla i valori e ritenta fino a 3 volte se la risposta è malformata o c'è un errore transitorio. Se continua a fallire, si ferma con un errore invece di scrivere un file incompleto.\n- **Media calcolata dal programma**, non da Claude, arrotondata a due decimali.\n- **Righe vuote ignorate**, perché ogni riga con testo è una recensione.\n- **Testo delle recensioni trattato solo come dati:** eventuali istruzioni scritte dentro una recensione vengono ignorate.\n\nScelte che puoi cambiare:\n- **Modello:** ho usato `claude-opus-5-5` (costante `MODELLO`). Per file grandi puoi passare a `claude-haiku-5-5`, che costa molto meno.\n- **Autenticazione:** l'SDK si appoggia alla CLI `claude`, che nel mio ambiente era già autenticata. Sul tuo computer deve esserlo anche lì, oppure serve `ANTHROPIC_API_KEY`.\n- **Sovrascrittura:** il programma sovrascrive `risultato.json` a ogni esecuzione.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 recensioni nell'ordine del file: True",
+   "sentimenti giusti: 6 su 6",
+   "voti interi da 1 a 5 e coerenti col sentimento: True ([5.0, 1.0, 3.0, 5.0, 1.0, 3.0])",
+   "media giusta dei voti: True (3.0)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.041093,
+   "token_output": 604,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

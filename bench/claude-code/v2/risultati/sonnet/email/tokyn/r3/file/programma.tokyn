@@ -1,0 +1,25 @@
+import os
+
+type Esito:
+    categoria: "ordine" | "reclamo" | "informazioni" | "spam" "tipo di email"
+    urgente: bool "True se il cliente ha una scadenza vicina o il problema richiede azione immediata"
+    riassunto: str "riassunto in una sola frase, in italiano"
+
+agent Smistatore:
+    model: "claude-haiku"
+    effort: "low"
+    instructions: """
+        Sei l'assistente di un negozio. Ti arriva il testo di un'email ricevuta all'indirizzo del negozio:
+        classificala, dì se è urgente e riassumila in una frase in italiano.
+    """
+    output: Esito
+
+main:
+    risultato = []
+    for nome in sorted(os.listdir("email")):
+        if not nome.endswith(".txt"):
+            continue
+        e = Smistatore.ask(read_file("email/" + nome))
+        risultato.append({"file": nome, "categoria": e.categoria, "urgente": e.urgente, "riassunto": e.riassunto})
+    write_file("risultato.json", json_dump(risultato))
+    print(f"{len(risultato)} email smistate in risultato.json")

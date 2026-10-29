@@ -1,0 +1,8 @@
+[
+  {"codice": "FER-A", "nome": "Trapano avvitatore a batteria", "quantita": 14, "prezzo_unitario": 89.9, "scorta_minima": 5},
+  {"codice": "FER-B", "nome": "Martello da carpentiere", "quantita": 37, "prezzo_unitario": 12.45, "scorta_minima": 10},
+  {"codice": "FER-C", "nome": "Nastro isolante nero", "quantita": 8, "prezzo_unitario": 1.75, "scorta_minima": 40},
+  {"codice": "FER-D", "nome": "Guanti da lavoro in pelle", "quantita": 120, "prezzo_unitario": 4.18, "scorta_minima": 50},
+  {"codice": "FER-E", "nome": "Silicone sigillante trasparente", "quantita": 6, "prezzo_unitario": 5.9, "scorta_minima": 20},
+  {"codice": "FER-F", "nome": "Livella a bolla", "quantita": 23, "prezzo_unitario": 15.35, "scorta_minima": 8}
+]

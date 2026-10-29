@@ -1,0 +1,40 @@
+import os
+
+type Risposta:
+    risposta: str "risposta breve e precisa, in italiano, basata solo sui documenti"
+    fonte: str "nome esatto del file (es. ferie.txt) da cui viene la risposta"
+
+type Voce:
+    domanda: str
+    risposta: str
+    fonte: str
+
+def carica_docs() -> str:
+    testo = ""
+    for nome in sorted(os.listdir("docs")):
+        if nome.endswith(".txt"):
+            testo += "=== FILE: " + nome + " ===\n" + read_file("docs/" + nome, "") + "\n\n"
+    return testo
+
+DOCS = carica_docs()
+
+agent Assistente:
+    instructions: f"""
+        Rispondi alla domanda di un collega usando solo i documenti aziendali qui sotto.
+        Nel campo fonte scrivi il nome esatto del file da cui hai preso la risposta, senza cartella.
+        Se i documenti non contengono la risposta, scrivi "Non presente nei documenti" come risposta e "nessuno" come fonte.
+
+        {DOCS}
+    """
+    output: Risposta
+    effort: "low"
+
+main:
+    risultato = []
+    for riga in read_file("domande.txt", "").split("\n"):
+        domanda = riga.strip()
+        if domanda != "":
+            r = Assistente.ask(domanda)
+            risultato.append(Voce(domanda=domanda, risposta=r.risposta, fonte=os.path.basename(r.fonte.strip())))
+    write_file("risultato.json", json_dump(risultato))
+    print(f"Scritte {len(risultato)} risposte in risultato.json")

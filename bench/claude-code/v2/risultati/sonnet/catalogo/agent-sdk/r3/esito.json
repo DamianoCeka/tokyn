@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/catalogo/agent-sdk/r3",
+ "cartella": "571c817d47",
+ "modello": "sonnet",
+ "compito": "catalogo",
+ "condizione": "agent-sdk",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2683895,
+ "costo_usd_telemetria": 0.26839,
+ "token_output": 3340,
+ "token_input": 10,
+ "token_cache_scritti": 54057,
+ "token_cache_letti": 187415,
+ "prove_del_programma": {
+  "costo_usd": 0.036991,
+  "token_output": 196,
+  "chiamate": 6,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 49.5,
+ "secondi_api": 39.3,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Bash": 4,
+  "Skill": 1,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 83,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "catalogo_en.csv",
+  "programma.py"
+ ],
+ "risposta_finale": "Ho scritto `programma.py` e l'ho provato sul tuo `catalogo.csv`. Ha prodotto `catalogo_en.csv` con le 6 righe tradotte in circa 7 secondi.\n\nHo controllato che l'intestazione, il separatore `;` e l'ordine delle righe siano identici all'originale. Anche codice, nome e prezzo sono rimasti invariati. La tua riga d'esempio è uscita così:\n\n```\nTZ-014;Tazza Aurora;Handmade ceramic mug, dishwasher safe;12,90\n```\n\nCome funziona:\n- Per ogni prodotto fa una chiamata a Claude tramite `claude_agent_sdk.query`, senza strumenti e con un solo turno. Il prompt chiede la sola traduzione, senza commenti, e mantiene numeri e unità.\n- Le chiamate vanno in parallelo (4 alla volta). Se una fallisce, il programma riprova fino a 3 volte e poi si ferma con un errore, senza scrivere un file a metà.\n- Se la descrizione è vuota, la riga resta com'è.\n- Il programma legge la colonna dalla sua intestazione (`descrizione`), non dalla posizione.\n\nNon ho scelto un modello: usa quello predefinito dell'SDK. Se ne vuoi uno preciso, aggiungi `model=\"...\"` in `ClaudeAgentOptions`.\n\nNel test non c'era `ANTHROPIC_API_KEY`, ma la chiamata ha funzionato lo stesso con le credenziali di Claude Code già presenti qui. Sulla macchina dove lo userai serve un login di Claude Code o una chiave.\n\nLe traduzioni sono tutte sensate. Ad esempio, \"Cuscino\" è diventato \"pillow\" e \"40 ore\" \"40-hour burn time\". Una rilettura da parte tua prima di pubblicare sul sito internazionale resta consigliabile.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "intestazione codice;nome;descrizione;prezzo: True (['codice', 'nome', 'descrizione', 'prezzo'])",
+   "5 prodotti con 4 colonne e codici nell'ordine del file: True (5 righe)",
+   "codice, nome e prezzo identici: True",
+   "descrizioni tradotte in inglese: 5 su 5"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.031544,
+   "token_output": 243,
+   "chiamate": 5,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

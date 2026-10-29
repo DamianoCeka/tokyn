@@ -1,0 +1,25 @@
+{
+  "candidati": [
+    {
+      "file": "bianchi_elena.txt",
+      "punteggio": 9,
+      "motivazione": "Oltre tre anni nel reparto telefonia di MediaWorld, con vendita di garanzie, cassa e weekend; poca esperienza documentata sul magazzino e sugli accessori informatici."
+    },
+    {
+      "file": "rizzo_davide.txt",
+      "punteggio": 6,
+      "motivazione": "Circa tre anni di vendita al dettaglio, uso della cassa e conoscenza degli smartphone; però conosce poco i computer e mancano gestionale e vendita di servizi aggiuntivi."
+    },
+    {
+      "file": "esposito_marco.txt",
+      "punteggio": 4,
+      "motivazione": "Ha esperienza col gestionale di magazzino, passione per l'informatica e disponibilità ai turni, ma non ha esperienza nella vendita al dettaglio né nella proposta di servizi aggiuntivi."
+    },
+    {
+      "file": "ferraro_chiara.txt",
+      "punteggio": 2,
+      "motivazione": "La candidata ha sei anni di esperienza relazionale in ambito sanitario. Non ha però esperienza nella vendita al dettaglio né conoscenze di elettronica, cassa o gestionale."
+    }
+  ],
+  "migliore": "bianchi_elena.txt"
+}

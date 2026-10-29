@@ -1,0 +1,81 @@
+import csv
+import io
+from decimal import Decimal
+
+agent Analista:
+    instructions: """
+        Scrivi per la direzione aziendale un breve paragrafo in italiano (3-5 frasi, testo semplice senza
+        titoli né elenchi) che commenta il fatturato trimestrale. Inizia dicendo qual è il paese con il
+        fatturato più alto e quanto ha fatturato, poi commenta i numeri: peso dei paesi sul totale, distacchi,
+        clienti migliori. Usa solo i dati ricevuti e scrivi gli importi esattamente come sono formattati.
+    """
+    effort: "low"
+
+def leggi_csv(percorso: str) -> list:
+    testo = read_file(percorso).lstrip("﻿")
+    righe = []
+    for r in csv.DictReader(io.StringIO(testo)):
+        pulita = {}
+        for k, v in r.items():
+            if k != None:
+                pulita[k.strip()] = str(v or "").strip()
+        if pulita.get("id", "") != "":
+            righe.append(pulita)
+    return righe
+
+def euro(x) -> str:
+    # 15230.5 -> "15.230,50"
+    return f"{x:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+def secondo(coppia: list):
+    return coppia[1]
+
+main:
+    clienti = {}
+    for c in leggi_csv("clienti.csv"):
+        clienti[c["id"]] = c
+
+    per_paese = {}
+    per_cliente = {}
+    for o in leggi_csv("ordini.csv"):
+        cid = o["cliente_id"]
+        if cid not in clienti:
+            print(f"Attenzione: ordine {o['id']} con cliente {cid} non presente in clienti.csv, ignorato")
+            continue
+        importo = Decimal(o["importo"])
+        paese = clienti[cid]["paese"]
+        per_paese[paese] = per_paese.get(paese, Decimal(0)) + importo
+        per_cliente[cid] = per_cliente.get(cid, Decimal(0)) + importo
+
+    if len(per_paese) == 0:
+        print("Nessun ordine da elaborare.")
+        return
+
+    paesi = []
+    for p, v in per_paese.items():
+        paesi.append([p, float(round(v, 2))])
+    paesi = sorted(sorted(paesi), key=secondo, reverse=True)
+    fatturato = {}
+    for p in paesi:
+        fatturato[p[0]] = p[1]
+
+    classifica = []
+    for cid, v in per_cliente.items():
+        classifica.append([clienti[cid]["nome"], float(round(v, 2))])
+    classifica = sorted(sorted(classifica), key=secondo, reverse=True)[:3]
+    migliori = []
+    for c in classifica:
+        migliori.append(c[0])
+
+    totale = float(round(sum(per_paese.values()), 2))
+    dati = f"Fatturato totale: {euro(totale)} euro\nFatturato per paese (dal più alto):\n"
+    for p in paesi:
+        dati += f"- {p[0]}: {euro(p[1])} euro ({f'{p[1] / totale * 100:.1f}'.replace('.', ',')}% del totale)\n"
+    dati += f"Paese con il fatturato più alto: {paesi[0][0]}\nI 3 clienti che hanno speso di più:\n"
+    for i, c in enumerate(classifica):
+        dati += f"{i + 1}. {c[0]}: {euro(c[1])} euro\n"
+
+    riassunto = Analista.ask(dati).strip()
+    risultato = {"fatturato_per_paese": fatturato, "migliori_clienti": migliori, "riassunto": riassunto}
+    write_file("risultato.json", json_dump(risultato))
+    print(json_dump(risultato))

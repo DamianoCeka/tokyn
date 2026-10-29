@@ -1,0 +1,43 @@
+type Scheda:
+    titolo: str "titolo breve dell'articolo, al massimo una decina di parole"
+    punti: list[str] "esattamente cinque punti chiave, una sola frase ciascuno, in ordine di importanza"
+    citati: list[str] "nomi completi delle persone e delle organizzazioni citate, ognuno una volta sola"
+
+agent Redattore:
+    instructions: """
+        Prepari schede di articoli di giornale per i colleghi di una redazione, in italiano.
+        Dato il testo di un articolo, scrivi:
+        - un titolo breve e informativo;
+        - esattamente cinque punti chiave, ognuno una sola frase completa che termina con il punto;
+        - i nomi di tutte le persone e le organizzazioni citate (enti, aziende, associazioni, ospedali),
+          ciascuno una volta sola, nella forma più completa usata nell'articolo. Non includere luoghi geografici.
+        Usa solo informazioni presenti nell'articolo.
+    """
+    output: Scheda
+    effort: "low"
+
+main:
+    testo = read_file("articolo.txt").strip()
+    if testo == "":
+        print("Il file articolo.txt è vuoto.")
+        return
+    scheda = Redattore.ask(testo)
+    for tentativo in range(2):
+        if len(scheda.punti) == 5:
+            break
+        scheda = Redattore.ask(f"Attenzione: servono ESATTAMENTE cinque punti chiave.\n\n{testo}")
+    if len(scheda.punti) != 5:
+        print(f"Errore: Claude ha restituito {len(scheda.punti)} punti invece di cinque.")
+        return
+    visti = []
+    citati = []
+    for nome in scheda.citati:
+        nome = nome.strip()
+        if nome != "" and nome.lower() not in visti:
+            visti.append(nome.lower())
+            citati.append(nome)
+    risultato = {"titolo": scheda.titolo.strip(), "punti": [], "citati": citati}
+    for p in scheda.punti:
+        risultato["punti"].append(p.strip())
+    write_file("risultato.json", json_dump(risultato))
+    print(f"Scheda scritta in risultato.json: {risultato['titolo']}")

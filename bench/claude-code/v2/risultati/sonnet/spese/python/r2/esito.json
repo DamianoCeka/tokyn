@@ -1,0 +1,74 @@
+{
+ "prova": "sonnet/spese/python/r2",
+ "cartella": "3d1d2966c2",
+ "modello": "sonnet",
+ "compito": "spese",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.3770993,
+ "costo_usd_telemetria": 0.377099,
+ "token_output": 6208,
+ "token_input": 18,
+ "token_cache_scritti": 66751,
+ "token_cache_letti": 479793,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 13,
+ "secondi": 65.5,
+ "secondi_api": 57.8,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Read": 2,
+  "Write": 1,
+  "Edit": 2
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 130,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": " `risultato.json` è quello che hai chiesto: stesso ordine del file, data e descrizione come nel file, importo come numero, totali arrotondati al centesimo.\n- Senza chiave il programma si ferma con il messaggio \"credenziali mancanti: imposta la variabile ANTHROPIC_API_KEY\" e non scrive nulla.\n- Non ho controllato la risposta reale di Claude: la richiesta con lo schema JSON e il modello `claude-opus-5-5` è scritta da documentazione, non provata. Se qualcosa non va, il probabile punto è lì.\n\n**Come funziona**\n- Manda i movimenti a Claude in blocchi da 100. La risposta è vincolata a uno schema JSON che ammette solo le cinque categorie.\n- Se Claude salta o inventa un movimento, o la risposta è troncata, il programma si ferma con un errore invece di scrivere dati sbagliati.\n- Gli importi sono sommati con `Decimal`, quindi niente errori di virgola mobile.\n- Il file viene letto anche se ha il BOM, e gli importi con il punto delle migliaia (`1.234,56`) sono gestiti.\n\n**Da sapere**\n- Gli importi positivi, come lo stipendio, finiscono in `altro` e rientrano nel suo totale. Per questo `altro` è +1848,50 e non solo le commissioni. Se vuoi solo le uscite, dimmelo.\n- Ho usato `claude-opus-5-5`. Per classificare movimenti basterebbe un modello più economico: si cambia la costante `MODEL`.\n- Prima di lanciarlo imposta la chiave (`export ANTHROPIC_API_KEY=...`) e poi esegui `python programma.py` nella cartella di `movimenti.csv`. Se mi dai la chiave o mi dici di usarla, rifaccio la prova vera.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 3,
+  "dettagli": [
+   "risultato.json mancante o senza la lista movimenti"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

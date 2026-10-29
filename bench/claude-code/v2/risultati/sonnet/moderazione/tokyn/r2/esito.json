@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/moderazione/tokyn/r2",
+ "cartella": "e15e406f14",
+ "modello": "sonnet",
+ "compito": "moderazione",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.0834848,
+ "costo_usd_telemetria": 0.083485,
+ "token_output": 2066,
+ "token_input": 10,
+ "token_cache_scritti": 13957,
+ "token_cache_letti": 69768,
+ "prove_del_programma": {
+  "costo_usd": 0.002326,
+  "token_output": 2467,
+  "chiamate": 12,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 6,
+ "secondi": 79.6,
+ "secondi_api": 30.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 3
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 829,
+ "righe_tokyn": 27,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "tile sul rame, tono aggressivo; la `riscrittura` è educata e tiene il contenuto |\n| 19 | rifiuta | spam, con invito a scrivere su WhatsApp |\n| 20 | rifiuta | contiene un'email personale |\n| 21 | pubblica | ringraziamento cortese |\n| 22 | rifiuta | insulto a un altro utente |\n\n- **Riscrittura:** il campo `riscrittura` compare solo nei commenti da rivedere, come nel tuo esempio.\n- **Sorgente:** ho scritto il programma in Tokyn (`programma.tokyn`, rimasto accanto al file) e `programma.py` è generato da lì. Il file Python è autonomo e non dipende da Tokyn.\n- **Modello:** usa `claude-haiku` con `effort: \"low\"`, perché la classificazione è semplice e costa poco. Se vuoi più sfumature nel giudizio sul tono, nel sorgente basta cambiare il modello in `claude`, poi rigenerare `programma.py` con `python /srv/plugin-tokyn/skills/tokyn/tokyn_cli.py build programma.tokyn --standalone -o programma.py`.\n- **Chiave API:** la prova è passata dal tuo Claude Code, perché non c'era `ANTHROPIC_API_KEY`. Il file funziona anche con Claude Code. Per farlo girare da solo o per altre persone serve una chiave API di Anthropic.\n- **Un commento alla volta:** ogni commento è una chiamata separata. Per molti commenti insieme esiste `ask_all`, che usa la Batch API a metà prezzo ma è più lenta.\n- **Istruzioni nel testo:** il modello è istruito a trattare il testo dei commenti come materiale da valutare e non come istruzioni da eseguire. Non ho provato un commento costruito apposta per ingannare il moderatore.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 commenti nell'ordine del file con id e motivo: True ([201, 202, 203, 204, 205, 206])",
+   "decisioni ammesse e giuste: True (6 su 6: ['pubblica', 'rifiuta', 'rivedi', 'pubblica', 'rifiuta', 'rivedi'])",
+   "riscrittura per ogni commento da rivedere: True (2 da rivedere)",
+   "commento 203: riscrittura senza offese True, con il contenuto True ('Capisco che la stessa domanda torni spesso: forse può essere utile usare la funzione di ricerca del forum. Per chi se lo chiede: le ortensie si potano a fine inverno, tagliando sopra la prima coppia di gemme gonfie, e non in autunno.')",
+   "commento 206: riscrittura senza offese True, con il contenuto True (\"Credo che il consiglio sopra possa essere rischioso per le piante grasse: annaffiarle ogni giorno non è ideale. Di solito funziona meglio annaffiarle d'estate una volta ogni 10-15 giorni e d'inverno quasi mai, controllando sempre che il terriccio sia completamente asciutto prima di intervenire.\")"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.001585,
+   "token_output": 1431,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

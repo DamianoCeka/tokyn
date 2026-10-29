@@ -1,0 +1,25 @@
+{
+  "candidati": [
+    {
+      "file": "bianchi_elena.txt",
+      "punteggio": 9,
+      "motivazione": "Candidata molto adatta: ha oltre 4 anni di vendita nel reparto telefonia di MediaWorld, con vendita di garanzie estese e assicurazioni, uso della cassa e turni nel weekend. Conosce bene smartphone e portatili e risiede vicino a Verona. Unico limite: dal curriculum non risulta esperienza di vendita diretta di computer portatili, e il gestionale indicato è quello di negozio, usato per gli ordini, non esplicitamente quello di magazzino."
+    },
+    {
+      "file": "rizzo_davide.txt",
+      "punteggio": 6,
+      "motivazione": "A favore: circa 3 anni di vendita al dettaglio da Decathlon, uso della cassa, buona conoscenza degli smartphone, disponibilità nel fine settimana e residenza vicino a Verona. Contro: nell'elettronica ha solo uno stage di 3 mesi da Tim, dichiara un uso solo di base del computer e non cita né la vendita di servizi aggiuntivi né l'uso di un gestionale di magazzino."
+    },
+    {
+      "file": "esposito_marco.txt",
+      "punteggio": 3,
+      "motivazione": "Mancano i 2 anni di vendita al dettaglio richiesti: ha esperienza come magazziniere e cameriere, non come venditore, e non dichiara capacità di vendita di servizi aggiuntivi né uso della cassa. Sono positivi la residenza a Verona, la disponibilità a turni, l'uso del gestionale di magazzino e la passione per l'informatica, ma la conoscenza di smartphone non è dichiarata."
+    },
+    {
+      "file": "ferraro_chiara.txt",
+      "punteggio": 1,
+      "motivazione": "La candidata abita a Verona, ma ha esperienza solo come infermiera. Nel curriculum non risultano esperienze di vendita al dettaglio né conoscenze di smartphone, computer, cassa o gestionale di magazzino, e non viene indicata la disponibilità a lavorare a turni nel fine settimana."
+    }
+  ],
+  "migliore": "bianchi_elena.txt"
+}

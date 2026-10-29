@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/assistente/tokyn/r2",
+ "cartella": "0ceb4d20ac",
+ "modello": "sonnet",
+ "compito": "assistente",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.0745169,
+ "costo_usd_telemetria": 0.074517,
+ "token_output": 1697,
+ "token_input": 10,
+ "token_cache_scritti": 12686,
+ "token_cache_letti": 67829,
+ "prove_del_programma": {
+  "costo_usd": 0.018392,
+  "token_output": 328,
+  "chiamate": 5,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 6,
+ "secondi": 52.2,
+ "secondi_api": 27.7,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 3
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 822,
+ "righe_tokyn": 21,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn"
+ ],
+ "risposta_finale": "n risposte vere di Claude, tramite il Claude Code di questa macchina perché qui non c'è `ANTHROPIC_API_KEY`. In questa prova ha risposto in modo sensato alle domande di test sulle FAQ.\n\nCosa ho verificato:\n- **Memoria:** il cliente ha scritto \"Abito in Germania\". Alla domanda successiva, \"Quanto costa la spedizione per me?\", l'assistente ha risposto 12 €, quindi si ricorda il paese. Ha tenuto a mente anche l'importo dell'ordine: per 30 € ha detto 4,90 €, per 60 € ha detto spedizione gratuita.\n- **Domande fuori dalle FAQ:** alla domanda \"Avete negozi fisici a Roma?\" ha risposto che non lo sa e ha indirizzato il cliente al servizio clienti, senza inventare.\n- **`esci`:** il programma termina. Le righe vuote vengono ignorate.\n\nUna cosa da sapere: se l'input finisce senza che il cliente scriva `esci`, per esempio con un file passato in pipe, il programma si ferma con un errore `EOFError`. In una sessione interattiva normale non succede.\n\nPer usarlo in produzione serve una chiave API di Anthropic. Con il Claude Code personale va bene per provare, ma non per un servizio che gira da solo o per altre persone.\n\nPer avviarlo, dalla cartella con `faq.txt`:\n```\npython programma.py\n```\n\nHo generato `programma.py` da `programma.tokyn`, che resta accanto come sorgente. Per cambiare il comportamento dell'assistente conviene modificare il `.tokyn` e rigenerare il Python, invece di modificare direttamente `programma.py`.\n\nFile in `/srv/progetti/0ceb4d20ac`:\n- `programma.py`\n- `programma.tokyn`",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "spedizione 6,90 euro: True",
+   "codice sconto CIAONESPOLO: True",
+   "reso entro 45 giorni: True",
+   "si ricorda il nome Giulia: True",
+   "termina su esci (codice 0) senza rispondere dopo: True",
+   "output (ultimi 1500 caratteri): Ciao Giulia, benvenuta da Casa Nespolo! Come posso aiutarti?\nIn Italia la spedizione standard costa 6,90 €, ma è gratuita per ordini da 79 € in su. Se mi dici l'importo del tuo ordine, ti confermo subito quale caso si applica. 😊\nSì, Giulia! Con il codice **CIAONESPOLO** hai il 10% di sconto sul primo ordine. 🎉\n\nSe vuoi, dimmi l'importo previsto del tuo ordine e ti aiuto a capire se la spedizione sarà gratuita.\nPuoi restituire i prodotti entro 45 giorni dalla consegna, Giulia. Il reso costa 7 €, tranne per i prodotti difettosi, per i quali non è previsto alcun costo. 😊\nTi chiami Giulia! 😊 C'è altro in cui posso aiutarti?\n"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.021038,
+   "token_output": 322,
+   "chiamate": 5,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

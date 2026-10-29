@@ -1,0 +1,28 @@
+import csv
+import io
+
+agent Traduttore:
+    model: "claude-haiku"
+    effort: "low"
+    instructions: """
+        Traduci in inglese la descrizione di un prodotto di un negozio online, dall'italiano.
+        Rispondi solo con la traduzione, senza virgolette, note o spiegazioni.
+        Mantieni numeri, misure e unità come nel testo originale.
+    """
+
+main:
+    testo = read_file("catalogo.csv")
+    righe = []
+    for r in csv.reader(io.StringIO(testo), delimiter=";"):
+        if r:
+            righe.append(r)
+    descrizioni = []
+    for r in righe[1:]:
+        descrizioni.append(r[2])
+    traduzioni = Traduttore.ask_all(descrizioni)
+    for i, r in enumerate(righe[1:]):
+        r[2] = traduzioni[i].strip()
+    out = io.StringIO()
+    csv.writer(out, delimiter=";", lineterminator="\n").writerows(righe)
+    write_file("catalogo_en.csv", out.getvalue())
+    print(f"Tradotti {len(descrizioni)} prodotti in catalogo_en.csv")

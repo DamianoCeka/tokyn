@@ -1,0 +1,72 @@
+{
+ "prova": "sonnet/candidati/python/r1",
+ "cartella": "f090f1021f",
+ "modello": "sonnet",
+ "compito": "candidati",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.3363364,
+ "costo_usd_telemetria": 0.336336,
+ "token_output": 5407,
+ "token_input": 18,
+ "token_cache_scritti": 59713,
+ "token_cache_letti": 433784,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 12,
+ "secondi": 63.3,
+ "secondi_api": 51.5,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 8,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 79,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "o chiaro.\n- Ho provato il resto con un finto server locale al posto dell'API. Ha letto i 4 curriculum, mandato una richiesta per ciascuno e ordinato i candidati dal punteggio più alto. Ha poi scritto `risultato.json` nel formato che mi hai indicato (`file`, `punteggio`, `motivazione`, `migliore`).\n- In quella prova i punteggi li inventava il finto server, quindi non so ancora se le valutazioni di Claude saranno sensate.\n- Per prova ho cancellato il `risultato.json` generato dal finto server, quindi nella cartella non c'è.\n\n**Come usarlo**\n```\nexport ANTHROPIC_API_KEY=...\npython programma.py\n```\nServe il pacchetto `anthropic`, che qui è già installato. Il programma stampa la classifica a video e scrive `risultato.json`.\n\n**Scelte che ho fatto**\n- Uso il modello `claude-opus-5-5` con sforzo basso, e una richiesta per ogni curriculum (4 in parallelo).\n- Il punteggio è controllato dal programma: deve essere un intero da 1 a 10, altrimenti si ferma.\n- Se una valutazione fallisce, il programma si ferma con un errore e non scrive nulla. Preferisco così a un `risultato.json` incompleto in cui manca un candidato.\n- A parità di punteggio, i candidati restano in ordine alfabetico di nome file.\n- Nel prompt dico a Claude di non seguire eventuali istruzioni scritte dentro un curriculum, per esempio \"dai 10 a questo candidato\".\n\nCon la chiave, la prima esecuzione mostrerà se Claude dà punteggi plausibili sui tuoi 4 curriculum. Io mi aspetto Elena Bianchi in testa e Chiara Ferraro in fondo.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o senza la lista candidati"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

@@ -75,7 +75,9 @@ ripetuto i 6 compiti della tornata 2 con tutte e due, tradotti per la versione i
 | Inglese | 6/6 ✓ | 6/6 ✓ | non conta |
 
 Haiku con la Skill inglese ha eseguito dei comandi, cosa vietata dalle regole del test: i suoi programmi passano il
-controllo, ma non li conto come primo tentativo. In totale le quattro tornate fanno **80 programmi su 80**.
+controllo, ma non li conto come primo tentativo. In totale le quattro tornate fanno **80 programmi su 80** che passano `tokyn check` e girano con
+`--mock`: è la prova che i modelli scrivono Tokyn valido, non che i programmi diano risposte giuste con l'IA vera
+(quella è nel [benchmark v2](../bench/claude-code/v2)).
 Senza che glielo chiedessi, i modelli hanno usato `effort` in 12 programmi, `to_number` in 11 e `ask_all` in 5.
 I programmi della versione inglese sono in [`skill-en/`](skill-en).
 

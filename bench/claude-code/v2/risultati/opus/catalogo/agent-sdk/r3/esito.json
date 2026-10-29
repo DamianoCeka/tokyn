@@ -1,0 +1,82 @@
+{
+ "prova": "opus/catalogo/agent-sdk/r3",
+ "cartella": "4c7cc559cd",
+ "modello": "opus",
+ "compito": "catalogo",
+ "condizione": "agent-sdk",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.5744222,
+ "costo_usd_telemetria": 0.574422,
+ "token_output": 4253,
+ "token_input": 12,
+ "token_cache_scritti": 55005,
+ "token_cache_letti": 246371,
+ "prove_del_programma": {
+  "costo_usd": 0.035502,
+  "token_output": 285,
+  "chiamate": 6,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 50.5,
+ "secondi_api": 38.5,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 92,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "catalogo_en.csv",
+  "programma.py"
+ ],
+ "risposta_finale": "ible;34,50\nCA-118;Candela Lavanda;Lavender scented candle in a glass jar, 40-hour burn time;15,90\nZA-402;Zaino Sentiero;30-litre hiking backpack with breathable back panel;79,00\nTP-509;Tappeto Duna;Hand-woven jute rug, 120 x 180 cm;89,90\n```\n\nLa riga della tazza è identica al tuo esempio. Ho anche confrontato i due file con un controllo automatico: intestazione, separatore e ordine delle righe sono uguali, e codice, nome e prezzo non cambiano in nessuna riga. Cambia solo la descrizione.\n\n**Come funziona**\n- Legge e scrive il CSV con il modulo `csv` di Python e il separatore `;`. Se una traduzione contenesse un `;`, il campo verrebbe messo tra virgolette e il file resterebbe leggibile.\n- Fa una richiesta a Claude per ogni descrizione, con il Claude Agent SDK e il modello `claude-opus-5-5`. Ogni richiesta chiede soltanto la traduzione, senza commenti, e lascia invariati numeri e misure (per esempio \"28 cm\" o \"120 x 180 cm\").\n- A Claude non dà nessuno strumento e non legge impostazioni né file della cartella: riceve solo il testo da tradurre.\n- Traduce 4 descrizioni alla volta. Se una richiesta non va a buon fine la riprova fino a 3 volte. Se poi fallisce ancora, il programma si ferma con un errore e non scrive un file incompleto.\n- La traduzione resta sempre su una sola riga. Le descrizioni vuote vengono lasciate vuote.\n\nPer il catalogo completo puoi cambiare `TRADUZIONI_IN_PARALLELO` in cima al file: con un valore più alto va più veloce, ma fa più richieste contemporaneamente.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "intestazione codice;nome;descrizione;prezzo: True (['codice', 'nome', 'descrizione', 'prezzo'])",
+   "5 prodotti con 4 colonne e codici nell'ordine del file: True (5 righe)",
+   "codice, nome e prezzo identici: True",
+   "descrizioni tradotte in inglese: 5 su 5"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.029397,
+   "token_output": 235,
+   "chiamate": 5,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

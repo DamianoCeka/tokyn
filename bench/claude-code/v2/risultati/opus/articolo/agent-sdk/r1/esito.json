@@ -1,0 +1,82 @@
+{
+ "prova": "opus/articolo/agent-sdk/r1",
+ "cartella": "65e6ff81a3",
+ "modello": "opus",
+ "compito": "articolo",
+ "condizione": "agent-sdk",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.599677,
+ "costo_usd_telemetria": 0.599677,
+ "token_output": 4542,
+ "token_input": 12,
+ "token_cache_scritti": 57364,
+ "token_cache_letti": 249385,
+ "prove_del_programma": {
+  "costo_usd": 0.0596,
+  "token_output": 1908,
+  "chiamate": 2,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 9,
+ "secondi": 66.0,
+ "secondi_api": 40.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 103,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "ermieri.\"\n  ],\n  \"citati\": [\"Ospedale San Matteo di Castelrocca\", \"Azienda Sanitaria Territoriale\", \"Fondazione Rinaldi\",\n             \"Marco Tessari\", \"Chiara Valli\", \"Genitori Insieme\", \"Silvia Orlandi\"]\n}\n```\nI punti sono sempre cinque e nessun nome è ripetuto. Le persone e le organizzazioni nominate nell'articolo ci sono tutte. Ho provato anche ad avviarlo in una cartella senza `articolo.txt`: si ferma con un messaggio di errore chiaro.\n\n**Come funziona:**\n- Usa `claude-agent-sdk` con il modello `claude-opus-5-5` e chiede a Claude una risposta in uno schema JSON fisso: titolo, cinque punti, citati.\n- A Claude non do nessuno strumento: niente accesso a file, terminale o web. Il programma legge l'articolo e glielo passa come semplice testo.\n- Prima di scrivere il file, il programma controlla che i punti siano esattamente cinque e toglie i nomi doppi, anche quando cambiano solo maiuscole o spazi. Se qualcosa non va, riprova fino a 3 volte.\n\n**Cosa tenere presente:**\n- Nell'elenco dei citati è entrato anche \"Ospedale San Matteo di Castelrocca\". È un ente, quindi secondo me va bene. Se preferite tenere fuori gli ospedali, basta una riga nelle istruzioni.\n- Le frasi dei punti sono a volte lunghe. Nel programma non c'è un limite di lunghezza.\n- Il programma controlla il numero dei punti ma non verifica che ciascuno sia davvero una sola frase. Per questo si affida alle istruzioni date a Claude, e nella prova le ha rispettate.\n- Ogni esecuzione è una chiamata a pagamento a Claude.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "titolo sullo stabilimento: True ('Valtek Impianti investe 48 milioni a Montebrenna per le pompe di calore')",
+   "esattamente 5 punti (stringhe non vuote): True (5)",
+   "i 5 punti riportano almeno 3 fatti principali su 4: True (['investimento di 48 milioni', '320 posti di lavoro', 'produzione dal 2027', 'pompe di calore'])",
+   "citati (lista di stringhe senza doppioni) con almeno 5 su 6 in voci distinte: True (6 trovati: ['Elena Marchesini', 'Laura Benedetti', 'Paolo Ricci', 'Valtek Impianti', 'Comune di Montebrenna', 'Istituto Tecnico Volta']; doppioni: [])"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.037569,
+   "token_output": 849,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

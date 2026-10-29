@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/magazzino/tokyn/r2",
+ "cartella": "1196394bbd",
+ "modello": "sonnet",
+ "compito": "magazzino",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.08273720000000001,
+ "costo_usd_telemetria": 0.082737,
+ "token_output": 2367,
+ "token_input": 8,
+ "token_cache_scritti": 13507,
+ "token_cache_letti": 50232,
+ "prove_del_programma": {
+  "costo_usd": 0.026454,
+  "token_output": 650,
+  "chiamate": 5,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 5,
+ "secondi": 81.6,
+ "secondi_api": 20.9,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 2
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 842,
+ "righe_tokyn": 52,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "e da `domande.txt`. Ha scritto `risultato.json` con una risposta per ognuna delle 5 domande, nello stesso ordine.\n\nI numeri sono esatti perché non li calcola Claude. Il programma gli mette a disposizione tre funzioni che fanno i conti sull'inventario: cercare un prodotto, dare il valore totale e elencare i prodotti sotto scorta. Claude riporta solo i risultati.\n\nHo controllato le risposte con un calcolo indipendente:\n- **Valore totale:** 1.540,20 €, uguale al mio calcolo.\n- **Sotto la scorta minima:** toner (manca 1), evidenziatori (ne mancano 12) e penne blu (ne mancano 50). Sono gli stessi tre prodotti che risultano dal controllo.\n- **Carta A4:** 120 risme.\n- **Valore del toner:** 235,50 €.\n- **Evidenziatori mancanti:** 12.\n\nLe risposte non sono sempre brevissime. Alcune aggiungono dettagli, come la scorta minima, e quella sui prodotti sotto scorta è un elenco. Se le vuoi più secche posso stringere le istruzioni.\n\nPer usarlo, da una cartella con `inventario.json` e `domande.txt` lancia `python programma.py`. Dalla mia prova risulta che senza la chiave `ANTHROPIC_API_KEY` usa il tuo Claude Code. Per farlo girare da solo o per altre persone serve la chiave API. Il file Python funziona anche senza Tokyn installato.\n\nHo lasciato accanto anche `programma.tokyn`, il sorgente da cui ho generato `programma.py`. Se vuoi modificare il programma, cambia quello e rigenera il Python.\n\nFile nella cartella `/srv/progetti/1196394bbd`:\n- `programma.py`\n- `programma.tokyn`\n- `risultato.json`",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "4 elementi con le domande nell'ordine del file: True",
+   "martelli 37: True ('In magazzino ci sono 37 martelli, tutti del tipo \"Martello da carpentiere\" (codice FER-B). Il loro valore è di 460,65 €, e la quantità è sopra la scor')",
+   "valore totale 2623,30: True ('La merce in magazzino vale in tutto 2.623,30 €.')",
+   "sotto scorta nastro e silicone, nessun altro: True (nominati ['nastro', 'silicone'], di troppo [])",
+   "pezzi da ordinare 46: True ('Dovete ordinare 46 pezzi in totale: 32 di Nastro isolante nero (FER-C) e 14 di Silicone sigillante trasparente (FER-E).')"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.017781,
+   "token_output": 462,
+   "chiamate": 4,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

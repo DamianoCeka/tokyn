@@ -1,0 +1,73 @@
+{
+ "prova": "opus/catalogo/python/r1",
+ "cartella": "944242bd43",
+ "modello": "opus",
+ "compito": "catalogo",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.7063740000000001,
+ "costo_usd_telemetria": 0.706374,
+ "token_output": 5880,
+ "token_input": 20,
+ "token_cache_scritti": 61025,
+ "token_cache_letti": 502470,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 12,
+ "secondi": 65.0,
+ "secondi_api": 55.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 7,
+  "Read": 1,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 63,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "o server restituiva `EN<descrizione originale>` al posto della traduzione. Così ho controllato che:\n- l'intestazione sia identica e le 6 righe restino nello stesso ordine;\n- codice, nome e prezzo restino uguali e cambi solo la descrizione;\n- il separatore resti `;` e i caratteri accentati (come \"bambù\") restino intatti;\n- la richiesta abbia la forma attesa, cioè modello, istruzioni e parametri giusti.\n\nTutti i controlli sono passati. Poi ho cancellato i file di prova: nella cartella ci sono solo `catalogo.csv` e `programma.py`.\n\n**Come funziona:**\n- Fa una richiesta a Claude (`claude-opus-5-5`) per ogni prodotto. Le istruzioni chiedono una traduzione concisa per un negozio online, che lasci invariati misure e numeri (es. \"28 cm\", \"120 x 180 cm\") e che risponda solo con il testo tradotto.\n- Ho attivato il ripiego automatico di Anthropic: se il modello dovesse rifiutare una richiesta, la ripete con un altro modello. Si può togliere se non lo volete.\n- Se una descrizione dovesse contenere un `;`, il programma la mette tra virgolette, così il CSV resta valido.\n- Se una richiesta fallisce, indica la riga e si ferma senza scrivere `catalogo_en.csv`, quindi non si ottiene mai un file a metà.\n\n**Per fare la prova vera:**\n```\npip install anthropic\nexport ANTHROPIC_API_KEY=la-vostra-chiave\npython programma.py\n```\nMentre lavora stampa ogni traduzione. Vi conviene confrontare la riga `TZ-014` con l'esempio che mi avete dato. Se mi mettete a disposizione una chiave, la prova la faccio io.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "catalogo_en.csv mancante"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

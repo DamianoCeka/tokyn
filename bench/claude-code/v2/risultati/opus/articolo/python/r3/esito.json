@@ -1,0 +1,74 @@
+{
+ "prova": "opus/articolo/python/r3",
+ "cartella": "c746dd228f",
+ "modello": "opus",
+ "compito": "articolo",
+ "condizione": "python",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.7541112,
+ "costo_usd_telemetria": 0.754111,
+ "token_output": 6522,
+ "token_input": 20,
+ "token_cache_scritti": 64995,
+ "token_cache_letti": 518156,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 13,
+ "secondi": 71.9,
+ "secondi_api": 60.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 7,
+  "Grep": 1,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 88,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "e ha richiesto la scheda.\n  - Al secondo giro è stato scritto un `risultato.json` corretto, con 5 punti.\n  - Il nome \"Marco Tessari\" ripetuto con un'altra grafia (\"marco  tessari\") è stato tenuto una volta sola.\n\nQuesto dimostra che il programma funziona, ma non dice niente sulla qualità di titolo, punti e nomi scritti da Claude.\n\n**Per provarlo tu:**\n```\npip install anthropic\nexport ANTHROPIC_API_KEY=la-tua-chiave\npython programma.py\n```\nSe me lo fai eseguire con una chiave, guardo io il primo risultato reale e sistemo le istruzioni se serve.\n\n**Come funziona:**\n- Usa il modello Claude Opus 5.5 e chiede una risposta in JSON con la struttura `titolo` / `punti` / `citati`.\n- Se Claude restituisce un numero di punti diverso da cinque, riprova fino a 3 volte, poi si ferma con un messaggio di errore.\n- **Una frase per punto:** questo lo chiedo nelle istruzioni a Claude, ma il programma non lo controlla.\n- **Nomi citati:**\n  - Chiedo nomi completi, quindi \"Tessari\" diventa \"Marco Tessari\" e compare una volta sola.\n  - Chiedo di escludere i soggetti generici senza nome proprio, come \"i sindacati\".\n  - Il programma toglie comunque i doppioni che differiscono solo per maiuscole o spazi.\n- **In caso di rifiuto:** se Claude rifiuta di elaborare un articolo, la richiesta passa automaticamente a un altro modello Claude. È un'opzione dell'API che ho attivato io e si può togliere.\n- Per chiave errata, limite di richieste o rete assente il programma mostra un messaggio d'errore in italiano.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

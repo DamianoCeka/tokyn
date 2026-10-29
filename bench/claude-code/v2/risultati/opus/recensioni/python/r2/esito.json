@@ -1,0 +1,75 @@
+{
+ "prova": "opus/recensioni/python/r2",
+ "cartella": "7c37fa64f2",
+ "modello": "opus",
+ "compito": "recensioni",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.6676894000000001,
+ "costo_usd_telemetria": 0.667689,
+ "token_output": 4483,
+ "token_input": 18,
+ "token_cache_scritti": 60996,
+ "token_cache_letti": 449947,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 13,
+ "secondi": 52.5,
+ "secondi_api": 44.8,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Grep": 1,
+  "Read": 2,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 58,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "del file, conserva gli accenti (\"è\", \"né\") e scrive `risultato.json` nel formato che hai chiesto. Con quei voti finti la media è uscita 3.0. Poi ho cancellato quel file di prova.\n- **Il caso senza chiave.** Ora il programma si ferma con un messaggio chiaro invece di un errore illeggibile.\n\n**Come funziona:**\n- Fa una richiesta a Claude per ogni recensione, con il modello `claude-opus-5-5`.\n- La risposta è vincolata da uno schema: il sentimento può essere solo `positivo`, `negativo` o `neutro`, e il voto solo un intero da 1 a 5. Così non serve interpretare testo libero.\n- Le righe vuote vengono saltate. La media è arrotondata a 2 decimali.\n- L'\"impegno\" del modello è al minimo, perché per classificare frasi brevi basta e costa meno.\n- Ho attivato il ripiego automatico: se Claude rifiuta una richiesta per motivi di sicurezza, il server la riprova con un altro modello. Con delle recensioni è molto improbabile. Se non lo vuoi, togli le righe `betas=` e `fallbacks=`.\n- Se una richiesta fallisce, il programma si ferma, dice quale recensione ha dato problemi e non scrive un `risultato.json` incompleto.\n\n**Per provarlo tu:**\n```bash\nexport ANTHROPIC_API_KEY=sk-ant-...\npython programma.py\n```\nMentre lavora stampa una riga per recensione e alla fine il voto medio. In alternativa, se mi dai una chiave lo faccio girare io e controllo i risultati. Se la richiesta viene rifiutata, il primo punto da guardare sono i parametri del ripiego: proprio quella parte non sono riuscito a verificarla.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o senza la lista recensioni"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

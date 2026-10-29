@@ -1,0 +1,35 @@
+{
+  "recensioni": [
+    {
+      "testo": "Prodotto fantastico, arrivato in un giorno.",
+      "sentimento": "positivo",
+      "voto": 5
+    },
+    {
+      "testo": "Si è rotto dopo una settimana, deluso.",
+      "sentimento": "negativo",
+      "voto": 1
+    },
+    {
+      "testo": "Nella media, niente di speciale.",
+      "sentimento": "neutro",
+      "voto": 3
+    },
+    {
+      "testo": "Ottimo rapporto qualità prezzo, lo consiglio a tutti.",
+      "sentimento": "positivo",
+      "voto": 5
+    },
+    {
+      "testo": "La batteria dura pochissimo e l'assistenza non risponde.",
+      "sentimento": "negativo",
+      "voto": 1
+    },
+    {
+      "testo": "Fa quello che promette, né più né meno.",
+      "sentimento": "neutro",
+      "voto": 3
+    }
+  ],
+  "media": 3.0
+}

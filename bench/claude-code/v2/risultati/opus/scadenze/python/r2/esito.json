@@ -1,0 +1,72 @@
+{
+ "prova": "opus/scadenze/python/r2",
+ "cartella": "e4168280ba",
+ "modello": "opus",
+ "compito": "scadenze",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.7046747999999999,
+ "costo_usd_telemetria": 0.704675,
+ "token_output": 5640,
+ "token_input": 20,
+ "token_cache_scritti": 61341,
+ "token_cache_letti": 505334,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 12,
+ "secondi": 63.0,
+ "secondi_api": 51.9,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 8,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 110,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": " Ferri / Licenza gestionale (24), Studio Dentistico Moretti (30). Restano fuori Bar Centrale (già scaduto), Pasticceria Lombardi (9 dicembre) e Agriturismo Le Querce (febbraio).\n- Su un CSV di prova: una scadenza uguale alla data di riferimento esce con 0 giorni, una a 30 giorni è inclusa, quelle a 31 giorni e del giorno prima sono escluse.\n- Una riga con la data scritta male viene saltata, con un avviso.\n- Se manca la data o è nel formato sbagliato, il programma lo segnala.\n\n**Come funziona la parte con Claude:**\n- Fa una chiamata per contratto a `claude-opus-5-5` e passa il nome del cliente, il servizio e la data già scritta in italiano (es. \"12 novembre 2026\").\n- La risposta è vincolata a un JSON con `oggetto` e `testo`, così non va interpretata a mano.\n- Il testo inizia con \"Gentile <cliente>,\". Ho chiesto anche di non inventare prezzi, condizioni o recapiti.\n- Ho attivato il rimedio automatico per i rifiuti: se Claude rifiuta una richiesta, l'API la ripete da sola su un altro modello. Se preferite toglierlo, sono due righe.\n- Ottica Ferri ha due contratti in scadenza, quindi riceve due email separate.\n- Se non c'è nessun contratto in scadenza, `risultato.json` contiene una lista vuota e Claude non viene chiamato.\n\n**Per fare la prova vera:**\n```\nexport ANTHROPIC_API_KEY=sk-ant-...\npython programma.py 2026-11-01\n```\nServe il pacchetto `anthropic` (`pip install anthropic`). Se mi rendete disponibile una chiave in questo ambiente, la eseguo io e controllo le email generate.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 5,
+  "dettagli": [
+   "risultato.json mancante o senza la lista in_scadenza"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

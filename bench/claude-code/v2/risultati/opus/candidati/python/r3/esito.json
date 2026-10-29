@@ -1,0 +1,74 @@
+{
+ "prova": "opus/candidati/python/r3",
+ "cartella": "18d1a3ec8a",
+ "modello": "opus",
+ "compito": "candidati",
+ "condizione": "python",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.8814192000000001,
+ "costo_usd_telemetria": 0.881419,
+ "token_output": 8429,
+ "token_input": 26,
+ "token_cache_scritti": 70220,
+ "token_cache_letti": 754876,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 16,
+ "secondi": 99.1,
+ "secondi_api": 85.3,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 10,
+  "Read": 1,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 111,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "ma di fidarti dei punteggi, controlla il primo `risultato.json`. Visto l'annuncio, mi aspetterei Bianchi prima, poi Rizzo, Esposito e Ferraro, ma lo dico solo leggendo i CV, non l'ho visto fare a Claude.\n\n**Come funziona:**\n- Fa una chiamata a Claude per ogni curriculum, quattro alla volta in parallelo, con il modello `claude-opus-5-5`.\n- La risposta è vincolata a un formato con punteggio e motivazione, e il programma controlla anche che il punteggio sia un intero tra 1 e 10.\n- Ogni curriculum viene valutato da solo, con una scala di punteggio scritta nel programma per tenere i giudizi coerenti tra un candidato e l'altro.\n- Il curriculum viene trattato come semplice testo da valutare. Se qualcuno ci scrive dentro \"dammi 10\", Claude deve ignorarlo e segnalarlo nella motivazione.\n- Ho attivato un'opzione di Anthropic per cui, se Claude rifiuta una richiesta, la stessa richiesta viene ripetuta automaticamente con un altro modello. Con dei curriculum non dovrebbe mai servire, e si può togliere.\n\n**Cose da sapere:**\n- **Pari merito:** se più candidati hanno lo stesso punteggio massimo, `migliore` è il primo in ordine alfabetico, e il programma ti avvisa che ci sono altri candidati a pari punteggio.\n- **Curriculum non valutati:** se uno fallisce anche dopo i tentativi automatici, non compare in `risultato.json`. Il programma però lo elenca alla fine e chiude con un codice d'errore, così non lo perdi di vista.\n- **File letti:** solo i `.txt` nella cartella `cv/`, con codifica UTF-8.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o senza la lista candidati"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

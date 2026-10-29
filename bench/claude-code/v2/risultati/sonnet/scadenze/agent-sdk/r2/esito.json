@@ -1,0 +1,83 @@
+{
+ "prova": "sonnet/scadenze/agent-sdk/r2",
+ "cartella": "c01d2cbde1",
+ "modello": "sonnet",
+ "compito": "scadenze",
+ "condizione": "agent-sdk",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2834113,
+ "costo_usd_telemetria": 0.283411,
+ "token_output": 4217,
+ "token_input": 10,
+ "token_cache_scritti": 55590,
+ "token_cache_letti": 188613,
+ "prove_del_programma": {
+  "costo_usd": 0.095878,
+  "token_output": 2776,
+  "chiamate": 7,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 55.8,
+ "secondi_api": 33.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 106,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "e.\n- Se una riga del CSV ha una scadenza non valida, la salta e lo segnala su stderr.\n- Se Claude non restituisce un'email per un contratto, il programma si ferma con un errore e non scrive un `risultato.json` incompleto.\n\n**Prove**\n- **`2026-11-01`:** ha trovato 4 contratti, con 11, 17, 24 e 30 giorni mancanti.\n  - Backup in cloud scade il 2026-12-01, cioè esattamente a +30 giorni, ed è incluso.\n  - Bar Centrale (scaduto il 20 ottobre) e le scadenze di dicembre o 2027 successive al 30° giorno sono escluse.\n- **`2026-10-20`:** Bar Centrale compare con `giorni_mancanti` 0.\n- **`2030-01-01`:** nessun contratto, e il file contiene `{\"in_scadenza\": []}`.\n- **Errori:** una data non valida, l'argomento mancante e l'assenza di `contratti.csv` danno un messaggio chiaro e uscita con codice 1.\n- **Email:** sono in italiano, si rivolgono al cliente per nome (\"Gentile Ottica Ferri,\") e citano servizio e data. L'oggetto di Ottica Ferri è uguale al tuo esempio.\n- **Tempi:** circa 6 secondi per 4 contratti.\n\n**Cosa sapere**\n- Le email non partono: il programma le scrive solo nel JSON. L'indirizzo `email` del CSV non finisce in `risultato.json`, perché il formato che hai descritto non lo prevede. Se ti serve per l'invio, basta aggiungerlo.\n- Il tono cambia da un cliente all'altro: ho visto sia il \"voi\" sia il \"Lei\", perché non l'ho fissato nelle istruzioni. Posso fissarlo, se preferisci.\n- Il programma non fissa il modello e usa quello predefinito dell'Agent SDK. Posso indicarne uno preciso.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "esattamente i 4 contratti in scadenza: True (['Panificio Russo', 'Farmacia Conti', 'Hotel Bellavista', 'Ferramenta Gallo Snc'])",
+   "scadenze come nel file e in ordine di scadenza: True (['2026-12-15', '2026-12-28', '2027-01-06', '2027-01-14'])",
+   "giorni_mancanti giusti: True ([0, 13, 22, 30])",
+   "email con oggetto e testo che nominano cliente e servizio: True",
+   "email scritte una per una (testi diversi anche senza nomi, servizi e date): True"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.049311,
+   "token_output": 1232,
+   "chiamate": 4,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

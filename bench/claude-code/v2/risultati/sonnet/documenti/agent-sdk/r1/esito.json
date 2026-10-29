@@ -1,0 +1,83 @@
+{
+ "prova": "sonnet/documenti/agent-sdk/r1",
+ "cartella": "f281ac2dd5",
+ "modello": "sonnet",
+ "compito": "documenti",
+ "condizione": "agent-sdk",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.27779980000000004,
+ "costo_usd_telemetria": 0.2778,
+ "token_output": 3535,
+ "token_input": 10,
+ "token_cache_scritti": 55855,
+ "token_cache_letti": 190098,
+ "prove_del_programma": {
+  "costo_usd": 0.110194,
+  "token_output": 959,
+  "chiamate": 6,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 47.7,
+ "secondi_api": 34.6,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 73,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "mento_viaggi.txt` |\n| Giorni di remoto | fino a 8 giorni al mese dopo la prova | `lavoro_da_remoto.txt` |\n| Resi in magazzino | bancale giallo vicino all'ingresso | `orari_magazzino.txt` |\n| Email sospette | inoltrarle a it@azienda.example | `regole_informatiche.txt` |\n\nHo provato anche due domande che nei documenti non hanno risposta, in una cartella temporanea e senza toccare i tuoi file. In entrambi i casi il programma ha detto che l'informazione non c'è e ha messo `fonte: null`, senza inventare. Se un documento non contiene la risposta, nel tuo `risultato.json` la fonte sarà quindi `null`.\n\nCome funziona:\n- **Documenti e domande:** per ogni domanda manda a Claude il testo di tutti i file in `docs/` insieme alla domanda. Legge `docs/*.txt` e salta le righe vuote di `domande.txt`.\n- **Nessuno strumento:** Claude non ha strumenti e non legge nient'altro, quindi risponde solo in base ai documenti.\n- **Ordine e fonte:** le domande girano in parallelo (4 alla volta), ma `risultato.json` resta nell'ordine di `domande.txt`. Se Claude indica un nome di file che non esiste, il programma mette `null`.\n- **Modello:** usa `claude-opus-5-5`. Per un uso così semplice puoi cambiare `MODELLO` in cima al file con uno più economico, per esempio `claude-sonnet-5-5`.\n- **Limite:** i documenti vengono mandati interi a ogni domanda. Con molti documenti o molto lunghi bisognerebbe prima selezionare quelli pertinenti.\n\nI file sono in `/srv/progetti/f281ac2dd5`:\n- `programma.py`\n- `risultato.json`",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "4 oggetti {domanda, risposta, fonte} nell'ordine di domande.txt: True",
+   "domanda 1: risposta giusta True, fonte trasferte.txt True (\"Chi va in trasferta con l'auto propria riceve un rimborso di 0,42 euro per chilometro, calcolato sul percorso più breve. Pedaggi e parcheggi si rimborsano a parte, con la ricevuta.\", 'trasferte.txt')",
+   "domanda 2: risposta giusta True, fonte sicurezza_it.txt True ('La password va cambiata ogni 90 giorni. Il sistema ti avvisa una settimana prima della scadenza. Deve avere almeno 12 caratteri ed essere diversa per ogni servizio.', 'sicurezza_it.txt')",
+   "domanda 3: risposta giusta True, fonte smart_working.txt True ('Si può lavorare da casa fino a 2 giorni alla settimana. Vale dal 1° gennaio 2026 per i dipendenti assunti a tempo indeterminato. I giorni vanno concordati con il proprio responsabile e segnati sul portale Presenze entro il giovedì della settimana prima. Il lunedì tutti lavorano in ufficio.', 'smart_working.txt')",
+   "domanda 4: risposta giusta True, fonte magazzino.txt True ('Il sabato le merci si possono ritirare fino alle 11:00 (apertura dalle 8:00 alle 11:00), ma solo se già prenotate. Il ritiro va prenotato almeno un giorno prima scrivendo a magazzino@azienda.example.', 'magazzino.txt')"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.064861,
+   "token_output": 782,
+   "chiamate": 4,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

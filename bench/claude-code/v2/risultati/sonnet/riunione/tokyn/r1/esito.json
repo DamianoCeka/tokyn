@@ -1,0 +1,83 @@
+{
+ "prova": "sonnet/riunione/tokyn/r1",
+ "cartella": "f2f3bbb4d0",
+ "modello": "sonnet",
+ "compito": "riunione",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.0759633,
+ "costo_usd_telemetria": 0.075963,
+ "token_output": 1616,
+ "token_input": 10,
+ "token_cache_scritti": 13226,
+ "token_cache_letti": 68793,
+ "prove_del_programma": {
+  "costo_usd": 0.013753,
+  "token_output": 534,
+  "chiamate": 2,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 6,
+ "secondi": 36.4,
+ "secondi_api": 21.7,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 3
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 825,
+ "righe_tokyn": 22,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "`programma.py` è pronto e l'ho provato davvero. Con `python programma.py` dalla cartella di `verbale.txt` scrive `risultato.json`.\n\nPer la prova ho usato risposte vere di Claude, tramite il Claude Code di questa macchina. Ecco cosa ne è uscito dal vostro verbale:\n\n- **Decisioni:**\n  - Partecipare alla fiera di Bologna con lo stand piccolo.\n  - La newsletter uscirà ogni due settimane invece che ogni mese.\n- **Azioni:**\n  - Paolo deve prenotare lo stand per la fiera di Bologna entro il 2026-10-30.\n  - Chiara deve preparare il calendario dei temi della newsletter entro il 2026-11-06.\n  - Roberto deve far stampare i volantini per lo stand entro il 2026-11-16.\n\nLe chiacchiere sul parcheggio sono rimaste fuori. Nel verbale le scadenze erano già date come date complete. Nelle istruzioni ho comunque scritto di calcolare quelle relative, come \"venerdì prossimo\", a partire dalla data della riunione, ma questo caso non l'ho provato.\n\nIl programma è stato generato con Tokyn, che compila in Python. `programma.py` funziona da solo, senza dipendere da Tokyn. Accanto c'è `programma.tokyn`, il sorgente: se vuoi cambiare qualcosa, modifica quello e rigenera il Python.\n\nPer usarlo con i verbali di tutto il team serve una chiave API di Anthropic, impostata come variabile d'ambiente `ANTHROPIC_API_KEY`. Senza chiave il programma si appoggia al Claude Code di chi lo lancia, e le regole di Anthropic lo consentono solo per provare, non per l'uso regolare.",
+ "controllo": {
+  "ok": true,
+  "punti": 6,
+  "massimo": 6,
+  "dettagli": [
+   "decisioni lista di stringhe e azioni lista di {cosa, chi, entro} stringhe: True",
+   "le 2 decisioni e nessuna chiacchiera: True (trovate: [\"lancio dell'app al 24 novembre\", 'budget pubblicitario dai giornali ai social']; chiacchiere: []; scritte: [\"Il lancio dell'app nuova slitta dal 10 al 24 novembre.\", 'Da dicembre tutto il budget pubblicitario passa dai giornali ai social.'])",
+   "azione di Marco entro 2026-11-13: True ([{'cosa': 'Sistemare i due bug bloccanti del pagamento con carta', 'chi': 'Marco', 'entro': '2026-11-13'}])",
+   "azione di Sara entro 2026-11-18: True ([{'cosa': 'Scrivere le risposte pronte per il supporto sul nuovo lancio', 'chi': 'Sara', 'entro': '2026-11-18'}])",
+   "azione di Davide entro 2026-11-30: True ([{'cosa': 'Preparare il piano delle campagne social di dicembre', 'chi': 'Davide', 'entro': '2026-11-30'}])",
+   "esattamente 3 azioni: True (3)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.00814,
+   "token_output": 287,
+   "chiamate": 1,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

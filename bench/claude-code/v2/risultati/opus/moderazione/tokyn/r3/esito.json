@@ -1,0 +1,83 @@
+{
+ "prova": "opus/moderazione/tokyn/r3",
+ "cartella": "809f20a09d",
+ "modello": "opus",
+ "compito": "moderazione",
+ "condizione": "tokyn",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.192103,
+ "costo_usd_telemetria": 0.192103,
+ "token_output": 2638,
+ "token_input": 12,
+ "token_cache_scritti": 15168,
+ "token_cache_letti": 89755,
+ "prove_del_programma": {
+  "costo_usd": 0.002453,
+  "token_output": 2717,
+  "chiamate": 12,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 61.7,
+ "secondi_api": 28.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 832,
+ "righe_tokyn": 30,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "iglio utile sul rame, ma tono aggressivo; c'è la `riscrittura` |\n| 19 | rifiuta | spam (offerte e WhatsApp) |\n| 20 | rifiuta | contiene un indirizzo email |\n| 21 | pubblica | ringraziamento per la guida sul compost |\n| 22 | rifiuta | insulto a un altro utente |\n\nHo eseguito il programma due volte e le decisioni sono uscite uguali. La `riscrittura` c'è solo per i commenti da rivedere, come nel tuo esempio. Quella del commento 18 mantiene il contenuto, ma in un'esecuzione ha aggiunto una frase di cortesia in chiusura che nell'originale non c'era.\n\n**Prima di metterlo in produzione:**\n- **Serve una chiave API:** le prove le ho fatte senza `ANTHROPIC_API_KEY`, quindi le risposte sono arrivate tramite il mio Claude Code. Le regole di Anthropic permettono di usarlo solo per provare: se il programma gira da solo sul sito ti serve una chiave API. Il programma la usa da solo se trova la variabile d'ambiente `ANTHROPIC_API_KEY`.\n- **Costo:** uso il modello più economico, Haiku, che basta per questo tipo di classificazione. Per questi 6 commenti la spesa a prezzi API sarebbe di circa 0,002 $.\n\nIl programma l'ho scritto in Tokyn: `programma.py` è generato dal compilatore e non ha bisogno di Tokyn per funzionare. Il sorgente è `programma.tokyn`, nella stessa cartella. Se vuoi cambiare le regole di moderazione conviene modificare quello, che è più breve, e rigenerare il Python con:\n```\npython /srv/plugin-tokyn/skills/tokyn/tokyn_cli.py build programma.tokyn --standalone -o programma.py\n```",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 commenti nell'ordine del file con id e motivo: True ([201, 202, 203, 204, 205, 206])",
+   "decisioni ammesse e giuste: True (6 su 6: ['pubblica', 'rifiuta', 'rivedi', 'pubblica', 'rifiuta', 'rivedi'])",
+   "riscrittura per ogni commento da rivedere: True (2 da rivedere)",
+   "commento 203: riscrittura senza offese True, con il contenuto True ('Capisco che la domanda sulla potatura torni spesso: potrebbe essere utile usare la funzione di ricerca del forum. In ogni caso, le ortensie si potano a fine inverno, tagliando sopra la prima coppia di gemme gonfie, e non in autunno.')",
+   "commento 206: riscrittura senza offese True, con il contenuto True (\"Credo che il consiglio sopra possa creare problemi: le piante grasse non vanno annaffiate tutti i giorni. D'estate basta annaffiarle una volta ogni 10-15 giorni, mentre d'inverno quasi mai, aspettando sempre che il terriccio sia asciutto. Chi segue quel consiglio rischia di far morire le piante.\")"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.001798,
+   "token_output": 1859,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

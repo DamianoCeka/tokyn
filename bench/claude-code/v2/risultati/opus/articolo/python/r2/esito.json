@@ -1,0 +1,73 @@
+{
+ "prova": "opus/articolo/python/r2",
+ "cartella": "f19fb65a31",
+ "modello": "opus",
+ "compito": "articolo",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.7583994,
+ "costo_usd_telemetria": 0.758399,
+ "token_output": 7332,
+ "token_input": 22,
+ "token_cache_scritti": 62285,
+ "token_cache_letti": 566957,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 13,
+ "secondi": 80.3,
+ "secondi_api": 67.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 8,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 107,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": ", citati) imposta alla risposta.\n- Se tornano 4 punti invece di 5, il programma lo segnala e riprova da solo. Riprova anche se la risposta ha un formato diverso da quello atteso: è un difetto che ho trovato e corretto durante la prova. Si arrende dopo 3 tentativi.\n- I nomi ripetuti vengono tolti: \"Marco Tessari\" e \"marco tessari\" diventano una sola voce, e gli spazi in più vengono ripuliti.\n- `risultato.json` viene scritto con le lettere accentate leggibili.\n- Senza credenziali il programma si ferma con un messaggio chiaro, invece di un errore incomprensibile.\n\n**Come funziona**\n\nClaude riceve l'articolo con alcune istruzioni:\n- un titolo breve;\n- cinque punti, una frase ciascuno e solo fatti presenti nell'articolo;\n- persone e organizzazioni citate per nome, una volta sola. Chi compare prima con nome e cognome e poi solo col cognome (come Tessari o Valli) va scritto una volta con il nome completo. Vanno esclusi i gruppi senza nome, come \"i sindacati\".\n\nHo attivato anche un'opzione dell'API: se Claude rifiutasse l'articolo, la richiesta viene ripetuta automaticamente con un altro modello.\n\n**Per provarlo davvero**\n\nServe una chiave API di Anthropic:\n```\nexport ANTHROPIC_API_KEY=la-tua-chiave\npython programma.py\n```\nSe vuoi impostarla qui, lo lancio io sull'articolo e ti mostro il risultato prima che tu lo usi con i colleghi.\n\nIl programma usa le librerie Python `anthropic` e `pydantic`, già installate su questa macchina. I file della prova sono rimasti in `/tmp/prova_scheda`.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

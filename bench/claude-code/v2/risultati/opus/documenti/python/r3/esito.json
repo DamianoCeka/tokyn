@@ -1,0 +1,73 @@
+{
+ "prova": "opus/documenti/python/r3",
+ "cartella": "7186192d19",
+ "modello": "opus",
+ "compito": "documenti",
+ "condizione": "python",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.7059085999999999,
+ "costo_usd_telemetria": 0.705909,
+ "token_output": 6412,
+ "token_input": 18,
+ "token_cache_scritti": 61255,
+ "token_cache_letti": 437783,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 14,
+ "secondi": 71.5,
+ "secondi_api": 60.9,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 8,
+  "Write": 1,
+  "Edit": 2
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 84,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "e. Le 4 domande sono state lette nell'ordine giusto, `risultato.json` ha il formato che hai chiesto e le richieste partono correttamente. Questa prova però non dice nulla sulla qualità delle risposte di Claude. Ho anche cancellato il `risultato.json` di prova.\n\n**Per provarlo davvero**, dalla cartella con `docs/` e `domande.txt`:\n```\nexport ANTHROPIC_API_KEY=la-tua-chiave\npython programma.py\n```\nDovresti ottenere, per esempio, \"100 euro a notte, colazione compresa\" con fonte `regolamento_viaggi.txt`. Se mi dai accesso a una chiave, la prova la faccio io.\n\n**Come funziona:**\n- Per ogni domanda manda a Claude Opus 5.5 tutti i documenti di `docs/`, insieme all'istruzione di rispondere solo in base a quelli.\n- La risposta torna in un formato fisso, e `fonte` può essere soltanto uno dei nomi di file presenti in `docs/`, quindi il modello non può inventarsi un file.\n- Ho attivato l'opzione per cui, se il modello si rifiuta di rispondere, la domanda passa in automatico a un altro modello Claude.\n\n**Due cose da sapere:**\n- Se nessun documento contiene la risposta, `fonte` vale `null` e la risposta lo dice. Il tuo esempio non prevedeva questo caso.\n- Se una singola domanda va in errore (rete, rifiuto, risposta malformata), l'errore finisce in `risposta` e il programma passa alla domanda successiva. Senza chiave API, invece, si ferma subito.\n\nDurante le prove ho corretto un difetto: se la risposta non conteneva i campi attesi, il programma andava in crash invece di registrare l'errore.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 5,
+  "dettagli": [
+   "risultato.json mancante o non è una lista"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

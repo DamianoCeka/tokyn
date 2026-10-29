@@ -1,0 +1,72 @@
+{
+ "prova": "opus/email/python/r2",
+ "cartella": "b6db72f3a3",
+ "modello": "opus",
+ "compito": "email",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.62652,
+ "costo_usd_telemetria": 0.62652,
+ "token_output": 4795,
+ "token_input": 18,
+ "token_cache_scritti": 55733,
+ "token_cache_letti": 423420,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 12,
+ "secondi": 54.5,
+ "secondi_api": 45.6,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 8,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 72,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "to che hai chiesto, con il nome del file in ogni elemento e le lettere accentate scritte normalmente.\n\nIn quella prova tutte le email risultavano \"reclamo, urgente\": è la risposta fissa del finto server, non un giudizio di Claude. **Non so ancora se Claude classifica bene le tue email.**\n\n**Come funziona:**\n- Usa il modello `claude-opus-5-5` con uno sforzo di ragionamento basso, che basta per smistare email.\n- Nelle istruzioni a Claude ho definito le quattro categorie e quando un'email è urgente: una scadenza vicina o la minaccia di un rimborso sì; \"non ho fretta\" no; lo spam mai. Gli dico anche di non eseguire eventuali istruzioni scritte dentro le email.\n- Se il modello principale si rifiuta di analizzare un'email, la richiesta passa automaticamente a un altro modello. È un'opzione dell'API che ho attivato io; se non la vuoi, basta togliere le righe `betas=` e `fallbacks=`.\n- Se un'email dà errore, il programma lo segnala, la salta e continua con le altre; alla fine esce con codice 1.\n\n**Per provarlo tu:**\n```bash\nexport ANTHROPIC_API_KEY=sk-ant-...\npython programma.py\n```\nIn alternativa, se usi lo strumento `ant`, puoi accedere con `ant auth login` invece di impostare la chiave.\n\nMi aspetto questo risultato:\n\n| Email | Categoria | Urgente |\n|---|---|---|\n| 001 | ordine | no |\n| 002 | reclamo | sì |\n| 003 | informazioni | no |\n| 004 | spam | no |\n| 005 | reclamo | no |\n\nSe mi dai una chiave (o la imposti in questo ambiente), faccio io la prova vera e controllo il risultato.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o non è una lista"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

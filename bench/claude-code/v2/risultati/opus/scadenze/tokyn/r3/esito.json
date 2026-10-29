@@ -1,0 +1,83 @@
+{
+ "prova": "opus/scadenze/tokyn/r3",
+ "cartella": "ce94252854",
+ "modello": "opus",
+ "compito": "scadenze",
+ "condizione": "tokyn",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2713098,
+ "costo_usd_telemetria": 0.27131,
+ "token_output": 4341,
+ "token_input": 20,
+ "token_cache_scritti": 18754,
+ "token_cache_letti": 171889,
+ "prove_del_programma": {
+  "costo_usd": 0.025812,
+  "token_output": 1253,
+  "chiamate": 4,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 11,
+ "secondi": 69.3,
+ "secondi_api": 41.6,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 7,
+  "Write": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 863,
+ "righe_tokyn": 64,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "ervizio e la data scritta per esteso. L'oggetto è del tipo \"Promemoria: Licenza gestionale in scadenza il 25 novembre 2026\". La prova vera ha richiesto circa 25 secondi.\n\n**Altre prove fatte, con risposte finte al posto di Claude:**\n- **Estremi compresi:** un contratto che scade proprio alla data di riferimento esce con `giorni_mancanti: 0`, e quello a 30 giorni è incluso (il Backup in cloud qui sopra).\n- **CSV difficili:** il programma legge correttamente un nome con la virgola tra virgolette (`\"Rossi, Bianchi & C.\"`), i file salvati da Excel e le righe vuote. Le righe con una scadenza non valida le salta e lo segnala a schermo.\n- **Data sbagliata:** se la data manca o non esiste (es. `2026-02-30`), il programma stampa `Uso: python programma.py AAAA-MM-GG` e si ferma.\n\n**Da sapere:**\n- **Chiave API:** nella prova le email le ha scritte il tuo Claude Code, perché non c'era una chiave API. Va bene per provare. Per usarlo da solo o farlo usare ad altri, ti serve una chiave dell'API di Anthropic in `ANTHROPIC_API_KEY` e la libreria `anthropic` (`pip install anthropic`).\n- **Tono delle email:** a volte mescolano il \"Lei\" e il \"Voi\" (es. \"Le scriviamo… dei vostri dati\"). Se vuoi un solo registro lo fisso nelle istruzioni.\n- **Il file:** `programma.py` è generato da Tokyn a partire da `programma.tokyn`, che ho lasciato nella stessa cartella. Per modifiche future conviene cambiare `programma.tokyn` e rigenerare il Python. `programma.py` è comunque autonomo e non ha bisogno di Tokyn.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "esattamente i 4 contratti in scadenza: True (['Panificio Russo', 'Farmacia Conti', 'Hotel Bellavista', 'Ferramenta Gallo Snc'])",
+   "scadenze come nel file e in ordine di scadenza: True (['2026-12-15', '2026-12-28', '2027-01-06', '2027-01-14'])",
+   "giorni_mancanti giusti: True ([0, 13, 22, 30])",
+   "email con oggetto e testo che nominano cliente e servizio: True",
+   "email scritte una per una (testi diversi anche senza nomi, servizi e date): True"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.022866,
+   "token_output": 1236,
+   "chiamate": 4,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

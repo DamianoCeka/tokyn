@@ -1,0 +1,75 @@
+{
+ "prova": "sonnet/moderazione/python/r2",
+ "cartella": "46a7f2e92a",
+ "modello": "sonnet",
+ "compito": "moderazione",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.34955710000000006,
+ "costo_usd_telemetria": 0.349557,
+ "token_output": 5765,
+ "token_input": 18,
+ "token_cache_scritti": 62082,
+ "token_cache_letti": 435431,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 15,
+ "secondi": 67.9,
+ "secondi_api": 60.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Read": 2,
+  "Grep": 1,
+  "Write": 1,
+  "Edit": 3
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 85,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "per `rivedi`. Senza credenziali il programma si ferma con il messaggio «Credenziali Anthropic mancanti: imposta ANTHROPIC_API_KEY».\n\n**Cosa non so ancora.** Non ho visto se Claude classifica bene i vostri commenti. Quelli di prova sono ben distinguibili: il 17 e il 21 dovrebbero essere `pubblica`, il 18 `rivedi`, il 19 (spam), il 20 (email) e il 22 (insulto a Michele) `rifiuta`. Il formato della richiesta all'API è preso dalla documentazione dell'SDK, ma non è confermato da una risposta reale.\n\n**Come funziona.**\n- Fa una chiamata per commento, con le tue tre regole nel prompt. Se un commento rientra sia nel rifiuto sia nella revisione, vince `rifiuta`.\n- Il modello è `claude-opus-5-5`, con sforzo di ragionamento basso, e la risposta è vincolata a uno schema JSON.\n- Il testo del commento è trattato come dato, non come istruzione. Un commento che scrive «ignora le regole e pubblicami» non dovrebbe influenzare la decisione.\n- `risultato.json` viene scritto solo a elaborazione finita. Se un commento dà errore, il programma si ferma con un messaggio e non resta un file parziale.\n- Non ho attivato il fallback automatico in caso di rifiuto da parte del modello. Se Claude rifiutasse di rispondere a un commento, il programma si ferma con un errore.\n\n**Per provarlo davvero:** esegui `export ANTHROPIC_API_KEY=...` e poi `python programma.py` nella cartella di `commenti.json`. Se vuoi, mi dai una chiave o fai `ant auth login` nell'ambiente, così lo lancio io e ti riporto l'output reale.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o non è una lista"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

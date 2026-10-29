@@ -1,0 +1,42 @@
+type Classe:
+    categoria: "spesa alimentare" | "trasporti" | "casa" | "svago" | "altro" "categoria del movimento"
+
+type Movimento:
+    data: str
+    descrizione: str
+    importo: float
+    categoria: str
+
+agent Classificatore:
+    model: "claude-haiku"
+    effort: "low"
+    instructions: """
+        Assegni una categoria a un movimento di conto corrente italiano, dato come descrizione e importo.
+        Categorie: spesa alimentare (supermercati, alimentari), trasporti (carburante, treni, mezzi, taxi, pedaggi, parcheggi),
+        casa (affitto, mutuo, bollette, utenze, arredamento, condominio), svago (ristoranti, bar, cinema, viaggi, abbonamenti streaming, hobby),
+        altro (tutto il resto, compresi stipendi, bonifici e prelievi).
+    """
+    output: Classe
+
+main:
+    righe = read_file("movimenti.csv").splitlines()
+    dati = []
+    testi = []
+    for riga in righe[1:]:
+        if riga.strip() == "":
+            continue
+        parti = riga.strip().split(";")
+        importo = float(to_number(parti[-1].strip()))
+        descrizione = ";".join(parti[1:-1])
+        dati.append([parti[0], descrizione, importo])
+        testi.append(f"Descrizione: {descrizione}\nImporto: {importo:.2f}")
+    risposte = Classificatore.ask_all(testi)
+    totali = {"spesa alimentare": 0.0, "trasporti": 0.0, "casa": 0.0, "svago": 0.0, "altro": 0.0}
+    movimenti = []
+    for d, r in zip(dati, risposte):
+        movimenti.append(Movimento(data=d[0], descrizione=d[1], importo=d[2], categoria=r.categoria))
+        totali[r.categoria] += d[2]
+    for k in totali.keys():
+        totali[k] = round(totali[k], 2)
+    write_file("risultato.json", json_dump({"movimenti": movimenti, "totali": totali}))
+    print(f"{len(movimenti)} movimenti scritti in risultato.json")

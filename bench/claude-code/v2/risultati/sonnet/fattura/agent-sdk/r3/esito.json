@@ -1,0 +1,84 @@
+{
+ "prova": "sonnet/fattura/agent-sdk/r3",
+ "cartella": "c3f8e34e90",
+ "modello": "sonnet",
+ "compito": "fattura",
+ "condizione": "agent-sdk",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.284742,
+ "costo_usd_telemetria": 0.284742,
+ "token_output": 3961,
+ "token_input": 10,
+ "token_cache_scritti": 56530,
+ "token_cache_letti": 189920,
+ "prove_del_programma": {
+  "costo_usd": 0.075399,
+  "token_output": 2673,
+  "chiamate": 3,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 71.4,
+ "secondi_api": 39.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 90,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "isultato.json` nel formato che mi hai indicato.\n\nSulla tua fattura (Ortofrutta Bassi, 05/03/2026, 4 righe) ha estratto fornitore, data in formato `2026-03-05` e righe nell'ordine giusto. Il totale scritto e quello ricalcolato sono entrambi 226,40 €, quindi `totale_corretto` è `true`.\n\nAltre due prove, fatte in cartelle temporanee:\n- **Totale sbagliato:** con il totale cambiato a 226,41 il programma lo segnala a video con la differenza di 0,01 €, e nel file mette `totale_corretto: false`.\n- **Fattura mancante:** senza `fattura.txt` stampa un errore e termina con codice 1.\n\nCome funziona:\n- **Ruolo di Claude:** Claude legge il testo e riporta quello che c'è scritto, compreso il totale dichiarato, senza calcolare né correggere niente. Non ha strumenti a disposizione.\n- **Calcolo del totale:** lo fa il programma, non Claude. Somma quantità per prezzo unitario con numeri decimali esatti, arrotonda al centesimo e confronta con il totale scritto.\n- **Chiamata all'API:** il programma usa `claude-agent-sdk` senza indicare un modello, quindi usa quello predefinito, e le credenziali già configurate nell'ambiente. Ogni esecuzione dura circa 8 secondi.\n\nUna cosa da sapere: la fattura contiene IVA inclusa nei prezzi, quindi il confronto è tra la somma delle righe e il \"TOTALE DA PAGARE\". Se una fattura avesse IVA o sconti separati, il programma segnerebbe il totale come sbagliato anche se la fattura è corretta.\n\nI file sono in `/srv/progetti/c3f8e34e90`:\n- `programma.py`\n- `risultato.json`",
+ "controllo": {
+  "ok": true,
+  "punti": 6,
+  "massimo": 6,
+  "dettagli": [
+   "fornitore: True ('CARTOLERIA MARCHETTI & FIGLI S.n.c.')",
+   "data 2026-02-18: True ('2026-02-18')",
+   "5 righe in ordine con quantità e prezzi giusti: True (5 giuste su 5)",
+   "totale_dichiarato 440.60: True (440.6)",
+   "totale_calcolato 439.60: True (439.6)",
+   "totale_corretto false: True (False)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.028128,
+   "token_output": 985,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

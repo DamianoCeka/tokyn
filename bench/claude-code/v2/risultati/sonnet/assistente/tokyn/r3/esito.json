@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/assistente/tokyn/r3",
+ "cartella": "ab10155131",
+ "modello": "sonnet",
+ "compito": "assistente",
+ "condizione": "tokyn",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.0682207,
+ "costo_usd_telemetria": 0.068221,
+ "token_output": 1501,
+ "token_input": 8,
+ "token_cache_scritti": 12051,
+ "token_cache_letti": 49907,
+ "prove_del_programma": {
+  "costo_usd": 0.013188,
+  "token_output": 270,
+  "chiamate": 3,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 5,
+ "secondi": 51.0,
+ "secondi_api": 26.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 2
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 821,
+ "righe_tokyn": 20,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn"
+ ],
+ "risposta_finale": "funziona**\n- Si avvia con `python programma.py` dalla cartella che contiene `faq.txt`.\n- All'avvio legge tutto `faq.txt` e lo passa a Claude insieme alle istruzioni.\n- Legge una riga alla volta da stdin, stampa la risposta e termina con `esci`.\n- Le righe vuote vengono ignorate.\n- Il programma ricorda tutta la conversazione.\n- Le istruzioni dicono a Claude di usare solo le FAQ e di ammettere quando una risposta non c'è.\n- Il file è autonomo: usa `ANTHROPIC_API_KEY` se c'è.\n\n**Cosa ho provato**\n- Una prova con risposte finte, che girava correttamente.\n- Una prova con risposte vere di Claude, senza chiave API, quindi tramite il tuo Claude Code. Ho scritto: \"Mi chiamo Luca, quanto costa la spedizione?\", poi \"Come mi chiamo?\", poi \"Vendete biciclette?\".\n  - La spedizione l'ha data correttamente dalle FAQ: 4,90 €, gratuita da 49 €.\n  - Ha ricordato il nome Luca.\n  - Sulle biciclette ha detto di non avere l'informazione e ha consigliato di contattare il negozio, senza inventare.\n\n**Da sapere**\n- Senza chiave API il programma passa dal Claude Code di chi lo avvia. Per usarlo davvero per i clienti serve una chiave API di Anthropic.\n- Ho scritto il programma in Tokyn (`programma.tokyn`) e `programma.py` è generato dal compilatore. Se vuoi modificare qualcosa, modifica il `.tokyn` e rigenera il `.py` con `python /srv/plugin-tokyn/skills/tokyn/tokyn_cli.py build programma.tokyn --standalone -o programma.py`.\n- `faq.txt` viene letto una volta all'avvio. Se lo cambi, riavvia il programma.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "spedizione 6,90 euro: True",
+   "codice sconto CIAONESPOLO: True",
+   "reso entro 45 giorni: True",
+   "si ricorda il nome Giulia: True",
+   "termina su esci (codice 0) senza rispondere dopo: True",
+   "output (ultimi 1500 caratteri): Ciao Giulia, benvenuta da Casa Nespolo! 😊 Come posso aiutarti oggi?\nCiao Giulia! In Italia la spedizione standard costa 6,90 €, ma è gratuita per ordini da 79 € in su. 😊\n\nSe vuoi, posso darti anche i tempi di consegna!\nSì, Giulia! 🎉 Con il codice **CIAONESPOLO** hai il 10% di sconto sul primo ordine.\n\nSe il tuo ordine arriva a 79 € o più, avrai anche la spedizione gratuita. Posso aiutarti con altro?\nGiulia, puoi restituire i prodotti entro **45 giorni dalla consegna**. 😊\n\nIl reso costa 7 €, tranne per i prodotti difettosi.\n\nPosso aiutarti con qualcos'altro?\nTi chiami Giulia! 😊 Posso aiutarti con qualcos'altro?\n"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.021105,
+   "token_output": 332,
+   "chiamate": 5,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

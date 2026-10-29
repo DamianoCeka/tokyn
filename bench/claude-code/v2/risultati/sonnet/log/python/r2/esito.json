@@ -1,0 +1,71 @@
+{
+ "prova": "sonnet/log/python/r2",
+ "cartella": "378fcdd0b8",
+ "modello": "sonnet",
+ "compito": "log",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.3117103,
+ "costo_usd_telemetria": 0.31171,
+ "token_output": 4880,
+ "token_input": 16,
+ "token_cache_scritti": 56710,
+ "token_cache_letti": 360383,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 10,
+ "secondi": 65.0,
+ "secondi_api": 50.7,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 7
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 61,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "Chiamata a Claude:** ho usato un server finto in locale. Ha confermato che la richiesta parte bene, con le statistiche nel prompt, e che `risultato.json` viene scritto con le chiavi richieste. Non so però che commento scriverebbe Claude davvero.\n\n**Prima di usarlo**\n- Imposta `ANTHROPIC_API_KEY` (o fai `ant auth login`). Senza credenziali il programma si ferma con un errore, e non scrive un commento inventato.\n- Serve `pip install anthropic`; qui era già installato.\n- Il modello è `claude-opus-5-5`, perché non me ne hai indicato uno. Se vuoi spendere meno, cambia la stringa nel file con `claude-sonnet-5-5` o `claude-haiku-5-5`.\n\n**Scelte nel codice**\n- L'ora è quella scritta nel log, senza conversioni di fuso orario.\n- Una riga che non rispetta il formato viene saltata, con un avviso su stderr. Con questo log non è successo.\n- Se Claude rifiuta la richiesta o risponde vuoto, il programma si ferma con un errore. Non uso il fallback automatico che l'API offre per i rifiuti, per tenere il file semplice.\n- Nel prompt ho chiesto esattamente due frasi. Il programma non controlla che siano due.\n\n**Il test che non conta:** un primo tentativo è andato a una porta locale (8765) già occupata da un processo che non conosco. Non era il mio server e ha risposto con dati senza senso, quindi l'ho scartato e ripetuto su una porta libera. Il riepilogo delle statistiche, senza dati sensibili, è arrivato a quel processo, ma è rimasto sul computer. Forse conviene vedere cosa gira su quella porta.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

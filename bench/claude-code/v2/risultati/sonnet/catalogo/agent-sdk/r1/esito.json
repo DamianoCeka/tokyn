@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/catalogo/agent-sdk/r1",
+ "cartella": "e0ab7348ca",
+ "modello": "sonnet",
+ "compito": "catalogo",
+ "condizione": "agent-sdk",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2688187,
+ "costo_usd_telemetria": 0.268819,
+ "token_output": 3582,
+ "token_input": 10,
+ "token_cache_scritti": 53582,
+ "token_cache_letti": 186507,
+ "prove_del_programma": {
+  "costo_usd": 0.03603,
+  "token_output": 273,
+  "chiamate": 6,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 58.3,
+ "secondi_api": 48.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 95,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "catalogo_en.csv",
+  "programma.py"
+ ],
+ "risposta_finale": "a:** intestazione, separatore `;` e numero di righe sono uguali.\n- **Colonne invariate:** codice, nome e prezzo sono identici in ogni riga, compresa la virgola decimale (`12,90`).\n- **Descrizioni:** sono cambiate in tutte le righe.\n\nLa tua riga di esempio diventa esattamente `TZ-014;Tazza Aurora;Handmade ceramic mug, dishwasher safe;12,90`. Anche le altre traduzioni sono corrette: ad esempio il tappeto è `Hand-woven jute rug, 120 x 180 cm` e la padella `28 cm non-stick frying pan, also suitable for induction hobs`.\n\nIl programma fa una chiamata a Claude per ogni descrizione, in parallelo (4 alla volta), tramite `claude-agent-sdk`. Ho scelto il modello `claude-opus-5-5`. Se vuoi risparmiare su cataloghi grandi, puoi cambiare la costante `MODEL` in cima al file con `claude-sonnet-5-5`. Non ho provato un modello diverso.\n\n- **Errori:** ogni traduzione viene ritentata fino a 3 volte. Se una fallisce comunque, il programma si ferma con un messaggio e non scrive `catalogo_en.csv`, così non resta mai un file con righe solo in parte tradotte.\n- **Descrizioni vuote:** vengono lasciate così come sono.\n- **Colonna `descrizione`:** il programma la cerca per nome nell'intestazione, quindi funziona anche se cambi l'ordine delle colonne.\n- **Istruzioni nelle descrizioni:** il programma dice al modello di trattare ogni descrizione come testo da tradurre, non come istruzioni.\n- **Terminatori di riga:** il file in uscita usa sempre `\\n`. Il tuo catalogo li usa già, quindi qui non cambia nulla.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "intestazione codice;nome;descrizione;prezzo: True (['codice', 'nome', 'descrizione', 'prezzo'])",
+   "5 prodotti con 4 colonne e codici nell'ordine del file: True (5 righe)",
+   "codice, nome e prezzo identici: True",
+   "descrizioni tradotte in inglese: 5 su 5"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.029697,
+   "token_output": 212,
+   "chiamate": 5,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

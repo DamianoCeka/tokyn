@@ -1,0 +1,84 @@
+{
+ "prova": "opus/riunione/tokyn/r1",
+ "cartella": "83edbeb3ef",
+ "modello": "opus",
+ "compito": "riunione",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.17089320000000002,
+ "costo_usd_telemetria": 0.170893,
+ "token_output": 2225,
+ "token_input": 12,
+ "token_cache_scritti": 13608,
+ "token_cache_letti": 87406,
+ "prove_del_programma": {
+  "costo_usd": 0.010998,
+  "token_output": 267,
+  "chiamate": 1,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 28.6,
+ "secondi_api": 22.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 825,
+ "righe_tokyn": 22,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "ettimane invece che ogni mese.\"\n  ],\n  \"azioni\": [\n    {\"cosa\": \"Prenotare lo stand per la fiera di Bologna\", \"chi\": \"Paolo\", \"entro\": \"2026-10-30\"},\n    {\"cosa\": \"Preparare il calendario dei temi della newsletter\", \"chi\": \"Chiara\", \"entro\": \"2026-11-06\"},\n    {\"cosa\": \"Far stampare i volantini per lo stand\", \"chi\": \"Roberto\", \"entro\": \"2026-11-16\"}\n  ]\n}\n```\n\nHo confrontato il risultato con la trascrizione: le due decisioni e i tre compiti ci sono tutti, con le persone e le date giuste. La domanda sul parcheggio, che non riguarda la riunione, è stata ignorata.\n\n- **Scadenze non scritte per intero:** se nel verbale c'è una scadenza come \"venerdì prossimo\", Claude la calcola partendo dalla data della riunione. Se il verbale non la riporta, usa la data del giorno in cui avvii il programma. In questa trascrizione tutte le date erano complete, quindi questo caso non l'ho potuto provare.\n- **Chiave API:** nella prova Claude ha risposto tramite il mio Claude Code, perché non c'era una chiave API. Va bene per provare, ma per usarlo davvero ogni volta, o farlo usare ad altri, ti serve una chiave API di Anthropic: impostala in `ANTHROPIC_API_KEY` e installa la libreria con `pip install anthropic`.\n- **Come è fatto:** ho scritto il programma in Tokyn (`programma.tokyn`, circa 25 righe) e il compilatore ne ha generato `programma.py`. Il file Python funziona da solo, senza Tokyn. Se vuoi modificare il programma, la cosa più comoda è cambiare `programma.tokyn` e rigenerare `programma.py`.",
+ "controllo": {
+  "ok": true,
+  "punti": 6,
+  "massimo": 6,
+  "dettagli": [
+   "decisioni lista di stringhe e azioni lista di {cosa, chi, entro} stringhe: True",
+   "le 2 decisioni e nessuna chiacchiera: True (trovate: [\"lancio dell'app al 24 novembre\", 'budget pubblicitario dai giornali ai social']; chiacchiere: []; scritte: [\"Il lancio dell'app nuova slitta dal 10 al 24 novembre.\", 'Da dicembre tutto il budget pubblicitario passa dai giornali ai social.'])",
+   "azione di Marco entro 2026-11-13: True ([{'cosa': 'Sistemare i due bug bloccanti del pagamento con carta', 'chi': 'Marco', 'entro': '2026-11-13'}])",
+   "azione di Sara entro 2026-11-18: True ([{'cosa': 'Scrivere le risposte pronte per il supporto sul nuovo lancio', 'chi': 'Sara', 'entro': '2026-11-18'}])",
+   "azione di Davide entro 2026-11-30: True ([{'cosa': 'Preparare il piano delle campagne social di dicembre', 'chi': 'Davide', 'entro': '2026-11-30'}])",
+   "esattamente 3 azioni: True (3)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.008229,
+   "token_output": 287,
+   "chiamate": 1,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

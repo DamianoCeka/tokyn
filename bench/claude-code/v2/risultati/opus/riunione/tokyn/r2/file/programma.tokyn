@@ -1,0 +1,34 @@
+import re
+
+type Azione:
+    cosa: str "che cosa va fatto, frase breve all'infinito"
+    chi: str "nome della persona che se ne occupa, come compare nella trascrizione"
+    entro: str "scadenza nel formato AAAA-MM-GG"
+
+type Verbale:
+    decisioni: list[str] "decisioni prese dal team, ognuna come frase breve"
+    azioni: list[Azione]
+
+agent Estrattore:
+    instructions: """
+        Estrai da una trascrizione di riunione le decisioni prese e le azioni da fare.
+        Le decisioni sono solo quelle concordate davvero, non proposte o chiacchiere fuori tema.
+        Le azioni sono i compiti assegnati a una persona con una scadenza.
+        Scrivi le scadenze nel formato AAAA-MM-GG; se sono relative (es. "venerdì prossimo"),
+        calcolale a partire dalla data della riunione indicata nella trascrizione o, se manca, dalla data di oggi.
+        Se un compito non ha scadenza, usa "" per entro. Rispondi in italiano.
+    """
+    output: Verbale
+    effort: "low"
+
+main:
+    testo = read_file("verbale.txt", "")
+    if testo.strip() == "":
+        print("verbale.txt non trovato o vuoto.")
+        return
+    v = Estrattore.ask(f"Data di oggi: {now()[:10]}\n\nTrascrizione:\n{testo}")
+    for a in v.azioni:
+        if a.entro != "" and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", a.entro):
+            print(f"Attenzione: scadenza non valida per '{a.cosa}': {a.entro}")
+    write_file("risultato.json", json_dump(v))
+    print(f"Scritto risultato.json: {len(v.decisioni)} decisioni, {len(v.azioni)} azioni.")

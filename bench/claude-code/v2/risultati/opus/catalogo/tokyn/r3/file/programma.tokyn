@@ -1,0 +1,35 @@
+INGRESSO = "catalogo.csv"
+USCITA = "catalogo_en.csv"
+
+agent Traduttore:
+    effort: "low"
+    instructions: """
+        Traduci in inglese la descrizione di un prodotto di un negozio online.
+        Rispondi solo con il testo inglese, su una riga, senza ripetere l'italiano, senza virgolette, frecce o commenti.
+        Stile conciso da scheda prodotto. Lascia invariati numeri, misure e nomi propri.
+        Maiuscola solo all'inizio della frase, come nell'originale (niente iniziali maiuscole in ogni parola).
+    """
+
+main:
+    testo = read_file(INGRESSO)
+    righe = testo.splitlines()
+    uscita = [righe[0]]
+    for riga in righe[1:]:
+        if riga.strip() == "":
+            uscita.append(riga)
+            continue
+        campi = riga.split(";")
+        if len(campi) < 4:
+            print(f"Riga non valida, copiata così com'è: {riga}")
+            uscita.append(riga)
+            continue
+        descrizione = ";".join(campi[2:-1])
+        inglese = Traduttore.ask(descrizione).strip()
+        inglese = " ".join(inglese.split()).replace(";", ",")
+        print(f"{campi[0]}: {inglese}")
+        uscita.append(";".join([campi[0], campi[1], inglese, campi[-1]]))
+    fine = ""
+    if testo.endswith("\n"):
+        fine = "\n"
+    write_file(USCITA, "\n".join(uscita) + fine)
+    print(f"Scritto {USCITA} ({len(uscita) - 1} prodotti)")

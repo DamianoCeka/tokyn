@@ -1,0 +1,72 @@
+{
+ "prova": "sonnet/fattura/python/r3",
+ "cartella": "31871e10b9",
+ "modello": "sonnet",
+ "compito": "fattura",
+ "condizione": "python",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.30088529999999997,
+ "costo_usd_telemetria": 0.300885,
+ "token_output": 5099,
+ "token_input": 14,
+ "token_cache_scritti": 55118,
+ "token_cache_letti": 293953,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 10,
+ "secondi": 55.4,
+ "secondi_api": 47.8,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 97,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "di Claude con i dati di `fattura.txt`. Il ricalcolo dà 226,40 € e `totale_corretto` è `true`. Con un totale dichiarato di 226,41 € dà `false`.\n- **Calcolo:** uso `Decimal` e non i float, quindi non ci sono errori di arrotondamento. Per esempio 3 × 0,10 fa esattamente 0,30.\n- **Senza chiave:** il programma stampa «chiave API mancante o non valida» ed esce con codice 1, senza traceback.\n- **Quello che non è provato:** la risposta reale di Claude, cioè se estrae bene fornitore, data e righe, e la scrittura di `risultato.json`. Non ho mai visto un file `risultato.json` generato.\n\n**Cosa fa**\n- Legge `fattura.txt` dalla cartella corrente.\n- Chiede a Claude (`claude-opus-5-5`) i dati in uno schema fisso: fornitore, data, righe e totale dichiarato.\n- Come fornitore indica chi emette la fattura (qui «Ortofrutta Bassi», non la trattoria). Le date italiane GG/MM/AAAA vengono convertite in AAAA-MM-GG.\n- Il totale lo ricalcola il programma, non Claude, e lo confronta con quello scritto al centesimo.\n- Scrive `risultato.json` nel formato che mi hai indicato e stampa una riga di esito.\n\n**Per provarlo**\n```\npip install anthropic   # già presente nel mio ambiente\nexport ANTHROPIC_API_KEY=...\npython programma.py\n```\nNella fattura di esempio le righe sommano 51 + 78,40 + 12 + 85 = 226,40 €. Se tutto va bene, il programma dovrebbe segnare il totale come corretto.\n\nQuando l'avrai eseguito con la chiave, dimmi cosa è uscito: se l'estrazione sbaglia qualcosa, aggiusto le istruzioni date a Claude.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 6,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

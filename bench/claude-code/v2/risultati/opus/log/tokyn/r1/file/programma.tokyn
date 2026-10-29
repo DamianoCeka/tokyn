@@ -1,0 +1,62 @@
+import re
+
+RIGA = re.compile(r'^(\S+) \S+ \S+ \[[^:\]]*:(\d{2}):[^\]]*\] ".*" (\d{3}) \S+$')
+
+agent Commentatore:
+    instructions: """
+        Ricevi le statistiche di una giornata di accessi a un sito web.
+        Scrivi in italiano esattamente due frasi brevi sul traffico della giornata
+        (andamento nelle ore, picchi, errori). Rispondi solo con le due frasi.
+    """
+    effort: "low"
+
+def per_conteggio(voce: list) -> int:
+    return voce[1]
+
+main:
+    per_ora = {}
+    errori = {}
+    per_ip = {}
+    totale = 0
+    for riga in read_file("access.log").splitlines():
+        if riga.strip() == "":
+            continue
+        m = RIGA.match(riga.strip())
+        if m == None:
+            print(f"Riga non riconosciuta, ignorata: {riga}")
+            continue
+        totale += 1
+        ip = m.group(1)
+        ora = m.group(2)
+        stato = m.group(3)
+        per_ora[ora] = per_ora.get(ora, 0) + 1
+        per_ip[ip] = per_ip.get(ip, 0) + 1
+        if int(stato) >= 400:
+            errori[stato] = errori.get(stato, 0) + 1
+    richieste_per_ora = {}
+    for ora in sorted(per_ora.keys()):
+        richieste_per_ora[ora] = per_ora[ora]
+    errori_ordinati = {}
+    for codice in sorted(errori.keys()):
+        errori_ordinati[codice] = errori[codice]
+    voci = []
+    for ip, n in per_ip.items():
+        voci.append([ip, n])
+    ip_top = []
+    for voce in sorted(voci, key=per_conteggio, reverse=True)[:3]:
+        ip_top.append(voce[0])
+    dati = {
+        "richieste_totali": totale,
+        "richieste_per_ora": richieste_per_ora,
+        "errori": errori_ordinati,
+        "ip_top": ip_top,
+    }
+    commento = Commentatore.ask(json_dump(dati)).strip()
+    risultato = {
+        "richieste_per_ora": richieste_per_ora,
+        "errori": errori_ordinati,
+        "ip_top": ip_top,
+        "commento": commento,
+    }
+    write_file("risultato.json", json_dump(risultato))
+    print(json_dump(risultato))

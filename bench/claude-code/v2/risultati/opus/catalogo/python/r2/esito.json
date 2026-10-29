@@ -1,0 +1,72 @@
+{
+ "prova": "opus/catalogo/python/r2",
+ "cartella": "290ff3523a",
+ "modello": "opus",
+ "compito": "catalogo",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.6147694,
+ "costo_usd_telemetria": 0.614769,
+ "token_output": 4497,
+ "token_input": 14,
+ "token_cache_scritti": 57796,
+ "token_cache_letti": 312027,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 10,
+ "secondi": 51.9,
+ "secondi_api": 46.1,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 57,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "i, compresi `12,90` e le lettere accentate come \"bambù\". Cambia solo la descrizione. Il controllo è passato. Ho controllato anche che il modello e le opzioni siano accettati dalla libreria `anthropic` installata (versione 2.3.0). Se invece il servizio li accetti, si vedrà solo con una chiamata vera.\n\n**Come funziona:**\n- Legge `catalogo.csv` e per ogni prodotto chiede a Claude (modello `claude-opus-5-5`) di tradurre solo la descrizione. Il nome del prodotto viene passato solo come contesto e non viene tradotto.\n- Le istruzioni chiedono un inglese naturale da negozio online, con numeri e misure invariati (\"28 cm\", \"120 x 180 cm\").\n- Se una traduzione manca, è incompleta o viene rifiutata, il programma si ferma con un errore e non scrive un file a metà.\n- Ho attivato un'opzione che, se Claude rifiuta una richiesta per i suoi filtri di sicurezza, la fa ripetere a un altro modello. Con descrizioni di prodotti è improbabile, ma se non la vuoi si toglie facilmente.\n- Se una traduzione contenesse un punto e virgola, quel campo verrebbe messo tra virgolette, come prevede il formato CSV, così le colonne non si spostano.\n\n**Per fare la prova vera** servono una chiave API Anthropic e la libreria `anthropic` (`pip install anthropic`). Poi, dalla cartella del catalogo:\n\n```\nexport ANTHROPIC_API_KEY=...\npython programma.py\n```\n\nSe mi dai una chiave da usare qui, lo lancio io e ricontrollo il risultato. Per esempio verifico che la riga TZ-014 diventi `Handmade ceramic mug, dishwasher safe`.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "catalogo_en.csv mancante"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

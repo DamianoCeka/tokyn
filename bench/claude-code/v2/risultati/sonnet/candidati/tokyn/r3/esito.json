@@ -1,0 +1,81 @@
+{
+ "prova": "sonnet/candidati/tokyn/r3",
+ "cartella": "f29047ed00",
+ "modello": "sonnet",
+ "compito": "candidati",
+ "condizione": "tokyn",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.10431040000000001,
+ "costo_usd_telemetria": 0.10431,
+ "token_output": 2804,
+ "token_input": 12,
+ "token_cache_scritti": 16792,
+ "token_cache_letti": 90784,
+ "prove_del_programma": {
+  "costo_usd": 0.051727,
+  "token_output": 1682,
+  "chiamate": 8,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 7,
+ "secondi": 66.8,
+ "secondi_api": 27.6,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 851,
+ "righe_tokyn": 46,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "a da MediaWorld, vende garanzie e assicurazioni e usa cassa e gestionale. |\n| 6 | `rizzo_davide.txt` | Ha circa 3 anni di vendita, ma non in elettronica, e non cita gestionale né servizi aggiuntivi. |\n| 3 | `esposito_marco.txt` | Non ha esperienza di vendita al dettaglio, ma ha competenze informatiche. |\n| 1 | `ferraro_chiara.txt` | È un'infermiera, senza esperienza di vendita né di elettronica. |\n\nIl migliore è `bianchi_elena.txt`. Il programma stampa a schermo la stessa classifica.\n\n- **Avvio:** `python programma.py`, dalla cartella con `annuncio.txt` e `cv/`. Legge solo i file `.txt` di `cv/`.\n- **Chiave API:** senza `ANTHROPIC_API_KEY` il programma usa il Claude Code installato qui, che va bene per provarlo. Se lo fai girare da solo o per altre persone, ti serve una chiave API di Anthropic.\n- **Costo e tempi:** fa una chiamata a Claude per ogni curriculum, quindi con molti curriculum ci mette più tempo.\n- **Punteggi e parità:** i punteggi sono limitati tra 1 e 10 anche se la risposta uscisse da questo intervallo. A parità di punteggio resta prima il candidato che viene prima in ordine alfabetico del nome del file.\n- **Motivazioni:** ho chiesto una sola frase di al massimo 25 parole, perché al primo tentativo erano troppo lunghe.\n- **Sorgente:** ho lasciato accanto anche `programma.tokyn`. Se vuoi cambiare le istruzioni a Claude, modifica quello e rigenera il Python con `python /srv/plugin-tokyn/skills/tokyn/tokyn_cli.py build programma.tokyn --standalone -o programma.py`.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "4 curriculum una volta ciascuno con punteggio intero da 1 a 10 e motivazione: True ([('ferrari_giulia.txt', 10), ('colombo_luca.txt', 3), ('ricci_paolo.txt', 3), ('gallo_andrea.txt', 1)])",
+   "in ordine di punteggio decrescente: True ([10, 3, 3, 1])",
+   "migliore ferrari_giulia.txt col punteggio più alto: True ('ferrari_giulia.txt')",
+   "gallo_andrea.txt col punteggio più basso: True"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.021852,
+   "token_output": 600,
+   "chiamate": 4,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

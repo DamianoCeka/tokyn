@@ -1,0 +1,34 @@
+type Analisi:
+    sentimento: "positivo" | "negativo" | "neutro" "sentimento della recensione"
+    voto: int "voto da 1 (pessimo) a 5 (ottimo), coerente con il sentimento"
+
+agent Analista:
+    model: "claude-haiku"
+    effort: "low"
+    instructions: """
+        Analizza una recensione di un prodotto. Indica il sentimento (positivo, negativo o neutro)
+        e un voto intero da 1 a 5.
+    """
+    output: Analisi
+
+main:
+    righe = read_file("recensioni.txt").split("\n")
+    risultati = []
+    totale = 0
+    for riga in righe:
+        testo = riga.strip()
+        if testo == "":
+            continue
+        a = Analista.ask(testo)
+        voto = a.voto
+        if voto < 1:
+            voto = 1
+        if voto > 5:
+            voto = 5
+        totale += voto
+        risultati.append({"testo": testo, "sentimento": a.sentimento, "voto": voto})
+    media = 0.0
+    if len(risultati) > 0:
+        media = round(totale / len(risultati), 2)
+    write_file("risultato.json", json_dump({"recensioni": risultati, "media": media}))
+    print(f"{len(risultati)} recensioni, voto medio {media}")

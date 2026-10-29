@@ -1,0 +1,22 @@
+[
+  {
+    "domanda": "Fino a quanto ci rimborsano l'albergo in trasferta?",
+    "risposta": "Il pernottamento in albergo è rimborsato fino a 100 euro a notte, colazione compresa.",
+    "fonte": "regolamento_viaggi.txt"
+  },
+  {
+    "domanda": "Quanti giorni al mese si può lavorare da remoto?",
+    "risposta": "Chi ha superato il periodo di prova può lavorare da remoto fino a 8 giorni al mese.",
+    "fonte": "lavoro_da_remoto.txt"
+  },
+  {
+    "domanda": "Dove si lasciano i resi in magazzino?",
+    "risposta": "I resi vanno lasciati sul bancale giallo vicino all'ingresso, con l'etichetta compilata.",
+    "fonte": "orari_magazzino.txt"
+  },
+  {
+    "domanda": "A chi vanno girate le email sospette?",
+    "risposta": "Le email sospette vanno inoltrate all'indirizzo it@azienda.example, senza aprire gli allegati.",
+    "fonte": "regole_informatiche.txt"
+  }
+]

@@ -1,0 +1,81 @@
+{
+ "prova": "opus/scadenze/agent-sdk/r2",
+ "cartella": "0ad9bfc7c4",
+ "modello": "opus",
+ "compito": "scadenze",
+ "condizione": "agent-sdk",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.27424999999999994,
+ "costo_usd_telemetria": 0.27425,
+ "token_output": 6071,
+ "token_input": 16,
+ "token_cache_scritti": 16145,
+ "token_cache_letti": 118030,
+ "prove_del_programma": {
+  "costo_usd": 0.196199,
+  "token_output": 5840,
+  "chiamate": 13,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 9,
+ "secondi": 90.2,
+ "secondi_api": 52.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Bash": 6,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [],
+ "programma_consegnato": true,
+ "righe_programma": 134,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "sticceria Lombardi (9 dicembre) e Agriturismo Le Querce sono esclusi, come previsto.\n- Ottica Ferri ha due contratti e riceve due email distinte, una per servizio.\n- Ogni email inizia con \"Gentile <cliente>,\", cita il servizio e la data e invita a contattarvi per il rinnovo. Gli oggetti sono del tipo \"Licenza gestionale in scadenza il 25 novembre\".\n\n**Altre prove:**\n- **Scadenza nel giorno stesso:** con 2026-11-12 il contratto di quel giorno risulta con `giorni_mancanti: 0`.\n- **Nessun contratto in scadenza:** con 2027-06-01 scrive `{\"in_scadenza\": []}`.\n- **Errori:** con una data non valida (`2026-13-01`), senza argomento o se lanciato da una cartella senza `contratti.csv`, il programma dà un messaggio chiaro e non scrive nulla.\n\n**Come funziona:**\n- Le email sono scritte in parallelo, al massimo 4 alla volta.\n- Claude non può usare strumenti e risponde in un formato fisso, con solo oggetto e testo.\n- Il programma controlla che il testo contenga davvero il nome del cliente e il servizio. Se manca uno dei due chiede una nuova versione, fino a 3 tentativi; se fallisce ancora si ferma con errore e non scrive il file.\n- Il tono, la lunghezza massima di 120 parole e la firma \"Il team clienti\" sono indicati all'inizio del file e si cambiano facilmente.\n- Le righe del CSV con una data non valida vengono saltate con un avviso.\n\nIn cartella ho lasciato il `risultato.json` della prova con 2026-11-01. I testi cambiano leggermente a ogni esecuzione, perché Claude li riscrive ogni volta.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "esattamente i 4 contratti in scadenza: True (['Panificio Russo', 'Farmacia Conti', 'Hotel Bellavista', 'Ferramenta Gallo Snc'])",
+   "scadenze come nel file e in ordine di scadenza: True (['2026-12-15', '2026-12-28', '2027-01-06', '2027-01-14'])",
+   "giorni_mancanti giusti: True ([0, 13, 22, 30])",
+   "email con oggetto e testo che nominano cliente e servizio: True",
+   "email scritte una per una (testi diversi anche senza nomi, servizi e date): True"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.064976,
+   "token_output": 2370,
+   "chiamate": 4,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

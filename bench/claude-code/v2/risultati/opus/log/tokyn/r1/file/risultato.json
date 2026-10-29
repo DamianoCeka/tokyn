@@ -1,0 +1,36 @@
+{
+  "richieste_per_ora": {
+    "00": 1,
+    "01": 1,
+    "06": 5,
+    "07": 2,
+    "08": 8,
+    "09": 12,
+    "10": 15,
+    "11": 10,
+    "12": 10,
+    "13": 4,
+    "14": 10,
+    "15": 9,
+    "16": 4,
+    "17": 5,
+    "18": 7,
+    "19": 4,
+    "20": 8,
+    "21": 6,
+    "22": 5,
+    "23": 4
+  },
+  "errori": {
+    "401": 1,
+    "403": 2,
+    "404": 6,
+    "408": 1
+  },
+  "ip_top": [
+    "203.0.113.5",
+    "192.0.2.200",
+    "198.51.100.31"
+  ],
+  "commento": "Il traffico, pari a 130 richieste, è quasi assente di notte, cresce dalle 6 fino al picco di 15 richieste alle 10 e poi si mantiene tra 4 e 10 richieste all'ora, con un lieve rialzo serale alle 20 (8 richieste). Gli errori sono 10 in totale, in gran parte 404 (6), seguiti da 403 (2), 401 e 408 (1 ciascuno)."
+}

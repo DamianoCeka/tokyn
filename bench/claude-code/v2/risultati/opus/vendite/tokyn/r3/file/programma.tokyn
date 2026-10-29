@@ -1,0 +1,103 @@
+import csv
+import sys
+
+agent Analista:
+    instructions: """
+        Sei un analista commerciale. Ricevi i dati di vendita di un trimestre e scrivi in italiano un breve
+        paragrafo (4-6 frasi) per la direzione. Inizia dicendo qual è il paese con il fatturato più alto e
+        quanto ha fatturato, poi commenta i numeri: peso di ciascun paese sul totale, distacchi, clienti
+        migliori e concentrazione del fatturato. Usa solo i numeri forniti, scritti come li ricevi
+        (formato italiano, es. 15.230,50 euro). Niente titoli, elenchi o markdown: solo il paragrafo.
+    """
+    effort: "low"
+
+def leggi_csv(percorso: str) -> list:
+    testo = read_file(percorso).lstrip("﻿")
+    righe = []
+    for r in csv.DictReader(testo.splitlines()):
+        pulita = {}
+        for k, v in r.items():
+            pulita[k.strip()] = (v or "").strip()
+        if pulita.get("id", "") != "":
+            righe.append(pulita)
+    return righe
+
+def euro(centesimi: int) -> str:
+    testo = f"{centesimi / 100:,.2f}"
+    return testo.replace(",", "_").replace(".", ",").replace("_", ".") + " euro"
+
+def quota(parte: int, totale: int) -> str:
+    return f"{parte * 100 / totale:.1f}%".replace(".", ",")
+
+def per_importo(voce: list) -> list:
+    return [-voce[1], voce[0]]
+
+def ordina(d: dict) -> list:
+    voci = []
+    for k, v in d.items():
+        voci.append([k, v])
+    return sorted(voci, key=per_importo)
+
+main:
+    clienti = {}
+    for c in leggi_csv("clienti.csv"):
+        clienti[c["id"]] = c
+    per_paese = {}
+    per_cliente = {}
+    date = []
+    for o in leggi_csv("ordini.csv"):
+        c = clienti.get(o["cliente_id"], None)
+        if c == None:
+            print(f"Attenzione: l'ordine {o['id']} ha un cliente sconosciuto ({o['cliente_id']}), lo ignoro.", file=sys.stderr)
+            continue
+        importo = to_number(o["importo"], None)
+        if importo == None:
+            print(f"Attenzione: l'ordine {o['id']} ha un importo non valido ({o['importo']}), lo ignoro.", file=sys.stderr)
+            continue
+        centesimi = round(importo * 100)
+        per_paese[c["paese"]] = per_paese.get(c["paese"], 0) + centesimi
+        per_cliente[c["nome"]] = per_cliente.get(c["nome"], 0) + centesimi
+        date.append(o["data"])
+    if len(per_paese) == 0:
+        print("Nessun ordine valido: controlla ordini.csv e clienti.csv.", file=sys.stderr)
+        return
+
+    paesi = ordina(per_paese)
+    migliori = ordina(per_cliente)[:3]
+    totale = sum(per_paese.values())
+
+    fatturato = {}
+    righe_paesi = []
+    for p in paesi:
+        fatturato[p[0]] = round(p[1] / 100, 2)
+        righe_paesi.append(f"- {p[0]}: {euro(p[1])} ({quota(p[1], totale)} del totale)")
+    nomi = []
+    righe_clienti = []
+    somma_migliori = 0
+    for i, m in enumerate(migliori):
+        nomi.append(m[0])
+        somma_migliori += m[1]
+        paese = clienti_paese(clienti, m[0])
+        righe_clienti.append(f"{i + 1}. {m[0]} ({paese}): {euro(m[1])}, {quota(m[1], per_paese[paese])} del fatturato del suo paese")
+    righe_clienti.append(f"Insieme: {euro(somma_migliori)}, {quota(somma_migliori, totale)} del totale.")
+
+    dati = "\n".join([
+        f"Periodo degli ordini: dal {min(date)} al {max(date)}, {len(date)} ordini, {len(per_cliente)} clienti.",
+        f"Fatturato totale: {euro(totale)}.",
+        f"Paese con il fatturato più alto: {paesi[0][0]}.",
+        "Fatturato per paese:",
+        "\n".join(righe_paesi),
+        "Migliori clienti:",
+        "\n".join(righe_clienti),
+    ])
+    riassunto = Analista.ask(dati).strip()
+
+    risultato = {"fatturato_per_paese": fatturato, "migliori_clienti": nomi, "riassunto": riassunto}
+    write_file("risultato.json", json_dump(risultato))
+    print(json_dump(risultato))
+
+def clienti_paese(clienti: dict, nome: str) -> str:
+    for c in clienti.values():
+        if c["nome"] == nome:
+            return c["paese"]
+    return ""

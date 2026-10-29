@@ -1,0 +1,82 @@
+{
+ "prova": "opus/articolo/tokyn/r1",
+ "cartella": "b7839c7eb6",
+ "modello": "opus",
+ "compito": "articolo",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.1789248,
+ "costo_usd_telemetria": 0.178925,
+ "token_output": 2440,
+ "token_input": 12,
+ "token_cache_scritti": 14061,
+ "token_cache_letti": 87944,
+ "prove_del_programma": {
+  "costo_usd": 0.02481,
+  "token_output": 1233,
+  "chiamate": 2,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 38.8,
+ "secondi_api": 23.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 837,
+ "righe_tokyn": 35,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": " pronto soccorso pediatrico\"\n- **Punti:** cinque, una frase ciascuno.\n- **Citati:** Marco Tessari, Chiara Valli, Silvia Orlandi, Fondazione Rinaldi, Azienda Sanitaria Territoriale, Genitori Insieme, San Matteo. Nessun nome ripetuto.\n\n**Cosa fa il programma:**\n- Se Claude non restituisce esattamente cinque punti, gli chiede di rifarlo fino a due volte. Se il numero è ancora sbagliato, si ferma con un messaggio di errore e non scrive il file.\n- Toglie i nomi ripetuti in `citati`, anche se sono scritti con maiuscole diverse.\n- Stampa la scheda anche sullo schermo.\n\n**Due cose da sapere:**\n- **Chiave API:** in questa prova non c'era una chiave, quindi il programma ha usato il tuo Claude Code. Va bene per provarlo, ma le regole di Anthropic chiedono una chiave per un uso regolare. Per lo strumento di ogni mattina imposta `ANTHROPIC_API_KEY` e installa la libreria `anthropic` (`pip install anthropic`). Il costo indicativo è di circa 2 centesimi di dollaro per articolo.\n- **Nomi di luoghi tra i citati:** l'ospedale \"San Matteo\" compare tra le organizzazioni, ed è corretto. Altri luoghi però potrebbero finirci per errore in futuro. Se dovesse succedere, basta precisarlo nelle istruzioni.\n\nHo scritto il programma con Tokyn, come hai chiesto, e `programma.py` è stato generato automaticamente da `programma.tokyn`, che trovi nella stessa cartella. Per modifiche future conviene cambiare il file `.tokyn` e rigenerare il Python. `programma.py` funziona anche da solo, senza Tokyn installato.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "titolo sullo stabilimento: True ('Valtek Impianti investe 48 milioni a Montebrenna per una fabbrica di pompe di calore')",
+   "esattamente 5 punti (stringhe non vuote): True (5)",
+   "i 5 punti riportano almeno 3 fatti principali su 4: True (['investimento di 48 milioni', '320 posti di lavoro', 'produzione dal 2027', 'pompe di calore'])",
+   "citati (lista di stringhe senza doppioni) con almeno 5 su 6 in voci distinte: True (6 trovati: ['Elena Marchesini', 'Laura Benedetti', 'Paolo Ricci', 'Valtek Impianti', 'Comune di Montebrenna', 'Istituto Tecnico Volta']; doppioni: [])"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.015973,
+   "token_output": 567,
+   "chiamate": 1,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

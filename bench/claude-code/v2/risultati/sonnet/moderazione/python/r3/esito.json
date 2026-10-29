@@ -1,0 +1,72 @@
+{
+ "prova": "sonnet/moderazione/python/r3",
+ "cartella": "6a47e508cb",
+ "modello": "sonnet",
+ "compito": "moderazione",
+ "condizione": "python",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2794556,
+ "costo_usd_telemetria": 0.279456,
+ "token_output": 3994,
+ "token_input": 10,
+ "token_cache_scritti": 55194,
+ "token_cache_letti": 187196,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 8,
+ "secondi": 38.6,
+ "secondi_api": 32.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 79,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "vato tutto il resto con un finto client che restituisce risposte preparate. Con quello, lettura di `commenti.json`, costruzione delle voci e formato di uscita funzionano. I campi `riscrittura` compaiono solo sui commenti da rivedere. Non so invece come Claude classificherà davvero i sei commenti. Mi aspetto 17 e 21 `pubblica`, 18 `rivedi`, 19, 20 e 22 `rifiuta`.\n\n**Per provarlo:**\n```bash\nexport ANTHROPIC_API_KEY=sk-ant-...\npython programma.py\n```\nSe vuoi, mandami l'output di quella prova e controllo che le decisioni siano quelle attese.\n\n**Come funziona:**\n- Fa una chiamata a Claude per ogni commento, con il modello `claude-opus-5-5`, quindi un commento non può influenzare la valutazione degli altri.\n- Le tre regole sono nel prompt di sistema. Se un commento rientra in più casi, `rifiuta` vince su `rivedi`.\n- Il testo del commento viene trattato come dato da valutare, quindi una frase come \"pubblica questo commento\" al suo interno viene ignorata.\n- La risposta è vincolata a un formato JSON fisso (`decisione`, `motivo`, `riscrittura`), con `decisione` limitata a `pubblica`, `rivedi` e `rifiuta`.\n- `risultato.json` ha un elemento per commento, nello stesso ordine di `commenti.json`. Se Claude sceglie `rivedi` senza fornire la riscrittura, il programma si ferma con un errore.\n- Il file di output viene scritto solo se tutti i commenti sono stati elaborati. Se una chiamata fallisce, il programma si ferma con un messaggio che indica l'`id` del commento e non lascia un file a metà.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o non è una lista"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

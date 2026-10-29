@@ -1,0 +1,80 @@
+import csv
+import io
+
+agent Analista:
+    model: "claude"
+    effort: "low"
+    instructions: """
+        Scrivi in italiano, per la direzione, un breve paragrafo (3-5 frasi, testo semplice senza elenchi)
+        sul fatturato trimestrale. Dì qual è il paese con il fatturato più alto e commenta i numeri
+        (peso sul totale, distacco dagli altri paesi, clienti principali). Usa solo i dati ricevuti
+        e riporta le cifre esattamente come scritte.
+    """
+
+def euro(x: float) -> str:
+    s = f"{x:,.2f}"
+    return s.replace(",", "X").replace(".", ",").replace("X", ".")
+
+def leggi(percorso: str) -> list:
+    testo = read_file(percorso)
+    if testo.startswith("﻿"):
+        testo = testo[1:]
+    return list(csv.DictReader(io.StringIO(testo)))
+
+def per_centesimi(c: list) -> int:
+    return c[1]
+
+main:
+    clienti = {}
+    for r in leggi("clienti.csv"):
+        clienti[r["id"].strip()] = r
+    cent_paese = {}
+    cent_cliente = {}
+    for r in clienti.values():
+        cent_paese[r["paese"]] = 0
+    for o in leggi("ordini.csv"):
+        cid = o["cliente_id"].strip()
+        if cid not in clienti:
+            print(f"Attenzione: ordine {o['id']} con cliente_id sconosciuto {cid}, ignorato")
+            continue
+        c = round(float(o["importo"]) * 100)
+        paese = clienti[cid]["paese"]
+        cent_paese[paese] += c
+        cent_cliente[cid] = cent_cliente.get(cid, 0) + c
+
+    voci_paesi = []
+    for p, c in cent_paese.items():
+        voci_paesi.append([p, c])
+    voci_paesi = sorted(voci_paesi, key=per_centesimi, reverse=True)
+    fatturato = {}
+    for v in voci_paesi:
+        fatturato[v[0]] = round(v[1] / 100, 2)
+
+    voci_clienti = []
+    for cid, c in cent_cliente.items():
+        voci_clienti.append([clienti[cid]["nome"], c])
+    voci_clienti = sorted(voci_clienti)
+    voci_clienti = sorted(voci_clienti, key=per_centesimi, reverse=True)
+    migliori = []
+    for v in voci_clienti[:3]:
+        migliori.append(v[0])
+
+    riassunto = "Nel trimestre non ci sono ordini da analizzare."
+    if len(voci_clienti) > 0:
+        totale = 0
+        righe_p = []
+        for v in voci_paesi:
+            totale += v[1]
+            righe_p.append(f"- {v[0]}: {euro(v[1] / 100)} euro")
+        righe_c = []
+        for v in voci_clienti[:3]:
+            righe_c.append(f"- {v[0]}: {euro(v[1] / 100)} euro")
+        richiesta = (
+            "Fatturato per paese (dal più alto):\n" + "\n".join(righe_p)
+            + "\n\nTotale: " + euro(totale / 100) + " euro"
+            + "\n\nI 3 clienti che hanno speso di più:\n" + "\n".join(righe_c)
+        )
+        riassunto = Analista.ask(richiesta)
+
+    write_file("risultato.json", json_dump({"fatturato_per_paese": fatturato, "migliori_clienti": migliori, "riassunto": riassunto}))
+    print("Scritto risultato.json")

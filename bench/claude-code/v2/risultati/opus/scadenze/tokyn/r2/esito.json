@@ -1,0 +1,84 @@
+{
+ "prova": "opus/scadenze/tokyn/r2",
+ "cartella": "02e0e4cac8",
+ "modello": "opus",
+ "compito": "scadenze",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.27423060000000005,
+ "costo_usd_telemetria": 0.274231,
+ "token_output": 4270,
+ "token_input": 20,
+ "token_cache_scritti": 19200,
+ "token_cache_letti": 175753,
+ "prove_del_programma": {
+  "costo_usd": 0.038173,
+  "token_output": 1932,
+  "chiamate": 6,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 13,
+ "secondi": 77.8,
+ "secondi_api": 41.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 8,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 851,
+ "righe_tokyn": 49,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "officina Riva (17), Ottica Ferri/Licenza gestionale (24) e Studio Moretti (30). Il contratto a 30 giorni esatti è incluso. Bar Centrale, già scaduto il 20 ottobre, è escluso. Le 4 email sono state scritte in circa 20 secondi.\n- **2026-12-01:** Studio Moretti risulta con `giorni_mancanti: 0` e c'è anche Pasticceria Lombardi (8 giorni).\n- **Senza la data, o con una data in formato sbagliato:** stampa `Uso: python programma.py AAAA-MM-GG` ed esce con errore.\n- **2027-06-01, nessuna scadenza:** scrive `{\"in_scadenza\": []}`.\n\nOgni email si rivolge al cliente con \"Gentile <cliente>,\", cita il servizio e la scadenza, invita a rinnovare e chiude con \"Cordiali saluti\". Ho chiesto a Claude di non inventare prezzi, condizioni o recapiti. La data in forma estesa (\"12 novembre 2026\", \"1º dicembre 2026\") la calcola il programma e la passa a Claude, così è sempre giusta. L'oggetto è del tipo \"Promemoria: Assistenza tecnica in scadenza il 12 novembre 2026\".\n\n**Prima di usarlo:**\n- Serve `pip install anthropic`.\n- Nelle prove ha risposto il mio Claude Code, perché qui non c'è una chiave API. Per usarlo davvero, e soprattutto se deve girare da solo, imposta `ANTHROPIC_API_KEY`: il programma la usa in automatico.\n- Il `risultato.json` rimasto in cartella è quello dell'ultima prova, con la data 2026-12-01.\n\nAccanto a `programma.py` c'è `programma.tokyn`, il sorgente Tokyn da cui è generato. Per le modifiche conviene cambiare quello e rigenerare il Python, invece di toccare `programma.py` a mano.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "esattamente i 4 contratti in scadenza: True (['Panificio Russo', 'Farmacia Conti', 'Hotel Bellavista', 'Ferramenta Gallo Snc'])",
+   "scadenze come nel file e in ordine di scadenza: True (['2026-12-15', '2026-12-28', '2027-01-06', '2027-01-14'])",
+   "giorni_mancanti giusti: True ([0, 13, 22, 30])",
+   "email con oggetto e testo che nominano cliente e servizio: True",
+   "email scritte una per una (testi diversi anche senza nomi, servizi e date): True"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.023452,
+   "token_output": 1280,
+   "chiamate": 4,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

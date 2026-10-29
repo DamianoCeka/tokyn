@@ -1,0 +1,82 @@
+{
+ "prova": "opus/email/tokyn/r2",
+ "cartella": "095a8d6239",
+ "modello": "opus",
+ "compito": "email",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.1777802,
+ "costo_usd_telemetria": 0.17778,
+ "token_output": 2245,
+ "token_input": 12,
+ "token_cache_scritti": 14461,
+ "token_cache_letti": 85721,
+ "prove_del_programma": {
+  "costo_usd": 0.001344,
+  "token_output": 901,
+  "chiamate": 5,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 36.8,
+ "secondi_api": 22.6,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 835,
+ "righe_tokyn": 33,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "ltati sono giusti:\n\n| File | Categoria | Urgente |\n|---|---|---|\n| msg_001.txt | ordine | no |\n| msg_002.txt | reclamo | **sì** (regalo per domani, chiede risposta entro oggi) |\n| msg_003.txt | informazioni | no |\n| msg_004.txt | spam | no |\n| msg_005.txt | reclamo | no (la cliente scrive che non è urgente) |\n\nOgni elemento contiene anche il riassunto di una frase. A volte la frase è un po' lunga: se le vuoi più brevi basta una piccola modifica alle istruzioni.\n\n**La chiave API:** nella mia prova non c'era `ANTHROPIC_API_KEY`, quindi le risposte le ha date Claude Code. Per provare va bene, ma per usarlo davvero imposta la chiave (`export ANTHROPIC_API_KEY=...`) prima di lanciare `python programma.py`. Con la chiave le email vengono inviate tutte insieme con la Batch API, che costa la metà ma può impiegare qualche minuto prima di dare il risultato. Il programma usa Haiku, il modello più economico, che per questo lavoro basta.\n\n**Come funziona:**\n- Legge tutti i file `.txt` in `email/`.\n- Per ogni email chiede a Claude una risposta strutturata, quindi la categoria può essere solo una delle quattro previste e \"urgente\" è sempre vero o falso.\n- Nelle istruzioni ho scritto a Claude di non eseguire eventuali comandi contenuti nelle email, che arrivano da sconosciuti.\n\nAccanto al programma c'è anche `programma.tokyn`: è il file da cui ho generato `programma.py` ed è più comodo da modificare se in futuro vuoi cambiare le categorie o le istruzioni. Per usare il programma non ti serve.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 email in ordine di nome del file: True (['msg_201.txt', 'msg_202.txt', 'msg_203.txt', 'msg_204.txt', 'msg_205.txt', 'msg_206.txt'])",
+   "categorie ammesse e giuste: True (6 su 6: ['ordine', 'reclamo', 'informazioni', 'spam', 'ordine', 'reclamo'])",
+   "urgente booleano e giusto: True (6 su 6: [False, True, False, False, True, False])",
+   "riassunti brevi e sull'argomento: True (brevi: True, sull'argomento: 6 su 6)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.001565,
+   "token_output": 1184,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

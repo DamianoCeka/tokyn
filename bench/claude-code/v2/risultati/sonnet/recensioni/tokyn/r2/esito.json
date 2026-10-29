@@ -1,0 +1,81 @@
+{
+ "prova": "sonnet/recensioni/tokyn/r2",
+ "cartella": "f78d21dbee",
+ "modello": "sonnet",
+ "compito": "recensioni",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.0743659,
+ "costo_usd_telemetria": 0.074366,
+ "token_output": 1739,
+ "token_input": 10,
+ "token_cache_scritti": 12551,
+ "token_cache_letti": 67519,
+ "prove_del_programma": {
+  "costo_usd": 0.001536,
+  "token_output": 1186,
+  "chiamate": 12,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 7,
+ "secondi": 48.3,
+ "secondi_api": 20.1,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 834,
+ "righe_tokyn": 32,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "`programma.py` è pronto e l'ho provato davvero: si avvia con `python programma.py` dalla cartella di `recensioni.txt` e scrive `risultato.json` nel formato che volevi.\n\n**Prova**\n- **Con Claude vero:** sulle 6 recensioni di esempio dà voto medio 3.0. Le due positive prendono 5, le due negative 1 e le due neutre 3, con sentimenti coerenti.\n- **Ordine:** le recensioni nel JSON restano nello stesso ordine del file.\n- **Senza chiave API:** ho provato con il tuo Claude Code, perché qui non c'era `ANTHROPIC_API_KEY`. Per usarlo da solo o con altre persone serve una chiave API di Anthropic.\n\n**Come funziona**\n- **Una chiamata per recensione:** il modello è `claude-haiku`, con `effort` basso, perché il compito è semplice.\n- **Righe vuote:** vengono ignorate.\n- **Voto fuori scala:** se il modello restituisse un voto sotto 1 o sopra 5, il programma lo riporta dentro l'intervallo.\n- **Media:** è arrotondata a 2 decimali. Se il file non ha recensioni vale 0.0.\n\nHo scritto il programma in Tokyn (`programma.tokyn`, accanto agli altri file) e `programma.py` è il Python generato dal compilatore. Il file funziona da solo, senza Tokyn installato. Se vuoi cambiare qualcosa, conviene modificare il `.tokyn` e rigenerare il `.py`.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 recensioni nell'ordine del file: True",
+   "sentimenti giusti: 6 su 6",
+   "voti interi da 1 a 5 e coerenti col sentimento: True ([5.0, 1.0, 3.0, 5.0, 1.0, 3.0])",
+   "media giusta dei voti: True (3.0)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.001046,
+   "token_output": 544,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

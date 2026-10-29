@@ -1,0 +1,36 @@
+{
+  "in_scadenza": [
+    {
+      "cliente": "Bar Sole",
+      "servizio": "Domini",
+      "scadenza": "2026-11-01",
+      "giorni_mancanti": 0,
+      "oggetto": "Promemoria scadenza dominio – Bar Sole, 1 novembre",
+      "testo": "Gentile Bar Sole,\n\nle scriviamo per ricordarLe che il servizio di registrazione Domini è in scadenza il 1 novembre 2026.\n\nPer evitare interruzioni del servizio e la perdita del dominio, La invitiamo a contattarci al più presto per procedere con il rinnovo.\n\nResto a disposizione per qualsiasi chiarimento.\n\nCordiali saluti,\nIl team di assistenza"
+    },
+    {
+      "cliente": "Ottica Ferri",
+      "servizio": "Assistenza tecnica",
+      "scadenza": "2026-11-12",
+      "giorni_mancanti": 11,
+      "oggetto": "Promemoria scadenza servizio di Assistenza tecnica – 12 novembre",
+      "testo": "Gentile Ottica Ferri,\n\nle scriviamo per ricordarLe che il contratto relativo al servizio di Assistenza tecnica è in scadenza il 12 novembre 2026.\n\nPer evitare interruzioni nell'assistenza, La invitiamo a contattarci per procedere con il rinnovo. Siamo a disposizione per discutere insieme le opzioni più adatte alle Sue esigenze.\n\nLa ringraziamo per la fiducia accordataci e restiamo in attesa di un Suo riscontro.\n\nCordiali saluti,\nil team di assistenza"
+    },
+    {
+      "cliente": "Gamma",
+      "servizio": "Cloud",
+      "scadenza": "2026-11-20",
+      "giorni_mancanti": 19,
+      "oggetto": "Promemoria scadenza servizio Cloud - 20 novembre",
+      "testo": "Gentile Gamma,\n\nle scriviamo per ricordarLe che il Suo contratto per il servizio Cloud è in scadenza il 20 novembre 2026.\n\nPer evitare interruzioni del servizio, La invitiamo a contattarci per discutere il rinnovo e valutare insieme le opzioni più adatte alle Sue esigenze.\n\nPuò rispondere a questa email o contattarci direttamente e saremo lieti di assisterLa.\n\nCordiali saluti,\nIl team di supporto"
+    },
+    {
+      "cliente": "Rossi, Bianchi & C.",
+      "servizio": "Hosting",
+      "scadenza": "2026-12-01",
+      "giorni_mancanti": 30,
+      "oggetto": "Promemoria scadenza servizio Hosting: 1 dicembre",
+      "testo": "Gentile Rossi, Bianchi & C.,\n\nle scriviamo per ricordarLe che il servizio di Hosting è in scadenza il 1 dicembre.\n\nPer evitare interruzioni del servizio, La invitiamo a contattarci per procedere con il rinnovo. Siamo a disposizione per illustrarLe le opzioni disponibili e rispondere a ogni Sua domanda.\n\nRestiamo in attesa di un Suo riscontro.\n\nCordiali saluti,\nIl team di assistenza"
+    }
+  ]
+}

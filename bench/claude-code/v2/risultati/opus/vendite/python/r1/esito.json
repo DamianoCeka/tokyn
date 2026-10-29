@@ -1,0 +1,73 @@
+{
+ "prova": "opus/vendite/python/r1",
+ "cartella": "2481512427",
+ "modello": "opus",
+ "compito": "vendite",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.7078388,
+ "costo_usd_telemetria": 0.707839,
+ "token_output": 8196,
+ "token_input": 14,
+ "token_cache_scritti": 60111,
+ "token_cache_letti": 314874,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 13,
+ "secondi": 86.7,
+ "secondi_api": 72.1,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1,
+  "Edit": 3
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 118,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "odurre numeri sbagliati:\n  - un ordine con un `cliente_id` che non esiste in `clienti.csv`\n  - una colonna mancante\n  - un importo scritto con la virgola e senza virgolette (es. `10,50`). Senza questo controllo verrebbe letto come 10 senza nessun avviso.\n- **Senza chiave**, il programma lo dice chiaramente e non scrive `risultato.json`.\n\n**Per avviarlo:**\n```\nexport ANTHROPIC_API_KEY=la-tua-chiave\npython programma.py\n```\nTi chiedo di lanciarlo una volta con la chiave e di leggere il riassunto prima di mandarlo alla direzione.\n\n**Come funziona:**\n- **Somme in Python.** Le fa il programma, non Claude, e senza gli errori di arrotondamento dei numeri decimali.\n- **Il ruolo di Claude.** Riceve i numeri già calcolati e scritti all'italiana (es. \"10.819,15 euro\") e scrive solo il commento. Il paese da citare in apertura glielo indica il programma, così non può sbagliarlo.\n- **Modello.** Usa Claude Opus 5.5 (`claude-opus-5-5`). Se il modello rifiuta la richiesta, l'API la ripete in automatico su un modello di riserva. Se vuoi lo tolgo.\n- **Scelte che ho fatto io:**\n  - un paese di `clienti.csv` senza ordini nel trimestre compare con 0\n  - se due clienti hanno speso uguale, va prima quello che viene prima in ordine alfabetico\n  - i paesi nel JSON sono in ordine di fatturato, dal più alto\n  - il file può essere salvato con o senza BOM: lo legge in entrambi i casi\n\nUn dato che il riassunto dovrebbe far notare: l'Italia è prima per fatturato, ma il cliente che ha speso di più è svizzero.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

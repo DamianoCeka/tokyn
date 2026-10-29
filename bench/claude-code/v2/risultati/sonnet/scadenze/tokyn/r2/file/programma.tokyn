@@ -1,0 +1,43 @@
+import sys
+import csv
+import json
+import datetime
+
+type Email:
+    oggetto: str "oggetto breve dell'email di promemoria, con servizio e data di scadenza in formato esteso (es. 12 novembre)"
+    testo: str "testo completo dell'email in italiano, che inizia con 'Gentile <cliente>,' e cita il servizio in scadenza"
+
+agent Redattore:
+    model: "claude-haiku"
+    effort: "low"
+    instructions: """
+        Scrivi email di promemoria di scadenza contratto, in italiano, cortesi e concise.
+        Ricevi cliente, servizio e data di scadenza. Rivolgiti al cliente per nome ("Gentile <cliente>,"),
+        cita il servizio in scadenza e la data, invita a contattarci per il rinnovo e chiudi con un saluto.
+    """
+    output: Email
+
+def per_scadenza(r: dict) -> str:
+    return r["scadenza"]
+
+main:
+    if len(sys.argv) < 2:
+        print("Uso: python programma.py AAAA-MM-GG")
+        return
+    rif = datetime.date.fromisoformat(sys.argv[1])
+    righe = list(csv.reader(read_file("contratti.csv").splitlines()))
+    trovati = []
+    for riga in righe[1:]:
+        if len(riga) < 4:
+            continue
+        scad = datetime.date.fromisoformat(riga[2].strip())
+        giorni = (scad - rif).days
+        if 0 <= giorni <= 30:
+            trovati.append({"cliente": riga[0], "servizio": riga[1], "scadenza": riga[2].strip(), "giorni_mancanti": giorni})
+    trovati = sorted(trovati, key=per_scadenza)
+    for c in trovati:
+        e = Redattore.ask(f"Cliente: {c['cliente']}\nServizio: {c['servizio']}\nScadenza: {c['scadenza']}")
+        c["oggetto"] = e.oggetto
+        c["testo"] = e.testo
+    write_file("risultato.json", json.dumps({"in_scadenza": trovati}, ensure_ascii=False, indent=2))
+    print(f"{len(trovati)} contratti in scadenza")

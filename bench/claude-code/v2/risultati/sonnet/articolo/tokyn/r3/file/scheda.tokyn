@@ -1,0 +1,33 @@
+type Scheda:
+    titolo: str "titolo breve dell'articolo, in italiano"
+    punti: list[str] "i cinque punti chiave, una frase ciascuno; esattamente cinque"
+    citati: list[str] "nomi delle persone e delle organizzazioni citate nell'articolo, ognuno una sola volta"
+
+agent Redattore:
+    instructions: """
+        Leggi l'articolo di giornale e prepara una scheda in italiano: un titolo breve, esattamente cinque punti
+        chiave (una frase ciascuno) e i nomi delle persone e delle organizzazioni citate, ognuno una sola volta,
+        nella forma più completa che compare nell'articolo.
+    """
+    output: Scheda
+    effort: "low"
+
+main:
+    articolo = read_file("articolo.txt")
+    scheda = Redattore.ask(articolo)
+    punti = scheda.punti[:5]
+    if len(punti) != 5:
+        punti = Redattore.ask(articolo + "\n\nATTENZIONE: servono esattamente cinque punti chiave.").punti[:5]
+    if len(punti) != 5:
+        print("Errore: l'IA non ha prodotto cinque punti.")
+        return
+    citati = []
+    visti = []
+    for nome in scheda.citati:
+        nome = nome.strip()
+        if nome != "" and nome.lower() not in visti:
+            visti.append(nome.lower())
+            citati.append(nome)
+    risultato = {"titolo": scheda.titolo.strip(), "punti": punti, "citati": citati}
+    write_file("risultato.json", json_dump(risultato))
+    print("Scheda scritta in risultato.json")

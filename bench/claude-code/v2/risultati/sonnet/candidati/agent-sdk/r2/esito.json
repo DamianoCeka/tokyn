@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/candidati/agent-sdk/r2",
+ "cartella": "3f887cfab4",
+ "modello": "sonnet",
+ "compito": "candidati",
+ "condizione": "agent-sdk",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.30493950000000003,
+ "costo_usd_telemetria": 0.30494,
+ "token_output": 4446,
+ "token_input": 12,
+ "token_cache_scritti": 58769,
+ "token_cache_letti": 253795,
+ "prove_del_programma": {
+  "costo_usd": 0.171318,
+  "token_output": 2436,
+  "chiamate": 8,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 9,
+ "secondi": 59.4,
+ "secondi_api": 42.5,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 105,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "one garanzie e assicurazioni, usa la cassa, lavora nei weekend. Non cita gli accessori né il magazzino. |\n| 6 | rizzo_davide.txt | Circa 3 anni di vendita da Decathlon e uno stage in telefonia, conosce gli smartphone. Ha solo un uso base del computer. |\n| 4 | esposito_marco.txt | Conosce il gestionale di magazzino. Non ha esperienza di vendita. |\n| 1 | ferraro_chiara.txt | Infermiera, profilo non pertinente al ruolo. |\n\n**Come funziona**\n- **Una richiesta per curriculum.** Ogni curriculum viene valutato da solo, a 4 per volta. Non gli ho dato accesso a file o comandi, perché deve solo leggere il testo.\n- **Formato della risposta.** Chiedo a Claude un punteggio intero da 1 a 10 e una motivazione breve. Il programma scarta e ripete (fino a 3 tentativi) le risposte fuori formato.\n- **Istruzioni nei curriculum.** Il testo del curriculum e dell'annuncio è trattato come dato da valutare, quindi eventuali istruzioni scritte dentro un curriculum vengono ignorate.\n- **Ordine.** Punteggio decrescente. A parità di punteggio ordina per nome del file, così il risultato è sempre lo stesso.\n\n**Limiti**\n- Se un curriculum non si riesce a valutare dopo i tentativi, il programma lo segnala sull'errore standard, scrive comunque il file con gli altri e termina con codice 1.\n- Ho dovuto accorciare le motivazioni, che alla prima prova erano troppo lunghe. Ora sono di circa 30 parole.\n- Non ho scelto io il modello. Il programma usa quello predefinito dell'SDK.\n- Il programma legge solo file `.txt`.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "4 curriculum una volta ciascuno con punteggio intero da 1 a 10 e motivazione: True ([('ferrari_giulia.txt', 10), ('colombo_luca.txt', 4), ('ricci_paolo.txt', 3), ('gallo_andrea.txt', 1)])",
+   "in ordine di punteggio decrescente: True ([10, 4, 3, 1])",
+   "migliore ferrari_giulia.txt col punteggio più alto: True ('ferrari_giulia.txt')",
+   "gallo_andrea.txt col punteggio più basso: True"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.055657,
+   "token_output": 929,
+   "chiamate": 4,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

@@ -1,0 +1,76 @@
+{
+ "prova": "sonnet/vendite/tokyn/r3",
+ "cartella": "4364c3aa57",
+ "modello": "sonnet",
+ "compito": "vendite",
+ "condizione": "tokyn",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.09655629999999998,
+ "costo_usd_telemetria": 0.096556,
+ "token_output": 3467,
+ "token_input": 8,
+ "token_cache_scritti": 14152,
+ "token_cache_letti": 52623,
+ "prove_del_programma": {
+  "costo_usd": 0.006368,
+  "token_output": 302,
+  "chiamate": 1,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 5,
+ "secondi": 43.0,
+ "secondi_api": 29.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 2
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": false,
+ "righe_programma": 0,
+ "righe_tokyn": 71,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "lavoro/programma.py",
+  "lavoro/programma.tokyn",
+  "lavoro/prova/clienti.csv",
+  "lavoro/prova/ordini.csv",
+  "lavoro/prova/risultato.json"
+ ],
+ "risposta_finale": "ini.csv` e un `clienti.csv` di prova, prima con risposte finte e poi con Claude vero.\n\nIl file da usare è `/srv/progetti/4364c3aa57/lavoro/programma.py`. L'ho generato da `programma.tokyn`, che resta accanto come sorgente da modificare. Il Python non dipende da Tokyn. Si avvia con `python programma.py` dalla cartella dei due CSV e scrive `risultato.json` nel formato che mi hai indicato.\n\nNella prova il riassunto è uscito corretto e coerente con i numeri. Le cifre nel JSON sono quelle attese: ad esempio Italia 11330.6, Francia 8120.0, e i tre migliori clienti sono nell'ordine giusto.\n\nCosa fa nei casi particolari:\n- **Importi:** li somma in centesimi interi, così gli arrotondamenti non si accumulano.\n- **Ordini con `cliente_id` sconosciuto:** li ignora e stampa un avviso con l'id dell'ordine.\n- **Paesi senza ordini:** compaiono con fatturato 0.0.\n- **Ordine dei paesi:** dal fatturato più alto al più basso.\n- **Parità tra clienti:** a parità di spesa vince l'ordine alfabetico.\n- **Meno di 3 clienti con ordini:** `migliori_clienti` ne contiene di meno.\n- **Nessun ordine:** il riassunto lo dice, senza chiamare Claude.\n- **CSV:** gestisce nomi con la virgola tra virgolette e un eventuale BOM nel file.\n\nUn limite da conoscere: nella prova non avevo la chiave API, quindi le risposte sono arrivate dal tuo Claude Code. Per usarlo da solo o per altre persone serve la variabile `ANTHROPIC_API_KEY` con una chiave dell'API di Anthropic.\n\nI file di prova sono nella cartella `lavoro/prova`.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": null,
+  "eseguibile": false,
+  "dettagli": [],
+  "errore": "programma.py non consegnato",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

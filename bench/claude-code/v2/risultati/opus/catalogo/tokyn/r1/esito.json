@@ -1,0 +1,82 @@
+{
+ "prova": "opus/catalogo/tokyn/r1",
+ "cartella": "1ec25b8b4d",
+ "modello": "opus",
+ "compito": "catalogo",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.18253180000000002,
+ "costo_usd_telemetria": 0.182532,
+ "token_output": 2323,
+ "token_input": 16,
+ "token_cache_scritti": 13922,
+ "token_cache_letti": 123159,
+ "prove_del_programma": {
+  "costo_usd": 0.016552,
+  "token_output": 130,
+  "chiamate": 6,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 9,
+ "secondi": 49.4,
+ "secondi_api": 27.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 821,
+ "righe_tokyn": 20,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "catalogo_en.csv",
+  "programma.py",
+  "programma.tokyn"
+ ],
+ "risposta_finale": "afe;12,90\nCU-207;Cuscino Nuvola;Memory foam pillow with removable bamboo cover;39,00\nPT-330;Padella Etna;28 cm non-stick frying pan, also suitable for induction hobs;34,50\nCA-118;Candela Lavanda;Lavender scented candle in a glass jar, 40-hour burn time;15,90\nZA-402;Zaino Sentiero;30-liter hiking backpack with breathable back panel;79,00\nTP-509;Tappeto Duna;Hand-woven jute rug, 120 x 180 cm;89,90\n```\n\nLa riga della Tazza Aurora è identica al tuo esempio. Ho confrontato i due file: codice, nome e prezzo sono uguali, nello stesso ordine e con la stessa intestazione.\n\n- **Come funziona:** traduce le descrizioni una alla volta. Dalla traduzione toglie gli a capo e trasforma un eventuale `;` in virgola, così le colonne del CSV restano a posto. Le righe vuote vengono saltate.\n- **Chiave API:** la prova l'ho fatta senza chiave, quindi le risposte sono arrivate dal mio Claude Code. Per usarlo davvero sul sito, imposta `ANTHROPIC_API_KEY` prima di lanciare `python programma.py`: senza chiave funziona solo dove c'è Claude Code. Le regole di Anthropic permettono di usare Claude Code per provare il programma, non per farlo girare da solo o per altre persone.\n- **Requisiti:** il file non ha bisogno di Tokyn. Con la chiave serve solo il pacchetto `anthropic` (`pip install anthropic`).\n- **Per modificarlo:** accanto c'è `programma.tokyn`, il sorgente da cui ho generato `programma.py`. È di circa 20 righe ed è il file più comodo se vuoi cambiare qualcosa, per esempio il tono delle traduzioni.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "intestazione codice;nome;descrizione;prezzo: True (['codice', 'nome', 'descrizione', 'prezzo'])",
+   "5 prodotti con 4 colonne e codici nell'ordine del file: True (5 righe)",
+   "codice, nome e prezzo identici: True",
+   "descrizioni tradotte in inglese: 5 su 5"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.013692,
+   "token_output": 102,
+   "chiamate": 5,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

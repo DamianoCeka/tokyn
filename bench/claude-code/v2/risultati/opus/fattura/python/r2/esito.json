@@ -1,0 +1,72 @@
+{
+ "prova": "opus/fattura/python/r2",
+ "cartella": "6a12d55051",
+ "modello": "opus",
+ "compito": "fattura",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.6334287999999999,
+ "costo_usd_telemetria": 0.633429,
+ "token_output": 5369,
+ "token_input": 16,
+ "token_cache_scritti": 56673,
+ "token_cache_letti": 363004,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 10,
+ "secondi": 55.8,
+ "secondi_api": 49.1,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 88,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "assi):** il totale calcolato è 51,00 + 78,40 + 12,00 + 85,00 = € 226,40, uguale a quello scritto. Risultato: `totale_corretto: true`, data `2026-03-05`, righe nell'ordine giusto.\n- **Totale sbagliato di un centesimo** (226,41): risultato `false`.\n- **3 × 0,10:** con i calcoli normali di Python viene 0,30000000000000004. Il programma dà correttamente € 0,30.\n- **1,5 kg × € 3,33** = 4,995: viene arrotondato a € 5,00.\n\n**Come funziona:**\n- Manda il testo a Claude Opus 5.5 e riceve la risposta in uno schema fisso: fornitore, data, righe e totale dichiarato. Se mancano campi o i dati non sono validi, il programma si ferma con un messaggio invece di scrivere dati sbagliati.\n- A Claude chiedo solo di copiare i valori, non di fare calcoli. Il ricalcolo lo fa il programma, in modo esatto, arrotondando al centesimo prima del confronto.\n- Ho attivato i \"fallback\": se Claude rifiuta la richiesta, l'API la ripassa da sola a un altro modello. Se non ti serve si può togliere.\n- Se la data non è valida, o se Claude rifiuta comunque, il programma si ferma con un messaggio e non scrive `risultato.json`.\n\n**Per provarlo tu:**\n```bash\nexport ANTHROPIC_API_KEY=la-tua-chiave\npython programma.py\n```\nDeve scrivere `Totale dichiarato € 226.40, calcolato € 226.40: CORRETTO` e creare `risultato.json`. Se mi dai accesso a una chiave in questo ambiente, faccio io la prova completa.\n\nNella cartella c'è ora un `risultato.json` creato dai test con i dati finti. Viene sovrascritto alla prima esecuzione vera.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 6,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

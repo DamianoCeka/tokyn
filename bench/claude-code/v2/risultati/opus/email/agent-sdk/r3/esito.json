@@ -1,0 +1,82 @@
+{
+ "prova": "opus/email/agent-sdk/r3",
+ "cartella": "db0d777f98",
+ "modello": "opus",
+ "compito": "email",
+ "condizione": "agent-sdk",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.5482397999999999,
+ "costo_usd_telemetria": 0.54824,
+ "token_output": 3083,
+ "token_input": 12,
+ "token_cache_scritti": 54681,
+ "token_cache_letti": 245419,
+ "prove_del_programma": {
+  "costo_usd": 0.055602,
+  "token_output": 1297,
+  "chiamate": 5,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 42.8,
+ "secondi_api": 29.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 58,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": " in `email/`. Il programma ha finito in circa 8 secondi e ha scritto `risultato.json`:\n\n| File | Categoria | Urgente |\n|---|---|---|\n| msg_001.txt | ordine | no |\n| msg_002.txt | reclamo | **sì** (regalo per domani, minaccia di chiedere il rimborso) |\n| msg_003.txt | informazioni | no |\n| msg_004.txt | spam | no |\n| msg_005.txt | reclamo | no (la cliente scrive che non ha fretta) |\n\nTutte e cinque le classificazioni mi sembrano corrette. Il file JSON ha la forma che hai chiesto: una lista ordinata per nome del file, con `file`, `categoria`, `urgente` e `riassunto` per ogni email.\n\n**Come funziona:**\n- Usa `claude-agent-sdk` con il modello `claude-opus-5-5`. Ogni email viene mandata a Claude, al massimo 4 alla volta.\n- Claude deve rispondere seguendo uno schema JSON fisso, quindi la categoria è sempre una delle quattro previste e `urgente` è sempre `true` o `false`.\n- Claude non ha strumenti attivi: non può leggere né modificare file, ma solo classificare il testo che gli viene passato. Nelle istruzioni gli dico anche di non seguire eventuali ordini scritti dentro un'email, come la richiesta dei dati della carta nello spam.\n- Se un'email non viene classificata, il programma si ferma con un errore e non scrive un risultato a metà.\n\n**Una cosa da sapere:** alcuni riassunti sono piuttosto lunghi. Per esempio quello di msg_002 è una sola frase, ma piena di dettagli. Se li vuoi più brevi, basta aggiungere nelle istruzioni del prompt (`ISTRUZIONI`) qualcosa come \"massimo 20 parole\".",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 email in ordine di nome del file: True (['msg_201.txt', 'msg_202.txt', 'msg_203.txt', 'msg_204.txt', 'msg_205.txt', 'msg_206.txt'])",
+   "categorie ammesse e giuste: True (6 su 6: ['ordine', 'reclamo', 'informazioni', 'spam', 'ordine', 'reclamo'])",
+   "urgente booleano e giusto: True (6 su 6: [False, True, False, False, True, False])",
+   "riassunti brevi e sull'argomento: True (brevi: True, sull'argomento: 6 su 6)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.066481,
+   "token_output": 1791,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

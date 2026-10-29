@@ -1,0 +1,25 @@
+{
+  "candidati": [
+    {
+      "file": "bianchi_elena.txt",
+      "punteggio": 9,
+      "motivazione": "Oltre 5 anni di vendita, di cui 5 in elettronica da MediaWorld con garanzie, assicurazioni, cassa, gestionale e weekend; diploma informatico e ottime competenze tecniche. Carenza: inglese solo B1."
+    },
+    {
+      "file": "rizzo_davide.txt",
+      "punteggio": 6,
+      "motivazione": "Circa 3 anni di vendita al dettaglio con cassa, stage in telefonia, buona conoscenza smartphone e disponibilità nel weekend; mancano esperienza specifica in elettronica, competenze informatiche avanzate, gestionale e vendita di servizi aggiuntivi."
+    },
+    {
+      "file": "esposito_marco.txt",
+      "punteggio": 3,
+      "motivazione": "Nessuna esperienza in vendita al dettaglio; punti di forza: passione per informatica, assemblaggio PC, gestionale di magazzino, disponibilità a turni e residenza a Verona."
+    },
+    {
+      "file": "ferraro_chiara.txt",
+      "punteggio": 1,
+      "motivazione": "Candidata infermiera con 6 anni in ambito sanitario, residente a Verona, ma senza esperienza di vendita, elettronica, cassa o gestionale; profilo non pertinente."
+    }
+  ],
+  "migliore": "bianchi_elena.txt"
+}

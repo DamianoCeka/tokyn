@@ -1,0 +1,22 @@
+Riunione settimanale del team prodotto - martedì 3 novembre 2026
+Presenti: Giulia (responsabile), Marco, Sara, Davide
+
+Giulia: Buongiorno a tutti. Partiamo dall'app nuova: come siamo messi con i test?
+Marco: Ci sono ancora due bug bloccanti nel pagamento con carta. Uscire il 10 novembre così è un rischio.
+Sara: Sono d'accordo, il supporto ha già troppe segnalazioni aperte.
+Giulia: Va bene, allora decidiamo così: il lancio dell'app nuova slitta dal 10 al 24 novembre.
+Davide: Avete visto che la macchinetta del caffè al secondo piano è di nuovo rotta?
+Marco: Ancora? È la terza volta questo mese.
+Sara: Io ormai il caffè lo prendo al bar qui sotto, è anche più buono.
+Davide: E ieri sera la partita? Che disastro il secondo tempo.
+Marco: Non me ne parlare.
+Giulia: Torniamo a noi. Secondo punto, la pubblicità. Davide, che numeri abbiamo?
+Davide: Le campagne sui social rendono il triplo di quelle sui giornali, a parità di spesa.
+Giulia: Allora è deciso: da dicembre spostiamo tutto il budget pubblicitario dai giornali ai social.
+Giulia: Passiamo ai compiti. Marco, sistemi tu i due bug del pagamento entro venerdì 13 novembre 2026?
+Marco: Sì, ci penso io.
+Giulia: Sara, mi scrivi le risposte pronte per il supporto sul nuovo lancio? Mi servono entro mercoledì 18 novembre 2026.
+Sara: Va bene.
+Giulia: Davide, prepari tu il piano delle campagne social di dicembre entro lunedì 30 novembre 2026.
+Davide: D'accordo.
+Giulia: Perfetto, grazie a tutti. Ci vediamo la settimana prossima.

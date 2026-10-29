@@ -1,0 +1,73 @@
+{
+ "prova": "sonnet/spese/python/r1",
+ "cartella": "58b61e511b",
+ "modello": "sonnet",
+ "compito": "spese",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.33114279999999996,
+ "costo_usd_telemetria": 0.331143,
+ "token_output": 4957,
+ "token_input": 12,
+ "token_cache_scritti": 63655,
+ "token_cache_letti": 269288,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 9,
+ "secondi": 58.6,
+ "secondi_api": 51.6,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Read": 1,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 106,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "le descrizioni del file, gli importi come numeri e i totali arrotondati. Ho poi cancellato quel file di prova.\n- La finta risposta usava regole banali (LIDL → spesa alimentare e così via), quindi le categorie in quel test non dicono nulla sulla qualità di Claude.\n- La forma della richiesta (`output_config` con schema JSON) l'ho presa dalla documentazione dell'SDK, ma non l'ho vista accettata dall'API.\n\n**Come funziona**\n- Legge il CSV con separatore `;`, accetta anche importi tipo `1.234,56` e calcola i totali con `Decimal`.\n- Manda i movimenti a Claude a blocchi da 100, con un solo valore ammesso tra le cinque categorie per ogni movimento. Controlla che ogni movimento riceva una categoria e si ferma con un errore chiaro se la risposta è incompleta.\n- Entrate e commissioni (stipendio, commissione bonifico) finiscono in `altro`, come ho indicato a Claude nelle istruzioni. Quindi il totale di `altro` nel tuo file sarà positivo, circa +1.848 €.\n\n**Modello e consumo**\n- Ho usato `claude-opus-5-5` con `effort: low`, perché è il modello predefinito che la documentazione dell'SDK indica. Per un compito così semplice puoi cambiare `MODELLO` in `claude-sonnet-5-5` o `claude-haiku-5-5` e spendere meno.\n- Non ho abilitato i modelli di ripiego (fallback) in caso di rifiuto: se Claude rifiuta, il programma si ferma con un errore.\n\n**Per provarlo**\n```\nexport ANTHROPIC_API_KEY=...\npython programma.py\n```\nSe me lo lanci con la chiave, o mi incolli l'output, controllo le categorie assegnate.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 3,
+  "dettagli": [
+   "risultato.json mancante o senza la lista movimenti"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

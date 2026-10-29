@@ -1,0 +1,40 @@
+type Risposta:
+    risposta: str "risposta breve in italiano"
+
+def prodotti() -> list:
+    """Elenco dei prodotti con codice, nome, quantita, prezzo_unitario, scorta_minima e i valori già calcolati: valore (quantita*prezzo), mancanti (pezzi per arrivare alla scorta minima, 0 se sopra) e sotto_scorta."""
+    out = []
+    for p in json_parse(read_file("inventario.json"), []):
+        p["valore"] = round(p["quantita"] * p["prezzo_unitario"], 2)
+        p["mancanti"] = max(0, p["scorta_minima"] - p["quantita"])
+        p["sotto_scorta"] = p["quantita"] < p["scorta_minima"]
+        out.append(p)
+    return out
+
+def valore_totale() -> float:
+    """Valore totale del magazzino in euro (somma di quantita*prezzo_unitario), già calcolato con esattezza."""
+    t = 0
+    for p in json_parse(read_file("inventario.json"), []):
+        t += round(p["quantita"] * p["prezzo_unitario"], 2)
+    return round(t, 2)
+
+agent Magazziniere:
+    instructions: """
+        Rispondi in italiano, in una frase breve, a domande sull'inventario del magazzino.
+        Usa sempre gli strumenti per i dati e non fare calcoli a mente: usa i valori già calcolati
+        (valore, mancanti, sotto_scorta, valore_totale). Riporta i numeri esattamente, gli importi in euro con due decimali.
+        Se il prodotto non esiste o la domanda non riguarda l'inventario, dillo.
+    """
+    tools: [prodotti, valore_totale]
+    output: Risposta
+    effort: "low"
+
+main:
+    risultati = []
+    for d in read_file("domande.txt", "").split("\n"):
+        d = d.strip()
+        if d == "":
+            continue
+        r = Magazziniere.ask(d)
+        risultati.append({"domanda": d, "risposta": r.risposta})
+    write_file("risultato.json", json_dump(risultati))

@@ -1,0 +1,72 @@
+{
+ "prova": "sonnet/riunione/python/r2",
+ "cartella": "779a63752e",
+ "modello": "sonnet",
+ "compito": "riunione",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.3412465,
+ "costo_usd_telemetria": 0.341247,
+ "token_output": 4871,
+ "token_input": 14,
+ "token_cache_scritti": 65005,
+ "token_cache_letti": 324885,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 10,
+ "secondi": 58.7,
+ "secondi_api": 46.7,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 78,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "hiave, il programma si ferma con il messaggio «imposta la variabile d'ambiente ANTHROPIC_API_KEY».\n- Con un finto server locale al posto dell'API (che restituisce sempre la stessa risposta fissa), il programma legge `verbale.txt`, interpreta la risposta e scrive `risultato.json` nel formato che mi hai chiesto. Questa prova copre solo il codice intorno alla chiamata, non la qualità dell'estrazione.\n- Ho eliminato `risultato.json` di prova: nella tua cartella non c'è nessun risultato finto.\n\n**Come funziona:**\n- Il programma manda la trascrizione a `claude-opus-5-5`.\n- Chiede una risposta con `decisioni` e `azioni` (`cosa`, `chi`, `entro`). Le date relative vengono calcolate dalla data della riunione scritta nel verbale.\n- Include un'azione solo se ha un responsabile e una scadenza chiari.\n- Se manca `verbale.txt` o è vuoto, se la chiave non è valida, se c'è un errore di rete o di API, o se Claude rifiuta di rispondere, il programma si ferma con un messaggio.\n\n**Per provarlo davvero:**\n```\nexport ANTHROPIC_API_KEY=sk-ant-...\npython programma.py\n```\nDal verbale di esempio mi aspetto due decisioni (fiera di Bologna con lo stand piccolo, newsletter ogni due settimane) e tre azioni: Paolo il 2026-10-30, Chiara il 2026-11-06, Roberto il 2026-11-16. Il parcheggio non dovrebbe comparire.\n\nSe mi dai una chiave, o fai `ant auth login` in questo ambiente, lo eseguo io sul verbale e ti dico com'è andata.\n\nIl programma richiede il pacchetto `anthropic`, già installato qui (versione 2.3.0).",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 6,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

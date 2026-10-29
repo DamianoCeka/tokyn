@@ -1,0 +1,25 @@
+{
+  "candidati": [
+    {
+      "file": "bianchi_elena.txt",
+      "punteggio": 9,
+      "motivazione": "Soddisfa tutti i requisiti: ha oltre 4 anni di vendita di telefonia da MediaWorld, propone garanzie e assicurazioni, usa cassa e gestionale e lavora nel weekend. L'unica lacuna è il magazzino, citato solo in modo generico."
+    },
+    {
+      "file": "rizzo_davide.txt",
+      "punteggio": 6,
+      "motivazione": "Ha circa tre anni nella vendita al dettaglio, usa la cassa e lavora nel weekend. Però conosce poco i portatili e non ha esperienza nella vendita di servizi aggiuntivi né con il gestionale di magazzino."
+    },
+    {
+      "file": "esposito_marco.txt",
+      "punteggio": 4,
+      "motivazione": "Usa già il gestionale di magazzino, si intende di informatica e accetta i turni. Però non ha mai lavorato nella vendita al dettaglio né venduto servizi aggiuntivi: ha solo esperienza come cameriere."
+    },
+    {
+      "file": "ferraro_chiara.txt",
+      "punteggio": 1,
+      "motivazione": "Risiede a Verona e sa relazionarsi con le persone, ma è infermiera e non ha esperienza di vendita né conoscenze di elettronica, cassa o gestionale."
+    }
+  ],
+  "migliore": "bianchi_elena.txt"
+}

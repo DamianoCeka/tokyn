@@ -1,0 +1,13 @@
+{
+  "fatturato_per_paese": {
+    "Italia": 11330.6,
+    "Francia": 8120.0,
+    "Germania": 0.0
+  },
+  "migliori_clienti": [
+    "Rossi Srl",
+    "Dupont SA",
+    "Verdi Spa"
+  ],
+  "riassunto": "Nel trimestre l'Italia è il paese con il fatturato più alto, pari a 11.330,60 euro su un totale di 19.450,60 euro, cioè oltre la metà dei ricavi complessivi. La Francia segue con 8.120,00 euro, a una distanza di 3.210,60 euro dall'Italia, mentre la Germania non ha generato alcun fatturato (0,00 euro), segnale di un mercato attualmente non sviluppato. Tra i clienti, Rossi Srl è il principale con 9.000,30 euro, seguito da Dupont SA con 8.120,00 euro, che da solo coincide con l'intero fatturato francese, e da Verdi Spa con 2.230,30 euro. I ricavi risultano quindi molto concentrati su pochi clienti, con un'evidente dipendenza da Rossi Srl e Dupont SA."
+}

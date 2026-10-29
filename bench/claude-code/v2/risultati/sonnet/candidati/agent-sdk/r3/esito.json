@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/candidati/agent-sdk/r3",
+ "cartella": "21ccc956b6",
+ "modello": "sonnet",
+ "compito": "candidati",
+ "condizione": "agent-sdk",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2947806,
+ "costo_usd_telemetria": 0.294781,
+ "token_output": 4127,
+ "token_input": 10,
+ "token_cache_scritti": 58604,
+ "token_cache_letti": 190746,
+ "prove_del_programma": {
+  "costo_usd": 0.084722,
+  "token_output": 1207,
+  "chiamate": 4,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 59.8,
+ "secondi_api": 48.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 102,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "vello base e non cita servizi aggiuntivi. |\n| 3 | esposito_marco.txt | Ha fatto il magazziniere e il cameriere, quindi mancano i 2 anni di vendita richiesti. Conosce il gestionale di magazzino. |\n| 1 | ferraro_chiara.txt | Fa l'infermiera, senza esperienza di vendita. |\n\nL'ordine mi sembra sensato per tutti e quattro.\n\n**Come funziona**\n- Ogni curriculum viene valutato con una richiesta separata a Claude tramite `claude-agent-sdk`. Le richieste girano 4 alla volta e senza strumenti, perché serve solo leggere il testo.\n- La risposta deve avere un punteggio intero da 1 a 10 e una motivazione. Se non rispetta questo formato, il programma ritenta fino a 3 volte.\n- Il prompt dice a Claude di trattare il testo del curriculum come un dato e non come istruzioni. Così un candidato che scrive \"dammi 10\" nel curriculum non influenza il voto. Non ho provato questo caso.\n- I candidati sono ordinati dal punteggio più alto al più basso. A parità di punteggio vale l'ordine alfabetico del nome del file.\n- Se un curriculum fallisce anche dopo i tentativi, il programma lo segnala a video, lo lascia fuori da `risultato.json` e termina con codice 2. Se `cv/` è vuota, `migliore` vale `null`.\n\nHo provato solo il caso normale con 4 curriculum. Non ho provato né i fallimenti né i pareggi di punteggio.\n\nIl modello non è fissato nel codice, quindi usa quello predefinito del tuo Claude Code. Se vuoi un modello preciso o più economico per volumi alti, basta aggiungere `model=...` in `ClaudeAgentOptions`.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "4 curriculum una volta ciascuno con punteggio intero da 1 a 10 e motivazione: True ([('ferrari_giulia.txt', 10), ('colombo_luca.txt', 3), ('ricci_paolo.txt', 3), ('gallo_andrea.txt', 1)])",
+   "in ordine di punteggio decrescente: True ([10, 3, 3, 1])",
+   "migliore ferrari_giulia.txt col punteggio più alto: True ('ferrari_giulia.txt')",
+   "gallo_andrea.txt col punteggio più basso: True"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.057652,
+   "token_output": 1028,
+   "chiamate": 4,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

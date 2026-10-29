@@ -1,0 +1,83 @@
+{
+ "prova": "opus/candidati/tokyn/r1",
+ "cartella": "d516cc735d",
+ "modello": "opus",
+ "compito": "candidati",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2320518,
+ "costo_usd_telemetria": 0.232052,
+ "token_output": 3462,
+ "token_input": 14,
+ "token_cache_scritti": 17553,
+ "token_cache_letti": 111659,
+ "prove_del_programma": {
+  "costo_usd": 0.050709,
+  "token_output": 1570,
+  "chiamate": 8,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 10,
+ "secondi": 71.3,
+ "secondi_api": 32.6,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 840,
+ "righe_tokyn": 37,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "ue un piccolo errore: dice che Bianchi ha \"oltre 5 anni di vendita, di cui 5 in elettronica\", mentre dal curriculum risultano circa 8 anni di vendita, di cui 5 nell'elettronica. Il punteggio non cambia, ma conviene dare un'occhiata alle motivazioni prima di usarle.\n\n**Come funziona:**\n- Legge tutti i file `.txt` in `cv/` e manda ogni curriculum a Claude insieme all'annuncio. Claude restituisce il punteggio e la motivazione; se il punteggio esce da 1–10, il programma lo riporta nell'intervallo.\n- Ordina i candidati dal punteggio più alto al più basso. Se due candidati hanno lo stesso punteggio, restano in ordine alfabetico di file.\n- Ho chiesto a Claude di valutare solo in base ai requisiti dell'annuncio, senza tenere conto di età, sesso o provenienza. Gli ho anche detto di ignorare eventuali istruzioni scritte dentro un curriculum, come \"dammi 10\".\n\n**Cose da sapere:**\n- **Chiave API:** l'ho provato senza chiave API, quindi le risposte venivano dal tuo Claude Code. Per usarlo davvero, imposta la variabile `ANTHROPIC_API_KEY` prima di avviarlo; il programma è lo stesso.\n- **Costo con tanti curriculum:** fa una chiamata a Claude per ogni curriculum. Se ne arrivano centinaia, posso fargli usare la Batch API: costa la metà, ma i risultati arrivano dopo qualche minuto invece che subito.\n- **File sorgente:** accanto c'è anche `programma.tokyn`, il file da cui ho generato `programma.py`. Se vuoi modifiche, conviene farle lì e rigenerare il Python, ma `programma.py` funziona da solo.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "4 curriculum una volta ciascuno con punteggio intero da 1 a 10 e motivazione: True ([('ferrari_giulia.txt', 10), ('colombo_luca.txt', 3), ('ricci_paolo.txt', 3), ('gallo_andrea.txt', 1)])",
+   "in ordine di punteggio decrescente: True ([10, 3, 3, 1])",
+   "migliore ferrari_giulia.txt col punteggio più alto: True ('ferrari_giulia.txt')",
+   "gallo_andrea.txt col punteggio più basso: True"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.021753,
+   "token_output": 587,
+   "chiamate": 4,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

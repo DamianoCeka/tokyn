@@ -1,0 +1,27 @@
+import csv
+import io
+
+agent Traduttore:
+    model: "claude-haiku"
+    effort: "low"
+    instructions: """
+        Traduci in inglese la descrizione di un prodotto di un negozio online.
+        Rispondi solo con la traduzione, senza virgolette né commenti.
+        Mantieni numeri, unità di misura e marchi invariati.
+    """
+
+main:
+    righe = list(csv.reader(read_file("catalogo.csv").splitlines(), delimiter=";"))
+    corpo = righe[1:]
+    testi = []
+    for r in corpo:
+        testi.append(r[2])
+    tradotti = Traduttore.ask_all(testi)
+    for i, r in enumerate(corpo):
+        r[2] = tradotti[i].strip()
+    buf = io.StringIO()
+    w = csv.writer(buf, delimiter=";", lineterminator="\n")
+    w.writerow(righe[0])
+    w.writerows(corpo)
+    write_file("catalogo_en.csv", buf.getvalue())
+    print(f"Tradotti {len(corpo)} prodotti in catalogo_en.csv")

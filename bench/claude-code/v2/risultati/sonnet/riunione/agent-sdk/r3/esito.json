@@ -1,0 +1,84 @@
+{
+ "prova": "sonnet/riunione/agent-sdk/r3",
+ "cartella": "7d1596f21c",
+ "modello": "sonnet",
+ "compito": "riunione",
+ "condizione": "agent-sdk",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2715387,
+ "costo_usd_telemetria": 0.271539,
+ "token_output": 3196,
+ "token_input": 10,
+ "token_cache_scritti": 55194,
+ "token_cache_letti": 187827,
+ "prove_del_programma": {
+  "costo_usd": 0.02287,
+  "token_output": 310,
+  "chiamate": 1,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 34.9,
+ "secondi_api": 26.8,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 87,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "verbale.txt`. Ha funzionato al primo colpo e ha creato `risultato.json`.\n\nIl risultato corrisponde al verbale:\n\n- **Decisioni:** andate alla fiera di Bologna con lo stand piccolo, e la newsletter esce ogni due settimane invece che ogni mese. Il parcheggio e le aperture della newsletter sono solo chiacchiere e non sono finiti tra le decisioni.\n- **Azioni:**\n  - Paolo prenota lo stand entro il 2026-10-30.\n  - Chiara prepara il calendario dei temi della newsletter entro il 2026-11-06.\n  - Roberto si occupa dei volantini entro il 2026-11-16.\n\nHo provato solo questo verbale. Non ho verificato come se la cava con testi più lunghi o con scadenze scritte in modo vago.\n\nCome funziona:\n\n- **Avvio:** si lancia con `python programma.py` dalla cartella che contiene `verbale.txt`.\n- **Solo testo:** Claude lavora solo sul testo, senza accesso a file o shell.\n- **Formato garantito:** la risposta deve rispettare lo schema `decisioni` / `azioni` (`cosa`, `chi`, `entro`). Il programma controlla anche che le date siano valide.\n- **Errori:** se manca il verbale o è vuoto, o se Claude risponde con un errore, il programma lo scrive e termina senza creare `risultato.json`.\n- **Scadenze relative:** se nel verbale c'è una scadenza come \"venerdì prossimo\", viene calcolata dalla data della riunione scritta nel verbale.\n- **Scadenza mancante:** se un'azione non ha scadenza, `entro` vale `null` invece di una data inventata.\n- **Modello:** non ho indicato un modello, quindi usa quello predefinito dell'SDK.",
+ "controllo": {
+  "ok": true,
+  "punti": 6,
+  "massimo": 6,
+  "dettagli": [
+   "decisioni lista di stringhe e azioni lista di {cosa, chi, entro} stringhe: True",
+   "le 2 decisioni e nessuna chiacchiera: True (trovate: [\"lancio dell'app al 24 novembre\", 'budget pubblicitario dai giornali ai social']; chiacchiere: []; scritte: [\"Il lancio dell'app nuova slitta dal 10 al 24 novembre 2026.\", 'Da dicembre tutto il budget pubblicitario passa dai giornali ai social.'])",
+   "azione di Marco entro 2026-11-13: True ([{'cosa': 'Sistemare i due bug bloccanti del pagamento con carta', 'chi': 'Marco', 'entro': '2026-11-13'}])",
+   "azione di Sara entro 2026-11-18: True ([{'cosa': 'Scrivere le risposte pronte per il supporto sul nuovo lancio', 'chi': 'Sara', 'entro': '2026-11-18'}])",
+   "azione di Davide entro 2026-11-30: True ([{'cosa': 'Preparare il piano delle campagne social di dicembre', 'chi': 'Davide', 'entro': '2026-11-30'}])",
+   "esattamente 3 azioni: True (3)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.019877,
+   "token_output": 486,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

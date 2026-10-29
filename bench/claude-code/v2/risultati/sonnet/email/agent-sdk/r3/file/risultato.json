@@ -1,0 +1,32 @@
+[
+  {
+    "file": "msg_001.txt",
+    "categoria": "ordine",
+    "urgente": false,
+    "riassunto": "Marco Valli vuole ordinare 6 tazze in ceramica blu modello \"Onda\" e 2 teiere abbinate, con spedizione a Parma e pagamento tramite PayPal."
+  },
+  {
+    "file": "msg_002.txt",
+    "categoria": "reclamo",
+    "urgente": true,
+    "riassunto": "La cliente segnala che l'ordine 4471, pagato tre settimane fa, non è mai arrivato perché il tracking è fermo da dieci giorni, e chiede una risposta entro oggi altrimenti vuole il rimborso, dato che è un regalo per un compleanno di domani."
+  },
+  {
+    "file": "msg_003.txt",
+    "categoria": "informazioni",
+    "urgente": false,
+    "riassunto": "Il cliente chiede se i piatti si possono mettere in lavastoviglie e nel microonde prima di fare un ordine."
+  },
+  {
+    "file": "msg_004.txt",
+    "categoria": "spam",
+    "urgente": false,
+    "riassunto": "Un mittente sconosciuto promette la prima posizione su Google in 7 giorni a 49 euro al mese e chiede di inviare i dati della carta per email, un probabile tentativo di truffa."
+  },
+  {
+    "file": "msg_005.txt",
+    "categoria": "reclamo",
+    "urgente": false,
+    "riassunto": "La cliente ha ricevuto ieri un vaso grande con il bordo scheggiato e chiede, senza fretta, come fare per sostituirlo."
+  }
+]

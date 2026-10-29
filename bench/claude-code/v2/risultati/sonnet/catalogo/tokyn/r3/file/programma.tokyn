@@ -1,0 +1,21 @@
+agent Traduttore:
+    model: "claude-haiku"
+    effort: "low"
+    instructions: """
+        Traduci dall'italiano all'inglese la descrizione di un prodotto di un negozio online.
+        Rispondi solo con la traduzione, senza virgolette, note o spiegazioni.
+        Non usare il punto e virgola e non andare a capo.
+    """
+
+main:
+    righe = read_file("catalogo.csv").splitlines()
+    uscita = [righe[0]]
+    for riga in righe[1:]:
+        if riga.strip() == "":
+            continue
+        campi = riga.split(";")
+        descrizione = ";".join(campi[2:-1])
+        tradotta = Traduttore.ask(descrizione).strip().replace(";", ",").replace("\n", " ")
+        uscita.append(campi[0] + ";" + campi[1] + ";" + tradotta + ";" + campi[-1])
+        print(f"{campi[0]} tradotto")
+    write_file("catalogo_en.csv", "\n".join(uscita) + "\n")

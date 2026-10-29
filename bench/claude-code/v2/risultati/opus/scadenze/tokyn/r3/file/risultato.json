@@ -1,0 +1,36 @@
+{
+  "in_scadenza": [
+    {
+      "cliente": "Ottica Ferri",
+      "servizio": "Assistenza tecnica",
+      "scadenza": "2026-11-12",
+      "giorni_mancanti": 11,
+      "oggetto": "Promemoria: Assistenza tecnica in scadenza il 12 novembre 2026",
+      "testo": "Gentile Ottica Ferri,\n\nLe scriviamo per ricordarLe che il contratto relativo al servizio di Assistenza tecnica scadrà il 12 novembre 2026, tra 11 giorni.\n\nPer garantire la continuità del servizio senza interruzioni, la invitiamo a contattarci al più presto per procedere con il rinnovo. Saremo lieti di rispondere a ogni sua domanda e di assisterla in tutte le fasi.\n\nRestiamo a disposizione e La ringraziamo per la fiducia accordataci.\n\nCordiali saluti,\nIl nostro team"
+    },
+    {
+      "cliente": "Autofficina Riva",
+      "servizio": "Manutenzione impianto antincendio",
+      "scadenza": "2026-11-18",
+      "giorni_mancanti": 17,
+      "oggetto": "Manutenzione impianto antincendio in scadenza il 18 novembre",
+      "testo": "Gentile Autofficina Riva,\n\nLa contattiamo per ricordarLe che il contratto relativo al servizio \"Manutenzione impianto antincendio\" scadrà il 18 novembre 2026, tra 17 giorni.\n\nPer garantire la continuità del servizio e evitare interruzioni, Le consigliamo di procedere con il rinnovo in tempo utile. Siamo a Sua disposizione per fornirLe tutte le informazioni necessarie.\n\nLa invitiamo a contattarci per definire insieme il rinnovo del contratto.\n\nRestiamo a disposizione per qualsiasi chiarimento.\n\nCordiali saluti,\nIl nostro team"
+    },
+    {
+      "cliente": "Ottica Ferri",
+      "servizio": "Licenza gestionale",
+      "scadenza": "2026-11-25",
+      "giorni_mancanti": 24,
+      "oggetto": "Promemoria: Licenza gestionale in scadenza il 25 novembre 2026",
+      "testo": "Gentile Ottica Ferri,\n\ndesideriamo ricordarLe che il servizio \"Licenza gestionale\" scadrà il 25 novembre 2026, tra 24 giorni.\n\nPer garantire la continuità del servizio ed evitare interruzioni nella Sua attività, Le consigliamo di procedere con il rinnovo prima della scadenza.\n\nPuò contattarci rispondendo a questa email: saremo lieti di assisterLa in ogni fase del rinnovo e di rispondere a qualsiasi sua domanda.\n\nLa ringraziamo per la fiducia e restiamo a disposizione.\n\nCordiali saluti,\nIl nostro team"
+    },
+    {
+      "cliente": "Studio Dentistico Moretti",
+      "servizio": "Backup in cloud",
+      "scadenza": "2026-12-01",
+      "giorni_mancanti": 30,
+      "oggetto": "Backup in cloud: scadenza del 1° dicembre 2026",
+      "testo": "Gentile Studio Dentistico Moretti,\n\nLe scriviamo per ricordarLe che il servizio \"Backup in cloud\" scadrà il 1° dicembre 2026, tra 30 giorni.\n\nPer evitare interruzioni e garantire la continuità della protezione dei vostri dati, Vi invitiamo a contattarci per procedere con il rinnovo. Saremo lieti di assistervi e di rispondere a qualsiasi domanda.\n\nRestiamo a disposizione per ogni necessità.\n\nCordiali saluti,\nIl nostro team"
+    }
+  ]
+}

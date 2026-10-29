@@ -1,0 +1,73 @@
+{
+ "prova": "sonnet/candidati/python/r3",
+ "cartella": "c7bcf468e5",
+ "modello": "sonnet",
+ "compito": "candidati",
+ "condizione": "python",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2981962,
+ "costo_usd_telemetria": 0.298196,
+ "token_output": 4676,
+ "token_input": 14,
+ "token_cache_scritti": 55279,
+ "token_cache_letti": 302922,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 10,
+ "secondi": 43.0,
+ "secondi_api": 38.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Grep": 1,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 94,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "ata reale non è partita.\n\nHo eseguito il programma con un client Claude simulato, che restituisce punteggi fissi. Con quella prova hanno funzionato:\n- la lettura di `annuncio.txt` e dei 4 file in `cv/`;\n- l'ordinamento per punteggio, dal più alto al più basso;\n- la scelta del migliore;\n- la scrittura di `risultato.json` nel formato che mi hai indicato.\n\nNon so quindi quali punteggi darebbe Claude ai tuoi curriculum, né se la chiamata all'API funzioni senza errori. Per provarlo davvero:\n\n```bash\nexport ANTHROPIC_API_KEY=sk-ant-...\npython programma.py\n```\n\nIl file `risultato.json` della prova simulata l'ho cancellato, per non lasciarti punteggi finti.\n\nCome si comporta:\n- **Modello:** usa `claude-opus-5-5`, a una chiamata per curriculum, quattro in parallelo.\n- **Punteggio:** Claude restituisce un oggetto con punteggio e motivazione. Il punteggio resta sempre tra 1 e 10.\n- **Criteri nel prompt:** gli ho detto di valutare solo ciò che è scritto nel curriculum e di ignorare età, sesso e nazionalità. Gli ho anche detto di trattare il testo del curriculum come dato da valutare, senza obbedire a istruzioni scritte al suo interno.\n- **Parità:** a punteggio uguale l'ordine segue il nome del file, così il risultato è sempre lo stesso.\n- **Errori:** se una valutazione fallisce, il programma lo dice e esce senza scrivere `risultato.json`, per non darti una classifica incompleta. Succede anche se manca `annuncio.txt` o se `cv/` è vuota.\n\nDal programma stampo anche la classifica a schermo.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o senza la lista candidati"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

@@ -1,0 +1,57 @@
+INVENTARIO = json_parse(read_file("inventario.json"))
+
+def cerca_prodotti(testo: str) -> list:
+    """Cerca prodotti per codice o parte del nome (testo vuoto = tutti). Per ognuno dà quantità, prezzo, scorta minima, valore in euro e pezzi mancanti alla scorta minima."""
+    trovati = []
+    for p in INVENTARIO:
+        if testo.strip().lower() in (p["codice"] + " " + p["nome"]).lower():
+            trovati.append({
+                "codice": p["codice"],
+                "nome": p["nome"],
+                "quantita": p["quantita"],
+                "prezzo_unitario": p["prezzo_unitario"],
+                "scorta_minima": p["scorta_minima"],
+                "valore_euro": round(p["quantita"] * p["prezzo_unitario"], 2),
+                "mancanti_alla_scorta_minima": max(0, p["scorta_minima"] - p["quantita"]),
+            })
+    return trovati
+
+def valore_totale() -> float:
+    """Valore totale in euro di tutto il magazzino (quantità per prezzo unitario, sommati)."""
+    tot = 0.0
+    for p in INVENTARIO:
+        tot += p["quantita"] * p["prezzo_unitario"]
+    return round(tot, 2)
+
+def sotto_scorta() -> list:
+    """Elenco dei prodotti con quantità inferiore alla scorta minima, con i pezzi mancanti."""
+    res = []
+    for p in INVENTARIO:
+        if p["quantita"] < p["scorta_minima"]:
+            res.append({
+                "codice": p["codice"],
+                "nome": p["nome"],
+                "quantita": p["quantita"],
+                "scorta_minima": p["scorta_minima"],
+                "mancanti": p["scorta_minima"] - p["quantita"],
+            })
+    return res
+
+agent Magazziniere:
+    instructions: """
+        Rispondi in italiano, in una o due frasi brevi, a domande sull'inventario del magazzino.
+        Usa sempre gli strumenti per ottenere i dati e non fare calcoli a mente: riporta i numeri
+        esattamente come li restituiscono gli strumenti (importi in euro con due decimali).
+        Se il prodotto non esiste o la domanda non riguarda l'inventario, dillo.
+    """
+    tools: [cerca_prodotti, valore_totale, sotto_scorta]
+    effort: "low"
+
+main:
+    risultato = []
+    for riga in read_file("domande.txt").split("\n"):
+        domanda = riga.strip()
+        if domanda == "":
+            continue
+        risultato.append({"domanda": domanda, "risposta": Magazziniere.ask(domanda)})
+    write_file("risultato.json", json_dump(risultato))

@@ -1,0 +1,60 @@
+def euro(x: float) -> str:
+    return f"{x:,.2f}".replace(",", "_").replace(".", ",").replace("_", ".") + " €"
+
+def scheda_inventario() -> str:
+    prodotti = json_parse(read_file("inventario.json"))
+    righe = []
+    totale = 0.0
+    for p in prodotti:
+        valore = round(p["quantita"] * p["prezzo_unitario"], 2)
+        totale += valore
+        mancanti = max(0, p["scorta_minima"] - p["quantita"])
+        sotto = "no"
+        if p["quantita"] < p["scorta_minima"]:
+            sotto = "sì"
+        righe.append(
+            f"- {p['codice']} | {p['nome']} | quantità {p['quantita']} | prezzo unitario {euro(p['prezzo_unitario'])} | "
+            + f"scorta minima {p['scorta_minima']} | valore {euro(valore)} | sotto scorta minima: {sotto} | "
+            + f"pezzi mancanti alla scorta minima: {mancanti}"
+        )
+    righe.append(f"VALORE TOTALE DEL MAGAZZINO: {euro(round(totale, 2))}")
+    return "\n".join(righe)
+
+INVENTARIO = scheda_inventario()
+
+def somma(valori: list[float]) -> float:
+    """Somma esatta di una lista di numeri, arrotondata a 2 decimali."""
+    return round(sum(valori), 2)
+
+def moltiplica(a: float, b: float) -> float:
+    """Prodotto esatto di due numeri, arrotondato a 2 decimali."""
+    return round(a * b, 2)
+
+def sottrai(a: float, b: float) -> float:
+    """Calcola a - b, arrotondato a 2 decimali."""
+    return round(a - b, 2)
+
+agent Magazziniere:
+    instructions: f"""
+        Rispondi alle domande dei colleghi sull'inventario del magazzino, in italiano, con una risposta breve
+        (una o due frasi) in testo semplice, senza markdown né elenchi puntati. I numeri devono essere esatti: usa i valori già calcolati nell'inventario qui sotto
+        e, se serve un calcolo che non c'è, usa gli strumenti somma, moltiplica e sottrai invece di calcolare
+        a mente. Importi in euro nel formato italiano, come nell'inventario (es. 1.540,20 €). Se la domanda non riguarda dati presenti nell'inventario,
+        dillo chiaramente senza inventare.
+
+        Inventario:
+        {INVENTARIO}
+    """
+    tools: [somma, moltiplica, sottrai]
+
+main:
+    domande = []
+    for riga in read_file("domande.txt").splitlines():
+        if riga.strip() != "":
+            domande.append(riga.strip())
+    risultati = []
+    for d in domande:
+        risposta = Magazziniere.ask(d)
+        print(f"{d}\n  → {risposta}")
+        risultati.append({"domanda": d, "risposta": risposta.strip()})
+    write_file("risultato.json", json_dump(risultati))

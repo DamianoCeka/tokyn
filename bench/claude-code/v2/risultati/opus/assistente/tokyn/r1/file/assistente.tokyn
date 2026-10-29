@@ -1,0 +1,22 @@
+FAQ = read_file("faq.txt")
+
+agent Assistente:
+    instructions: f"""
+        Sei l'assistente clienti del negozio online. Rispondi in italiano, in modo breve e cortese.
+        Usa solo le informazioni delle FAQ qui sotto e quello che il cliente ti ha detto in questa conversazione.
+        Se la risposta non è nelle FAQ, dillo chiaramente e suggerisci di contattare il servizio clienti:
+        non inventare prezzi, tempi, regole o altre informazioni.
+
+        FAQ:
+        {FAQ}
+    """
+    memory: True
+
+main:
+    for turno in range(100_000):
+        testo = input("").strip()
+        if testo.lower() == "esci":
+            break
+        if testo == "":
+            continue
+        print(Assistente.ask(testo))

@@ -1,0 +1,83 @@
+{
+ "prova": "opus/documenti/tokyn/r2",
+ "cartella": "3bc012591a",
+ "modello": "opus",
+ "compito": "documenti",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.1990078,
+ "costo_usd_telemetria": 0.199008,
+ "token_output": 2573,
+ "token_input": 16,
+ "token_cache_scritti": 15278,
+ "token_cache_letti": 126299,
+ "prove_del_programma": {
+  "costo_usd": 0.026866,
+  "token_output": 1014,
+  "chiamate": 8,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 9,
+ "secondi": 55.7,
+ "secondi_api": 25.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 839,
+ "righe_tokyn": 36,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "di lavoro da remoto | fino a 8 al mese, dopo il periodo di prova | `lavoro_da_remoto.txt` |\n| Dove si lasciano i resi | sul bancale giallo vicino all'ingresso, con l'etichetta compilata | `orari_magazzino.txt` |\n| Email sospette | si inoltrano a it@azienda.example senza aprire gli allegati | `regole_informatiche.txt` |\n\nCome funziona:\n- Legge tutti i file `.txt` in `docs/` e li passa a Claude insieme alle domande, una alla volta. Claude deve rispondere solo in base a quei documenti.\n- Le righe vuote di `domande.txt` vengono saltate.\n- Se nessun documento contiene la risposta, scrive \"Non trovato nei documenti\" e mette `\"fonte\": \"nessuna\"`. Lo stesso succede se Claude indica un file che non esiste in `docs/`.\n- Nel terminale stampa anche ogni domanda con la sua risposta e la fonte.\n- Le 4 domande sono costate circa 2 centesimi a prezzi API.\n\nDue cose da sapere:\n- **Chiave API:** la prova è girata senza chiave, quindi con il tuo Claude Code. Per usarlo davvero o farlo usare ai colleghi serve una chiave API di Anthropic: basta impostare `ANTHROPIC_API_KEY` prima di lanciare `python programma.py`.\n- **Molti documenti:** a ogni domanda Claude riceve tutti i documenti insieme. Con questi 4 file brevi va benissimo; se `docs/` diventasse molto grande servirebbe prima una ricerca dei documenti giusti.\n\n`programma.py` è stato generato da `programma.tokyn`, che ho lasciato accanto: se vuoi cambiare il programma conviene modificare quello e rigenerare il Python, perché è molto più corto.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "4 oggetti {domanda, risposta, fonte} nell'ordine di domande.txt: True",
+   "domanda 1: risposta giusta True, fonte trasferte.txt True (\"Chi usa l'auto propria in trasferta riceve un rimborso di 0,42 euro per chilometro, calcolato sul percorso più breve. Pedaggi e parcheggi si rimborsano a parte, con la ricevuta.\", 'trasferte.txt')",
+   "domanda 2: risposta giusta True, fonte sicurezza_it.txt True ('La password va cambiata ogni 90 giorni (il sistema avvisa una settimana prima della scadenza).', 'sicurezza_it.txt')",
+   "domanda 3: risposta giusta True, fonte smart_working.txt True ('Fino a 2 giorni alla settimana (per i dipendenti assunti a tempo indeterminato, dal 1° gennaio 2026). Il lunedì, giorno della riunione di reparto, si lavora sempre in ufficio.', 'smart_working.txt')",
+   "domanda 4: risposta giusta True, fonte magazzino.txt True ('Il sabato il magazzino è aperto dalle 8:00 alle 11:00, solo per il ritiro delle merci già prenotate. Quindi si può ritirare fino alle 11:00. Il ritiro va prenotato almeno un giorno prima scrivendo a magazzino@azienda.example.', 'magazzino.txt')"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.020619,
+   "token_output": 629,
+   "chiamate": 4,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

@@ -1,0 +1,73 @@
+{
+ "prova": "opus/spese/python/r2",
+ "cartella": "31ca39fa94",
+ "modello": "opus",
+ "compito": "spese",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.6815706000000001,
+ "costo_usd_telemetria": 0.681571,
+ "token_output": 6279,
+ "token_input": 18,
+ "token_cache_scritti": 58848,
+ "token_cache_letti": 425673,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 11,
+ "secondi": 64.2,
+ "secondi_api": 57.1,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Read": 1,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 134,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "chiesta così com'è e che le categorie scelte siano sensate. Per farlo, imposta la chiave ed eseguilo:\n\n```bash\nexport ANTHROPIC_API_KEY=la-tua-chiave   # oppure: ant auth login\npython programma.py\n```\n\nSe mi dai accesso a una chiave in questo ambiente, lo eseguo io e ti dico com'è andata.\n\nCome funziona:\n- **Una sola richiesta a Claude** con tutti i movimenti numerati. Se il file supera i 100 movimenti li divide in più richieste.\n- **Risposta vincolata a uno schema JSON**, che ammette solo le tue 5 categorie e un numero per ogni movimento. Il programma controlla che ci siano tutti, altrimenti riprova fino a 3 volte.\n- **Modello `claude-opus-5-5`** con impegno di ragionamento basso, che basta per classificare dei movimenti. Ho anche attivato il **fallback lato server**: se Claude rifiuta una richiesta, l'API la ripete da sola con un altro modello. Si può togliere se preferisci.\n- **Somme fatte in decimale esatto**, senza errori di arrotondamento sui centesimi, poi arrotondate a 2 decimali. Il programma accetta anche il punto delle migliaia (`1.850,00`) e i file salvati in UTF-8 o in Windows-1252.\n\n**Una cosa da decidere:** lo stipendio (+1850,00) non rientra in nessuna delle tue categorie, quindi finisce in `altro` e il totale di `altro` diventa positivo (1848,5). Nel tuo esempio tutti i totali sono negativi, quindi forse vuoi contare solo le uscite. In quel caso le entrate si possono escludere dai totali o mettere in una categoria `entrate` a parte: dimmi tu quale preferisci.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 3,
+  "dettagli": [
+   "risultato.json mancante o senza la lista movimenti"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

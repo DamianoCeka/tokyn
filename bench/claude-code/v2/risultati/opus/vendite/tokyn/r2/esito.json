@@ -1,0 +1,83 @@
+{
+ "prova": "opus/vendite/tokyn/r2",
+ "cartella": "4457add16a",
+ "modello": "opus",
+ "compito": "vendite",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.24561419999999998,
+ "costo_usd_telemetria": 0.245614,
+ "token_output": 4209,
+ "token_input": 18,
+ "token_cache_scritti": 16447,
+ "token_cache_letti": 148931,
+ "prove_del_programma": {
+  "costo_usd": 0.014072,
+  "token_output": 664,
+  "chiamate": 2,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 11,
+ "secondi": 55.1,
+ "secondi_api": 40.1,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 873,
+ "righe_tokyn": 69,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "6,30 €), Caseificio Valtellina Spa (5.706,75 €), Verdi, Neri & C. Sas (3.156,60 €)\n- **Riassunto:** *\"L'Italia è il paese con il fatturato più alto del trimestre, con 10.819,15 euro, pari al 48,9% del totale di 22.107,05 euro. Segue la Svizzera…\"*\n\n**Come funziona:**\n- Tutti i conti li fa il programma, non Claude: somme, arrotondamenti, classifiche, paese con il fatturato più alto e percentuali. Claude riceve i numeri già calcolati e scritti all'italiana, e deve solo commentarli. Così nel paragrafo non possono comparire cifre inventate.\n- Legge correttamente anche i nomi che contengono una virgola, come `\"Verdi, Neri & C. Sas\"`.\n- I paesi nel JSON sono in ordine dal fatturato più alto al più basso.\n- Se un ordine ha un `cliente_id` che non esiste in `clienti.csv`, lo salta e lo segnala a schermo.\n\n**Cose da sapere:**\n- **Il testo cambia a ogni esecuzione.** Nella seconda prova Claude ha scritto un piccolo errore (\"superano da soli… da soli\"). Conviene rileggere il paragrafo prima di inviarlo.\n- **Per l'uso di tutti i giorni serve una chiave API di Anthropic.** Nelle mie prove il programma ha usato il tuo Claude Code, che va bene solo per provare. Ti servono `pip install anthropic` e la variabile `ANTHROPIC_API_KEY`. Ogni esecuzione fa una sola chiamata a Claude e costa meno di un centesimo.\n- Accanto c'è anche `programma.tokyn`, il sorgente da cui ho generato `programma.py`. Ti serve solo se vuoi che sia io a modificare il programma in futuro; per usarlo basta `programma.py`.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "fatturato_per_paese con i 4 paesi e gli importi giusti: True ({'Germania': 27143.37, 'Italia': 21476.62, 'Francia': 20713.08, 'Spagna': 7420.85})",
+   "fatturati arrotondati al centesimo: True",
+   "migliori_clienti giusti e in ordine: True (['Dupont Équipements SARL', 'Müller Werkzeuge GmbH', 'Ferretti Arredamenti Srl'])",
+   "riassunto di testo che nomina la Germania: True (734 caratteri)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.007196,
+   "token_output": 338,
+   "chiamate": 1,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

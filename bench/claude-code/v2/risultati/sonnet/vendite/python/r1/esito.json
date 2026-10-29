@@ -1,0 +1,74 @@
+{
+ "prova": "sonnet/vendite/python/r1",
+ "cartella": "b5d04736a0",
+ "modello": "sonnet",
+ "compito": "vendite",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2999752,
+ "costo_usd_telemetria": 0.299975,
+ "token_output": 4823,
+ "token_input": 16,
+ "token_cache_scritti": 54081,
+ "token_cache_letti": 353892,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 10,
+ "secondi": 49.2,
+ "secondi_api": 44.1,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 7
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 71,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "umeri giusti e la risposta finisce in `risultato.json`. Il testo vero del paragrafo e la chiamata reale non li ho visti.\n- **Senza chiave:** il programma salva i numeri in `risultato.json`, con `\"riassunto\": null`, e termina con un errore leggibile.\n\n**Come usarlo**\n- Imposta `ANTHROPIC_API_KEY` ed esegui `python programma.py` dalla cartella dei CSV. Serve il pacchetto `anthropic`.\n- Il modello è `claude-opus-5-5`, quello che di solito uso per un lavoro come questo.\n- Il prompt chiede un paragrafo di 3-5 frasi con gli importi nel formato italiano. Il paese con il fatturato più alto lo calcola il programma, non Claude.\n- Ho lasciato fuori il meccanismo di riserva su un secondo modello per i rifiuti di Claude. È improbabile che serva per un riassunto di fatturato. Se Claude rifiuta, ricevi lo stesso errore leggibile.\n\n**Scelte che ho fatto io**\n- **Importi:** le somme sono in `Decimal`, per evitare errori di arrotondamento sui centesimi.\n- **Cliente sconosciuto:** se un ordine ha un `cliente_id` che non è in `clienti.csv`, o un importo non valido, il programma si ferma con un messaggio. Preferisco questo a mandare alla direzione totali sbagliati senza avvisare.\n- **Paesi e clienti senza ordini:** un paese senza ordini compare con 0,0. Un cliente senza ordini compare tra i migliori solo se ce ne sono meno di tre con ordini.\n- **Parità di spesa:** a parità di spesa i clienti sono ordinati per nome.\n\nPer provare la chiamata vera basta lanciare il programma con la chiave impostata.",
+ "controllo": {
+  "ok": false,
+  "punti": 3,
+  "massimo": 4,
+  "dettagli": [
+   "fatturato_per_paese con i 4 paesi e gli importi giusti: True ({'Italia': 21476.62, 'Germania': 27143.37, 'Francia': 20713.08, 'Spagna': 7420.85})",
+   "fatturati arrotondati al centesimo: True",
+   "migliori_clienti giusti e in ordine: True (['Dupont Équipements SARL', 'Müller Werkzeuge GmbH', 'Ferretti Arredamenti Srl'])",
+   "riassunto di testo che nomina la Germania: False (0 caratteri)"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

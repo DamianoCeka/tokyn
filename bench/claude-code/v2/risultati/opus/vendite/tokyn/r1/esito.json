@@ -1,0 +1,83 @@
+{
+ "prova": "opus/vendite/tokyn/r1",
+ "cartella": "c35a64ae9e",
+ "modello": "opus",
+ "compito": "vendite",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2531974,
+ "costo_usd_telemetria": 0.253197,
+ "token_output": 4254,
+ "token_input": 18,
+ "token_cache_scritti": 17238,
+ "token_cache_letti": 150707,
+ "prove_del_programma": {
+  "costo_usd": 0.021306,
+  "token_output": 1232,
+  "chiamate": 3,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 11,
+ "secondi": 62.1,
+ "secondi_api": 41.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1,
+  "Edit": 2
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 868,
+ "righe_tokyn": 68,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "*Migliori clienti:** Alpenhof Hotel AG, Caseificio Valtellina Spa, \"Verdi, Neri & C. Sas\"\n- **Riassunto:** il paragrafo comincia così: *\"L'Italia è il paese con il fatturato più alto del trimestre, con 10.819,15 euro, pari al 48,9% del totale di 22.107,05 euro…\"*. Prosegue con le quote dei paesi, i distacchi e i migliori clienti. Fa anche notare che Alpenhof da solo vale circa quattro quinti del fatturato svizzero. Ho controllato i numeri citati e sono giusti.\n\n**Come funziona**\n- Il programma fa tutti i calcoli in Python. A Claude passa solo i numeri, già scritti all'italiana, così il paragrafo non può sbagliare i conti. Claude scrive solo il testo.\n- I nomi con la virgola, come `\"Verdi, Neri & C. Sas\"`, vengono letti correttamente.\n- Se un ordine ha un cliente che non è in `clienti.csv`, il programma lo esclude dai calcoli e stampa un avviso. Le righe vuote vengono saltate. Ho provato anche questi due casi su una copia dei file.\n\n**Cose da sapere**\n- **Chiave API:** nella prova il programma usava il tuo Claude Code, perché qui non c'è una chiave API. Se deve girare da solo o su altri computer, imposta `ANTHROPIC_API_KEY` e il programma la userà in automatico.\n- **Testo diverso ogni volta:** a ogni esecuzione il paragrafo cambia un po'. Calcoli e classifiche invece restano uguali.\n- **File sorgente:** accanto c'è `programma.tokyn`, il sorgente da cui ho generato `programma.py`. È più comodo da modificare se in futuro vuoi cambiare qualcosa, ma a te serve solo `programma.py`.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "fatturato_per_paese con i 4 paesi e gli importi giusti: True ({'Germania': 27143.37, 'Italia': 21476.62, 'Francia': 20713.08, 'Spagna': 7420.85})",
+   "fatturati arrotondati al centesimo: True",
+   "migliori_clienti giusti e in ordine: True (['Dupont Équipements SARL', 'Müller Werkzeuge GmbH', 'Ferretti Arredamenti Srl'])",
+   "riassunto di testo che nomina la Germania: True (867 caratteri)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.00791,
+   "token_output": 403,
+   "chiamate": 1,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

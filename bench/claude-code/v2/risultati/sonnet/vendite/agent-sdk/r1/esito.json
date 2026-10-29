@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/vendite/agent-sdk/r1",
+ "cartella": "fe00662509",
+ "modello": "sonnet",
+ "compito": "vendite",
+ "condizione": "agent-sdk",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2732192,
+ "costo_usd_telemetria": 0.273219,
+ "token_output": 3713,
+ "token_input": 10,
+ "token_cache_scritti": 54409,
+ "token_cache_letti": 184332,
+ "prove_del_programma": {
+  "costo_usd": 0.019299,
+  "token_output": 835,
+  "chiamate": 1,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 43.6,
+ "secondi_api": 30.8,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 77,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": ":** Italia 10.819,15 €, Svizzera 8.592,50 €, Austria 2.695,40 €.\n- **Migliori clienti:** Alpenhof Hotel AG (6.786,30 €), Caseificio Valtellina Spa (5.706,75 €), \"Verdi, Neri & C. Sas\" (3.156,60 €).\n- **Riassunto:** Claude ha scritto in italiano che l'Italia è il paese con il fatturato più alto e ha commentato i numeri. Ha notato anche che i primi tre clienti valgono circa il 70% del totale.\n\nIl nome \"Verdi, Neri & C. Sas\" contiene una virgola ed è tra virgolette nel CSV. Viene letto correttamente.\n\nAlcune scelte che ho fatto:\n- **Precisione:** le somme sono calcolate in modo esatto (con `Decimal`) e arrotondate al centesimo solo alla fine. I numeri passati a Claude sono già nel formato italiano, per esempio 10.819,15, così non devono essere riformattati.\n- **Parità:** a parità di importo i clienti sono ordinati per nome.\n- **Ordini anomali:** un ordine con `cliente_id` che non esiste in `clienti.csv` viene ignorato, con un avviso su stderr. Un importo non numerico ferma il programma con un messaggio.\n- **Se Claude non risponde:** il programma termina con un errore e non scrive `risultato.json`. Preferisco questo a un file senza il riassunto o con un riassunto finto.\n- **Uso di Claude:** la chiamata usa il Claude Agent SDK, senza strumenti e con un solo turno. Serve solo a scrivere il paragrafo.\n\nIl programma lo avvii con `python programma.py` dalla cartella dei CSV.\n\nFile nella cartella `/srv/progetti/fe00662509`:\n- `programma.py`\n- `risultato.json` (generato dalla mia prova)",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "fatturato_per_paese con i 4 paesi e gli importi giusti: True ({'Germania': 27143.37, 'Italia': 21476.62, 'Francia': 20713.08, 'Spagna': 7420.85})",
+   "fatturati arrotondati al centesimo: True",
+   "migliori_clienti giusti e in ordine: True (['Dupont Équipements SARL', 'Müller Werkzeuge GmbH', 'Ferretti Arredamenti Srl'])",
+   "riassunto di testo che nomina la Germania: True (693 caratteri)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.021463,
+   "token_output": 739,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

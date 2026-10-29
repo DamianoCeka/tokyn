@@ -1,0 +1,78 @@
+{
+ "prova": "opus/assistente/python/r1",
+ "cartella": "7518b8cb79",
+ "modello": "opus",
+ "compito": "assistente",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.7267426000000001,
+ "costo_usd_telemetria": 0.726743,
+ "token_output": 7493,
+ "token_input": 16,
+ "token_cache_scritti": 62461,
+ "token_cache_letti": 385653,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 13,
+ "secondi": 82.4,
+ "secondi_api": 66.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 7,
+  "Write": 1,
+  "Edit": 2
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 71,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": ": se il modello rifiuta una richiesta per i suoi filtri di sicurezza, la richiesta passa a un altro modello. Se preferisci toglierlo, basta cancellare le righe `betas` e `fallbacks`.\n- Se c'è un errore di rete o dell'API, il cliente legge \"si è verificato un errore tecnico\" e la conversazione continua. Se manca la chiave API, compare un messaggio chiaro invece di un errore Python.\n\n**Cosa ho provato** (con un server finto locale che imita le API di Anthropic)\n- Le richieste partono con il modello giusto, le opzioni giuste e le FAQ dentro.\n- La cronologia cresce correttamente a ogni messaggio.\n- `esci` ferma il programma: la riga dopo non viene inviata.\n- Il messaggio di errore senza chiave funziona.\n- Un errore dell'API non blocca il programma.\n- Il test ha trovato un difetto, che ho corretto: dopo un rifiuto, il messaggio successivo sarebbe fallito. Ora i messaggi rifiutati e quelli finiti in errore non restano nella cronologia, e la conversazione prosegue normalmente.\n\n**Per la prova vera**, con una chiave API:\n```bash\nexport ANTHROPIC_API_KEY=...\nprintf '%s\\n' \"Ciao, abito in Francia\" \"Quanto mi costa la spedizione?\" \"Posso pagare in contrassegno?\" \"Avete un negozio a Milano?\" \"Dove ho detto che abito?\" \"esci\" | python programma.py\n```\nLe risposte attese sono 12 € (spedizione dall'estero, perché ricorda che abiti in Francia), poi \"no\" per il contrassegno, poi \"non è nelle FAQ\" per il negozio a Milano, e infine \"Francia\". Se mi dai accesso a una chiave, la faccio girare io.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 5,
+  "dettagli": [
+   "spedizione 6,90 euro: False",
+   "codice sconto CIAONESPOLO: False",
+   "reso entro 45 giorni: False",
+   "si ricorda il nome Giulia: False",
+   "termina su esci (codice 1) senza rispondere dopo: False",
+   "output (ultimi 1500 caratteri): "
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

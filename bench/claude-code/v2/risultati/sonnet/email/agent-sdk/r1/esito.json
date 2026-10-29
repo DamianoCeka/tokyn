@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/email/agent-sdk/r1",
+ "cartella": "eae68455c9",
+ "modello": "sonnet",
+ "compito": "email",
+ "condizione": "agent-sdk",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2643927,
+ "costo_usd_telemetria": 0.264393,
+ "token_output": 2936,
+ "token_input": 10,
+ "token_cache_scritti": 54152,
+ "token_cache_letti": 184047,
+ "prove_del_programma": {
+  "costo_usd": 0.057198,
+  "token_output": 1955,
+  "chiamate": 5,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 57.4,
+ "secondi_api": 45.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 77,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "Ho scritto `programma.py` e l'ho provato sulle 5 email che ci sono in `email/`. Gira in circa 8 secondi e crea `risultato.json` con un elemento per email, in ordine di nome file.\n\nIl programma usa `claude-agent-sdk`. Manda ogni email a Claude e chiede una risposta in un formato fisso, così la categoria può essere solo una delle quattro e `urgente` solo vero o falso. Elabora fino a 4 email in parallelo e riprova fino a 3 volte se una chiamata fallisce.\n\nRisultato della prova:\n\n| File | Categoria | Urgente |\n|---|---|---|\n| msg_001 | ordine | no |\n| msg_002 | reclamo | sì (regalo per domani, chiede risposta entro oggi) |\n| msg_003 | informazioni | no |\n| msg_004 | spam | no |\n| msg_005 | reclamo | no (la cliente scrive che non è urgente) |\n\n- **Riassunti:** sono in italiano e di solito di una frase. Alcuni sono lunghi: quello di msg_002 è una frase sola, ma con un punto e virgola.\n- **Email dentro il prompt:** il testo delle email viene trattato solo come materiale da classificare. Se un'email contiene istruzioni, come la richiesta dei dati della carta in msg_004, il programma non le esegue.\n- **Errori:** se un'email continua a fallire dopo i tentativi, il programma si ferma con un errore che indica il file. In quel caso `risultato.json` non viene scritto.\n\nPer usarlo: `python programma.py` dalla cartella che contiene `email/`.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 email in ordine di nome del file: True (['msg_201.txt', 'msg_202.txt', 'msg_203.txt', 'msg_204.txt', 'msg_205.txt', 'msg_206.txt'])",
+   "categorie ammesse e giuste: True (6 su 6: ['ordine', 'reclamo', 'informazioni', 'spam', 'ordine', 'reclamo'])",
+   "urgente booleano e giusto: True (6 su 6: [False, True, False, False, True, False])",
+   "riassunti brevi e sull'argomento: True (brevi: True, sull'argomento: 6 su 6)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.064963,
+   "token_output": 1985,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

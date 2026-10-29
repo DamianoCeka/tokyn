@@ -1,0 +1,84 @@
+{
+ "prova": "opus/fattura/tokyn/r1",
+ "cartella": "e28ffc6aa8",
+ "modello": "opus",
+ "compito": "fattura",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.21002639999999997,
+ "costo_usd_telemetria": 0.210026,
+ "token_output": 3158,
+ "token_input": 16,
+ "token_cache_scritti": 15155,
+ "token_cache_letti": 127812,
+ "prove_del_programma": {
+  "costo_usd": 0.001086,
+  "token_output": 1035,
+  "chiamate": 3,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 9,
+ "secondi": 42.6,
+ "secondi_api": 31.5,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 843,
+ "righe_tokyn": 45,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "nitari giusti\n- **Totale:** 226,40 € dichiarato e 226,40 € ricalcolato, quindi `\"totale_corretto\": true`\n\nHo fatto anche una seconda prova su una copia della fattura con il totale cambiato in 226,50 €. Il programma l'ha segnalato: `\"totale_corretto\": false`, con totale calcolato 226,4.\n\n**Come funziona:**\n- **Lettura:** Claude legge il testo e restituisce i dati già strutturati. Uso il modello Haiku, adatto e poco costoso per questo tipo di estrazione.\n- **Calcolo:** il programma ricalcola il totale da solo, senza Claude. Usa l'aritmetica decimale e arrotonda al centesimo, così non ci sono errori dei numeri in virgola mobile.\n- **Quantità:** se sono intere vengono scritte come interi (`15`); se sono frazionarie, ad esempio 2,5 kg, restano decimali.\n\n**Cose da sapere:**\n- **Chiave API:** l'ho provato senza chiave API, quindi le risposte sono arrivate tramite il tuo Claude Code. Va bene per provarlo. Se il programma deve girare da solo o per altre persone, serve impostare `ANTHROPIC_API_KEY`, e con la chiave gira senza modifiche. Probabilmente serve anche `pip install anthropic`, ma con la chiave non l'ho provato.\n- **Formato della data:** si chiede a Claude di restituirla come AAAA-MM-GG, ma il programma non controlla il formato.\n- **File sorgente:** accanto a `programma.py` c'è `programma.tokyn`, il sorgente da cui `programma.py` è stato generato con la skill tokyn. Per modificarlo conviene cambiare quel file e rigenerare `programma.py`. Se ti basta il Python, puoi ignorarlo.",
+ "controllo": {
+  "ok": true,
+  "punti": 6,
+  "massimo": 6,
+  "dettagli": [
+   "fornitore: True ('CARTOLERIA MARCHETTI & FIGLI S.n.c.')",
+   "data 2026-02-18: True ('2026-02-18')",
+   "5 righe in ordine con quantità e prezzi giusti: True (5 giuste su 5)",
+   "totale_dichiarato 440.60: True (440.6)",
+   "totale_calcolato 439.60: True (439.6)",
+   "totale_corretto false: True (False)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.000393,
+   "token_output": 387,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

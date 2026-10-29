@@ -1,0 +1,42 @@
+type Scheda:
+    titolo: str "titolo breve dell'articolo, in italiano, al massimo 10 parole"
+    punti: list[str] "esattamente cinque punti chiave, ognuno una sola frase in italiano"
+    citati: list[str] "nomi delle persone e delle organizzazioni citate nell'articolo, ognuno una volta sola, nella forma completa"
+
+agent Redattore:
+    instructions: """
+        Prepari schede di articoli di giornale per i colleghi di una redazione.
+        Dato il testo di un articolo, scrivi un titolo breve, esattamente cinque punti chiave
+        (una frase ciascuno, in ordine di importanza) e l'elenco delle persone e delle organizzazioni
+        citate: nomi propri di persone, enti, aziende, istituzioni, associazioni.
+        Non includere luoghi generici ne' ruoli senza nome. Ogni nome compare una volta sola.
+    """
+    output: Scheda
+    effort: "low"
+
+def unici(nomi: list) -> list:
+    visti = []
+    risultato = []
+    for n in nomi:
+        nome = n.strip()
+        if nome != "" and nome.lower() not in visti:
+            visti.append(nome.lower())
+            risultato.append(nome)
+    return risultato
+
+main:
+    testo = read_file("articolo.txt")
+    if testo.strip() == "":
+        print("articolo.txt è vuoto")
+        return
+    scheda = Redattore.ask(testo)
+    for tentativo in range(2):
+        if len(scheda.punti) == 5:
+            break
+        scheda = Redattore.ask(f"Hai scritto {len(scheda.punti)} punti invece di cinque. Rifai la scheda con esattamente cinque punti.\n\n{testo}")
+    if len(scheda.punti) != 5:
+        print(f"Errore: la scheda ha {len(scheda.punti)} punti invece di cinque")
+        return
+    scheda.citati = unici(scheda.citati)
+    write_file("risultato.json", json_dump(scheda))
+    print(f"Scheda scritta in risultato.json: {scheda.titolo}")

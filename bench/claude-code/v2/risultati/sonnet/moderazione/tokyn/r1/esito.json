@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/moderazione/tokyn/r1",
+ "cartella": "c013441dd7",
+ "modello": "sonnet",
+ "compito": "moderazione",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.08271610000000001,
+ "costo_usd_telemetria": 0.082716,
+ "token_output": 2177,
+ "token_input": 10,
+ "token_cache_scritti": 13501,
+ "token_cache_letti": 69221,
+ "prove_del_programma": {
+  "costo_usd": 0.001626,
+  "token_output": 1238,
+  "chiamate": 6,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 6,
+ "secondi": 50.1,
+ "secondi_api": 26.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 3
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 833,
+ "righe_tokyn": 31,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "gole):\n- **17, 21:** `pubblica`.\n- **18:** `rivedi`. Il consiglio sul rame è utile ma il tono è aggressivo, e la riscrittura lo mantiene in forma educata.\n- **19:** `rifiuta` perché è spam.\n- **20:** `rifiuta` perché contiene un'email.\n- **22:** `rifiuta` perché contiene un insulto a un altro utente.\n\n**Come funziona**\n- Un solo file, da avviare con `python programma.py` nella cartella di `commenti.json`.\n- Fa una richiesta per commento e tiene l'ordine del file. Per ogni commento scrive `id`, `decisione` e `motivo`. La `riscrittura` c'è solo per i commenti `rivedi`.\n- Il testo dei commenti viene trattato come materiale da valutare. Se un commento contiene istruzioni, il programma non le esegue.\n- Usa il modello veloce `claude-haiku`, che costa poco per questo tipo di classificazione.\n\n**Chiave API**\n- La prova l'ho fatta senza `ANTHROPIC_API_KEY`: il programma ha usato il tuo Claude Code e ci ha messo circa 22 secondi.\n- Per usarlo in produzione o farlo girare da solo ti serve una chiave API di Anthropic. Con la chiave `ANTHROPIC_API_KEY` impostata, lo stesso file la usa da solo.\n\n**Altri file**\n- Ho scritto il programma in Tokyn (`programma.tokyn`) e `programma.py` è generato da lì. Il file Python funziona anche senza Tokyn.\n- Se vuoi cambiare le regole, modifica `programma.tokyn` e rigenera il Python con `python /srv/plugin-tokyn/skills/tokyn/tokyn_cli.py build programma.tokyn --standalone -o programma.py`.\n- `risultato.json` nella cartella è quello della mia ultima prova.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 commenti nell'ordine del file con id e motivo: True ([201, 202, 203, 204, 205, 206])",
+   "decisioni ammesse e giuste: True (6 su 6: ['pubblica', 'rifiuta', 'rivedi', 'pubblica', 'rifiuta', 'rivedi'])",
+   "riscrittura per ogni commento da rivedere: True (2 da rivedere)",
+   "commento 203: riscrittura senza offese True, con il contenuto True ('La domanda sulla potatura torna spesso, quindi può essere utile usare la funzione di ricerca del forum. In breve: le ortensie si potano a fine inverno, tagliando sopra la prima coppia di gemme gonfie, e non in autunno.')",
+   "commento 206: riscrittura senza offese True, con il contenuto True (\"Mi permetto di segnalare che il consiglio sopra potrebbe non essere corretto per le piante grasse: non vanno annaffiate tutti i giorni. D'estate, di solito, basta farlo ogni 10-15 giorni, mentre d'inverno si annaffia quasi mai. In generale, conviene aspettare sempre che il terriccio sia completamente asciutto prima di intervenire, perché l'eccesso d'acqua è la causa più comune della morte di queste piante.\")"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.001672,
+   "token_output": 1599,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

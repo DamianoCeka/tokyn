@@ -1,0 +1,55 @@
+import sys
+import csv
+import re
+from datetime import date
+
+GIORNI_FINESTRA = 30
+MESI = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio",
+        "agosto", "settembre", "ottobre", "novembre", "dicembre"]
+
+type Email:
+    oggetto: str "oggetto breve dell'email, in italiano, che cita il servizio e la data di scadenza"
+    testo: str "corpo completo dell'email, in italiano, che inizia con 'Gentile <cliente>,'"
+
+agent Promemoria:
+    instructions: """
+        Scrivi email di promemoria per contratti in scadenza, in italiano, con tono cordiale e professionale.
+        Rivolgiti al cliente per nome, iniziando il testo con "Gentile <cliente>,".
+        Cita il servizio in scadenza e la data di scadenza esattamente come ti vengono date.
+        Invita il cliente a contattarci per rinnovare il contratto. Chiudi con "Cordiali saluti".
+        Non inventare prezzi, condizioni, nomi di persone o recapiti.
+    """
+    output: Email
+
+def per_scadenza(c: dict) -> str:
+    return c["scadenza"]
+
+def data_estesa(d) -> str:
+    giorno = str(d.day)
+    if d.day == 1:
+        giorno = "1º"
+    return f"{giorno} {MESI[d.month - 1]} {d.year}"
+
+main:
+    if len(sys.argv) < 2 or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", sys.argv[1]):
+        print("Uso: python programma.py AAAA-MM-GG")
+        sys.exit(1)
+    riferimento = date.fromisoformat(sys.argv[1])
+    testo_csv = read_file("contratti.csv").lstrip("﻿")
+    trovati = []
+    for riga in csv.DictReader(testo_csv.splitlines()):
+        scadenza = (riga["scadenza"] or "").strip()
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", scadenza):
+            continue
+        giorni = (date.fromisoformat(scadenza) - riferimento).days
+        if 0 <= giorni <= GIORNI_FINESTRA:
+            trovati.append({"cliente": riga["cliente"].strip(), "servizio": riga["servizio"].strip(),
+                            "scadenza": scadenza, "giorni_mancanti": giorni})
+    trovati = sorted(trovati, key=per_scadenza)
+    for c in trovati:
+        quando = data_estesa(date.fromisoformat(c["scadenza"]))
+        e = Promemoria.ask(f"Cliente: {c['cliente']}\nServizio in scadenza: {c['servizio']}\nData di scadenza: {quando}\nGiorni mancanti: {c['giorni_mancanti']}")
+        c["oggetto"] = e.oggetto
+        c["testo"] = e.testo
+    write_file("risultato.json", json_dump({"in_scadenza": trovati}))
+    print(f"{len(trovati)} contratti in scadenza scritti in risultato.json")

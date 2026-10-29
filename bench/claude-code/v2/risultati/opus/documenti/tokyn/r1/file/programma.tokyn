@@ -1,0 +1,53 @@
+import os
+
+CARTELLA = "docs"
+
+def elenco_documenti() -> list:
+    nomi = []
+    for nome in sorted(os.listdir(CARTELLA)):
+        if nome.endswith(".txt"):
+            nomi.append(nome)
+    return nomi
+
+def testo_documenti(nomi: list) -> str:
+    parti = []
+    for nome in nomi:
+        parti.append(f"=== FILE: {nome} ===\n{read_file(os.path.join(CARTELLA, nome)).strip()}\n=== FINE {nome} ===")
+    return "\n\n".join(parti)
+
+NOMI = elenco_documenti()
+DOCUMENTI = testo_documenti(NOMI)
+
+type Risposta:
+    risposta: str "risposta breve e precisa, in italiano, presa solo dai documenti"
+    fonte: str "nome esatto del file da cui viene la risposta (es. ferie.txt), oppure 'nessuna' se i documenti non rispondono"
+
+agent Assistente:
+    instructions: f"""
+        Rispondi alle domande dei colleghi usando solo i documenti interni dell'azienda riportati qui sotto.
+        Dai una risposta breve e precisa e indica in "fonte" il nome esatto del file da cui viene.
+        Se i documenti non contengono la risposta, scrivi "Non trovato nei documenti" e fonte "nessuna".
+        Non inventare nulla.
+
+        {DOCUMENTI}
+    """
+    output: Risposta
+    effort: "low"
+
+main:
+    righe = read_file("domande.txt").splitlines()
+    domande = []
+    for r in righe:
+        if r.strip() != "":
+            domande.append(r.strip())
+    risultato = []
+    for i, d in enumerate(domande):
+        print(f"[{i + 1}/{len(domande)}] {d}")
+        r = Assistente.ask(d)
+        fonte = r.fonte.strip()
+        if fonte not in NOMI:
+            fonte = "nessuna"
+        risultato.append({"domanda": d, "risposta": r.risposta, "fonte": fonte})
+        print(f"    → {r.risposta} ({fonte})")
+    write_file("risultato.json", json_dump(risultato))
+    print(f"Scritto risultato.json con {len(risultato)} risposte.")

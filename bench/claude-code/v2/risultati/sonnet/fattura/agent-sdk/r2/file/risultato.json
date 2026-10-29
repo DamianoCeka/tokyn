@@ -1,0 +1,29 @@
+{
+  "fornitore": "ORTOFRUTTA BASSI di Bassi Marco",
+  "data": "2026-03-05",
+  "righe": [
+    {
+      "descrizione": "Pomodori San Marzano (kg)",
+      "quantita": 15,
+      "prezzo_unitario": 3.4
+    },
+    {
+      "descrizione": "Mozzarella fior di latte (kg)",
+      "quantita": 8,
+      "prezzo_unitario": 9.8
+    },
+    {
+      "descrizione": "Basilico fresco (mazzo)",
+      "quantita": 10,
+      "prezzo_unitario": 1.2
+    },
+    {
+      "descrizione": "Olio extravergine di oliva, latta 5 l",
+      "quantita": 2,
+      "prezzo_unitario": 42.5
+    }
+  ],
+  "totale_dichiarato": 226.4,
+  "totale_calcolato": 226.4,
+  "totale_corretto": true
+}

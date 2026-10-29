@@ -1,0 +1,81 @@
+{
+ "prova": "opus/spese/agent-sdk/r2",
+ "cartella": "0935f83867",
+ "modello": "opus",
+ "compito": "spese",
+ "condizione": "agent-sdk",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.6167232,
+ "costo_usd_telemetria": 0.616723,
+ "token_output": 4910,
+ "token_input": 14,
+ "token_cache_scritti": 57095,
+ "token_cache_letti": 308536,
+ "prove_del_programma": {
+  "costo_usd": 0.01977,
+  "token_output": 279,
+  "chiamate": 1,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 9,
+ "secondi": 54.9,
+ "secondi_api": 44.5,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 128,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "refour | -70,02 |\n| trasporti | Trenord, Telepass | -23,00 |\n| casa | A2A gas, Leroy Merlin | -120,20 |\n| svago | pizzeria, Netflix, Feltrinelli | -74,49 |\n| altro | stipendio, commissione bonifico | **+1848,50** |\n\n**Una cosa da decidere:** lo stipendio finisce in \"altro\", perché nessuna delle cinque categorie va bene per le entrate. Visto che hai chiesto di sommare tutti gli importi, il totale di \"altro\" diventa positivo e non mostra più le uscite varie. Se preferisci, posso far sommare nei totali solo le uscite, oppure aggiungere una categoria `entrate`.\n\n**Come funziona:**\n- Il programma manda a Claude tutti i movimenti in una sola richiesta, con il Claude Agent SDK e il modello `claude-opus-5-5`. Claude deve rispondere in un formato fisso (`output_format`), così può usare solo le cinque categorie.\n- Il programma controlla che ogni movimento abbia ricevuto una categoria valida. Se no, riprova fino a 3 volte e poi si ferma con un messaggio di errore: non scrive mai un risultato incompleto.\n- I totali li calcola Python, non Claude, con aritmetica decimale esatta, e li arrotonda al centesimo. Nei totali ci sono sempre tutte e cinque le categorie, anche quelle con zero movimenti.\n- La lettura del CSV regge anche la riga vuota, il segno BOM che alcuni file salvati da Excel hanno all'inizio e il separatore delle migliaia (`1.850,00`). Ho provato questi casi su un file di prova, senza chiamare Claude.\n\nSi avvia con `python programma.py` dalla cartella in cui c'è `movimenti.csv`.",
+ "controllo": {
+  "ok": true,
+  "punti": 3,
+  "massimo": 3,
+  "dettagli": [
+   "8 movimenti nell'ordine del file con data, descrizione e importo giusti: True",
+   "categorie ammesse e giuste: True (8 su 8: ['spesa alimentare', 'trasporti', 'casa', 'svago', 'spesa alimentare', 'trasporti', 'casa', 'altro'])",
+   "totali arrotondati al centesimo e coerenti con le categorie assegnate: True (uguali ai totali attesi: True; {'spesa alimentare': -85.5, 'trasporti': -51.8, 'casa': -728.45, 'svago': -19.0, 'altro': -12.8})"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.013987,
+   "token_output": 228,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

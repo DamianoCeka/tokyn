@@ -1,0 +1,56 @@
+type Risposta:
+    risposta: str "risposta breve in italiano"
+
+type Risultato:
+    domanda: str
+    risposta: str
+
+def prodotti() -> list:
+    return json_parse(read_file("inventario.json"))
+
+def elenco_prodotti() -> list:
+    """Elenco dei prodotti con codice, nome, quantita, prezzo_unitario, scorta_minima, valore (euro, esatto), mancanti (pezzi per arrivare alla scorta minima) e sotto_scorta (bool)."""
+    out = []
+    for p in prodotti():
+        mancanti = max(0, p["scorta_minima"] - p["quantita"])
+        out.append({
+            "codice": p["codice"],
+            "nome": p["nome"],
+            "quantita": p["quantita"],
+            "prezzo_unitario": p["prezzo_unitario"],
+            "scorta_minima": p["scorta_minima"],
+            "valore": round(p["quantita"] * p["prezzo_unitario"], 2),
+            "mancanti": mancanti,
+            "sotto_scorta": p["quantita"] < p["scorta_minima"],
+        })
+    return out
+
+def valore_totale() -> float:
+    """Valore totale esatto del magazzino in euro (somma di quantita per prezzo unitario)."""
+    tot = 0
+    for p in prodotti():
+        tot += p["quantita"] * p["prezzo_unitario"]
+    return round(tot, 2)
+
+agent Magazziniere:
+    effort: "low"
+    instructions: """
+        Rispondi in italiano, in modo breve (una o due frasi), a domande sull'inventario del magazzino.
+        Per ogni numero usa SEMPRE gli strumenti elenco_prodotti e valore_totale: non fare calcoli a mente
+        e non arrotondare. Gli importi in euro con due decimali (es. 1.234,50 €). Se la domanda non si
+        riferisce all'inventario o il prodotto non esiste, dillo.
+    """
+    tools: [elenco_prodotti, valore_totale]
+    output: Risposta
+
+main:
+    domande = []
+    for riga in read_file("domande.txt").split("\n"):
+        if riga.strip() != "":
+            domande.append(riga.strip())
+    risultati = []
+    for d in domande:
+        r = Magazziniere.ask(d)
+        risultati.append(Risultato(domanda=d, risposta=r.risposta))
+    write_file("risultato.json", json_dump(risultati))
+    print(f"{len(risultati)} risposte scritte in risultato.json")

@@ -1,0 +1,33 @@
+[
+  {
+    "id": 17,
+    "decisione": "pubblica",
+    "motivo": "Domanda legittima e pertinente di giardinaggio, senza spam, insulti, dati personali o tono aggressivo."
+  },
+  {
+    "id": 18,
+    "decisione": "rivedi",
+    "motivo": "Il contenuto è utile ma il tono è polemico e sgarbato, quindi va riscritto senza le frasi aggressive.",
+    "riscrittura": "Vorrei ribadire un punto importante: il rame contro la peronospora va somministrato con tempo asciutto. Se piove entro un'ora dal trattamento, il prodotto viene dilavato e l'intervento risulta inutile. Grazie a chi legge con attenzione!"
+  },
+  {
+    "id": 19,
+    "decisione": "rifiuta",
+    "motivo": "Il commento è spam pubblicitario con offerte commerciali e invito a contattare su WhatsApp."
+  },
+  {
+    "id": 20,
+    "decisione": "rifiuta",
+    "motivo": "Il commento contiene un indirizzo email personale, che il regolamento vieta di pubblicare."
+  },
+  {
+    "id": 21,
+    "decisione": "pubblica",
+    "motivo": "Commento positivo e cortese, senza spam, insulti, dati personali o toni aggressivi."
+  },
+  {
+    "id": 22,
+    "decisione": "rifiuta",
+    "motivo": "Il commento contiene un insulto rivolto direttamente a una persona (\"caso disperato\") e un attacco personale, quindi viola la regola contro gli insulti."
+  }
+]

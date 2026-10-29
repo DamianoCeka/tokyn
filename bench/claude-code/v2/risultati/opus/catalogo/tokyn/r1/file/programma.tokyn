@@ -1,0 +1,21 @@
+agent Traduttore:
+    instructions: """
+        Translate the Italian product description you receive into natural English for an online shop.
+        Reply with the translation only: one line, no quotes, no notes, no semicolons.
+        Keep numbers, measures and units as they are.
+    """
+    effort: "low"
+
+main:
+    righe = read_file("catalogo.csv").splitlines()
+    uscita = [righe[0]]
+    for riga in righe[1:]:
+        if riga.strip() == "":
+            continue
+        campi = riga.split(";")
+        descrizione = ";".join(campi[2:-1])
+        inglese = Traduttore.ask(descrizione).strip().replace("\n", " ").replace(";", ",")
+        uscita.append(f"{campi[0]};{campi[1]};{inglese};{campi[-1]}")
+        print(f"{campi[0]}: {inglese}")
+    write_file("catalogo_en.csv", "\n".join(uscita) + "\n")
+    print(f"Scritto catalogo_en.csv con {len(uscita) - 1} prodotti")

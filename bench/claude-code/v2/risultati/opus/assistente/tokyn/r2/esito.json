@@ -1,0 +1,84 @@
+{
+ "prova": "opus/assistente/tokyn/r2",
+ "cartella": "56882798e5",
+ "modello": "opus",
+ "compito": "assistente",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.24639879999999997,
+ "costo_usd_telemetria": 0.246399,
+ "token_output": 4016,
+ "token_input": 20,
+ "token_cache_scritti": 16578,
+ "token_cache_letti": 166874,
+ "prove_del_programma": {
+  "costo_usd": 0.048125,
+  "token_output": 1114,
+  "chiamate": 11,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 12,
+ "secondi": 103.5,
+ "secondi_api": 39.8,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1,
+  "Edit": 2
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 827,
+ "righe_tokyn": 26,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn"
+ ],
+ "risposta_finale": "ecedenti, e ha usato la città per scegliere la tariffa estera.\n- **Chiusura:** `esci` funziona anche con maiuscole e spazi (`  ESCI  `), e le righe dopo non vengono lette. Se l'input finisce senza `esci` (Ctrl+D) il programma si chiude senza errori. Le righe vuote vengono ignorate.\n- **Senza `faq.txt`:** il programma si ferma subito con l'errore `il file \"faq.txt\" non esiste`.\n\n**Un errore da sapere:** in una risposta il totale era giusto (30 + 2,50 + 4,90 = 37,40 €), ma poi ha detto che mancavano \"circa 21,50 €\" alla spedizione gratuita, mentre sono 19 €. Le FAQ le rispetta, ma nei calcoli fatti da lui può sbagliare.\n\n**Da sapere per l'uso:**\n- **Serve una chiave API per l'uso vero.** Ho fatto le prove senza chiave, con Claude Code: va bene per provare, ma se il programma lo usano i clienti servono `pip install anthropic` e la variabile `ANTHROPIC_API_KEY`. Senza chiave, all'avvio compare anche un avviso su questo; con la chiave non compare.\n- **Le FAQ si leggono all'avvio** e vengono date tutte a Claude, che con un file così piccolo è la cosa più affidabile. Se modifichi `faq.txt`, riavvia il programma.\n- **Come è stato scritto:** ho scritto il programma in Tokyn (`programma.tokyn`, circa 30 righe, nella stessa cartella) e il compilatore ha generato `programma.py`. Il file Python funziona da solo, ma per modificarlo conviene cambiare `programma.tokyn` e ricompilare con:\n  `python /srv/plugin-tokyn/skills/tokyn/tokyn_cli.py build programma.tokyn --standalone -o programma.py`",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "spedizione 6,90 euro: True",
+   "codice sconto CIAONESPOLO: True",
+   "reso entro 45 giorni: True",
+   "si ricorda il nome Giulia: True",
+   "termina su esci (codice 0) senza rispondere dopo: True",
+   "output (ultimi 1500 caratteri): Tu: Assistente: Ciao Giulia, piacere di conoscerti! Come posso aiutarti oggi? Se hai domande su spedizioni, resi, pagamenti o altro, sono qui per te.\nTu: Assistente: In Italia la spedizione standard costa 6,90 €, ed è gratuita per ordini da 79 € in su. 😊\n\nGli ordini partono entro 2 giorni lavorativi e arrivano in 3-5 giorni lavorativi.\nTu: Assistente: Sì, Giulia! 🎉 Con il codice **CIAONESPOLO** hai il 10% di sconto sul primo ordine.\n\nPosso aiutarti con altro?\nTu: Assistente: Puoi restituire un articolo entro **45 giorni dalla consegna**, Giulia. 😊\n\nIl reso costa 7 €, tranne per i prodotti difettosi.\n\nPosso aiutarti con altro?\nTu: Assistente: Ti chiami Giulia! 😊 Me l'hai detto all'inizio della conversazione.\n\nPosso aiutarti con qualcos'altro?\nTu: Arrivederci!\n"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.021605,
+   "token_output": 345,
+   "chiamate": 5,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

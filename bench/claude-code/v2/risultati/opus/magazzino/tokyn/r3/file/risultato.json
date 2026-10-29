@@ -1,0 +1,22 @@
+[
+  {
+    "domanda": "Quante risme di carta A4 abbiamo?",
+    "risposta": "Abbiamo 120 risme di carta A4 (CAN-01), sopra la scorta minima di 50."
+  },
+  {
+    "domanda": "Qual è il valore totale del magazzino?",
+    "risposta": "Il valore totale del magazzino è di 1.540,20 €."
+  },
+  {
+    "domanda": "Quali prodotti sono sotto la scorta minima?",
+    "risposta": "Sono sotto la scorta minima tre prodotti: i toner per stampante laser (CAN-02, ne manca 1), gli evidenziatori gialli (CAN-04, ne mancano 12) e le penne a sfera blu (CAN-08, ne mancano 50)."
+  },
+  {
+    "domanda": "Quanto vale la scorta di toner che abbiamo?",
+    "risposta": "La scorta di toner per stampante laser (CAN-02) vale 235,50 €: sono 3 pezzi a 78,50 € l'uno. Siamo sotto la scorta minima di 4, quindi manca 1 pezzo."
+  },
+  {
+    "domanda": "Quanti evidenziatori mancano per arrivare alla scorta minima?",
+    "risposta": "Mancano 12 evidenziatori gialli (CAN-04) per raggiungere la scorta minima: ne abbiamo 18 a fronte di una scorta minima di 30."
+  }
+]

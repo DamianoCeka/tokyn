@@ -1,0 +1,84 @@
+{
+ "prova": "opus/fattura/agent-sdk/r3",
+ "cartella": "77e10fca55",
+ "modello": "opus",
+ "compito": "fattura",
+ "condizione": "agent-sdk",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.6459196,
+ "costo_usd_telemetria": 0.64592,
+ "token_output": 5128,
+ "token_input": 16,
+ "token_cache_scritti": 58568,
+ "token_cache_letti": 373758,
+ "prove_del_programma": {
+  "costo_usd": 0.060845,
+  "token_output": 1952,
+  "chiamate": 2,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 10,
+ "secondi": 70.2,
+ "secondi_api": 45.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 117,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": " Data: 2026-03-05\n- Righe: tutte e 4, nell'ordine della fattura\n- Totale ricalcolato: 51,00 + 78,40 + 12,00 + 85,00 = 226,40. È uguale a quello in fattura, quindi `\"totale_corretto\": true`.\n- Il file `risultato.json` ha esattamente il formato del tuo esempio. Ci sono voluti circa 9 secondi.\n\n**Prova con un errore:** ho fatto una copia della fattura in un'altra cartella e ho cambiato il totale in 226,41. Il programma se ne è accorto: `\"totale_corretto\": false` e il messaggio \"differenza € 0.01\".\n\n**Come funziona:**\n- **Cosa fa Claude:** legge la fattura e tira fuori i dati: fornitore, data, righe e totale dichiarato. Gli ho chiesto di copiarli così come sono scritti, senza correggerli. La risposta deve avere una forma fissa (fornitore, data, righe, totale), così il programma la legge senza ambiguità.\n- **Cosa fa il programma:** i conti non li fa Claude. Il programma moltiplica quantità per prezzo unitario per ogni riga e somma tutto. Usa l'aritmetica decimale esatta, così non ci sono errori di arrotondamento sui centesimi. Poi arrotonda al centesimo e confronta con il totale scritto in fattura.\n- **Sicurezza:** Claude non ha accesso a file o comandi. Riceve solo il testo della fattura.\n- **Controllo della data:** se Claude restituisce una data che non esiste, il programma si ferma con un errore invece di scrivere un risultato sbagliato.\n\nIl modello usato è Claude Opus 5.5. Per lanciare il programma, vai nella cartella che contiene `fattura.txt` ed esegui `python programma.py`.",
+ "controllo": {
+  "ok": true,
+  "punti": 6,
+  "massimo": 6,
+  "dettagli": [
+   "fornitore: True ('CARTOLERIA MARCHETTI & FIGLI S.n.c.')",
+   "data 2026-02-18: True ('2026-02-18')",
+   "5 righe in ordine con quantità e prezzi giusti: True (5 giuste su 5)",
+   "totale_dichiarato 440.60: True (440.6)",
+   "totale_calcolato 439.60: True (439.6)",
+   "totale_corretto false: True (False)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.029252,
+   "token_output": 866,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

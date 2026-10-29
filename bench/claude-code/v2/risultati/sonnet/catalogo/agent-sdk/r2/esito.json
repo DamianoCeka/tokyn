@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/catalogo/agent-sdk/r2",
+ "cartella": "38e40db919",
+ "modello": "sonnet",
+ "compito": "catalogo",
+ "condizione": "agent-sdk",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2773747,
+ "costo_usd_telemetria": 0.277375,
+ "token_output": 3900,
+ "token_input": 12,
+ "token_cache_scritti": 53472,
+ "token_cache_letti": 244627,
+ "prove_del_programma": {
+  "costo_usd": 0.03655,
+  "token_output": 275,
+  "chiamate": 6,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 9,
+ "secondi": 77.0,
+ "secondi_api": 66.7,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 100,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "catalogo_en.csv",
+  "programma.py"
+ ],
+ "risposta_finale": "Il programma è pronto e funziona: l'ho provato sul tuo `catalogo.csv` e ha prodotto `catalogo_en.csv` con tutti e 6 i prodotti. I controlli sul risultato sono andati a buon fine:\n- L'intestazione e il numero di righe sono identici all'originale, nello stesso ordine.\n- Codice, nome e prezzo sono uguali carattere per carattere.\n- Cambia solo la descrizione. Ad esempio TZ-014 diventa `Handmade ceramic mug, dishwasher safe`, come nel tuo esempio.\n\nUn'esecuzione su 6 prodotti è durata circa 7 secondi.\n\nPer avviarlo basta `python programma.py` dalla cartella con `catalogo.csv`. Il programma è `programma.py`, in un solo file e con il solo pacchetto `claude-agent-sdk`. Traduce 4 descrizioni alla volta e, se una chiamata fallisce, riprova fino a 3 volte. Se una traduzione continua a fallire, non scrive nessun file, così non ti ritrovi un `catalogo_en.csv` incompleto.\n\nNon ho impostato un modello: usa quello predefinito dell'installazione di Claude Code. Se ne vuoi uno preciso, aggiungi `model=\"...\"` in `ClaudeAgentOptions`, dentro `translate()`.\n\nIl file di output usa UTF-8 senza BOM e `\\n` a fine riga, come il tuo originale. I campi che contengono un `;` vengono messi tra virgolette, così il CSV resta valido.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "intestazione codice;nome;descrizione;prezzo: True (['codice', 'nome', 'descrizione', 'prezzo'])",
+   "5 prodotti con 4 colonne e codici nell'ordine del file: True (5 righe)",
+   "codice, nome e prezzo identici: True",
+   "descrizioni tradotte in inglese: 5 su 5"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.030097,
+   "token_output": 212,
+   "chiamate": 5,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

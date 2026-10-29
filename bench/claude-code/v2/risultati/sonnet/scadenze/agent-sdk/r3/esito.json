@@ -1,0 +1,83 @@
+{
+ "prova": "sonnet/scadenze/agent-sdk/r3",
+ "cartella": "9fe1d362a0",
+ "modello": "sonnet",
+ "compito": "scadenze",
+ "condizione": "agent-sdk",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.28898209999999996,
+ "costo_usd_telemetria": 0.288982,
+ "token_output": 4616,
+ "token_input": 10,
+ "token_cache_scritti": 55977,
+ "token_cache_letti": 188941,
+ "prove_del_programma": {
+  "costo_usd": 0.172724,
+  "token_output": 7918,
+  "chiamate": 14,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 75.4,
+ "secondi_api": 40.3,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 107,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "è incluso.\n\nLe email sono in italiano e iniziano con \"Gentile <cliente>,\". Citano il servizio e la data di scadenza, e l'oggetto riporta giorno e mese. Il Bar Centrale (scaduto il 20/10) e l'Agriturismo (2027) sono rimasti fuori, come previsto.\n\nHo provato anche i casi limite:\n- **Scadenza nel giorno di riferimento:** con `2026-10-20` il Bar Centrale compare con `giorni_mancanti` a 0.\n- **Trentunesimo giorno:** con `2026-10-31` il Backup in cloud (1 dicembre) è escluso.\n- **Nessun contratto:** con `2030-01-01` il file contiene `{\"in_scadenza\": []}`.\n- **Data errata o assente:** il programma si ferma con un messaggio di errore.\n\nScelte che ho fatto io e che puoi cambiare:\n- **Modello:** ho usato `claude-opus-5-5`. Si cambia con la costante `MODELLO` in cima al file, se vuoi un modello più economico.\n- **Righe con scadenza non valida:** vengono saltate con un avviso su stderr, senza bloccare il resto.\n- **Contratti dello stesso cliente:** ogni contratto riceve la sua email, quindi Ottica Ferri ne ha due.\n- **Chiamate a Claude:** partono fino a 4 alla volta. Le 4 email sono state generate in circa 7 secondi.\n- **Email non inviate:** il programma scrive solo il testo, quindi la colonna `email` del CSV per ora non viene usata.\n- **Firma:** le email chiudono con \"Cordiali saluti\" senza nome. Nel prompt ho vietato di inventare nomi e recapiti, quindi se vuoi una firma va aggiunta nel prompt o dopo.\n\n`risultato.json` nella cartella è l'ultimo output generato, quello per `2026-11-01`.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "esattamente i 4 contratti in scadenza: True (['Panificio Russo', 'Farmacia Conti', 'Hotel Bellavista', 'Ferramenta Gallo Snc'])",
+   "scadenze come nel file e in ordine di scadenza: True (['2026-12-15', '2026-12-28', '2027-01-06', '2027-01-14'])",
+   "giorni_mancanti giusti: True ([0, 13, 22, 30])",
+   "email con oggetto e testo che nominano cliente e servizio: True",
+   "email scritte una per una (testi diversi anche senza nomi, servizi e date): True"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.051869,
+   "token_output": 2009,
+   "chiamate": 4,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/articolo/agent-sdk/r2",
+ "cartella": "a941c91a49",
+ "modello": "sonnet",
+ "compito": "articolo",
+ "condizione": "agent-sdk",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.29819819999999997,
+ "costo_usd_telemetria": 0.298198,
+ "token_output": 4262,
+ "token_input": 12,
+ "token_cache_scritti": 57495,
+ "token_cache_letti": 255742,
+ "prove_del_programma": {
+  "costo_usd": 0.075419,
+  "token_output": 1717,
+  "chiamate": 2,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 10,
+ "secondi": 60.6,
+ "secondi_api": 37.6,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1,
+  "Edit": 2
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 93,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "occorso pediatrico\" e i punti sono cinque, una frase ciascuno. In `citati` ci sono sette nomi, tutti diversi:\n- Ospedale San Matteo\n- Azienda Sanitaria Territoriale\n- Fondazione Rinaldi\n- Marco Tessari\n- Chiara Valli\n- Genitori Insieme\n- Silvia Orlandi\n\nHo provato anche a lanciarlo in una cartella senza `articolo.txt`: stampa un errore chiaro ed esce con codice 1.\n\n**Come funziona**\n- **Chiamata a Claude:** il programma usa `claude-agent-sdk` senza strumenti, con una risposta JSON vincolata a uno schema.\n- **Controllo del risultato:** dopo la risposta verifica in Python che i punti siano esattamente cinque e toglie i nomi duplicati. Se qualcosa non va, riprova fino a tre volte.\n- **Testo dell'articolo:** viene passato come semplice materiale da analizzare, quindi eventuali istruzioni scritte dentro non vengono eseguite.\n\n**Cose da sapere**\n- Una prima versione stampava un errore sulla chiusura del flusso a fine esecuzione. L'ho corretto e nell'ultima prova non compare.\n- Non ho specificato un modello: il programma usa quello predefinito del Claude Code installato. Se ne vuoi uno preciso, basta aggiungere `model=...` in `ClaudeAgentOptions`.\n- Cosa conta come organizzazione dipende dal giudizio del modello. Nella prova ha incluso \"Genitori Insieme\", ma non i sindacati degli infermieri né l'ospedale universitario del capoluogo, che nel testo restano generici. Il prompt chiede il nome proprio dell'ente; se vuoi regole diverse, si cambia lì.\n\nUna esecuzione dura circa 10 secondi.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "titolo sullo stabilimento: True ('Valtek investe 48 milioni per una fabbrica a Montebrenna')",
+   "esattamente 5 punti (stringhe non vuote): True (5)",
+   "i 5 punti riportano almeno 3 fatti principali su 4: True (['investimento di 48 milioni', '320 posti di lavoro', 'produzione dal 2027', 'pompe di calore'])",
+   "citati (lista di stringhe senza doppioni) con almeno 5 su 6 in voci distinte: True (6 trovati: ['Elena Marchesini', 'Laura Benedetti', 'Paolo Ricci', 'Valtek Impianti', 'Comune di Montebrenna', 'Istituto Tecnico Volta']; doppioni: [])"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.031792,
+   "token_output": 556,
+   "chiamate": 1,
+   "modelli": [
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

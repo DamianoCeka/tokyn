@@ -1,0 +1,81 @@
+{
+ "prova": "sonnet/catalogo/tokyn/r2",
+ "cartella": "91a129dfee",
+ "modello": "sonnet",
+ "compito": "catalogo",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.07568770000000001,
+ "costo_usd_telemetria": 0.075688,
+ "token_output": 1888,
+ "token_input": 8,
+ "token_cache_scritti": 12900,
+ "token_cache_letti": 51917,
+ "prove_del_programma": {
+  "costo_usd": 0.000834,
+  "token_output": 134,
+  "chiamate": 6,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 6,
+ "secondi": 39.1,
+ "secondi_api": 22.1,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 3
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 826,
+ "righe_tokyn": 25,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "catalogo_en.csv",
+  "programma.py",
+  "programma.tokyn"
+ ],
+ "risposta_finale": "`programma.py` è pronto e l'ho provato con risposte vere di Claude sul tuo `catalogo.csv`, che ha 6 prodotti. Ha scritto `catalogo_en.csv` con la stessa intestazione, lo stesso separatore e le righe nello stesso ordine. Codice, nome e prezzo sono identici all'originale. La riga di esempio, `TZ-014`, è uscita come l'avevi scritta tu: `Handmade ceramic mug, dishwasher safe`.\n\nPer avviarlo, esegui `python programma.py` dalla cartella con `catalogo.csv`.\n\n- **Chiave API:** per usarlo per conto tuo e senza il mio Claude Code serve la chiave `ANTHROPIC_API_KEY`. Nella prova non l'avevo impostata, quindi le traduzioni sono passate dal Claude Code di questo ambiente.\n- **Batch API:** con la chiave il programma usa la Batch API, che costa la metà ma di solito impiega qualche minuto (al massimo 24 ore). Va bene per cataloghi grandi. Se ti serve il risultato subito su pochi prodotti, dimmelo e lo passo a una richiesta alla volta.\n- **Modello:** traduce con Claude Haiku, il più economico, che per descrizioni brevi basta. Se vuoi una resa più curata, si cambia con una riga.\n- **Sorgente:** `programma.py` è generato da `programma.tokyn`, che ho lasciato accanto. Per modificare il programma conviene cambiare il `.tokyn` e rigenerare il Python.\n\nFile nella cartella `/srv/progetti/91a129dfee`:\n- `programma.py`\n- `programma.tokyn`\n- `catalogo_en.csv`",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "intestazione codice;nome;descrizione;prezzo: True (['codice', 'nome', 'descrizione', 'prezzo'])",
+   "5 prodotti con 4 colonne e codici nell'ordine del file: True (5 righe)",
+   "codice, nome e prezzo identici: True",
+   "descrizioni tradotte in inglese: 5 su 5"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.000693,
+   "token_output": 108,
+   "chiamate": 5,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

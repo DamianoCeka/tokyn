@@ -1,0 +1,56 @@
+PRODOTTI = json_parse(read_file("inventario.json"))
+
+def scheda(p: dict) -> dict:
+    mancanti = p["scorta_minima"] - p["quantita"]
+    if mancanti < 0:
+        mancanti = 0
+    return {
+        "codice": p["codice"],
+        "nome": p["nome"],
+        "quantita": p["quantita"],
+        "prezzo_unitario_euro": p["prezzo_unitario"],
+        "scorta_minima": p["scorta_minima"],
+        "valore_euro": round(p["quantita"] * p["prezzo_unitario"], 2),
+        "sotto_scorta_minima": p["quantita"] < p["scorta_minima"],
+        "pezzi_mancanti_alla_scorta_minima": mancanti,
+    }
+
+def inventario() -> list:
+    """Restituisce tutti i prodotti del magazzino con i valori già calcolati: quantità, prezzo unitario, scorta minima, valore in euro (quantità per prezzo), se è sotto la scorta minima e quanti pezzi mancano per raggiungerla."""
+    schede = []
+    for p in PRODOTTI:
+        schede.append(scheda(p))
+    return schede
+
+def valore_totale(codici: list[str]) -> dict:
+    """Calcola il valore esatto in euro e il numero di pezzi dei prodotti indicati per codice (es. ["CAN-01", "CAN-02"]). Con una lista vuota calcola il totale di tutto il magazzino."""
+    valore = 0.0
+    pezzi = 0
+    trovati = []
+    for p in PRODOTTI:
+        if len(codici) == 0 or p["codice"] in codici:
+            valore += p["quantita"] * p["prezzo_unitario"]
+            pezzi += p["quantita"]
+            trovati.append(p["codice"])
+    return {"codici": trovati, "pezzi": pezzi, "valore_euro": round(valore, 2)}
+
+agent Magazziniere:
+    instructions: """
+        Rispondi alle domande dei colleghi sull'inventario del magazzino, in italiano, con una risposta breve (una o due frasi) in testo semplice, senza markdown né elenchi puntati.
+        Usa sempre lo strumento inventario per i dati e valore_totale per le somme: non fare calcoli a mente
+        e riporta i numeri esattamente come li restituiscono gli strumenti. Indica i valori in euro con due decimali e la virgola (es. 1.540,20 €).
+        Se la domanda non riguarda prodotti presenti nell'inventario, dillo.
+    """
+    tools: [inventario, valore_totale]
+    effort: "low"
+
+main:
+    risultati = []
+    for riga in read_file("domande.txt").splitlines():
+        domanda = riga.strip()
+        if domanda == "":
+            continue
+        risposta = Magazziniere.ask(domanda)
+        print(f"{domanda}\n  → {risposta}")
+        risultati.append({"domanda": domanda, "risposta": risposta.strip()})
+    write_file("risultato.json", json_dump(risultati))

@@ -1,0 +1,6 @@
+SICUREZZA INFORMATICA - REGOLE PER TUTTI
+
+La password del computer deve avere almeno 10 caratteri, con lettere, numeri e un simbolo.
+Il computer si blocca da solo dopo 5 minuti di inattività.
+Le email sospette vanno inoltrate all'indirizzo it@azienda.example senza aprire gli allegati.
+È vietato installare programmi non approvati dal reparto IT.

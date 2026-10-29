@@ -1,0 +1,54 @@
+import os
+
+ANNUNCIO = read_file("annuncio.txt")
+
+type Valutazione:
+    punteggio: int "punteggio intero da 1 (inadatto) a 10 (ideale) rispetto ai requisiti dell'annuncio"
+    motivazione: str "motivazione in italiano, una sola frase di al massimo 25 parole"
+
+type Candidato:
+    file: str
+    punteggio: int
+    motivazione: str
+
+type Esito:
+    candidati: list[Candidato]
+    migliore: str
+
+agent Valutatore:
+    effort: "low"
+    instructions: f"""
+        Sei un selezionatore del personale. Valuta il curriculum che ricevi rispetto all'annuncio di lavoro
+        qui sotto. Dai un punteggio intero da 1 a 10 in base a quanto il candidato soddisfa i requisiti
+        (esperienza, competenze, disponibilità) e scrivi una breve motivazione in italiano, citando punti
+        di forza e carenze principali. Basati solo su quanto scritto nel curriculum.
+
+        ANNUNCIO:
+        {ANNUNCIO}
+    """
+    output: Valutazione
+
+def per_punteggio(c: Candidato) -> int:
+    return c.punteggio
+
+main:
+    candidati = []
+    for nome in sorted(os.listdir("cv")):
+        if not nome.endswith(".txt"):
+            continue
+        testo = read_file("cv/" + nome, "")
+        v = Valutatore.ask("CURRICULUM:\n" + testo)
+        p = v.punteggio
+        if p < 1:
+            p = 1
+        if p > 10:
+            p = 10
+        candidati.append(Candidato(file=nome, punteggio=p, motivazione=v.motivazione))
+    candidati = sorted(candidati, key=per_punteggio, reverse=True)
+    migliore = ""
+    if len(candidati) > 0:
+        migliore = candidati[0].file
+    write_file("risultato.json", json_dump(Esito(candidati=candidati, migliore=migliore)))
+    for c in candidati:
+        print(f"{c.punteggio}/10  {c.file}: {c.motivazione}")
+    print(f"Migliore: {migliore}")

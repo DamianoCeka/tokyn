@@ -1,0 +1,79 @@
+{
+ "prova": "opus/recensioni/agent-sdk/r2",
+ "cartella": "0443f319df",
+ "modello": "opus",
+ "compito": "recensioni",
+ "condizione": "agent-sdk",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.1932322,
+ "costo_usd_telemetria": 0.193232,
+ "token_output": 3706,
+ "token_input": 14,
+ "token_cache_scritti": 12569,
+ "token_cache_letti": 92521,
+ "prove_del_programma": {
+  "costo_usd": 0.055009,
+  "token_output": 914,
+  "chiamate": 8,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 7,
+ "secondi": 51.3,
+ "secondi_api": 32.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Bash": 5,
+  "Write": 1
+ },
+ "skill": [],
+ "programma_consegnato": true,
+ "righe_programma": 66,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": ", né più né meno. |\n\n**Voto medio: 3.0.** Nel JSON le recensioni sono nello stesso ordine del file, con il formato che mi avete indicato.\n\nHo provato anche due casi particolari, ed entrambi funzionano:\n- **Righe vuote nel file:** vengono saltate e il calcolo resta corretto.\n- **`recensioni.txt` mancante:** il programma lo segnala con un messaggio chiaro e si ferma.\n\n**Come funziona:**\n- **Una richiesta a Claude per recensione**, fino a 4 alla volta, così anche un file lungo si elabora velocemente.\n- **Risposta in formato fisso:** Claude deve restituire il sentimento come positivo, negativo o neutro e il voto come numero intero da 1 a 5. Non deve interpretare testo libero, quindi le risposte non possono uscire da questi valori.\n- **Claude non ha strumenti a disposizione:** gli è chiesto solo di giudicare il testo. Le istruzioni dicono inoltre di trattare ogni recensione come un dato da valutare e non come istruzioni da seguire.\n- **Il voto medio** è la media dei voti dati da Claude, arrotondata a 2 decimali.\n- **Se l'analisi di una recensione fallisce**, il programma si ferma con un errore e non scrive un `risultato.json` incompleto.\n\nDue cose da sapere:\n- Il voto è una stima di Claude del voto che avrebbe dato il cliente. Ripetendo l'analisi, i casi incerti possono variare di un punto: per esempio \"Buono.\" ha preso 4, ma potrebbe prendere 5.\n- Il programma usa il Claude Code installato su questo computer e il suo account. Ogni recensione è una chiamata a Claude e ha un costo.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 recensioni nell'ordine del file: True",
+   "sentimenti giusti: 6 su 6",
+   "voti interi da 1 a 5 e coerenti col sentimento: True ([5.0, 1.0, 3.0, 5.0, 1.0, 3.0])",
+   "media giusta dei voti: True (3.0)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.04031,
+   "token_output": 555,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

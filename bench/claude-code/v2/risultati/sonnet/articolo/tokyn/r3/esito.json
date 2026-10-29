@@ -1,0 +1,81 @@
+{
+ "prova": "sonnet/articolo/tokyn/r3",
+ "cartella": "9d7aec4caf",
+ "modello": "sonnet",
+ "compito": "articolo",
+ "condizione": "tokyn",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.0854907,
+ "costo_usd_telemetria": 0.085491,
+ "token_output": 2143,
+ "token_input": 12,
+ "token_cache_scritti": 13819,
+ "token_cache_letti": 87607,
+ "prove_del_programma": {
+  "costo_usd": 0.025064,
+  "token_output": 1274,
+  "chiamate": 2,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 7,
+ "secondi": 58.3,
+ "secondi_api": 31.1,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 833,
+ "righe_tokyn": 31,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json",
+  "scheda.tokyn"
+ ],
+ "risposta_finale": "txt`, e `risultato.json` contiene un titolo, cinque punti e sette nomi citati, tutti diversi tra loro.\n\nHo usato Tokyn: ho scritto `scheda.tokyn`, che ho controllato con le risposte finte, e il compilatore ne ha generato `programma.py`. Nella prova vera ha risposto Claude Code, perché non c'era una chiave API. Per usarlo ogni mattina, anche da altre persone, serve una `ANTHROPIC_API_KEY`: con la chiave `programma.py` usa l'API, senza ripiega su `claude -p`.\n\nCosa fa il programma:\n- **Cinque punti:** se Claude ne restituisce un numero diverso, lo richiama una volta. Se anche il secondo tentativo sbaglia, non scrive nulla e stampa un errore.\n- **Nomi citati:** togliendo le ripetizioni e gli spazi, ogni nome compare una sola volta.\n\nNella prova il titolo è «Castelrocca apre il pronto soccorso pediatrico» e tra i citati ci sono Marco Tessari, Chiara Valli, Silvia Orlandi, Fondazione Rinaldi, Azienda Sanitaria Territoriale e Genitori Insieme. Ho controllato nell'articolo solo i punti sui sindacati e su Genitori Insieme, non gli altri.\n\nUn nome in cui avrei dei dubbi è «ospedale San Matteo di Castelrocca»: l'articolo dice «San Matteo», quindi potreste voler togliere la parola «ospedale».\n\nUna prova costa circa 640 token in uscita e 3.000 scritti in cache, circa $0,018 a prezzi API.\n\nI file sono in `/srv/progetti/9d7aec4caf`:\n- `programma.py`\n- `scheda.tokyn`\n\n`scheda.tokyn` è il sorgente: se volete cambiare qualcosa, modificate quello e rigenerate `programma.py` con il compilatore.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "titolo sullo stabilimento: True ('Valtek Impianti investe 48 milioni a Montebrenna')",
+   "esattamente 5 punti (stringhe non vuote): True (5)",
+   "i 5 punti riportano almeno 3 fatti principali su 4: True (['investimento di 48 milioni', '320 posti di lavoro', 'produzione dal 2027', 'pompe di calore'])",
+   "citati (lista di stringhe senza doppioni) con almeno 5 su 6 in voci distinte: True (6 trovati: ['Elena Marchesini', 'Laura Benedetti', 'Paolo Ricci', 'Valtek Impianti', 'Comune di Montebrenna', 'Istituto Tecnico Volta']; doppioni: [])"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.016016,
+   "token_output": 572,
+   "chiamate": 1,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

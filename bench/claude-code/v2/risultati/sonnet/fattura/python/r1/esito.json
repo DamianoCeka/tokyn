@@ -1,0 +1,73 @@
+{
+ "prova": "sonnet/fattura/python/r1",
+ "cartella": "6173d6d607",
+ "modello": "sonnet",
+ "compito": "fattura",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.35475319999999994,
+ "costo_usd_telemetria": 0.354753,
+ "token_output": 5865,
+ "token_input": 16,
+ "token_cache_scritti": 64483,
+ "token_cache_letti": 381392,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 12,
+ "secondi": 75.7,
+ "secondi_api": 57.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 7,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 101,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": " in `Decimal`: somma quantità × prezzo unitario e arrotonda al centesimo una sola volta. Il confronto con il totale dichiarato è esatto al centesimo, senza errori da virgola mobile.\n- Scrive `risultato.json` nel formato che hai indicato, con le righe nell'ordine della fattura. Controlla anche che la data sia una data valida AAAA-MM-GG.\n- Se manca `fattura.txt`, se manca la chiave o se l'API dà errore, stampa un messaggio chiaro ed esce con codice 1.\n\n**Cosa ho provato**\n- Ho fatto girare il programma con l'SDK vero contro un server finto in locale, che restituisce quello che mi aspetto da Claude per la tua fattura.\n- Con totale dichiarato 226,40 ottengo `totale_corretto: true`. Con 226,00 ottengo `false` e il programma segnala la differenza. Il JSON è nel formato richiesto.\n- Ho controllato la richiesta inviata: contiene il testo della fattura e lo schema di output.\n- Senza chiave stampa \"imposta ANTHROPIC_API_KEY\", e senza `fattura.txt` stampa l'errore dedicato.\n\n**Per usarlo**\n```\npip install anthropic pydantic\nexport ANTHROPIC_API_KEY=...\npython programma.py\n```\nAlla prima esecuzione con la chiave vera controlla che `risultato.json` contenga le 4 righe e la data `2026-03-05`.\n\n**Da sapere**\n- Non ho abilitato i modelli di ripiego se Claude rifiuta la richiesta. Con una fattura normale non dovrebbe succedere. Se accade, il programma si ferma con un errore.\n- La porta 8765 di questa macchina è occupata da un altro servizio, che rispondeva con dati non miei. Non l'ho toccato.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 6,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

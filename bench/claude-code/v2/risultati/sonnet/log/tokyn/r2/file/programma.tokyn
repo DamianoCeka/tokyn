@@ -1,0 +1,47 @@
+import re
+
+RIGA = r'^(\S+) \S+ \S+ \[[^:]+:(\d\d):\d\d:\d\d [^\]]*\] "(?:[^"]*)" (\d{3})'
+PER_IP = {}
+
+type Commento:
+    testo: str "due frasi in italiano sul traffico della giornata"
+
+agent Analista:
+    instructions: """
+        Sei un analista del traffico web. Ricevi le statistiche di una giornata di accessi al sito
+        (richieste per ora, errori HTTP, indirizzi IP più attivi). Scrivi un commento di esattamente
+        due frasi in italiano, basato solo sui numeri ricevuti: andamento durante la giornata e picco,
+        poi la situazione degli errori.
+    """
+    effort: "low"
+    output: Commento
+
+def conta_ip(ip: str) -> int:
+    return PER_IP[ip]
+
+main:
+    ore = {}
+    errori = {}
+    for riga in read_file("access.log").splitlines():
+        m = re.match(RIGA, riga)
+        if not m:
+            continue
+        ip = m.group(1)
+        ora = m.group(2)
+        stato = int(m.group(3))
+        ore[ora] = ore.get(ora, 0) + 1
+        PER_IP[ip] = PER_IP.get(ip, 0) + 1
+        if stato >= 400:
+            errori[str(stato)] = errori.get(str(stato), 0) + 1
+    ore_ord = {}
+    for o in sorted(ore.keys()):
+        ore_ord[o] = ore[o]
+    errori_ord = {}
+    for c in sorted(errori.keys()):
+        errori_ord[c] = errori[c]
+    ip_ord = sorted(sorted(PER_IP.keys()), key=conta_ip, reverse=True)
+    top = ip_ord[:3]
+    riepilogo = {"richieste_per_ora": ore_ord, "errori": errori_ord, "ip_top": top, "richieste_totali": sum(ore_ord.values())}
+    c = Analista.ask(json_dump(riepilogo))
+    risultato = {"richieste_per_ora": ore_ord, "errori": errori_ord, "ip_top": top, "commento": c.testo}
+    write_file("risultato.json", json_dump(risultato))

@@ -1,0 +1,72 @@
+{
+ "prova": "sonnet/articolo/python/r1",
+ "cartella": "45f415eb0b",
+ "modello": "sonnet",
+ "compito": "articolo",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2964475,
+ "costo_usd_telemetria": 0.296448,
+ "token_output": 4592,
+ "token_input": 14,
+ "token_cache_scritti": 55047,
+ "token_cache_letti": 303115,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 9,
+ "secondi": 43.5,
+ "secondi_api": 37.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 87,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "Toglie i nomi doppi in `citati`, anche quando cambiano solo le maiuscole.\n- Se manca `articolo.txt`, esce con un messaggio chiaro.\n\n**Cosa non ho verificato**: la qualità reale di titolo, punti e nomi estratti, e il formato esatto della richiesta all'API. Il file di esempio è un articolo sul pronto soccorso pediatrico del San Matteo, quindi con la tua chiave basta lanciarlo e controllare il risultato.\n\n**Per usarlo**:\n```\nexport ANTHROPIC_API_KEY=...\npython programma.py\n```\nServe il pacchetto `anthropic`, che qui è già installato (versione 2.3.0).\n\n**Scelte che ho fatto**:\n- **Modello:** `claude-opus-5-5`, con pensiero adattivo e impegno medio. Se vuoi spendere meno, `claude-sonnet-5-5` o `claude-haiku-5-5` costano meno, ma non ho confrontato la qualità.\n- **Formato:** chiedo a Claude una risposta in JSON con lo schema fisso. Il vincolo dei cinque punti e l'unicità dei nomi li controllo comunque nel codice.\n- **Persone e organizzazioni:** nelle istruzioni chiedo il nome completo e niente luoghi. Nell'articolo di esempio dovrebbero uscire Marco Tessari, Chiara Valli, Silvia Orlandi, la Fondazione Rinaldi, l'Azienda Sanitaria Territoriale e l'associazione Genitori Insieme. Il San Matteo è un ospedale, quindi può comparire come organizzazione.\n- **Rifiuti:** non ho attivato il modello di riserva che la documentazione consiglia per i rifiuti di sicurezza. Se Claude rifiuta un articolo, il programma si ferma con un messaggio. Si può aggiungere, ma non potrei provarlo senza chiave.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

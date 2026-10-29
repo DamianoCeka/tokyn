@@ -1,0 +1,85 @@
+{
+ "prova": "opus/fattura/tokyn/r2",
+ "cartella": "e631f8dc46",
+ "modello": "opus",
+ "compito": "fattura",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2089028,
+ "costo_usd_telemetria": 0.208903,
+ "token_output": 3171,
+ "token_input": 16,
+ "token_cache_scritti": 15032,
+ "token_cache_letti": 125814,
+ "prove_del_programma": {
+  "costo_usd": 0.02093,
+  "token_output": 990,
+  "chiamate": 3,
+  "modelli": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 10,
+ "secondi": 45.7,
+ "secondi_api": 30.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 845,
+ "righe_tokyn": 47,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "6-03-05` e le 4 righe nell'ordine giusto. Il totale calcolato è 15×3,40 + 8×9,80 + 10×1,20 + 2×42,50 = 226,40 €, uguale a quello scritto in fattura, quindi `\"totale_corretto\": true`.\n- **Una copia con il totale cambiato a 226,50 €:** ha risposto `\"totale_corretto\": false` e ha segnalato 0,10 € di differenza.\n- Una lettura costa circa un centesimo di dollaro.\n\n**Cose da sapere:**\n- **Chiave API:** nelle prove il programma ha usato il mio Claude Code, perché qui non c'era una chiave API. Se deve girare da solo o lo usano altre persone, serve una chiave API di Anthropic nella variabile d'ambiente `ANTHROPIC_API_KEY`. Con la chiave il programma la usa senza bisogno di modifiche.\n- **Controllo al centesimo:** il conto viene fatto con numeri decimali esatti, quindi non ci sono errori di arrotondamento, e i due totali vengono confrontati arrotondati al centesimo.\n- **Quantità:** quelle intere escono come numeri interi (`15`), quelle con la virgola (per esempio 2,5 kg) come decimali.\n- **Totale di riferimento:** come totale scritto in fattura usa il \"totale da pagare\". Nella tua fattura i prezzi sono IVA inclusa, quindi va bene così. Se un fornitore scrive i prezzi senza IVA e aggiunge l'IVA in fondo, il totale da pagare non coincide con la somma delle righe e il programma lo segnalerebbe come sbagliato.\n\nAccanto a `programma.py` ho lasciato `programma.tokyn`, il sorgente da cui è generato. Ti conviene modificare quello e rigenerare il Python, invece di toccare `programma.py` a mano.",
+ "controllo": {
+  "ok": true,
+  "punti": 6,
+  "massimo": 6,
+  "dettagli": [
+   "fornitore: True ('CARTOLERIA MARCHETTI & FIGLI S.n.c.')",
+   "data 2026-02-18: True ('2026-02-18')",
+   "5 righe in ordine con quantità e prezzi giusti: True (5 giuste su 5)",
+   "totale_dichiarato 440.60: True (440.6)",
+   "totale_calcolato 439.60: True (439.6)",
+   "totale_corretto false: True (False)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.007585,
+   "token_output": 366,
+   "chiamate": 1,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

@@ -1,0 +1,27 @@
+import os
+
+type Esito:
+    categoria: "ordine" | "reclamo" | "informazioni" | "spam" "tipo di email"
+    urgente: bool "True solo se il cliente ha una scadenza ravvicinata o chiede risposta immediata"
+    riassunto: str "riassunto in una sola frase, in italiano"
+
+agent Smistatore:
+    model: "claude-haiku"
+    effort: "low"
+    instructions: """
+        Smisti le email arrivate all'indirizzo di un negozio online.
+        Categorie: ordine (richiesta di acquisto), reclamo (problema con un acquisto),
+        informazioni (domande di un cliente), spam (pubblicità o truffe non richieste).
+        Indica se è urgente e riassumi in una frase.
+    """
+    output: Esito
+
+main:
+    nomi = sorted(os.listdir("email"))
+    risultato = []
+    for nome in nomi:
+        if not nome.endswith(".txt"):
+            continue
+        e = Smistatore.ask(read_file("email/" + nome))
+        risultato.append({"file": nome, "categoria": e.categoria, "urgente": e.urgente, "riassunto": e.riassunto})
+    write_file("risultato.json", json_dump(risultato))

@@ -1,0 +1,48 @@
+CATEGORIE = ["spesa alimentare", "trasporti", "casa", "svago", "altro"]
+
+type Classificazione:
+    categoria: "spesa alimentare" | "trasporti" | "casa" | "svago" | "altro"
+
+agent Classificatore:
+    model: "claude-haiku"
+    effort: "low"
+    instructions: """
+        Assegni una categoria a un movimento di un conto corrente bancario italiano, partendo da descrizione e importo
+        (negativo = uscita, positivo = entrata).
+        - spesa alimentare: supermercati, alimentari, discount (Esselunga, Lidl, Carrefour, Coop, Conad...).
+        - trasporti: treni, autobus, metro, taxi, carburante, pedaggi, Telepass, parcheggi, manutenzione auto.
+        - casa: affitto, mutuo, condominio, bollette (luce, gas, acqua, internet, rifiuti), arredamento, bricolage, ferramenta.
+        - svago: ristoranti, pizzerie, bar, cinema, abbonamenti streaming, libri, viaggi, sport, hobby.
+        - altro: tutto il resto (stipendi e altre entrate, commissioni, bonifici, prelievi, tasse, salute...).
+    """
+    output: Classificazione
+
+main:
+    testo = read_file("movimenti.csv").replace("﻿", "")
+    movimenti = []
+    totali = {}
+    for c in CATEGORIE:
+        totali[c] = 0.0
+    for n, riga in enumerate(testo.splitlines()):
+        riga = riga.strip()
+        if n == 0 or riga == "":
+            continue
+        campi = riga.split(";")
+        if len(campi) < 3:
+            print(f"Riga {n + 1} ignorata, campi insufficienti: {riga}")
+            continue
+        data = campi[0].strip()
+        descrizione = ";".join(campi[1:-1]).strip()
+        importo = to_number(campi[-1].strip(), None)
+        if importo == None:
+            print(f"Riga {n + 1} ignorata, importo non valido: {riga}")
+            continue
+        importo = float(importo)
+        r = Classificatore.ask(f"Descrizione: {descrizione}\nImporto: {importo:.2f} euro")
+        movimenti.append({"data": data, "descrizione": descrizione, "importo": importo, "categoria": r.categoria})
+        totali[r.categoria] += importo
+        print(f"{data}  {descrizione}  {importo:.2f}  → {r.categoria}")
+    for c in CATEGORIE:
+        totali[c] = round(totali[c], 2)
+    write_file("risultato.json", json_dump({"movimenti": movimenti, "totali": totali}))
+    print(f"Scritto risultato.json con {len(movimenti)} movimenti.")

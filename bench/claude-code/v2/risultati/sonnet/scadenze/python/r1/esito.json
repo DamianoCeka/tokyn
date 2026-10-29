@@ -1,0 +1,72 @@
+{
+ "prova": "sonnet/scadenze/python/r1",
+ "cartella": "145d4c8fea",
+ "modello": "sonnet",
+ "compito": "scadenze",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.3158156,
+ "costo_usd_telemetria": 0.315816,
+ "token_output": 5282,
+ "token_input": 16,
+ "token_cache_scritti": 56470,
+ "token_cache_letti": 370836,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 10,
+ "secondi": 62.1,
+ "secondi_api": 51.8,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 95,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "opia del CSV a cui ho aggiunto due casi limite.\n\n**Cosa è risultato dalla prova** (riferimento 2026-11-01):\n- Estremi compresi: il contratto che scade il 2026-11-01 ha `giorni_mancanti` 0, quello del 2026-12-01 ha 30.\n- Esclusi: quello del 2026-12-02 (31 giorni), quello del 2026-12-09 e quello già scaduto del 2026-10-20.\n- L'ordine per scadenza è corretto, e i due contratti di Ottica Ferri risultano separati.\n- La richiesta all'API parte con il modello giusto e lo schema con `oggetto` e `testo`, e il risultato finisce in `risultato.json`.\n- Una data non valida dà un errore chiaro, e un riferimento senza scadenze produce `{\"in_scadenza\": []}`.\n\n**Cosa non è verificato:** la qualità delle email. Il prompt chiede di rivolgersi al cliente per nome, citare servizio e data scritta per esteso, chiudere con un saluto generico senza firma e senza segnaposto, ma finché non lo lanci con una chiave vera non so come vengano.\n\n**Per usarlo:**\n- Serve `pip install anthropic` e la variabile `ANTHROPIC_API_KEY` impostata.\n- Poi, dalla cartella con `contratti.csv`, lancia `python programma.py 2026-11-01`.\n\n**Scelte che ho fatto io:**\n- Uso `claude-opus-5-5` con sforzo basso, perché per un'email breve basta.\n- Se una chiamata a Claude fallisce, il programma si ferma e non scrive `risultato.json`, così non resta un file con email mancanti.\n- Le righe con scadenza non valida vengono saltate con un avviso su stderr.\n\nSe preferisci un modello più economico, basta cambiare `MODELLO` in cima al file.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 5,
+  "dettagli": [
+   "risultato.json mancante o senza la lista in_scadenza"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

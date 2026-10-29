@@ -1,0 +1,84 @@
+{
+ "prova": "opus/fattura/agent-sdk/r1",
+ "cartella": "a287ed0a21",
+ "modello": "opus",
+ "compito": "fattura",
+ "condizione": "agent-sdk",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.6425698,
+ "costo_usd_telemetria": 0.64257,
+ "token_output": 5353,
+ "token_input": 16,
+ "token_cache_scritti": 57590,
+ "token_cache_letti": 373629,
+ "prove_del_programma": {
+  "costo_usd": 0.060162,
+  "token_output": 1525,
+  "chiamate": 2,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 10,
+ "secondi": 72.2,
+ "secondi_api": 48.6,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 130,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "iene preso per la quantità: la quantità letta è 2.\n- Totale scritto in fattura 226,40 €, totale ricalcolato 226,40 €, quindi `\"totale_corretto\": true`. Il file `risultato.json` è già nella cartella.\n\n**Su una fattura di prova con il totale sbagliato apposta** (l'ho poi cancellata): conteneva il prezzo \"€ 1.234,55\" con il punto delle migliaia, una quantità con la virgola (2,5) e un totale sbagliato di 98 centesimi. Il programma ha letto bene tutti i numeri, ha ricalcolato 1.288,18 € invece dei 1.287,20 € scritti e ha restituito `\"totale_corretto\": false`, segnalando a schermo la differenza.\n\n**Come funziona:**\n- Claude legge solo il testo della fattura, senza poter usare altri strumenti. Restituisce i dati in un formato fisso, che il programma controlla.\n- Il modello che uso è `claude-opus-5-5`.\n- Claude non fa i conti: il totale lo ricalcola Python a partire dalle righe.\n- I conti sono esatti al centesimo, senza gli errori di arrotondamento tipici dei numeri decimali al computer.\n- Se la data non è nel formato AAAA-MM-GG, o Claude non risponde, il programma si ferma con un messaggio d'errore invece di scrivere un risultato sbagliato.\n\n**Una scelta da confermare:** quando una riga ha frazioni di centesimo (es. 2,5 × 1,33 = 3,325), il programma prima somma tutto in modo esatto e poi arrotonda il totale una sola volta, con 0,005 arrotondato per eccesso. Se i tuoi fornitori arrotondano invece ogni riga prima di sommare, il risultato può cambiare di un centesimo e posso adattarlo.",
+ "controllo": {
+  "ok": true,
+  "punti": 6,
+  "massimo": 6,
+  "dettagli": [
+   "fornitore: True ('CARTOLERIA MARCHETTI & FIGLI S.n.c.')",
+   "data 2026-02-18: True ('2026-02-18')",
+   "5 righe in ordine con quantità e prezzi giusti: True (5 giuste su 5)",
+   "totale_dichiarato 440.60: True (440.6)",
+   "totale_calcolato 439.60: True (439.6)",
+   "totale_corretto false: True (False)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.030377,
+   "token_output": 920,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

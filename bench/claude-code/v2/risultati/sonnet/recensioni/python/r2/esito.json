@@ -1,0 +1,72 @@
+{
+ "prova": "sonnet/recensioni/python/r2",
+ "cartella": "afb32eb14f",
+ "modello": "sonnet",
+ "compito": "recensioni",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.3002399,
+ "costo_usd_telemetria": 0.30024,
+ "token_output": 3977,
+ "token_input": 14,
+ "token_cache_scritti": 57431,
+ "token_cache_letti": 307179,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 10,
+ "secondi": 44.1,
+ "secondi_api": 38.5,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 61,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "'unico test reale che ho fatto.\n\n**Cosa ho verificato.** Ho eseguito il programma con un client Claude finto che risponde con sentimenti e voti prefissati, in una cartella temporanea con una copia di `recensioni.txt`.\n- Ha letto le 6 recensioni, le ha tenute nell'ordine del file e ha prodotto un `risultato.json` nel formato richiesto, con `media` 3.0.\n- Quella media viene dai voti finti, non da Claude.\n- Non ho verificato che l'API accetti la richiesta così com'è scritta, né che Claude dia voti sensati. Alla prima esecuzione con la chiave il punto più a rischio è la richiesta stessa: la sintassi l'ho presa dalla documentazione dell'SDK, ma non l'ho vista funzionare.\n\n**Come funziona.**\n- Fa una chiamata a Claude per recensione e chiede una risposta JSON con `sentimento` (solo positivo, negativo o neutro) e `voto` (solo da 1 a 5).\n- Salta le righe vuote.\n- La media è arrotondata a 2 decimali.\n- Se una chiamata fallisce, si ferma con un errore che indica quale recensione ha dato problemi e non scrive un `risultato.json` incompleto.\n- Il modello è `claude-opus-5-5`, con `effort: low` perché il compito è semplice. Per spendere meno si può cambiare la costante `MODELLO` in cima al file, per esempio con `claude-haiku-5-5`.\n\n**Per provarlo.**\n```\nexport ANTHROPIC_API_KEY=sk-ant-...\npython programma.py\n```\nRichiede il pacchetto `anthropic`, già installato qui (versione 2.3.0).\n\nSe mi dai una chiave, o fai `ant auth login` in questo ambiente, lo rilancio e ti riporto i risultati veri.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o senza la lista recensioni"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

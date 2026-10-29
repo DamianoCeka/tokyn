@@ -1,0 +1,25 @@
+type Azione:
+    cosa: str "che cosa va fatto, frase breve all'infinito"
+    chi: str "nome di chi se ne occupa"
+    entro: str "scadenza nel formato AAAA-MM-GG"
+
+type Verbale:
+    decisioni: list[str] "decisioni prese, frasi brevi"
+    azioni: list[Azione]
+
+agent Estrattore:
+    instructions: """
+        Ricavi da una trascrizione di riunione le decisioni prese e le azioni da fare.
+        Decisioni: solo quelle davvero prese dal team, non proposte, opinioni o chiacchiere fuori tema; una frase breve ciascuna.
+        Azioni: solo compiti assegnati a una persona, con il suo nome e la scadenza.
+        Le scadenze vanno in formato AAAA-MM-GG; se sono relative ("venerdì prossimo") calcolale dalla data della
+        riunione indicata nella trascrizione o, se manca, dalla data di oggi. Rispondi in italiano.
+    """
+    output: Verbale
+    effort: "low"
+
+main:
+    testo = read_file("verbale.txt")
+    v = Estrattore.ask(f"Data di oggi: {now()[:10]}\n\nTrascrizione:\n{testo}")
+    write_file("risultato.json", json_dump(v))
+    print(f"Salvate {len(v.decisioni)} decisioni e {len(v.azioni)} azioni in risultato.json")

@@ -1,17 +1,36 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "tokyn"
 version = "0.1.0"
-description = "Tokyn: il linguaggio per costruire agenti IA, progettato per essere scritto bene dalle IA."
+description = "A language with Python syntax for programs that use Claude: agents, tools and structured outputs built in, compiled to Python."
 readme = "README.md"
 license = "MIT"
+license-files = ["LICENSE"]
 authors = [{ name = "Damiano Ceka" }]
 requires-python = ">=3.10"
-dependencies = ["lark>=1.1", "anthropic>=0.40"]
-keywords = ["ai", "agents", "llm", "language", "claude"]
+# anthropic 0.108 è la prima versione con `fallbacks` in beta.messages.create (output_config e cache_control
+# in cima alla richiesta ci sono da prima); lark 1.1 è la più vecchia provata con tutti i test
+dependencies = ["lark>=1.1", "anthropic>=0.108"]
+keywords = ["ai", "agents", "ai-agents", "llm", "claude", "anthropic", "language", "compiler", "structured-output"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Natural Language :: Italian",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Compilers",
+]
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]
@@ -21,9 +40,13 @@ tokyn = "tokyn.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/DamianoCeka/tokyn"
+Repository = "https://github.com/DamianoCeka/tokyn"
+Documentation = "https://github.com/DamianoCeka/tokyn/blob/main/tokyn/SPEC.en.md"
+Issues = "https://github.com/DamianoCeka/tokyn/issues"
+Changelog = "https://github.com/DamianoCeka/tokyn/releases"
 
 [tool.setuptools]
 packages = ["tokyn"]
 
 [tool.setuptools.package-data]
-tokyn = ["grammar.lark", "SPEC.md"]
+tokyn = ["grammar.lark", "SPEC.md", "SPEC.en.md"]

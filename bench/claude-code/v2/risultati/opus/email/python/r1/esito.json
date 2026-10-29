@@ -1,0 +1,72 @@
+{
+ "prova": "opus/email/python/r1",
+ "cartella": "38ee29116b",
+ "modello": "opus",
+ "compito": "email",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.6347348,
+ "costo_usd_telemetria": 0.634735,
+ "token_output": 4521,
+ "token_input": 16,
+ "token_cache_scritti": 58610,
+ "token_cache_letti": 376854,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 10,
+ "secondi": 51.3,
+ "secondi_api": 43.8,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 71,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": " hai chiesto, conserva gli accenti e il campo `file`. Poi ho cancellato quel file di prova. Non ho controllato se Claude classifica bene le email, né se la chiamata viene accettata dal server. In particolare non è testata l'opzione `fallbacks`: se un giorno Claude si rifiuta di analizzare un'email, la richiesta viene rifatta in automatico su un altro modello.\n\n**Come funziona:**\n- Usa il modello `claude-opus-5-5` e manda una richiesta per ogni email.\n- La risposta è vincolata a uno schema: la categoria può essere solo una delle 4 previste, `urgente` è sempre vero/falso e il riassunto è testo.\n- Le istruzioni spiegano a Claude come distinguere le quattro categorie. Gli dicono anche che, se il mittente scrive che non ha fretta, l'email non è urgente, e che lo spam non è mai urgente.\n- Il testo dell'email viene trattato come dato da analizzare, non come istruzioni. Per esempio `msg_004.txt` chiede i dati della carta: Claude deve solo classificarla, non seguirla.\n- Se un'email dà errore, il programma lo stampa, passa alla successiva e alla fine esce con codice 1. Le email non riuscite non compaiono in `risultato.json`.\n\n**Per provarlo:**\n```bash\nexport ANTHROPIC_API_KEY=sk-ant-...\npython programma.py\n```\nServono i pacchetti `anthropic` e `pydantic`, che qui sono già installati. Se mi dai accesso a una chiave in questo ambiente, lo eseguo io sulle 5 email e controllo i risultati. Mi aspetto:\n- 001 ordine\n- 002 reclamo urgente\n- 003 informazioni\n- 004 spam\n- 005 reclamo non urgente",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o non è una lista"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

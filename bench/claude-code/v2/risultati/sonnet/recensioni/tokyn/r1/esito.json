@@ -1,0 +1,81 @@
+{
+ "prova": "sonnet/recensioni/tokyn/r1",
+ "cartella": "f6ca389f31",
+ "modello": "sonnet",
+ "compito": "recensioni",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.0716599,
+ "costo_usd_telemetria": 0.07166,
+ "token_output": 1585,
+ "token_input": 10,
+ "token_cache_scritti": 12277,
+ "token_cache_letti": 66819,
+ "prove_del_programma": {
+  "costo_usd": 0.001178,
+  "token_output": 615,
+  "chiamate": 6,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 6,
+ "secondi": 56.0,
+ "secondi_api": 20.8,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 3
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 830,
+ "righe_tokyn": 28,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "`programma.py` è pronto in `/srv/progetti/f6ca389f31`. L'ho provato con Claude vero sulle 6 recensioni di `recensioni.txt`: ha scritto `risultato.json` con sentimenti e voti sensati e una media di 3.0. La prova è girata tramite il tuo Claude Code, perché `ANTHROPIC_API_KEY` non era impostata, e ha richiesto circa 33 secondi.\n\nSi avvia con `python programma.py` dalla cartella di `recensioni.txt`. Il file è stato generato dal compilatore Tokyn, ma funziona da solo e non dipende da Tokyn. Il sorgente `programma.tokyn` è accanto, se vuoi modificare qualcosa.\n\n- **Chiave API:** se il programma deve girare da solo o per altre persone, serve una chiave API di Anthropic (`ANTHROPIC_API_KEY`). Le regole di Anthropic consentono l'uso del Claude Code solo per provare.\n- **Costi e tempi:** con la chiave le recensioni passano dalla Batch API, che costa la metà ma di solito risponde in qualche minuto e può arrivare a 24 ore. Il programma usa `claude-haiku`, il modello più economico.\n- **Righe vuote:** vengono ignorate.\n- **Voto fuori scala:** se Claude restituisce un voto fuori da 1–5, il programma lo riporta dentro quei limiti.\n- **File vuoto:** la media è 0.\n- **Arrotondamento:** la media è arrotondata a 2 decimali.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 recensioni nell'ordine del file: True",
+   "sentimenti giusti: 6 su 6",
+   "voti interi da 1 a 5 e coerenti col sentimento: True ([5.0, 1.0, 3.0, 5.0, 1.0, 3.0])",
+   "media giusta dei voti: True (3.0)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.001086,
+   "token_output": 629,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

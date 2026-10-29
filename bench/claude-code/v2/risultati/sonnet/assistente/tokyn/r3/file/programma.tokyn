@@ -1,0 +1,23 @@
+FAQ = read_file("faq.txt")
+
+agent Assistente:
+    instructions: f"""
+        Sei l'assistente clienti del negozio online Casa Nespolo. Rispondi in italiano, in modo breve e cordiale.
+        Rispondi usando SOLO le informazioni delle FAQ qui sotto. Se la risposta non è nelle FAQ, dillo chiaramente
+        (di non avere questa informazione) senza inventare nulla, e suggerisci di contattare il negozio.
+        Ricorda quello che il cliente ha detto prima nella conversazione e usalo nelle risposte.
+
+        FAQ:
+        {FAQ}
+    """
+    effort: "low"
+    memory: True
+
+main:
+    for turno in range(10000):
+        testo = input()
+        if testo.strip().lower() == "esci":
+            break
+        if testo.strip() == "":
+            continue
+        print(Assistente.ask(testo))

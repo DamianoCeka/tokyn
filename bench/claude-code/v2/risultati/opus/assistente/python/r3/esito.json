@@ -1,0 +1,78 @@
+{
+ "prova": "opus/assistente/python/r3",
+ "cartella": "2aa61bf5e7",
+ "modello": "opus",
+ "compito": "assistente",
+ "condizione": "python",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.7592888000000001,
+ "costo_usd_telemetria": 0.759289,
+ "token_output": 7458,
+ "token_input": 20,
+ "token_cache_scritti": 63201,
+ "token_cache_letti": 522204,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 12,
+ "secondi": 81.5,
+ "secondi_api": 67.9,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 7,
+  "Write": 1,
+  "Edit": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 102,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "se come il nome del cliente.\n- Ogni richiesta parte con il contenuto di `faq.txt` e le istruzioni.\n- Se una richiesta fallisce, stampa un messaggio di errore e continua; il messaggio fallito viene tolto dalla conversazione.\n- Senza credenziali o senza `faq.txt` esce con un messaggio chiaro invece di un errore Python.\n\n**Come funziona:**\n- Usa il modello `claude-opus-5-5` con impegno di ragionamento basso (`effort: low`), che basta per una chat di assistenza.\n- Le istruzioni chiedono di rispondere solo con le FAQ. Se l'informazione non c'è, deve dirlo; se le FAQ coprono solo una parte della domanda, risponde a quella e dice che il resto manca. Può usare ciò che il cliente ha detto prima, per esempio per calcolare la spedizione in base al paese e all'importo.\n- Ho aggiunto un'opzione che non avevi chiesto: se Claude rifiuta una richiesta per motivi di sicurezza, l'API la ripete in automatico su un modello di riserva (`fallbacks: \"default\"`). Se preferisci toglierla, bastano due righe in `rispondi()`.\n\n**Per provarlo davvero** devi avere il pacchetto `anthropic` (`pip install anthropic`) e una chiave API:\n```\nexport ANTHROPIC_API_KEY=...\nprintf '%s\\n' \"Ciao, sono Marta e abito in Francia\" \"Quanto pago di spedizione?\" \"Avete un negozio a Milano?\" \"Come mi chiamo?\" \"esci\" | python programma.py\n```\nCon queste domande dovresti vedere 12 € di spedizione per la Francia, un \"non è nelle FAQ\" per il negozio a Milano e il nome ricordato. Se mi fornisci una chiave, faccio io questa prova.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 5,
+  "dettagli": [
+   "spedizione 6,90 euro: False",
+   "codice sconto CIAONESPOLO: False",
+   "reso entro 45 giorni: False",
+   "si ricorda il nome Giulia: False",
+   "termina su esci (codice 1) senza rispondere dopo: False",
+   "output (ultimi 1500 caratteri): "
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

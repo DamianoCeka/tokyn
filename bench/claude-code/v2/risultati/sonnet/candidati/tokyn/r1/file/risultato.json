@@ -1,0 +1,25 @@
+{
+  "candidati": [
+    {
+      "file": "bianchi_elena.txt",
+      "punteggio": 9,
+      "motivazione": "Elena ha circa 5 anni di esperienza in vendita al dettaglio, di cui oltre 4 nell'elettronica (telefonia in MediaWorld). Vende garanzie e assicurazioni, usa cassa e gestionale, lavora nei weekend e ha un diploma informatico. Abita vicino a Verona. Non ha esperienza specifica sui computer portatili in vendita, ma li configura."
+    },
+    {
+      "file": "rizzo_davide.txt",
+      "punteggio": 6,
+      "motivazione": "Il candidato ha circa 3 anni di vendita al dettaglio (Decathlon dal 2023) più uno stage in un negozio di telefonia, con uso della cassa, buona conoscenza degli smartphone, disponibilità nel fine settimana e residenza vicina a Verona. Mancano esperienza specifica nell'elettronica, competenze informatiche avanzate (solo uso base del computer), conoscenza del gestionale di magazzino e vendita di servizi aggiuntivi."
+    },
+    {
+      "file": "esposito_marco.txt",
+      "punteggio": 3,
+      "motivazione": "Il candidato non ha esperienza nella vendita al dettaglio (è magazziniere e cameriere stagionale), che è il requisito principale di almeno 2 anni. Ha una buona passione per l'informatica, usa il gestionale di magazzino, vive a Verona e è disponibile a turni, ma mancano la consulenza al cliente, l'uso della cassa e la vendita di servizi aggiuntivi."
+    },
+    {
+      "file": "ferraro_chiara.txt",
+      "punteggio": 1,
+      "motivazione": "La candidata è un'infermiera con 6 anni di esperienza solo in ambito sanitario, senza alcuna esperienza di vendita al dettaglio, di elettronica, di cassa o gestionale di magazzino. Vive a Verona, ma i requisiti principali dell'annuncio non sono soddisfatti."
+    }
+  ],
+  "migliore": "bianchi_elena.txt"
+}

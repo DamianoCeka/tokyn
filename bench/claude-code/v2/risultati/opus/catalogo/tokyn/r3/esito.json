@@ -1,0 +1,84 @@
+{
+ "prova": "opus/catalogo/tokyn/r3",
+ "cartella": "5de9647500",
+ "modello": "opus",
+ "compito": "catalogo",
+ "condizione": "tokyn",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.24341319999999997,
+ "costo_usd_telemetria": 0.243413,
+ "token_output": 4179,
+ "token_input": 16,
+ "token_cache_scritti": 16784,
+ "token_cache_letti": 127486,
+ "prove_del_programma": {
+  "costo_usd": 0.020275,
+  "token_output": 414,
+  "chiamate": 18,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-sonnet-5-5"
+  ]
+ },
+ "turni": 12,
+ "secondi": 82.0,
+ "secondi_api": 37.9,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1,
+  "Edit": 2
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 834,
+ "righe_tokyn": 33,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "catalogo_en.csv",
+  "programma.py",
+  "programma.tokyn"
+ ],
+ "risposta_finale": "siano uguali all'originale, e il controllo è passato.\n\n**Cosa ho cambiato durante le prove:**\n- **Modello:** all'inizio usavo il modello più economico (Haiku). In una prova ha restituito il testo italiano seguito da \"→\" e dalla traduzione, e in un'altra ha messo le iniziali maiuscole in ogni parola. Sono passato al modello standard, che ha dato il risultato qui sopra.\n- **Punto e virgola:** se una traduzione contiene un punto e virgola, il programma lo sostituisce con una virgola, così le colonne del file restano a posto.\n- **Righe anomale:** le righe vuote vengono ricopiate così come sono. Le righe con meno di 4 colonne vengono ricopiate senza traduzione e segnalate a schermo.\n\n**Prima di usarlo sul serio:**\n- **Chiave API:** io l'ho provato senza chiave API, quindi le risposte sono arrivate tramite il mio Claude Code. Per usarlo in modo regolare, o se lo usano altre persone, impostate la variabile `ANTHROPIC_API_KEY` con una chiave dell'API di Anthropic. Il programma la usa da solo, senza bisogno di modifiche.\n- **Traduzioni non sempre uguali:** lanciandolo più volte le frasi possono cambiare un po' (per esempio \"removable bamboo cover\" oppure \"bamboo removable cover\"). Conviene rileggere il file prima di pubblicarlo.\n\n`programma.py` non ha bisogno di altre librerie. Accanto ho lasciato anche `programma.tokyn`, il sorgente Tokyn da cui è generato. Se un giorno volete cambiare qualcosa, per esempio lo stile delle traduzioni, conviene modificare quello e rigenerare il Python.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "intestazione codice;nome;descrizione;prezzo: True (['codice', 'nome', 'descrizione', 'prezzo'])",
+   "5 prodotti con 4 colonne e codici nell'ordine del file: True (5 righe)",
+   "codice, nome e prezzo identici: True",
+   "descrizioni tradotte in inglese: 5 su 5"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.015312,
+   "token_output": 92,
+   "chiamate": 5,
+   "modelli": [
+    "claude-sonnet-5-5"
+   ]
+  }
+ }
+}

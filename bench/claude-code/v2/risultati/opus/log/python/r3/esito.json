@@ -1,0 +1,72 @@
+{
+ "prova": "opus/log/python/r3",
+ "cartella": "bb458c2e4c",
+ "modello": "opus",
+ "compito": "log",
+ "condizione": "python",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.6661577999999999,
+ "costo_usd_telemetria": 0.666158,
+ "token_output": 6000,
+ "token_input": 18,
+ "token_cache_scritti": 57582,
+ "token_cache_letti": 427149,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 12,
+ "secondi": 71.6,
+ "secondi_api": 61.7,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 8,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 84,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "o indipendente, e i numeri coincidono.\n- Risultati sul vostro log (130 righe):\n  - `richieste_per_ora`: 20 ore, con il picco alle 10 (15 richieste).\n  - `errori`: `{\"401\": 1, \"403\": 2, \"404\": 6, \"408\": 1}`\n  - `ip_top`: `[\"203.0.113.5\", \"192.0.2.200\", \"198.51.100.31\"]` (19, 14 e 11 richieste, quindi nessun pareggio).\n- Ho cancellato il `risultato.json` della prova, perché conteneva un commento finto.\n\n**Per provarlo davvero**\nLe statistiche sono già verificate; resta da controllare solo il commento di Claude. Basta un'esecuzione da parte vostra:\n```\nexport ANTHROPIC_API_KEY=...   # oppure: ant auth login\npython programma.py\n```\nServe il pacchetto `anthropic` (`pip install anthropic`).\n\n**Scelte da sapere**\n- Il log contiene due richieste con riga vuota (`\"-\" 408`), cioè connessioni chiuse per timeout. Le ho contate come richieste e il 408 compare tra gli errori, come avete chiesto.\n- Le righe vuote vengono saltate. Le righe che non rispettano il formato vengono segnalate a schermo e non contate (nel vostro log non ce ne sono).\n- Se due IP sono a pari merito, vince quello comparso prima nel log.\n- A Claude mando solo le statistiche, non il log intero. Le chiedo due frasi in italiano. Uso il modello `claude-opus-5-5` con impegno basso (`effort: \"low\"`), che per un commento breve basta.\n- Ho attivato i \"fallback\" lato server: se Claude rifiuta la richiesta, la API la ripassa automaticamente a un altro modello. Se non vi serve, si toglie eliminando le righe `betas` e `fallbacks`.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

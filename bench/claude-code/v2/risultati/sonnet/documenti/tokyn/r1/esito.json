@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/documenti/tokyn/r1",
+ "cartella": "3976c570f8",
+ "modello": "sonnet",
+ "compito": "documenti",
+ "condizione": "tokyn",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.08418540000000001,
+ "costo_usd_telemetria": 0.084185,
+ "token_output": 1977,
+ "token_input": 12,
+ "token_cache_scritti": 13916,
+ "token_cache_letti": 87274,
+ "prove_del_programma": {
+  "costo_usd": 0.001873,
+  "token_output": 1016,
+  "chiamate": 8,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 7,
+ "secondi": 54.5,
+ "secondi_api": 21.8,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 830,
+ "righe_tokyn": 28,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "ltato.json` con 4 elementi, uno per domanda e nello stesso ordine di `domande.txt`.\n\nLe quattro risposte e le fonti sono corrette rispetto ai documenti:\n\n| Domanda | Risposta | Fonte |\n|---|---|---|\n| Albergo in trasferta | fino a 100 euro a notte, colazione compresa | `regolamento_viaggi.txt` |\n| Giorni da remoto | fino a 8 al mese | `lavoro_da_remoto.txt` |\n| Resi in magazzino | bancale giallo vicino all'ingresso | `orari_magazzino.txt` |\n| Email sospette | a it@azienda.example | `regole_informatiche.txt` |\n\n**Come funziona:**\n- Legge tutti i `.txt` di `docs/` e li manda a Claude insieme a ogni domanda.\n- Le istruzioni dicono di rispondere solo in base ai documenti.\n- Se la risposta non c'è, scrive \"Informazione non presente nei documenti\" e come fonte \"nessuno\".\n- Ho scelto il modello `claude-haiku` con `effort: \"low\"` perché i documenti sono brevi. Se vuoi risposte più accurate si può passare a `claude-sonnet`.\n\n**Limiti e cose da sapere:**\n- Senza `ANTHROPIC_API_KEY` il programma usa il tuo Claude Code (`claude -p`). Va bene per provarlo, ma se deve girare da solo o per altri colleghi serve una chiave API.\n- Il programma ha una sola dipendenza, `lark`, che serviva solo per la prova. Non ho controllato se `programma.py` funzioni senza.\n- Ogni domanda rimanda tutti i documenti a Claude. Con pochi file va bene, con molti documenti diventerebbe lento e costoso.\n\nAccanto a `programma.py` c'è anche `programma.tokyn`, il sorgente da cui l'ho generato, utile se vuoi modificarlo.",
+ "controllo": {
+  "ok": true,
+  "punti": 5,
+  "massimo": 5,
+  "dettagli": [
+   "4 oggetti {domanda, risposta, fonte} nell'ordine di domande.txt: True",
+   "domanda 1: risposta giusta True, fonte trasferte.txt True (\"Chi va in trasferta con l'auto propria riceve un rimborso di 0,42 euro per chilometro, calcolato sul percorso più breve. Pedaggi e parcheggi si rimborsano a parte, con la ricevuta.\", 'trasferte.txt')",
+   "domanda 2: risposta giusta True, fonte sicurezza_it.txt True ('La password va cambiata ogni 90 giorni. Deve essere lunga almeno 12 caratteri e diversa per ogni servizio; il sistema avvisa una settimana prima della scadenza.', 'sicurezza_it.txt')",
+   "domanda 3: risposta giusta True, fonte smart_working.txt True ('Fino a 2 giorni alla settimana, per i dipendenti assunti a tempo indeterminato (dal 1° gennaio 2026). I giorni si concordano con il responsabile e si segnano sul portale Presenze entro il giovedì della settimana precedente. Il lunedì tutti lavorano in ufficio.', 'smart_working.txt')",
+   "domanda 4: risposta giusta True, fonte magazzino.txt True ('Il sabato le merci si possono ritirare fino alle 11:00 (orario 8:00–11:00), e solo per il ritiro di merci già prenotate.', 'magazzino.txt')"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.001567,
+   "token_output": 639,
+   "chiamate": 4,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

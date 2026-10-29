@@ -1,0 +1,75 @@
+import re
+import builtins
+from decimal import Decimal
+
+PRODOTTI = json_parse(read_file("inventario.json"))
+
+def euro(x):
+    return Decimal(str(x))
+
+def scheda(p: dict) -> dict:
+    valore = euro(p["prezzo_unitario"]) * p["quantita"]
+    mancanti = 0
+    if p["quantita"] < p["scorta_minima"]:
+        mancanti = p["scorta_minima"] - p["quantita"]
+    return {
+        "codice": p["codice"],
+        "nome": p["nome"],
+        "quantita": p["quantita"],
+        "prezzo_unitario_euro": f"{euro(p['prezzo_unitario']):.2f}",
+        "scorta_minima": p["scorta_minima"],
+        "valore_in_magazzino_euro": f"{valore:.2f}",
+        "sotto_scorta_minima": p["quantita"] < p["scorta_minima"],
+        "pezzi_mancanti_alla_scorta_minima": mancanti,
+    }
+
+def dati_inventario() -> str:
+    """Restituisce tutti i prodotti con quantità, prezzo, scorta minima, valore, pezzi mancanti già calcolati, e i totali del magazzino."""
+    schede = []
+    totale = Decimal("0")
+    pezzi = 0
+    sotto = []
+    for p in PRODOTTI:
+        schede.append(scheda(p))
+        totale += euro(p["prezzo_unitario"]) * p["quantita"]
+        pezzi += p["quantita"]
+        if p["quantita"] < p["scorta_minima"]:
+            sotto.append(p["nome"])
+    return json_dump({
+        "prodotti": schede,
+        "totali": {
+            "numero_prodotti": len(PRODOTTI),
+            "pezzi_totali": pezzi,
+            "valore_totale_magazzino_euro": f"{totale:.2f}",
+            "prodotti_sotto_scorta_minima": sotto,
+        },
+    })
+
+def calcola(espressione: str) -> str:
+    """Calcola in modo esatto un'espressione aritmetica con numeri, + - * / e parentesi (es. "(30 - 18) * 1.2")."""
+    if not re.fullmatch(r"[0-9.+\-*/() ]+", espressione):
+        return "Errore: usa solo numeri, + - * / e parentesi."
+    testo = re.sub(r"(\d+(\.\d+)?)", r"Decimal('\1')", espressione)
+    risultato = builtins.eval(testo, {"__builtins__": {}, "Decimal": Decimal})
+    return str(risultato.normalize())
+
+agent Magazziniere:
+    instructions: """
+        Rispondi alle domande dei colleghi sull'inventario del magazzino, in italiano, con una risposta breve (una o due frasi) in testo semplice, senza markdown né elenchi, e rispondi solo a ciò che è chiesto.
+        Prendi i dati sempre con lo strumento dati_inventario: valori, totali e pezzi mancanti sono già calcolati in modo esatto, riportali così come sono.
+        Se serve un calcolo che non è già pronto, fallo con lo strumento calcola, mai a mente.
+        Gli importi in euro con due decimali e la virgola (es. 588,00 €). Se un dato non c'è nell'inventario, dillo.
+    """
+    tools: [dati_inventario, calcola]
+    effort: "low"
+
+main:
+    risultati = []
+    for riga in read_file("domande.txt").splitlines():
+        domanda = riga.strip()
+        if domanda == "":
+            continue
+        risposta = Magazziniere.ask(domanda)
+        print(f"{domanda}\n  → {risposta}")
+        risultati.append({"domanda": domanda, "risposta": risposta.strip()})
+    write_file("risultato.json", json_dump(risultati))

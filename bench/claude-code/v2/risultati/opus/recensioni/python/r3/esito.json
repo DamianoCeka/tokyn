@@ -1,0 +1,74 @@
+{
+ "prova": "opus/recensioni/python/r3",
+ "cartella": "278294e204",
+ "modello": "opus",
+ "compito": "recensioni",
+ "condizione": "python",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.6470156,
+ "costo_usd_telemetria": 0.647016,
+ "token_output": 5224,
+ "token_input": 18,
+ "token_cache_scritti": 57237,
+ "token_cache_letti": 422838,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 12,
+ "secondi": 56.7,
+ "secondi_api": 50.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Grep": 2,
+  "Read": 1,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 53,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": " **Risposta:** viene letta e convertita senza errori.\n- **`risultato.json`:** ha esattamente il formato che hai chiesto, con le recensioni nell'ordine del file anche se le risposte arrivano disordinate.\n- **Media:** è calcolata giusta (3.0 sui dati finti).\n\nResta da verificare come Claude giudica davvero le recensioni, e che il server accetti i parametri della richiesta.\n\n**Come funziona:**\n- Per ogni riga non vuota fa una chiamata a `claude-opus-5-5`. La risposta è vincolata a uno schema, quindi `sentimento` può essere solo `positivo`, `negativo` o `neutro` e `voto` è un intero da 1 a 5, controllato dal programma.\n- Le recensioni vengono analizzate 4 alla volta per andare più veloce. L'ordine nel risultato resta comunque quello del file.\n- Ho impostato lo sforzo di ragionamento su `low`, che per una classificazione semplice basta e costa meno.\n- Ho attivato il fallback automatico: se il modello rifiuta una recensione per motivi di sicurezza, la richiesta passa a un altro modello. Se rifiutano tutti, il programma si ferma con un messaggio chiaro invece di inventarsi un voto. Se non ti serve, si tolgono le righe `betas` e `fallbacks`.\n- Oltre al file JSON, stampa a schermo un riepilogo con voto, sentimento e testo di ogni recensione, più la media.\n\n**Per provarlo tu:**\n```bash\nexport ANTHROPIC_API_KEY=sk-ant-...\npython programma.py\n```\nTi servono `anthropic` (qui c'è la 2.3.0) e `pydantic`. Se mi dai accesso a una chiave in questo ambiente, lo faccio girare io con Claude vero.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o senza la lista recensioni"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

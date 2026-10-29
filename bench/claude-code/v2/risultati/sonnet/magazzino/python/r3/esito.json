@@ -1,0 +1,74 @@
+{
+ "prova": "sonnet/magazzino/python/r3",
+ "cartella": "ea88923e70",
+ "modello": "sonnet",
+ "compito": "magazzino",
+ "condizione": "python",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.3213818,
+ "costo_usd_telemetria": 0.321382,
+ "token_output": 5190,
+ "token_input": 14,
+ "token_cache_scritti": 59573,
+ "token_cache_letti": 311618,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 10,
+ "secondi": 57.5,
+ "secondi_api": 47.0,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1,
+  "Read": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 93,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "dine di `domande.txt`. Il contesto passato al modello contiene i numeri corretti, ad esempio 1.540,20 € di valore totale e 12 evidenziatori mancanti. Se la chiave manca, il programma si ferma con un messaggio chiaro.\n\nPer il test ho usato la porta 18765. Il primo tentativo sulla 8765 ha trovato un altro servizio già in ascolto, che ha risposto con dati senza senso e ha ricevuto domande e inventario. Ho scartato quel risultato. Il `risultato.json` presente ora nella cartella viene dal server finto, quindi non è valido. Lo sovrascrive la prima esecuzione vera.\n\n**Come ottiene numeri esatti:** Python calcola con `Decimal` il valore di ogni scorta, il totale del magazzino, i pezzi mancanti alla scorta minima, i prodotti sotto soglia e il costo di riordino. Claude riceve questi valori già pronti e deve solo copiarli in una risposta breve in italiano. Non fa aritmetica. Se una domanda non si risolve con questi dati, deve dirlo.\n\n**Per provarlo:**\n```\nexport ANTHROPIC_API_KEY=...\npython programma.py\n```\nControlla che le risposte coincidano con questi valori:\n- **Carta A4:** 120 risme.\n- **Valore totale:** 1.540,20 €.\n- **Sotto scorta minima:** toner, evidenziatori gialli e penne a sfera blu.\n- **Valore del toner:** 235,50 €.\n- **Evidenziatori mancanti:** 12.\n\nIl modello è `claude-opus-5-5` (la costante `MODEL`), con ragionamento adattivo e impegno basso. Se per una domanda la chiamata fallisce, la risposta in quella riga è un messaggio di errore e il programma continua con le altre.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 5,
+  "dettagli": [
+   "risultato.json mancante o non è una lista"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

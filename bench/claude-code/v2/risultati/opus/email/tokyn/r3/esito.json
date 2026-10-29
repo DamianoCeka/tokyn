@@ -1,0 +1,82 @@
+{
+ "prova": "opus/email/tokyn/r3",
+ "cartella": "213c642ed5",
+ "modello": "opus",
+ "compito": "email",
+ "condizione": "tokyn",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.1920514,
+ "costo_usd_telemetria": 0.192051,
+ "token_output": 2411,
+ "token_input": 16,
+ "token_cache_scritti": 14868,
+ "token_cache_letti": 124117,
+ "prove_del_programma": {
+  "costo_usd": 0.001805,
+  "token_output": 1676,
+  "chiamate": 10,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 9,
+ "secondi": 58.6,
+ "secondi_api": 25.1,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Write": 1
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 832,
+ "righe_tokyn": 30,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "2 teiere, spedizione a Parma |\n| msg_002.txt | reclamo | **sì** | Ordine 4471 mai arrivato, serve per domani, minaccia il rimborso |\n| msg_003.txt | informazioni | no | Domanda su lavastoviglie e microonde |\n| msg_004.txt | spam | no | Offerta per comparire primi su Google che chiede i dati della carta |\n| msg_005.txt | reclamo | no | Vaso scheggiato, la cliente scrive che non è urgente |\n\nOgni elemento ha anche il riassunto di una frase.\n\n**Come funziona:**\n- Legge tutti i file `.txt` in `email/` e manda a Claude un'email alla volta.\n- Usa Haiku, il modello più economico, che basta per smistare email. La prova è costata circa un decimo di centesimo.\n- Ho detto a Claude di ignorare eventuali istruzioni scritte dentro le email, così uno spammer non può cambiare la classificazione.\n\n**Cose da sapere:**\n- **Serve una chiave API per l'uso normale.** Nella prova non c'era una chiave, quindi le risposte sono arrivate tramite il tuo Claude Code. Va bene per provarlo, ma se il programma deve girare da solo o lo usano altre persone devi impostare la variabile `ANTHROPIC_API_KEY`. Non va cambiato niente nel codice.\n- **Il file è lungo circa 1000 righe** perché è generato e contiene già tutto il necessario per funzionare da solo. La parte che riguarda le email è breve.\n- **Per modificarlo** (categorie, criteri di urgenza, modello) conviene usare il sorgente `programma.tokyn`, che ho lasciato accanto ed è di circa 30 righe, e poi rigenerare `programma.py`. Posso farlo io quando ti serve.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 email in ordine di nome del file: True (['msg_201.txt', 'msg_202.txt', 'msg_203.txt', 'msg_204.txt', 'msg_205.txt', 'msg_206.txt'])",
+   "categorie ammesse e giuste: True (6 su 6: ['ordine', 'reclamo', 'informazioni', 'spam', 'ordine', 'reclamo'])",
+   "urgente booleano e giusto: True (6 su 6: [False, True, False, False, True, False])",
+   "riassunti brevi e sull'argomento: True (brevi: True, sull'argomento: 6 su 6)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.001546,
+   "token_output": 1143,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

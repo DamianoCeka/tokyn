@@ -1,0 +1,81 @@
+{
+ "prova": "sonnet/spese/agent-sdk/r3",
+ "cartella": "817f4748b7",
+ "modello": "sonnet",
+ "compito": "spese",
+ "condizione": "agent-sdk",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.28180220000000006,
+ "costo_usd_telemetria": 0.281802,
+ "token_output": 3702,
+ "token_input": 10,
+ "token_cache_scritti": 56482,
+ "token_cache_letti": 188342,
+ "prove_del_programma": {
+  "costo_usd": 0.018147,
+  "token_output": 265,
+  "chiamate": 1,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 42.0,
+ "secondi_api": 32.8,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 114,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "errori di arrotondamento.\n- Manda i movimenti a Claude a blocchi di 50. Ogni richiesta ha uno schema JSON che permette solo le cinque categorie.\n- Controlla che la risposta contenga esattamente un'etichetta per ogni movimento e riprova fino a 3 volte, poi si ferma con un errore.\n- Le descrizioni vanno nel prompt come dati da classificare, non come istruzioni.\n- Somma gli importi per categoria e scrive `risultato.json` nel formato che mi hai indicato, con i movimenti nell'ordine del file.\n\n**Il risultato sui tuoi dati**\nI totali tornano con un controllo a mano:\n\n| Categoria | Totale |\n|---|---|\n| spesa alimentare | -70,02 |\n| trasporti | -23,00 |\n| casa | -120,20 |\n| svago | -52,49 |\n| altro | 1826,50 |\n\n- **Entrate in «altro»:** lo stipendio (+1850) finisce in `altro`, perché le categorie sono solo le cinque che hai dato. Il totale di `altro` è quindi positivo. Se preferisci, posso escludere le entrate dai totali o aggiungere una categoria `entrate`.\n- **Scelte dubbie di Claude:** la pizzeria è finita in `svago` e la libreria in `altro`. Sono scelte plausibili ma discutibili. Se vuoi criteri diversi, basta cambiare `SYSTEM_PROMPT`.\n- **Esecuzione non deterministica:** la classificazione dipende da Claude, quindi su casi ambigui due esecuzioni potrebbero dare etichette diverse.\n\nNon ho impostato un modello, quindi usa quello predefinito dell'SDK. Si può fissare con `model=` in `ClaudeAgentOptions`.\n\nI file sono in `/srv/progetti/817f4748b7`:\n- `programma.py`\n- `risultato.json`",
+ "controllo": {
+  "ok": true,
+  "punti": 3,
+  "massimo": 3,
+  "dettagli": [
+   "8 movimenti nell'ordine del file con data, descrizione e importo giusti: True",
+   "categorie ammesse e giuste: True (8 su 8: ['spesa alimentare', 'trasporti', 'casa', 'svago', 'spesa alimentare', 'trasporti', 'casa', 'altro'])",
+   "totali arrotondati al centesimo e coerenti con le categorie assegnate: True (uguali ai totali attesi: True; {'spesa alimentare': -85.5, 'trasporti': -51.8, 'casa': -728.45, 'svago': -19.0, 'altro': -12.8})"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.011363,
+   "token_output": 217,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

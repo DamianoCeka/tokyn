@@ -1,0 +1,78 @@
+{
+ "prova": "opus/spese/agent-sdk/r3",
+ "cartella": "b8185dcfce",
+ "modello": "opus",
+ "compito": "spese",
+ "condizione": "agent-sdk",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2384186,
+ "costo_usd_telemetria": 0.238419,
+ "token_output": 5070,
+ "token_input": 14,
+ "token_cache_scritti": 14743,
+ "token_cache_letti": 95093,
+ "prove_del_programma": {
+  "costo_usd": 0.028367,
+  "token_output": 612,
+  "chiamate": 2,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 7,
+ "secondi": 56.9,
+ "secondi_api": 43.7,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Bash": 5,
+  "Write": 1
+ },
+ "skill": [],
+ "programma_consegnato": true,
+ "righe_programma": 147,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "ipendio + commissione bonifico) |\n\nSince you asked to add up *all* the amounts, income counts too. Your salary lands in `altro`, so that total comes out positive. If you only want expenses, I can drop the positive amounts from the totals or give income its own category.\n\n**How it works**\n- Claude only picks the category. The program sends every movement in one request (batches of 100 if there are more) and gets the answer back in a fixed format, limited to your five categories. Claude has no tools and doesn't load any local settings.\n- If a movement comes back without a category, the program asks again, up to 3 times. If it still fails, it stops and doesn't write a partial result.\n- The program reads the amounts and adds them up itself, using exact arithmetic so there are no rounding errors. Totals are rounded to the cent and all five categories always appear, even when one is zero.\n\n**Edge cases tested** (in a temporary folder, now deleted):\n- A file saved with the Windows encoding that Italian banks often use, with an accented letter (\"CAFFÈ\")\n- Windows line endings and blank lines\n- A description containing a quoted semicolon\n- An amount with a thousands separator (`-1.200,00`)\n\nAll of them were read correctly. The rent went to `casa` and the ATM withdrawal to `altro`.\n\nOne limitation: in the movements list the amount is written exactly as it appears in the file. So a value with three decimals like `-60,005` stays `-60.005`, while the totals are always rounded to the cent.",
+ "controllo": {
+  "ok": true,
+  "punti": 3,
+  "massimo": 3,
+  "dettagli": [
+   "8 movimenti nell'ordine del file con data, descrizione e importo giusti: True",
+   "categorie ammesse e giuste: True (8 su 8: ['spesa alimentare', 'trasporti', 'casa', 'svago', 'spesa alimentare', 'trasporti', 'casa', 'altro'])",
+   "totali arrotondati al centesimo e coerenti con le categorie assegnate: True (uguali ai totali attesi: True; {'spesa alimentare': -85.5, 'trasporti': -51.8, 'casa': -728.45, 'svago': -19.0, 'altro': -12.8})"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.011533,
+   "token_output": 227,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

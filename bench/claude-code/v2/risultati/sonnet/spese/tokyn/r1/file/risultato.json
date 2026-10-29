@@ -1,0 +1,41 @@
+{
+  "movimenti": [
+    {
+      "data": "03/09/2026",
+      "descrizione": "PAGAMENTO POS ESSELUNGA MILANO",
+      "importo": -23.4,
+      "categoria": "spesa alimentare"
+    },
+    {
+      "data": "05/09/2026",
+      "descrizione": "TRENITALIA; BIGLIETTO",
+      "importo": -35.0,
+      "categoria": "trasporti"
+    },
+    {
+      "data": "07/09/2026",
+      "descrizione": "AFFITTO SETTEMBRE",
+      "importo": -1200.3,
+      "categoria": "casa"
+    },
+    {
+      "data": "09/09/2026",
+      "descrizione": "NETFLIX",
+      "importo": -12.99,
+      "categoria": "svago"
+    },
+    {
+      "data": "10/09/2026",
+      "descrizione": "STIPENDIO",
+      "importo": 2000.0,
+      "categoria": "altro"
+    }
+  ],
+  "totali": {
+    "spesa alimentare": -23.4,
+    "trasporti": -35.0,
+    "casa": -1200.3,
+    "svago": -12.99,
+    "altro": 2000.0
+  }
+}
