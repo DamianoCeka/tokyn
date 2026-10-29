@@ -1,0 +1,83 @@
+{
+ "prova": "sonnet/riunione/tokyn/r2",
+ "cartella": "d104a41fd0",
+ "modello": "sonnet",
+ "compito": "riunione",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.073239,
+ "costo_usd_telemetria": 0.073239,
+ "token_output": 1652,
+ "token_input": 8,
+ "token_cache_scritti": 12920,
+ "token_cache_letti": 50230,
+ "prove_del_programma": {
+  "costo_usd": 0.000921,
+  "token_output": 965,
+  "chiamate": 2,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 5,
+ "secondi": 38.7,
+ "secondi_api": 23.5,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 2
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 826,
+ "righe_tokyn": 23,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "u `verbale.txt` e ha scritto `risultato.json` correttamente.\n\nDal verbale del 20 ottobre ha estratto:\n\n- **Decisioni:**\n  - Partecipare alla fiera di Bologna con lo stand piccolo.\n  - Far uscire la newsletter ogni due settimane invece che ogni mese.\n- **Azioni:**\n  - Paolo prenota lo stand entro il 2026-10-30.\n  - Chiara prepara il calendario dei temi della newsletter entro il 2026-11-06.\n  - Roberto cura i volantini per lo stand entro il 2026-11-16.\n\nHa ignorato la domanda sul parcheggio, che non porta né a una decisione né a un compito.\n\nPer avviarlo, dalla cartella con `verbale.txt`, lancia `python programma.py`. L'ho eseguito anche così, dopo averlo generato, e il risultato era lo stesso. Il file è autonomo, ma richiede la libreria `anthropic` e una chiave API in `ANTHROPIC_API_KEY`. Nel test non avevo la chiave e ha risposto tramite il mio Claude Code, quindi con la chiave API non l'ho provato.\n\nUsa `claude-haiku` con ragionamento ridotto, perché per questo compito basta e costa poco. Se le scadenze nei verbali sono scritte in modo relativo (\"venerdì prossimo\"), il modello le calcola partendo dalla data della riunione. Se il verbale non la riporta, può sbagliare.\n\nHo lasciato accanto a `programma.py` anche il sorgente `programma.tokyn`, da cui è generato. Se vuoi cambiare il comportamento, conviene modificare quello e rigenerare il Python.\n\nFile nella cartella `/srv/progetti/d104a41fd0`:\n- `programma.py`\n- `programma.tokyn`\n- `risultato.json` (quello del mio ultimo test)",
+ "controllo": {
+  "ok": true,
+  "punti": 6,
+  "massimo": 6,
+  "dettagli": [
+   "decisioni lista di stringhe e azioni lista di {cosa, chi, entro} stringhe: True",
+   "le 2 decisioni e nessuna chiacchiera: True (trovate: [\"lancio dell'app al 24 novembre\", 'budget pubblicitario dai giornali ai social']; chiacchiere: []; scritte: [\"Il lancio dell'app nuova slitta dal 10 novembre al 24 novembre 2026, per i due bug bloccanti nel pagamento con carta.\", 'Da dicembre tutto il budget pubblicitario passa dai giornali ai social, perché rendono il triplo a parità di spesa.'])",
+   "azione di Marco entro 2026-11-13: True ([{'cosa': 'Sistemare i due bug bloccanti del pagamento con carta', 'chi': 'Marco', 'entro': '2026-11-13'}])",
+   "azione di Sara entro 2026-11-18: True ([{'cosa': 'Scrivere le risposte pronte per il supporto sul nuovo lancio', 'chi': 'Sara', 'entro': '2026-11-18'}])",
+   "azione di Davide entro 2026-11-30: True ([{'cosa': 'Preparare il piano delle campagne social di dicembre', 'chi': 'Davide', 'entro': '2026-11-30'}])",
+   "esattamente 3 azioni: True (3)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.000437,
+   "token_output": 339,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

@@ -1,0 +1,81 @@
+{
+ "prova": "sonnet/catalogo/tokyn/r3",
+ "cartella": "53caed08a7",
+ "modello": "sonnet",
+ "compito": "catalogo",
+ "condizione": "tokyn",
+ "ripetizione": 3,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.0773942,
+ "costo_usd_telemetria": 0.077394,
+ "token_output": 1792,
+ "token_input": 10,
+ "token_cache_scritti": 13145,
+ "token_cache_letti": 68742,
+ "prove_del_programma": {
+  "costo_usd": 0.000948,
+  "token_output": 259,
+  "chiamate": 12,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 6,
+ "secondi": 63.4,
+ "secondi_api": 19.8,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 3
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 821,
+ "righe_tokyn": 20,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "catalogo_en.csv",
+  "programma.py",
+  "programma.tokyn"
+ ],
+ "risposta_finale": "`programma.py` è pronto e l'ho provato davvero. Ho scritto il programma in Tokyn (`programma.tokyn`) e il compilatore ha generato il Python, che sta in un solo file e non dipende da Tokyn.\n\n**Come si usa:** dalla cartella con `catalogo.csv` lancia `python programma.py`. Serve `ANTHROPIC_API_KEY` se lo fai girare da solo o per altre persone. Senza chiave usa il tuo Claude Code, e va bene solo per le prove.\n\n**Cosa fa:** scrive `catalogo_en.csv` con la stessa intestazione, lo stesso separatore e le righe nello stesso ordine. Traduce solo la descrizione e lascia codice, nome e prezzo come sono. Usa `claude-haiku` con `effort: \"low\"`, una chiamata per prodotto. Se una traduzione contiene `;` o va a capo, il programma li sostituisce con una virgola o uno spazio, per non rompere il file.\n\n**Prove fatte:**\n- Con risposte finte il programma ha girato fino in fondo.\n- Con Claude Code ho fatto una prova reale sui 6 prodotti. Per esempio `TZ-014` è diventato `Handmade ceramic mug, dishwasher safe;12,90`, come nel tuo esempio.\n- Ho rigenerato il file con il `programma.py` finale e ho confrontato le colonne codice, nome e prezzo con l'originale: sono identiche.\n\nNella cartella trovi anche `programma.tokyn`, il sorgente da modificare se vuoi cambiare qualcosa. Il `catalogo_en.csv` presente è il risultato dell'ultima prova.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "intestazione codice;nome;descrizione;prezzo: True (['codice', 'nome', 'descrizione', 'prezzo'])",
+   "5 prodotti con 4 colonne e codici nell'ordine del file: True (5 righe)",
+   "codice, nome e prezzo identici: True",
+   "descrizioni tradotte in inglese: 5 su 5"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.000698,
+   "token_output": 98,
+   "chiamate": 5,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

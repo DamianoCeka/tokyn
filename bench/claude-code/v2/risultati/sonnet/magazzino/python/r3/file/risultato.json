@@ -1,0 +1,22 @@
+[
+  {
+    "domanda": "Quante risme di carta A4 abbiamo?",
+    "risposta": "ok: Quante risme di carta A4 abbiamo?"
+  },
+  {
+    "domanda": "Qual è il valore totale del magazzino?",
+    "risposta": "ok: Qual è il valore totale del magazzino?"
+  },
+  {
+    "domanda": "Quali prodotti sono sotto la scorta minima?",
+    "risposta": "ok: Quali prodotti sono sotto la scorta minima?"
+  },
+  {
+    "domanda": "Quanto vale la scorta di toner che abbiamo?",
+    "risposta": "ok: Quanto vale la scorta di toner che abbiamo?"
+  },
+  {
+    "domanda": "Quanti evidenziatori mancano per arrivare alla scorta minima?",
+    "risposta": "ok: Quanti evidenziatori mancano per arrivare alla scorta minima?"
+  }
+]

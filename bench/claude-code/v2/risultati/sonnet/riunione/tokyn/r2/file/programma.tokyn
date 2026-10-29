@@ -1,0 +1,26 @@
+type Azione:
+    cosa: str "che cosa va fatto, in una frase breve"
+    chi: str "nome di battesimo di chi se ne occupa"
+    entro: str "scadenza nel formato AAAA-MM-GG; se è relativa (es. venerdì prossimo) calcolala dalla data della riunione"
+
+type Esito:
+    decisioni: list[str] "decisioni prese, ciascuna una frase breve"
+    azioni: list[Azione] "azioni da fare assegnate a una persona"
+
+agent Estrattore:
+    model: "claude-haiku"
+    effort: "low"
+    instructions: """
+        Ricevi la trascrizione di una riunione di team in italiano. Ricava le decisioni prese
+        (solo quelle effettivamente concordate, non le semplici discussioni) e le azioni da fare,
+        con chi se ne occupa e la scadenza. Scrivi in italiano, con frasi brevi. Le scadenze
+        vanno in formato AAAA-MM-GG. Se una scadenza è relativa, calcolala dalla data della riunione.
+        Non inventare nulla: ignora i discorsi che non portano a decisioni o compiti.
+    """
+    output: Esito
+
+main:
+    testo = read_file("verbale.txt")
+    esito = Estrattore.ask(testo)
+    write_file("risultato.json", json_dump(esito))
+    print(f"Salvato risultato.json: {len(esito.decisioni)} decisioni, {len(esito.azioni)} azioni")
