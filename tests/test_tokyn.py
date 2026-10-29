@@ -812,3 +812,206 @@ def test_claude_code_chosen_automatically_warns_once(fake_claude, monkeypatch, c
     assert rt._backend() == "claude-code" and rt._backend() == "claude-code"
     err = capsys.readouterr().err
     assert err.count("Tokyn: senza chiave API") == 1 and "legal-and-compliance" in err
+
+
+# ------------------------------------------------------------ lingua dei messaggi
+
+def _no_language_env(monkeypatch):
+    for name in ("TOKYN_LANG", "LC_ALL", "LC_MESSAGES", "LANG"):
+        monkeypatch.delenv(name, raising=False)
+
+
+def test_language_selection_rules(monkeypatch):
+    from tokyn import lingua
+    _no_language_env(monkeypatch)
+    assert lingua.lingua() == "en"  # nessuna indicazione: inglese
+    monkeypatch.setenv("LANG", "it_IT.UTF-8")
+    assert lingua.lingua() == "it"
+    monkeypatch.setenv("LC_MESSAGES", "en_US.UTF-8")  # LC_ALL, LC_MESSAGES, LANG: decide la prima impostata
+    assert lingua.lingua() == "en"
+    monkeypatch.setenv("LC_ALL", "it_CH.UTF-8")
+    assert lingua.lingua() == "it"
+    monkeypatch.setenv("LC_ALL", "C.UTF-8")
+    assert lingua.lingua() == "en"
+    lingua.imposta_plugin("it")  # la lingua del plugin prende il posto di quella del sistema
+    assert lingua.lingua() == "it"
+    lingua.imposta_opzione("en")  # --lang vince sul plugin
+    assert lingua.lingua() == "en"
+    monkeypatch.setenv("TOKYN_LANG", "it")  # TOKYN_LANG vince su tutto
+    assert lingua.lingua() == "it"
+    monkeypatch.setenv("TOKYN_LANG", "fr")  # un valore che non conosciamo non conta
+    assert lingua.lingua() == "en"
+    lingua.imposta_opzione(None)
+    assert lingua.lingua() == "it" and lingua.tr("ciao", "hello") == "ciao"
+
+
+BROKEN = ('type Order:\n    item: str\n    price: float\n\nagent Helper:\n    instruction: "Help."\n\n'
+          'main:\n    o = Order(item="pen", price=1.5)\n    print(o.prize)\n    print(missing)\n    total = "Total: " + 5\n')
+
+
+def _cli(args, env_extra, cwd=ROOT, stdin=None, cmd=None):
+    env = {k: v for k, v in os.environ.items() if k not in ("TOKYN_LANG", "LC_ALL", "LC_MESSAGES", "LANG")}
+    env.update(env_extra)
+    return subprocess.run(cmd or [sys.executable, "-m", "tokyn", *args], capture_output=True, text=True,
+                          cwd=cwd, env=env, input=stdin)
+
+
+def test_cli_lang_flag(tmp_path):
+    f = tmp_path / "bad.tokyn"
+    f.write_text(BROKEN, encoding="utf-8")
+    italian = _cli(["check", str(f)], {"LANG": "it_IT.UTF-8"}).stdout
+    assert "errore E130" in italian and "5 errori" in italian
+    for args in (["check", "--lang", "en", str(f)], ["--lang", "en", "check", str(f)], ["check", "--lang=en", str(f)]):
+        r = _cli(args, {"LANG": "it_IT.UTF-8"})
+        assert r.returncode == 1 and "error E130" in r.stdout and "5 errors" in r.stdout, args
+    assert "errore E130" in _cli(["check", "--lang", "en", str(f)], {"TOKYN_LANG": "it"}).stdout  # TOKYN_LANG vince
+    assert "errore E130" in _cli(["check", "--lang", "it", str(f)], {"LANG": "en_US.UTF-8"}).stdout
+    r = _cli(["check", "--lang", "fr", str(f)], {})
+    assert r.returncode == 2 and "invalid choice" in r.stderr
+    assert "check one or more files" in _cli(["--lang", "en", "--help"], {"LANG": "it_IT.UTF-8"}).stdout
+    assert "controlla uno o più file" in _cli(["--help"], {"LANG": "it_IT.UTF-8"}).stdout
+
+
+@pytest.mark.parametrize("plugin,own,other", [("tokyn", "it", "en"), ("tokyn-en", "en", "it")])
+def test_plugin_launcher_speaks_its_language(tmp_path, plugin, own, other):
+    launcher = ROOT / "plugins" / plugin / "skills" / "tokyn" / "tokyn_cli.py"
+    assert f'LINGUA = "{own}"' in launcher.read_text(encoding="utf-8")  # scritto da build_skill.py
+    f = tmp_path / "bad.tokyn"
+    f.write_text(BROKEN, encoding="utf-8")
+    word = {"it": "errore E130", "en": "error E130"}
+    cmd = [sys.executable, "-S", str(launcher), "check", str(f)]
+    locale = {"it": "it_IT.UTF-8", "en": "en_US.UTF-8"}
+    env = {"PYTHONPATH": _lark_only_env()["PYTHONPATH"]}
+    # la lingua del sistema non conta: il plugin parla sempre la sua lingua...
+    for lang in ("it", "en"):
+        assert word[own] in _cli([], dict(env, LANG=locale[lang]), cmd=cmd).stdout
+    # ...a meno che non si imposti TOKYN_LANG
+    assert word[other] in _cli([], dict(env, TOKYN_LANG=other, LANG=locale[own]), cmd=cmd).stdout
+    # anche il messaggio del lanciatore quando manca lark
+    r = _cli([], {"PYTHONPATH": "", "LANG": locale[other]}, cmd=cmd)
+    assert r.returncode == 1 and {"it": "manca la libreria lark", "en": "the lark library is missing"}[own] in r.stderr
+
+
+def test_build_skill_copies_the_english_spec():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("build_skill", ROOT / "scripts" / "build_skill.py")
+    build_skill = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(build_skill)
+    for lang in ("it", "en"):
+        assert {"tokyn/SPEC.md", "tokyn/SPEC.en.md", "tokyn/lingua.py"} <= set(build_skill.copies(lang))
+    launcher = build_skill.content("en", build_skill.LAUNCHER).decode("utf-8")
+    assert 'LINGUA = "en"' in launcher and 'LINGUA = "it"' not in launcher
+
+
+def _italian_fragments():
+    """Le parti fisse dei messaggi italiani: il primo argomento di ogni tr("italiano", "english") del compilatore."""
+    import ast
+    import re
+    from tokyn.parser import TOKEN_LABELS, UNSUPPORTED
+    texts = []
+    for path in (ROOT / "tokyn").glob("*.py"):
+        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+            if isinstance(node, ast.Call) and getattr(node.func, "id", None) == "tr" and len(node.args) == 2:
+                english = [n.value for n in ast.walk(node.args[1]) if isinstance(n, ast.Constant) and isinstance(n.value, str)]
+                texts += [(n.value, english) for n in ast.walk(node.args[0]) if isinstance(n, ast.Constant) and isinstance(n.value, str)]
+    texts += [(it, [en]) for it, en in list(UNSUPPORTED.values()) + [v for v in TOKEN_LABELS.values() if isinstance(v, tuple)]]
+    fragments = set()
+    for it, english in texts:
+        for piece in re.split(r"[\n`\"']", it):
+            piece = piece.strip()
+            if len(piece) >= 6 and not any(piece in en for en in english):
+                fragments.add(piece)
+    return fragments
+
+
+def test_english_messages(monkeypatch, capsys, tmp_path):
+    """Un campione di ogni categoria (parser, checker, esecuzione, riga di comando): in inglese e senza italiano."""
+    import io
+    import re
+    import tokyn.runtime as rt
+    from tokyn.errors import diagnostics_json, format_diagnostics
+    monkeypatch.setenv("TOKYN_LANG", "en")
+    out = []
+
+    def check(src):
+        r = check_source(src, "t.tokyn")
+        out.append(format_diagnostics(r.diagnostics, r.source, "t.tokyn"))
+        return out[-1]
+
+    # parser
+    assert "`while` does not exist in Tokyn" in check("main:\n    while True:\n        pass\n")
+    assert "missing ':' at the end of the line" in check("def f(x)\n    pass\n")
+    assert "missing indented block" in check("main:\nprint(1)\n")
+    assert "Missing ')' to close the open bracket" in check("main:\n    print(len([1, 2])\n")
+    assert "comprehensions `[... for x in ...]` do not exist" in check("main:\n    ys = [x * 2 for x in [1, 2]]\n")
+    assert "Expected here: ':', end of line." in check('agent A:\n    instructions "x"\n')
+    # checker: il programma rotto di prima, più un avviso
+    text = check(BROKEN)
+    for expected in ['error E130: "instruction" is not a valid agent field', '→ Did you mean "instructions"?',
+                     'error E131: the agent "Helper" has no instructions', 'the type "Order" has no field "prize"',
+                     'the name "missing" is not defined', "cannot add a text and a number", "5 errors"]:
+        assert expected in text
+    assert "1 warning" in check('agent A:\n    instructions: "i"\n')
+    r = check_source('agent A:\n    instructions: "i"\n')
+    assert '"severity": "warning"' in diagnostics_json(r.diagnostics, "t.tokyn")
+    # esecuzione
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(sys, "stdin", io.StringIO(""))
+    for src, expected in [("main:\n    x = [1]\n    print(x[3])\n", "t.tokyn:3 runtime error: index out of range"),
+                          ('main:\n    print(read_file("missing.txt"))\n', 'the file "missing.txt" does not exist'),
+                          ('main:\n    print(to_number("n/a"))\n', "If it may not be, give a fallback value: to_number(text, 0)"),
+                          ("main:\n    x = input()\n", "input() got no line")]:
+        assert run_source(src, "t.tokyn", mock=True) == 1
+        err = capsys.readouterr().err
+        assert expected in err, err
+        out.append(err)
+    fake = _FakeClient(_reply(_text("..."), stop="max_tokens"))
+    ns = _agents('agent A:\n    instructions: "i"\n', monkeypatch, fake)
+    with pytest.raises(rt.TokynRuntimeError) as info:
+        ns["A"].ask("x")
+    assert info.value.message == "the answer of agent A was cut off because it was too long"
+    out += [info.value.message, info.value.hint, rt.usage_report()]
+    monkeypatch.setattr(rt, "_AVVISO_CLAUDE_CODE", [])
+    monkeypatch.delenv("TOKYN_BACKEND")
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.delenv("ANTHROPIC_AUTH_TOKEN", raising=False)
+    monkeypatch.setattr(rt.shutil, "which", lambda name: "/usr/bin/claude")
+    assert rt._backend() == "claude-code"
+    notice = capsys.readouterr().err
+    assert "without an API key the agents answer through your Claude Code" in notice
+    out.append(notice)
+    # riga di comando
+    (tmp_path / "bad.tokyn").write_text(BROKEN, encoding="utf-8")
+    (tmp_path / "ok.tokyn").write_text('main:\n    print("hi")\n', encoding="utf-8")
+    env = {"TOKYN_LANG": "en", "PYTHONPATH": str(ROOT)}
+    for args, expected in [(["check", "nope.tokyn"], 'error: the file "nope.tokyn" does not exist'),
+                           (["build", "ok.tokyn"], "wrote ok.py"),
+                           (["build", "bad.tokyn"], "5 errors"),
+                           (["new", "hello"], "created hello.tokyn. Try it with: tokyn run hello.tokyn --mock"),
+                           (["new", "hello"], 'error: "hello.tokyn" already exists'),
+                           (["run", "ok.tokyn", "--mock", "--usage"], "tokens: 0 input"),
+                           (["--help"], "Tokyn: the language for AI agents."),
+                           (["run", "--help"], "fake answers, without calling the AI")]:
+        r = _cli(args, env, cwd=tmp_path)
+        assert expected in r.stdout + r.stderr, (args, r.stdout, r.stderr)
+        out.append(r.stdout + r.stderr)
+    assert 'instructions: "Answer in English' in (tmp_path / "hello.tokyn").read_text(encoding="utf-8")
+    spec = _cli(["spec"], env).stdout
+    assert spec.startswith("# Tokyn v0.1 — Specification")
+    assert _cli(["spec"], {"TOKYN_LANG": "it"}).stdout.startswith("# Tokyn v0.1 — Specifica")
+
+    italian = _italian_fragments()
+    assert len(italian) > 200
+    for text in out:
+        found = [f for f in italian if f in text]
+        words = re.findall(r"\b(errore|errori|avviso|esecuzione|manca|riga|esiste|oppure|intendevi|valore|chiave)\b", text)
+        assert not found and not words, (found, words, text)
+
+
+def test_standalone_program_speaks_the_language(tmp_path):
+    src = 'main:\n    print(read_file("missing.txt"))\n'
+    py = tmp_path / "prog.py"
+    py.write_text(compile_source(src, "prog.tokyn", standalone=True).python, encoding="utf-8")
+    for lang, expected in [("en", 'the file "missing.txt" does not exist'), ("it", 'il file "missing.txt" non esiste')]:
+        r = _cli([], {"TOKYN_LANG": lang, "PYTHONPATH": ""}, cwd=tmp_path, cmd=[sys.executable, "-S", str(py)])
+        assert r.returncode == 1 and expected in r.stderr, r.stderr

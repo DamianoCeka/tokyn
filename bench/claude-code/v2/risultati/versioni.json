@@ -1,0 +1,7 @@
+{
+ "commit_plugin": "8d83509b7ac239c9623e795da77b12440fbeb646",
+ "plugin": "e1d24cd12f1df588",
+ "claude_code": "2.1.312 (Claude Code)",
+ "claude_code_agent_sdk": "2.1.308 (Claude Code)",
+ "python": "3.13.17"
+}

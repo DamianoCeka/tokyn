@@ -181,6 +181,7 @@ main:
 | `tokyn build file.tokyn --standalone` | genera un file Python autonomo (serve solo `anthropic`) |
 | `tokyn spec` | stampa questa specifica |
 | `tokyn new nome` | crea un file di partenza |
+| `tokyn check --lang en file.tokyn` | lingua dei messaggi (`it` o `en`), con ogni comando. Vince la variabile `TOKYN_LANG`; senza nessuna delle due vale la lingua della Skill o del sistema |
 
 ## Codici di errore principali
 

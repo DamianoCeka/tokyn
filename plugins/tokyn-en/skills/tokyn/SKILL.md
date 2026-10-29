@@ -8,8 +8,8 @@ description: Writes programs that use Claude (AI agents, chatbots, text extracti
 A language with Python syntax in which agents, tools and structured outputs are part of the language: the tool
 loop, JSON schemas, validation, retries and caching are handled by the runtime. The same program takes about a
 third of the tokens of Python. Everything you need to write it is in this file; the full spec,
-`${CLAUDE_SKILL_DIR}/tokyn/SPEC.md` (in Italian), is only for rare details. Compiler messages are in Italian and
-each one comes with the fix (`→`).
+`${CLAUDE_SKILL_DIR}/tokyn/SPEC.en.md`, is only for rare details. Compiler messages are in English and each
+one comes with the fix (`→`).
 
 ## Procedure
 
