@@ -43,7 +43,7 @@ Fields (written with `:`, never with `=`):
 | Field | Required | Value |
 |---|---|---|
 | `instructions` | yes | text: who the agent is and what it must do. It can be `"""on several lines"""` or a constant |
-| `model` | no (default `"claude"`) | `"claude"`, `"claude-opus"`, `"claude-haiku"`, `"mock"` or the full id of a model |
+| `model` | no (default `"claude"`) | `"claude"`, `"claude-opus"`, `"claude-haiku"`, `"mock"`, the full id of a Claude model, or `"provider:model"` for another provider (see [Other providers](#other-providers)) |
 | `tools` | no | list of names of `def` functions or of other agents |
 | `output` | no | name of a `type`: the agent answers with structured data |
 | `memory` | no (default `False`) | `True` to remember the conversation from one `ask` to the next |
@@ -56,13 +56,46 @@ An agent is used **only** like this:
 - `Agent.ask_all(texts)` → a list of answers, in the same order as the texts: like a loop of `ask`, but with
   Anthropic's Batch API, which costs half. It is slower (usually minutes, at most 24 hours) and does not use the memory:
   suited to bulk jobs, not to chats. A text that is refused or has an error in the batch is retried with a
-  normal call; if it is still left without an answer, the program stops saying which one.
+  normal call; if it is still left without an answer, the program stops saying which one. With other providers it
+  is a loop of `ask` (one request at a time, without memory).
 - `Agent.reset()` → clears the memory.
 
 During `ask` the runtime handles the loop of tool calls on its own,
 plus retries and output validation. You do not need to write any loop.
 
 An agent in the `tools` list of another agent becomes a sub-agent to delegate to.
+
+## Other providers
+
+Tokyn is designed for Claude, and its benchmarks were run with Anthropic Claude. An agent can however use another
+provider with `model: "provider:model"`, through its OpenAI-compatible API (Chat Completions):
+
+```
+agent Summary:
+    model: "openai:gpt-5.6-luna"
+    instructions: "Summarize in three lines."
+```
+
+| Prefix | Key | Notes |
+|---|---|---|
+| `openai` | `OPENAI_API_KEY` | for tools use `gpt-5.6-terra` or `gpt-5.6-luna`: other recent models use them only through the Responses API or with `reasoning_effort` `"none"`, which Tokyn does not send |
+| `gemini` | `GEMINI_API_KEY` | Google's compatible API, still in beta |
+| `mistral` | `MISTRAL_API_KEY` | `effort` only counts as `"high"` (or more) |
+| `deepseek` | `DEEPSEEK_API_KEY` | output as free JSON, validated and retried |
+| `groq` | `GROQ_API_KEY` | strict schema only on some models and without tools; otherwise free JSON or the `rispondi` tool |
+| `openrouter` | `OPENROUTER_API_KEY` | the model is written with its author: `openrouter:google/gemini-3.8-flash` |
+| `xai` | `XAI_API_KEY` | `effort` is not used |
+| `ollama` | none | local (`http://localhost:11434/v1`); first `ollama pull model`. Short default context: raise it with `OLLAMA_CONTEXT_LENGTH` |
+| `openai-compatible` | `TOKYN_OPENAI_API_KEY` (if needed) | any other compatible server, at the address in `TOKYN_OPENAI_BASE_URL` (e.g. `http://localhost:8000/v1`) |
+
+- They behave like Claude agents: instructions, tools, `max_steps`, `memory`, `reset`, structured outputs validated
+  and retried. Where the provider allows it the output uses a strict schema (`json_schema`), otherwise free JSON or
+  the `rispondi` tool. `ask_all` is a loop of `ask`.
+- `effort` becomes `reasoning_effort` only with `openai`, `gemini`, `mistral`, `deepseek` and `groq`; elsewhere it is ignored.
+- Without the key the program stops saying which variable to set. `--mock` works with every provider, without keys.
+  `--backend` and Claude Code apply only to Claude models.
+- Rate limits and busy servers are retried on their own (honouring `Retry-After`); used-up credit and bad requests
+  are not. `--usage` also counts the tokens of other providers.
 
 ## Tools (functions)
 
@@ -178,7 +211,7 @@ main:
 | `tokyn run file.tokyn --mock` | runs with fake answers, without calling the AI |
 | `tokyn run file.tokyn --usage` | at the end shows the tokens spent and those read from the cache |
 | `tokyn build file.tokyn` | generates the equivalent Python file |
-| `tokyn build file.tokyn --standalone` | generates a standalone Python file (only `anthropic` is needed) |
+| `tokyn build file.tokyn --standalone` | generates a standalone Python file (only `anthropic` is needed, and nothing for other providers) |
 | `tokyn spec` | prints this specification |
 | `tokyn new name` | creates a starter file |
 | `tokyn check --lang en file.tokyn` | language of the messages (`it` or `en`), with every command. The `TOKYN_LANG` variable wins; without either, the language of the Skill or of the system applies |
@@ -196,6 +229,7 @@ main:
 | E130–E139 | agent field that is wrong, missing or has an invalid value |
 | E144 | agents that delegate to each other |
 | E145 | invalid `effort` value |
+| E146 | unknown provider in `model: "provider:model"`, or missing model name |
 | E142 | attempt to change a constant |
 | E160 / E161 | undefined name / variable used before it is assigned |
 | E162 | constant or default value that uses something written further down |

@@ -45,6 +45,10 @@ In una sessione di Claude Code:
     `PATH`; nessuna chiave API);
   - una **chiave dell'API di Anthropic** in `ANTHROPIC_API_KEY`, più l'SDK: `pip install "anthropic>=0.108"`. È la
     strada per i programmi che girano da soli o per altre persone (vedi [la regola qui sotto](#login-di-claude-code-o-chiave-api)).
+- **Altri fornitori**, solo se li chiedi: un agente con `model: "openai:gpt-5.6-luna"` o simili usa la chiave di
+  quel fornitore (`OPENAI_API_KEY`, `GEMINI_API_KEY`, `MISTRAL_API_KEY`, `DEEPSEEK_API_KEY`, `GROQ_API_KEY`,
+  `OPENROUTER_API_KEY`, `XAI_API_KEY`; nessuna per Ollama in locale) e non serve installare altro. L'elenco completo
+  è nella sezione "Altri fornitori" della specifica. I benchmark di Tokyn sono stati fatti con Claude di Anthropic.
 
 ## Esempi di richieste
 
@@ -101,7 +105,8 @@ processo Python locale, con i permessi del tuo utente.
 
 **Cosa invia quando rispondono gli agenti.** Con `--mock`, niente. Altrimenti, per ogni domanda, ad Anthropic
 arrivano le instructions dell'agente, la domanda, i turni precedenti se l'agente ha `memory: True`, la descrizione
-dei suoi strumenti e i loro risultati, e il formato della risposta, in uno di due modi:
+dei suoi strumenti e i loro risultati, e il formato della risposta, in uno di due modi (o a un altro fornitore,
+se l'agente lo indica nel `model`):
 
 - **Senza chiave API, con il tuo Claude Code.** Tokyn avvia `claude -p` con il tuo login. Per quella chiamata
   spegne gli strumenti di Claude Code, i file di impostazioni, i comandi slash e gli altri server MCP, e la sessione
@@ -111,6 +116,12 @@ dei suoi strumenti e i loro risultati, e il formato della risposta, in uno di du
 - **Con `ANTHROPIC_API_KEY`, con l'API di Anthropic**, tramite l'SDK Python ufficiale `anthropic`: la Messages API,
   la Message Batches API per `ask_all` e, sui modelli che lo prevedono, la beta dei fallback lato server (se un
   modello rifiuta, l'API riprova su un altro).
+- **Con `model: "fornitore:modello"`, solo a quel fornitore**, con la sua API Chat Completions compatibile con
+  OpenAI, tramite `urllib` di Python e la chiave nella sua variabile: OpenAI (`api.openai.com`), Google Gemini
+  (`generativelanguage.googleapis.com`), Mistral (`api.mistral.ai`), DeepSeek (`api.deepseek.com`), Groq
+  (`api.groq.com`), OpenRouter (`openrouter.ai`, che inoltra al fornitore del modello), xAI (`api.x.ai`), Ollama sul
+  tuo computer (`localhost:11434`: non esce nulla) o il server in `TOKYN_OPENAI_BASE_URL`. Queste richieste non
+  passano da Anthropic né da Claude Code.
 
 **Cosa fanno i tuoi programmi.** I programmi che scrive Claude sono programmi normali. `read_file`, `write_file` e
 `append_file` usano i tuoi file, `http_get` e `http_post` chiamano gli indirizzi scritti nel programma, `env` legge
@@ -154,6 +165,8 @@ Se c'è `ANTHROPIC_API_KEY`, Tokyn usa l'API. Puoi anche scegliere tu con `--bac
 - **"manca la chiave ANTHROPIC_API_KEY".** Non c'è una chiave API e il comando `claude` non è stato trovato (oppure
   hai scelto `--backend api`). Imposta la chiave, oppure installa Claude Code e fai il login, oppure prova il
   programma con `--mock`.
+- **"manca la chiave OPENAI_API_KEY per l'agente …"** (o la variabile di un altro fornitore). L'agente usa un altro
+  fornitore: imposta quella chiave, oppure prova il programma con `--mock`.
 - **"Claude Code non ha risposto per l'agente …".** Apri `claude` una volta e completa il login, poi riprova.
 - **"manca il pacchetto anthropic" o "è troppo vecchio".** Serve solo con la chiave API:
   `pip install -U "anthropic>=0.108"`.

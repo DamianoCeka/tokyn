@@ -43,7 +43,7 @@ Campi (si scrivono con `:`, mai con `=`):
 | Campo | Obbligatorio | Valore |
 |---|---|---|
 | `instructions` | sì | testo: chi è l'agente e cosa deve fare. Può essere `"""su più righe"""` o una costante |
-| `model` | no (default `"claude"`) | `"claude"`, `"claude-opus"`, `"claude-haiku"`, `"mock"` oppure l'id completo di un modello |
+| `model` | no (default `"claude"`) | `"claude"`, `"claude-opus"`, `"claude-haiku"`, `"mock"`, l'id completo di un modello Claude, oppure `"fornitore:modello"` per un altro fornitore (vedi [Altri fornitori](#altri-fornitori)) |
 | `tools` | no | lista di nomi di funzioni `def` o di altri agenti |
 | `output` | no | nome di un `type`: l'agente risponde con dati strutturati |
 | `memory` | no (default `False`) | `True` per ricordare la conversazione tra una `ask` e l'altra |
@@ -56,13 +56,46 @@ Un agente si usa **solo** così:
 - `Agente.ask_all(testi)` → una lista di risposte, nello stesso ordine dei testi: come un ciclo di `ask`, ma con la
   Batch API di Anthropic, che costa la metà. È più lento (di solito minuti, al massimo 24 ore) e non usa la memoria:
   adatto ai lavori in blocco, non alle chat. Un testo rifiutato o con un errore nel batch viene riprovato con una
-  chiamata normale; se resta senza risposta, il programma si ferma dicendo quale.
+  chiamata normale; se resta senza risposta, il programma si ferma dicendo quale. Con gli altri fornitori è un
+  ciclo di `ask` (una richiesta alla volta, senza memoria).
 - `Agente.reset()` → cancella la memoria.
 
 Durante `ask` il runtime gestisce da solo il ciclo delle chiamate agli strumenti,
 i retry e la validazione dell'output. Non serve scrivere nessun ciclo.
 
 Un agente nella lista `tools` di un altro agente diventa un sotto-agente a cui delegare.
+
+## Altri fornitori
+
+Tokyn è pensato per Claude, e i suoi benchmark sono stati fatti con Claude di Anthropic. Un agente può però usare
+un altro fornitore con `model: "fornitore:modello"`, tramite la sua API compatibile con OpenAI (Chat Completions):
+
+```
+agent Riassunto:
+    model: "openai:gpt-5.6-luna"
+    instructions: "Riassumi in tre righe."
+```
+
+| Prefisso | Chiave | Note |
+|---|---|---|
+| `openai` | `OPENAI_API_KEY` | per gli strumenti `gpt-5.6-terra` o `gpt-5.6-luna`: altri modelli recenti li usano solo con la Responses API o con `reasoning_effort` `"none"`, che Tokyn non manda |
+| `gemini` | `GEMINI_API_KEY` | API compatibile di Google, ancora in beta |
+| `mistral` | `MISTRAL_API_KEY` | `effort` vale solo come `"high"` (o più) |
+| `deepseek` | `DEEPSEEK_API_KEY` | output come JSON libero, validato e ritentato |
+| `groq` | `GROQ_API_KEY` | schema rigido solo su alcuni modelli e senza strumenti; altrimenti JSON libero o lo strumento `rispondi` |
+| `openrouter` | `OPENROUTER_API_KEY` | il modello si scrive con il suo autore: `openrouter:google/gemini-3.8-flash` |
+| `xai` | `XAI_API_KEY` | `effort` non si usa |
+| `ollama` | nessuna | in locale (`http://localhost:11434/v1`); prima `ollama pull modello`. Contesto predefinito corto: alzalo con `OLLAMA_CONTEXT_LENGTH` |
+| `openai-compatible` | `TOKYN_OPENAI_API_KEY` (se serve) | qualunque altro server compatibile, all'indirizzo in `TOKYN_OPENAI_BASE_URL` (es. `http://localhost:8000/v1`) |
+
+- Si comportano come gli agenti Claude: istruzioni, strumenti, `max_steps`, `memory`, `reset`, output strutturati
+  validati e ritentati. Dove il fornitore lo permette l'output usa uno schema rigido (`json_schema`), altrimenti
+  JSON libero o lo strumento `rispondi`. `ask_all` è un ciclo di `ask`.
+- `effort` diventa `reasoning_effort` solo con `openai`, `gemini`, `mistral`, `deepseek` e `groq`; altrove si ignora.
+- Senza la chiave il programma si ferma dicendo quale variabile impostare. `--mock` funziona con ogni fornitore,
+  senza chiavi. `--backend` e Claude Code valgono solo per i modelli Claude.
+- I limiti di frequenza e i server occupati si riprovano da soli (rispettando `Retry-After`); credito esaurito e
+  richieste sbagliate no. `--usage` conta anche i token degli altri fornitori.
 
 ## Strumenti (funzioni)
 
@@ -178,7 +211,7 @@ main:
 | `tokyn run file.tokyn --mock` | esegue con risposte finte, senza chiamare l'IA |
 | `tokyn run file.tokyn --usage` | alla fine mostra i token spesi e quelli letti dalla cache |
 | `tokyn build file.tokyn` | genera il file Python equivalente |
-| `tokyn build file.tokyn --standalone` | genera un file Python autonomo (serve solo `anthropic`) |
+| `tokyn build file.tokyn --standalone` | genera un file Python autonomo (serve solo `anthropic`, e per gli altri fornitori niente) |
 | `tokyn spec` | stampa questa specifica |
 | `tokyn new nome` | crea un file di partenza |
 | `tokyn check --lang en file.tokyn` | lingua dei messaggi (`it` o `en`), con ogni comando. Vince la variabile `TOKYN_LANG`; senza nessuna delle due vale la lingua della Skill o del sistema |
@@ -196,6 +229,7 @@ main:
 | E130–E139 | campo dell'agente sbagliato, mancante o con un valore non valido |
 | E144 | agenti che si delegano a vicenda |
 | E145 | valore di `effort` non valido |
+| E146 | fornitore sconosciuto in `model: "fornitore:modello"`, o nome del modello mancante |
 | E142 | si tenta di modificare una costante |
 | E160 / E161 | nome non definito / variabile usata prima di assegnarla |
 | E162 | costante o valore predefinito che usa qualcosa scritto più sotto |

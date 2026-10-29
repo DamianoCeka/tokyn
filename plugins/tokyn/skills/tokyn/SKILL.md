@@ -138,6 +138,8 @@ main:                                          # punto di partenza, uno solo
 - Costi: `"claude-haiku"` per classificare o estrarre molti testi semplici, il default `"claude"` per il resto,
   `"claude-opus"` solo per compiti difficili; `effort: "low"` riduce i token di ragionamento. Istruzioni e
   strumenti restano in cache tra una chiamata e l'altra: tienili fissi e metti i dati che cambiano nel testo dell'`ask`.
+- Altri fornitori, solo se l'utente lo chiede: `model: "openai:gpt-5.6-luna"` (anche `gemini` `mistral` `deepseek`
+  `groq` `openrouter` `xai` `ollama` `openai-compatible`); chiavi e note nella tabella "Altri fornitori" di SPEC.md.
 
 ## Non esistono
 

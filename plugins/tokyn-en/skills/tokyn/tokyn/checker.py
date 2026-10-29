@@ -16,6 +16,7 @@ from lark import Token, Tree
 from .errors import Diagnostic, did_you_mean, suggest
 from .lingua import tr
 from .parser import parse_expr
+from .runtime import FORNITORI, aiuto_fornitori, dividi_modello
 
 # ---------------------------------------------------------------- tipi statici
 
@@ -35,7 +36,7 @@ def LIST(elem=ANY):
 PRIMITIVES = {"str": STR, "int": INT, "float": FLOAT, "bool": BOOL, "dict": DICT}
 
 AGENT_FIELDS = {
-    "model": "nome del modello: \"claude\", \"claude-opus\", \"claude-haiku\", \"mock\" o un id completo",
+    "model": "nome del modello: \"claude\", \"claude-opus\", \"claude-haiku\", \"mock\", un id completo o \"fornitore:modello\"",
     "instructions": "le istruzioni (system prompt) dell'agente",
     "tools": "lista di funzioni (def) o di altri agenti che l'agente può usare",
     "output": "nome di un `type`: l'agente risponde con dati strutturati invece che testo",
@@ -532,6 +533,11 @@ class Checker:
                                value, tr('Esempio: effort: "low" per classificare o estrarre (costa meno).',
                                          'Example: effort: "low" to classify or extract (it costs less).'))
 
+            if "model" in fields:
+                value = fields["model"][1]
+                if isinstance(value, Tree) and value.data == "string":
+                    self.check_model(string_value(value.children[0]), value)
+
             const_scope = Scope(self, kind="agent")
             for fname in ("model", "instructions"):
                 if fname in fields:
@@ -539,6 +545,21 @@ class Checker:
                     if t not in (STR, ANY):
                         self.error("E139", tr(f"{fname} deve essere un testo", f"{fname} must be a text"), fields[fname][1],
                                    tr('Usa una stringa tra virgolette, es. model: "claude"', 'Use a quoted string, e.g. model: "claude"'))
+
+    def check_model(self, model: str, node):
+        """model "fornitore:modello": il fornitore deve essere tra quelli noti e il modello non può mancare."""
+        parts = dividi_modello(model)
+        if parts is None and dividi_modello(model.lower()) is not None:  # "OpenAI:gpt-..." andrebbe a Claude così com'è
+            parts = tuple(model.split(":", 1))
+        if parts is None:
+            return
+        provider, name = parts
+        if provider not in FORNITORI:
+            self.error("E146", tr(f'fornitore sconosciuto "{provider}" in model', f'unknown provider "{provider}" in model'), node,
+                       " ".join(p for p in (did_you_mean(provider.lower(), FORNITORI), aiuto_fornitori()) if p))
+        elif not name.strip():
+            self.error("E146", tr(f'manca il nome del modello dopo "{provider}:"', f'the model name after "{provider}:" is missing'),
+                       node, tr(f'Esempio: model: "{provider}:nome-del-modello"', f'Example: model: "{provider}:model-name"'))
 
     # ------------------------------------------------------------ main
     def check_main(self):

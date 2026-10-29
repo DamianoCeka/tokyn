@@ -6,8 +6,10 @@ Il codice Python generato dal compilatore importa questo modulo.
 from __future__ import annotations
 
 import datetime as _dt
+import email.utils as _eutils
 import json as _json
 import os
+import re
 import secrets
 import shutil
 import socket
@@ -17,6 +19,8 @@ import tempfile
 import textwrap
 import threading
 import time as _time
+import http.client as _httpc
+import urllib.error as _urlerr
 import urllib.request as _urlreq
 
 from .errors import TokynRuntimeError
@@ -318,8 +322,11 @@ class Agent:
     # ---------------------------------------------------------------- ask
     def ask(self, text):
         text = str(text)
+        ricordo = None  # con gli altri fornitori la risposta da ricordare porta anche i campi nascosti
         if _use_mock(self.model):
             answer, final_text = _mock_answer(self, text)
+        elif _fornitore(self.model):
+            answer, final_text, ricordo = _chiedi_chat(self, text, self._history)
         elif _backend() == "claude-code":
             answer, final_text = _claude_code_ask(self, text, self._history)
         else:
@@ -327,7 +334,7 @@ class Agent:
         if self.memory:
             self._history += [
                 {"role": "user", "content": text},
-                {"role": "assistant", "content": final_text or "(nessuna risposta)"},
+                ricordo or {"role": "assistant", "content": final_text or "(nessuna risposta)"},
             ]
         return answer
 
@@ -335,6 +342,7 @@ class Agent:
         """Come un ciclo di ask, ma con la Batch API: costa la metà e restituisce le risposte nello stesso ordine.
 
         È più lento (di solito minuti) e non usa la memoria: ogni testo è una richiesta a sé.
+        Con gli altri fornitori (e con Claude Code) è un ciclo di ask senza memoria.
         """
         if isinstance(texts, (str, dict)) or not hasattr(texts, "__iter__"):
             raise TokynRuntimeError(tr(f"{self.name}.ask_all vuole una lista di testi", f"{self.name}.ask_all takes a list of texts"),
@@ -342,13 +350,18 @@ class Agent:
         texts = [str(t) for t in texts]
         if _use_mock(self.model):
             return [_mock_answer(self, t)[0] for t in texts]
+        if _fornitore(self.model):  # gli altri fornitori non hanno la Batch API di Anthropic: una richiesta alla volta
+            return [_chiedi_chat(self, t, [])[0] for t in texts]
         if _backend() == "claude-code":  # la Batch API c'è solo con la chiave: una richiesta alla volta
             return [_claude_code_ask(self, t, [])[0] for t in texts]
         return self._run_batch(texts) if texts else []
 
-    def _system(self):
+    def _system(self, final_tool=None):
+        """Le istruzioni per l'IA; final_tool dice se l'output arriva con lo strumento `rispondi` (di solito si sa da solo)."""
         system = self.instructions
-        if self.output is not None and not self._native_output:
+        if final_tool is None:
+            final_tool = self.output is not None and not self._native_output
+        if final_tool:
             system += (
                 f"\n\nQuando hai finito, chiama sempre lo strumento `{FINAL_TOOL}` con la risposta finale "
                 "nel formato richiesto. Non rispondere solo con testo."
@@ -560,6 +573,9 @@ def usage_report() -> str:
     if u["fallback"]:
         report += tr(f"; {u['fallback']} risposte da un modello di riserva dopo un rifiuto",
                      f"; {u['fallback']} answer{'' if u['fallback'] == 1 else 's'} from a fallback model after a refusal")
+    if _USO_FORNITORI:
+        others = ", ".join(f"{nome} {n}" for nome, n in _USO_FORNITORI.items())
+        report += tr(f"; chiamate ad altri fornitori: {others}", f"; calls to other providers: {others}")
     if u["chiamate_claude_code"]:
         report += tr(f"; {u['chiamate_claude_code']} tramite Claude Code "
                      f"(valore indicativo a prezzi API: ${u['costo_claude_code']:.4f})",
@@ -839,6 +855,440 @@ def _with_retry(fn, agent_name, attempts=3):
                 raise failure from None
             _time.sleep(delay)
             delay *= 2
+
+
+# ======================================================================= altri fornitori
+#
+# Con model "fornitore:modello" (es. "openai:gpt-5.6-luna") l'agente usa l'API Chat Completions compatibile con
+# OpenAI, chiamata con urllib: nessuna dipendenza in più, anche nei file autonomi. Si comporta come un agente Claude
+# (istruzioni, strumenti, passaggi, output validati e ritentati, memoria); le differenze tra i fornitori vengono
+# dalla loro documentazione, letta il 2026-10-29.
+
+_ALTO = {"low": "low", "medium": "medium", "high": "high", "xhigh": "high", "max": "high"}
+
+# url: indirizzo dell'API; chiave: variabile con la chiave (None: non serve); max: il campo del limite di token;
+# formato: output strutturati con schema rigido ("json_schema") o solo JSON libero ("json_object");
+# effort: valore di reasoning_effort per ogni effort di Tokyn (senza, l'effort si ignora);
+# strict: strumenti con schema rigido; campi_standard: l'API rifiuta i campi in più nei messaggi rimandati.
+FORNITORI = {
+    "openai": {"url": "https://api.openai.com/v1", "chiave": "OPENAI_API_KEY", "max": "max_completion_tokens",
+               "formato": "json_schema", "effort": _ALTO, "strict": True},
+    "gemini": {"url": "https://generativelanguage.googleapis.com/v1beta/openai", "chiave": "GEMINI_API_KEY",
+               "max": "max_tokens", "formato": "json_schema", "effort": _ALTO},
+    "mistral": {"url": "https://api.mistral.ai/v1", "chiave": "MISTRAL_API_KEY", "max": "max_tokens",
+                "formato": "json_schema", "effort": {"high": "high", "xhigh": "high", "max": "high"},
+                "campi_standard": True},
+    "deepseek": {"url": "https://api.deepseek.com", "chiave": "DEEPSEEK_API_KEY", "max": "max_tokens",
+                 "formato": "json_object",
+                 "effort": {"low": "low", "medium": "high", "high": "high", "xhigh": "max", "max": "max"}},
+    "groq": {"url": "https://api.groq.com/openai/v1", "chiave": "GROQ_API_KEY", "max": "max_completion_tokens",
+             "formato": "json_object", "effort": _ALTO, "campi_standard": True},
+    "openrouter": {"url": "https://openrouter.ai/api/v1", "chiave": "OPENROUTER_API_KEY", "max": "max_tokens",
+                   "formato": "json_schema"},
+    "xai": {"url": "https://api.x.ai/v1", "chiave": "XAI_API_KEY", "max": "max_completion_tokens", "formato": "json_schema"},
+    "ollama": {"url": "http://localhost:11434/v1", "chiave": None, "max": "max_tokens", "formato": "json_schema"},
+    # qualunque altro server compatibile: indirizzo in TOKYN_OPENAI_BASE_URL, chiave facoltativa
+    "openai-compatible": {"url": None, "chiave": "TOKYN_OPENAI_API_KEY", "max": "max_tokens", "formato": "json_schema",
+                          "chiave_facoltativa": True},
+}
+GROQ_STRICT = ("gpt-oss-20b", "gpt-oss-120b", "qwen3.8-27b", "muse-spark-open")  # schema rigido, ma senza strumenti
+_RITENTA = (408, 429, 498)  # più i 5xx, tranne 501 (il server non sa fare la richiesta: riprovare non serve)
+_SENZA_CREDITO = ("insufficient_quota", "credit_balance", "spend_limit", "usage_limit_exceeded", "billing_hard_limit")
+_INTERROTTE = ("error", "insufficient_system_resource", "aborted")  # finish_reason di un server che non ha finito
+_SOLO_IN_RISPOSTA = ("refusal", "annotations", "audio", "function_call")
+_USO_FORNITORI: dict[str, int] = {}
+
+
+def dividi_modello(model):
+    """("fornitore", "modello") per model "fornitore:modello", None per i modelli Claude.
+
+    Il prefisso conta solo se ha la forma di un nome (minuscole, cifre e trattini): un id come
+    "anthropic.claude-...-v1:0" resta un id di Claude, e così un ARN di Bedrock ("arn:aws:bedrock:...")."""
+    if not isinstance(model, str) or ":" not in model:
+        return None
+    prefisso, modello = model.split(":", 1)
+    if not re.fullmatch(r"[a-z][a-z0-9-]*", prefisso) or prefisso == "arn":
+        return None
+    return prefisso, modello
+
+
+def aiuto_fornitori() -> str:
+    nomi = ", ".join(FORNITORI)
+    return tr(f'Scrivi model: "fornitore:modello" con uno tra {nomi} (es. "openai:gpt-5.6-luna"), '
+              'oppure un modello Claude: "claude", "claude-opus", "claude-haiku".',
+              f'Write model: "provider:model" with one of {nomi} (e.g. "openai:gpt-5.6-luna"), '
+              'or a Claude model: "claude", "claude-opus", "claude-haiku".')
+
+
+def _fornitore(model):
+    """Il fornitore di un agente con model "fornitore:modello"; None per Claude."""
+    parti = dividi_modello(model)
+    if parti is None:
+        return None
+    if parti[0] not in FORNITORI:
+        raise TokynRuntimeError(tr(f'fornitore sconosciuto "{parti[0]}" in model "{model}"',
+                                   f'unknown provider "{parti[0]}" in model "{model}"'), hint=aiuto_fornitori())
+    return parti[0]
+
+
+def _chiedi_chat(agent, text, history):
+    """Una ask con un altro fornitore: restituisce (valore, testo da ricordare, messaggio da ricordare)."""
+    nome = _fornitore(agent.model)
+    modello = agent.model.split(":", 1)[1]
+    url, chiave = _indirizzo_e_chiave(agent, nome)
+    modo = _modo_output(agent, nome, modello)
+    messages = list(history) + [{"role": "user", "content": text}]
+    for _passo in range(agent.max_steps):
+        risposta = _post_chat(url, chiave, _richiesta_chat(agent, nome, modello, modo, messages), agent.name, nome)
+        fatto, valore, finale, ricordo = _passo_chat(agent, nome, modo, risposta, messages)
+        if fatto:
+            return valore, finale, ricordo
+    raise agent._too_many_steps()
+
+
+def _indirizzo_e_chiave(agent, nome):
+    conf = FORNITORI[nome]
+    url = conf["url"]
+    if url is None:
+        url = os.environ.get("TOKYN_OPENAI_BASE_URL", "").strip()
+        if not url:
+            raise TokynRuntimeError(
+                tr(f"manca TOKYN_OPENAI_BASE_URL per l'agente {agent.name} (model \"{agent.model}\")",
+                   f"TOKYN_OPENAI_BASE_URL is not set for agent {agent.name} (model \"{agent.model}\")"),
+                hint=tr("Impostala con l'indirizzo dell'API, es. http://localhost:8000/v1 (la chiave, se serve, va in "
+                        "TOKYN_OPENAI_API_KEY), oppure prova il programma senza IA con: tokyn run file.tokyn --mock",
+                        "Set it to the address of the API, e.g. http://localhost:8000/v1 (the key, if needed, goes in "
+                        "TOKYN_OPENAI_API_KEY), or try the program without AI with: tokyn run file.tokyn --mock"))
+        if not re.match(r"https?://", url):  # senza http:// urllib non sa che fare: meglio dirlo subito
+            raise TokynRuntimeError(
+                tr(f'TOKYN_OPENAI_BASE_URL non è un indirizzo web: "{url}"', f'TOKYN_OPENAI_BASE_URL is not a web address: "{url}"'),
+                hint=tr("Scrivilo con http:// o https://, es. http://localhost:8000/v1",
+                        "Write it with http:// or https://, e.g. http://localhost:8000/v1"))
+    var = conf["chiave"]
+    chiave = os.environ.get(var, "").strip() if var else ""
+    if not chiave and var and not conf.get("chiave_facoltativa"):
+        raise TokynRuntimeError(
+            tr(f"manca la chiave {var} per l'agente {agent.name} (model \"{agent.model}\")",
+               f"{var} is not set for agent {agent.name} (model \"{agent.model}\")"),
+            hint=tr(f"Impostala come variabile d'ambiente con la tua chiave di {nome}, oppure prova il programma senza IA "
+                    "con: tokyn run file.tokyn --mock",
+                    f"Set it as an environment variable with your {nome} key, or try the program without AI with: "
+                    "tokyn run file.tokyn --mock"))
+    return url, chiave or "tokyn"  # Ollama e i server locali vogliono una chiave qualsiasi
+
+
+def _modo_output(agent, nome, modello):
+    """Come arriva l'output strutturato: "json_schema" (schema rigido dell'API), "json_object" (JSON libero, con lo
+    schema nelle istruzioni) o "strumento" (lo strumento `rispondi`, come con Claude). None senza output."""
+    if agent.output is None:
+        return None
+    if not agent._native_output:  # dict liberi o ricorsione: niente schema rigido
+        return "strumento"
+    formato = FORNITORI[nome]["formato"]
+    if nome == "groq" and modello.split("/")[-1] in GROQ_STRICT and not agent.tools:
+        formato = "json_schema"
+    if formato == "json_object" and agent.tools:  # JSON libero insieme agli strumenti: non documentato, meglio `rispondi`
+        return "strumento"
+    return formato
+
+
+def _strumento_chat(schema, nome):
+    funzione = {"name": schema["name"], "description": schema["description"], "parameters": schema["input_schema"]}
+    if FORNITORI[nome].get("strict") and schema.get("strict"):
+        funzione["strict"] = True
+    return {"type": "function", "function": funzione}
+
+
+def _richiesta_chat(agent, nome, modello, modo, messages):
+    """Il corpo della richiesta. Niente temperature, stop o penalità: diversi modelli che ragionano li rifiutano."""
+    conf = FORNITORI[nome]
+    system = agent._system(final_tool=modo == "strumento")
+    schema = agent.output.__tokyn_schema__() if agent.output is not None else None
+    if modo == "json_object":  # la parola JSON serve anche a DeepSeek per accettare il formato
+        system += ("\n\nRispondi solo con un oggetto JSON che rispetta questo schema JSON:\n"
+                   + _json.dumps(schema, ensure_ascii=False))
+    body = {"model": modello, "messages": [{"role": "system", "content": system}] + messages, conf["max"]: MAX_TOKENS}
+    tools = [_strumento_chat(_tool_schema(t), nome) for t in agent.tools]
+    if modo == "strumento":
+        tools.append(_strumento_chat({"name": FINAL_TOOL, "description": "Consegna la risposta finale nel formato richiesto.",
+                                      "input_schema": schema}, nome))
+    if tools:
+        body["tools"] = tools
+    if modo == "json_schema":
+        body["response_format"] = {"type": "json_schema", "json_schema": {
+            "name": re.sub(r"[^A-Za-z0-9_-]", "_", agent.output.__name__)[:64], "schema": schema, "strict": True}}
+    elif modo == "json_object":
+        body["response_format"] = {"type": "json_object"}
+    effort = conf.get("effort", {}).get(agent.effort) if agent.effort else None
+    if effort:
+        body["reasoning_effort"] = effort
+    if nome == "openrouter" and (tools or modo):  # solo i server che rispettano strumenti e formato
+        body["provider"] = {"require_parameters": True}
+    return body
+
+
+def _post_chat(url, chiave, body, agent_name, nome, attempts=5):
+    """Una chiamata a /chat/completions. Riprova su limiti di frequenza, server occupati e risposte interrotte,
+    rispettando Retry-After; non riprova se manca il credito o la richiesta è sbagliata."""
+    headers = {"Content-Type": "application/json", "Authorization": f"Bearer {chiave}", "User-Agent": "tokyn/0.1"}
+    if nome == "openrouter":
+        headers["X-OpenRouter-Title"] = "Tokyn"
+    data = _json.dumps(body, ensure_ascii=False).encode("utf-8")
+    delay = 2.0
+    for i in range(attempts):
+        last = i == attempts - 1
+        wait = delay
+        try:
+            req = _urlreq.Request(url.rstrip("/") + "/chat/completions", data=data, headers=headers, method="POST")
+            with _urlreq.urlopen(req, timeout=900) as r:  # i modelli che ragionano possono metterci minuti
+                text = r.read().decode("utf-8", errors="replace")
+        except _urlerr.HTTPError as err:
+            try:
+                text = err.read().decode("utf-8", errors="replace")
+            except Exception:  # corpo illeggibile: basta il codice
+                text = ""
+            message, code = _errore_api(text)
+            after = _retry_after(err.headers)
+            # OpenRouter: un 402 per il budget delle richieste in corso passa da solo, e allora manda Retry-After
+            in_flight = err.code == 402 and "openrouter_in_flight_budget" in text and after is not None
+            no_credit = not in_flight and (err.code == 402 or any(s in (code + " " + message).lower() for s in _SENZA_CREDITO))
+            if no_credit or not (in_flight or _ritentabile(err.code)) or last:
+                raise _errore_http(err.code, message, no_credit, agent_name, nome, body["model"]) from None
+            wait = delay if after is None else after
+        except (OSError, _httpc.HTTPException) as err:  # rete, connessione rifiutata, timeout
+            if last:
+                hint = (tr(f"Avvia Ollama e scarica il modello: ollama pull {body['model']}",
+                           f"Start Ollama and download the model: ollama pull {body['model']}") if nome == "ollama"
+                        else tr("Controlla TOKYN_OPENAI_BASE_URL.", "Check TOKYN_OPENAI_BASE_URL.") if nome == "openai-compatible"
+                        else tr("Controlla la connessione a internet.", "Check the internet connection."))
+                shown = re.sub(r"//[^/@]*@", "//", url)  # utente e password nell'indirizzo non si stampano
+                raise TokynRuntimeError(tr(f"impossibile raggiungere {nome} ({shown}) per l'agente {agent_name}: "
+                                           f"{getattr(err, 'reason', None) or err}",
+                                           f"cannot reach {nome} ({shown}) for agent {agent_name}: "
+                                           f"{getattr(err, 'reason', None) or err}"), hint=hint) from None
+        else:
+            try:
+                response = _json.loads(text)  # le righe vuote mandate durante l'attesa (DeepSeek) non danno fastidio
+            except ValueError:
+                raise TokynRuntimeError(tr(f"{nome} non ha risposto in JSON per l'agente {agent_name}: {text.strip()[:200]}",
+                                           f"{nome} did not answer in JSON for agent {agent_name}: {text.strip()[:200]}"),
+                                        hint=tr("Controlla l'indirizzo dell'API.", "Check the address of the API.")) from None
+            choices = response.get("choices") if isinstance(response, dict) else None
+            if not (isinstance(choices, list) and choices and isinstance(choices[0], dict)):
+                # errore arrivato dopo l'inizio della risposta (OpenRouter): HTTP 200 con `error`, a volte col suo codice
+                message, code = _errore_api(text)
+                status = next((int(c) for c in code.split() if c.isdigit()), 200)
+                no_credit = status == 402 or any(s in (code + " " + message).lower() for s in _SENZA_CREDITO)
+                if no_credit or last or (400 <= status < 500 and not _ritentabile(status)):
+                    raise _errore_http(status, message or tr("risposta senza choices", "answer without choices"),
+                                       no_credit, agent_name, nome, body["model"])
+            elif (choices[0] or {}).get("finish_reason") in _INTERROTTE and not last:
+                _conta_uso_chat(nome, response.get("usage"))  # si paga anche il tentativo interrotto
+            else:
+                return response
+        _time.sleep(min(wait, 60.0))
+        delay *= 2
+
+
+def _ritentabile(status):
+    return status in _RITENTA or (status >= 500 and status != 501)
+
+
+def _retry_after(headers):
+    """I secondi da aspettare secondo Retry-After (un numero o una data HTTP); None se manca o non si capisce."""
+    try:
+        value = str(headers.get("Retry-After") or "").strip()
+    except AttributeError:
+        return None
+    if not value:
+        return None
+    try:
+        seconds = float(value)
+    except ValueError:
+        try:
+            seconds = (_eutils.parsedate_to_datetime(value) - _dt.datetime.now(_dt.timezone.utc)).total_seconds()
+        except (TypeError, ValueError, IndexError, OverflowError):
+            return None
+    return max(0.0, seconds) if seconds == seconds else None  # NaN: come se mancasse
+
+
+def _errore_api(text):
+    """Messaggio e codice di un errore, nelle forme dei vari fornitori."""
+    try:
+        data = _json.loads(text)
+    except ValueError:
+        return text.strip()[:300], ""
+    if isinstance(data, list) and data:  # Gemini a volte manda una lista
+        data = data[0]
+    if not isinstance(data, dict):
+        return str(data)[:300], ""
+    err = data.get("error", data)
+    if not isinstance(err, dict):
+        return str(err)[:300], ""
+    message = err.get("message") or err.get("detail") or data.get("message") or data.get("detail") or ""
+    code = " ".join(str(err[k]) for k in ("code", "type", "status") if err.get(k) is not None)
+    return str(message)[:300], code
+
+
+def _errore_http(status, message, no_credit, agent_name, nome, modello):
+    detail = f" ({status}): {message}" if message else f" ({status})"
+    var = FORNITORI[nome]["chiave"]
+    if no_credit:
+        return TokynRuntimeError(tr(f"{nome}: credito o quota esauriti per l'agente {agent_name}{detail}",
+                                    f"{nome}: credit or quota used up for agent {agent_name}{detail}"),
+                                 hint=tr(f"Controlla il piano e il credito del tuo account {nome}.",
+                                         f"Check the plan and the credit of your {nome} account."))
+    if status in (401, 403):
+        return TokynRuntimeError(tr(f"{nome} ha rifiutato la richiesta dell'agente {agent_name}{detail}",
+                                    f"{nome} rejected agent {agent_name}'s request{detail}"),
+                                 hint=tr(f"Controlla la chiave in {var}.", f"Check the key in {var}.") if var else "")
+    if status == 404:
+        return TokynRuntimeError(tr(f'modello "{modello}" non trovato su {nome} per l\'agente {agent_name}{detail}',
+                                    f'model "{modello}" not found on {nome} for agent {agent_name}{detail}'),
+                                 hint=tr(f"Scaricalo con: ollama pull {modello}", f"Download it with: ollama pull {modello}")
+                                 if nome == "ollama" else
+                                 tr(f'Controlla il nome del modello dopo "{nome}:" nella documentazione di {nome}.',
+                                    f'Check the model name after "{nome}:" in the {nome} documentation.'))
+    failure = TokynRuntimeError(tr(f"chiamata a {nome} fallita per l'agente {agent_name}{detail}",
+                                   f"call to {nome} failed for agent {agent_name}{detail}"))
+    failure.bad_request = status == 400
+    return failure
+
+
+def _passo_chat(agent, nome, modo, response, messages):
+    """Come Agent._step, per una risposta Chat Completions: esegue gli strumenti richiesti o riconosce la risposta
+    finale. Restituisce (finito, valore, testo da ricordare, messaggio da ricordare)."""
+    _conta_uso_chat(nome, response.get("usage"))
+    choice = response["choices"][0]  # _post_chat ha già controllato che sia un oggetto
+    msg = choice.get("message") if isinstance(choice.get("message"), dict) else {}
+    stop = choice.get("finish_reason")
+    if msg.get("refusal") or stop == "content_filter":
+        reason = msg.get("refusal") or tr("filtro dei contenuti", "content filter")
+        raise TokynRuntimeError(tr(f"l'IA ha rifiutato la richiesta dell'agente {agent.name} ({nome}: {reason})",
+                                   f"the AI refused agent {agent.name}'s request ({nome}: {reason})"),
+                                hint=tr("Riformula le instructions o il testo della richiesta.",
+                                        "Rephrase the instructions or the text of the request."))
+    if stop in ("length", "model_length"):  # anche gli strumenti avrebbero un input troncato: non si eseguono
+        raise TokynRuntimeError(tr(f"la risposta dell'agente {agent.name} è stata interrotta perché troppo lunga",
+                                   f"agent {agent.name}'s answer was cut off because it was too long"),
+                                hint=tr("Chiedi nelle instructions una risposta più breve, o usa un effort più basso.",
+                                        "Ask for a shorter answer in the instructions, or use a lower effort."))
+    if stop in _INTERROTTE:
+        raise TokynRuntimeError(tr(f"{nome} ha interrotto la risposta dell'agente {agent.name} ({stop})",
+                                   f"{nome} stopped agent {agent.name}'s answer ({stop})"),
+                                hint=tr("Riprova più tardi.", "Try again later."))
+    calls = [dict(c) for c in msg.get("tool_calls") or [] if isinstance(c, dict)]
+    for i, call in enumerate(calls):  # id e tipo, se il server non li manda
+        call.setdefault("type", "function")
+        if not call.get("id"):
+            call["id"] = f"call_{len(messages)}_{i}"
+    msg = dict(msg, tool_calls=calls) if calls else {k: v for k, v in msg.items() if k != "tool_calls"}
+    messages.append(_da_rimandare(msg, nome))
+    text = _testo_chat(msg.get("content")).strip()
+
+    if not calls:
+        if agent.output is None:
+            return True, text, text, _da_ricordare(msg, nome, text)
+        if modo != "strumento":
+            try:
+                value = convert(_json.loads(_senza_recinto(text)), T.ref(agent.output.__name__), agent.output.__name__)
+                return True, value, text, _da_ricordare(msg, nome, text)
+            except ValueError as err:  # anche JSON non valido o vuoto
+                messages.append({"role": "user", "content": f"La risposta non è nel formato richiesto ({err}). "
+                                                             "Rispondi di nuovo solo con il JSON richiesto."})
+                return False, None, None, None
+        messages.append({"role": "user", "content": f"Ora chiama lo strumento `{FINAL_TOOL}` con la risposta finale."})
+        return False, None, None, None
+
+    for call in calls:
+        function = call.get("function") if isinstance(call.get("function"), dict) else {}
+        name = function.get("name")
+        try:
+            args = function.get("arguments") or {}
+            args = _json.loads(args) if isinstance(args, str) else args
+            if not isinstance(args, dict):
+                raise ValueError(tr("serve un oggetto", "an object is needed"))
+        except ValueError as err:
+            content = f"Errore: gli argomenti non sono un oggetto JSON valido ({err}). Riprova."
+        else:
+            if name == FINAL_TOOL and modo == "strumento":
+                try:
+                    value = convert(args, T.ref(agent.output.__name__), agent.output.__name__)
+                    final = _json.dumps(to_plain(value), ensure_ascii=False)
+                    return True, value, final, _da_ricordare(msg, nome, final)
+                except ValueError as err:
+                    content = f"Formato non valido: {err}. Riprova."
+            elif name not in agent._tools_by_name:
+                content = f"Lo strumento {name} non esiste."
+            else:
+                try:
+                    content = _call_tool(agent._tools_by_name[name], args)
+                except Exception as err:  # l'errore torna all'IA, che può correggersi
+                    content = f"Errore: {err}"
+        messages.append({"role": "tool", "tool_call_id": call["id"], "content": content})
+    return False, None, None, None
+
+
+def _testo_chat(content):
+    """Il testo della risposta: una stringa, o (Mistral mentre ragiona) una lista di pezzi, di cui conta il testo."""
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        return "".join(p if isinstance(p, str) else str(p.get("text") or "") for p in content
+                       if isinstance(p, str) or (isinstance(p, dict) and p.get("type") == "text"))
+    return ""
+
+
+def _senza_recinto(text):
+    """Il JSON senza il recinto ```json ... ``` che alcuni modelli aggiungono."""
+    if text.startswith("```"):
+        text = text.split("\n", 1)[1] if "\n" in text else ""
+        text = text.rsplit("```", 1)[0]
+    return text
+
+
+def _da_rimandare(msg, nome):
+    """Il messaggio dell'IA da rimettere nella conversazione, con i campi nascosti che alcuni fornitori vogliono
+    ritrovare (reasoning_content di DeepSeek, firme del ragionamento di Gemini in extra_content, reasoning_details di
+    OpenRouter); solo i campi standard dove l'API rifiuta gli altri (Mistral, Groq)."""
+    out = {k: v for k, v in msg.items() if v is not None and k not in _SOLO_IN_RISPOSTA}
+    out["role"] = "assistant"
+    out["content"] = msg.get("content")
+    if out["content"] is None and not out.get("tool_calls"):  # una risposta vuota: senza testo né strumenti l'API la rifiuta
+        out["content"] = ""
+    if FORNITORI[nome].get("campi_standard"):
+        out = {k: v for k, v in out.items() if k in ("role", "content", "tool_calls")}
+        if "tool_calls" in out:
+            out["tool_calls"] = [{"id": c["id"], "type": c["type"],
+                                  "function": {k: v for k, v in (c.get("function") or {}).items() if k in ("name", "arguments")}}
+                                 for c in out["tool_calls"]]
+    return out
+
+
+def _da_ricordare(msg, nome, text):
+    """La risposta finale per la memoria: il testo, più i campi nascosti (DeepSeek vuole il suo reasoning_content
+    in ogni turno precedente)."""
+    remembered = {k: v for k, v in msg.items() if k != "tool_calls"}
+    remembered["content"] = text or "(nessuna risposta)"
+    return _da_rimandare(remembered, nome)
+
+
+def _conta_uso_chat(nome, usage):
+    _USAGE["chiamate"] += 1
+    _USO_FORNITORI[nome] = _USO_FORNITORI.get(nome, 0) + 1
+    if not isinstance(usage, dict):
+        return
+    details = usage.get("prompt_tokens_details")
+    details = details if isinstance(details, dict) else {}
+
+    def num(value):  # un server che manda altro al posto dei numeri non deve fermare il programma
+        return value if isinstance(value, int) and not isinstance(value, bool) and value > 0 else 0
+
+    read = num(details.get("cached_tokens")) or num(usage.get("prompt_cache_hit_tokens"))  # il secondo è di DeepSeek
+    _USAGE["input"] += max(0, num(usage.get("prompt_tokens")) - read)  # come con Claude: senza i token dalla cache
+    _USAGE["output"] += num(usage.get("completion_tokens"))
+    _USAGE["cache_lette"] += read
+    _USAGE["cache_scritte"] += num(details.get("cache_write_tokens"))
 
 
 # ======================================================================= mock

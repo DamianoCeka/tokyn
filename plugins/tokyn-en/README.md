@@ -45,6 +45,10 @@ In a Claude Code session:
     `PATH`; no API key needed);
   - an **Anthropic API key** in `ANTHROPIC_API_KEY`, plus the SDK: `pip install "anthropic>=0.108"`. This is the
     way for programs that run on their own or for other people (see [the rule below](#claude-code-login-or-api-key)).
+- **Other providers**, only if you ask for them: an agent with `model: "openai:gpt-5.6-luna"` or the like uses that
+  provider's key (`OPENAI_API_KEY`, `GEMINI_API_KEY`, `MISTRAL_API_KEY`, `DEEPSEEK_API_KEY`, `GROQ_API_KEY`,
+  `OPENROUTER_API_KEY`, `XAI_API_KEY`; none for a local Ollama) and nothing else needs installing. The full list is
+  in the "Other providers" section of the specification. Tokyn's benchmarks were run with Anthropic Claude.
 
 ## Example prompts
 
@@ -101,7 +105,8 @@ permissions.
 
 **What is sent when agents answer.** With `--mock`, nothing. Otherwise, for each question, the agent's
 instructions, the question, the earlier turns when the agent has `memory: True`, the description of its tools and
-their results, and the output format are sent to Anthropic in one of two ways:
+their results, and the output format are sent to Anthropic in one of two ways (or to another provider, when the
+agent names one in its `model`):
 
 - **Without an API key, through your Claude Code.** Tokyn starts `claude -p` with your login. For that call it
   switches off Claude Code's own tools, settings files, slash commands and other MCP servers, and the session is
@@ -111,6 +116,12 @@ their results, and the output format are sent to Anthropic in one of two ways:
 - **With `ANTHROPIC_API_KEY`, through the Anthropic API**, with the official `anthropic` Python SDK: the Messages
   API, the Message Batches API for `ask_all`, and, on the models that support it, the server-side fallback beta
   (if a model refuses, the API retries on another one).
+- **With `model: "provider:model"`, only to that provider**, through its OpenAI-compatible Chat Completions API,
+  with Python's own `urllib` and the key in that provider's variable: OpenAI (`api.openai.com`), Google Gemini
+  (`generativelanguage.googleapis.com`), Mistral (`api.mistral.ai`), DeepSeek (`api.deepseek.com`), Groq
+  (`api.groq.com`), OpenRouter (`openrouter.ai`, which forwards to the model's provider), xAI (`api.x.ai`), Ollama on
+  your own computer (`localhost:11434`: nothing leaves it) or the server in `TOKYN_OPENAI_BASE_URL`. These requests
+  go neither through Anthropic nor through Claude Code.
 
 **What your programs do.** The programs Claude writes are ordinary programs. `read_file`, `write_file` and
 `append_file` use your files, `http_get` and `http_post` call the URLs the program names, `env` reads environment
@@ -154,6 +165,8 @@ When `ANTHROPIC_API_KEY` is set, Tokyn uses the API. You can also choose with `-
   work with `python3`.
 - **"ANTHROPIC_API_KEY is not set".** There is no API key and the `claude` command was not found (or you chose
   `--backend api`). Set the key, or install Claude Code and log in, or try the program with `--mock`.
+- **"OPENAI_API_KEY is not set for agent …"** (or another provider's variable). The agent uses another provider:
+  set that key, or try the program with `--mock`.
 - **"Claude Code did not answer for agent …".** Open `claude` once and complete the login, then try again.
 - **"the anthropic package is missing" or "is too old".** Only needed with an API key:
   `pip install -U "anthropic>=0.108"`.
