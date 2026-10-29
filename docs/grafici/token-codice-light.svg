@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="436" viewBox="0 0 880 436" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" role="img" aria-label="Token del codice scritto da Claude, per programma">
+<rect x="0.5" y="0.5" width="879" height="435" rx="12" fill="#fcfcfb" stroke="rgba(11,11,11,0.10)"/>
+<text x="28" y="40" font-size="18" font-weight="600" fill="#0b0b0b">Token del codice scritto da Claude, per programma</text>
+<text x="28" y="62" font-size="13" fill="#52514e">Lo stesso compito in Tokyn e nel Python che Claude scrive di solito (benchmark in bench/)</text>
+<line x1="200" y1="102" x2="200" y2="408" stroke="#c3c2b7"/>
+<rect x="28" y="83" width="10" height="10" rx="2" fill="#2a78d6"/>
+<text x="44" y="92" font-size="12" fill="#52514e">Tokyn</text>
+<rect x="83.0" y="83" width="10" height="10" rx="2" fill="#8f8e88"/>
+<text x="99.0" y="92" font-size="12" fill="#52514e">Python</text>
+<text x="28" y="131" font-size="13" fill="#0b0b0b">Email</text>
+<path d="M200,108 h96.6 a4,4 0 0 1 4,4 v10 a4,4 0 0 1 -4,4 h-96.6 z" fill="#2a78d6"/>
+<text x="308.6" y="121" font-size="12" fill="#52514e" font-variant-numeric="tabular-nums">317</text>
+<path d="M200,128 h293.0 a4,4 0 0 1 4,4 v10 a4,4 0 0 1 -4,4 h-293.0 z" fill="#8f8e88"/>
+<text x="505.0" y="141" font-size="12" fill="#52514e" font-variant-numeric="tabular-nums">936</text>
+<text x="852" y="131" font-size="14" font-weight="600" text-anchor="end" fill="#006300">↓ 66%</text>
+<text x="28" y="195" font-size="13" fill="#0b0b0b">Prenotazioni</text>
+<path d="M200,172 h139.8 a4,4 0 0 1 4,4 v10 a4,4 0 0 1 -4,4 h-139.8 z" fill="#2a78d6"/>
+<text x="351.8" y="185" font-size="12" fill="#52514e" font-variant-numeric="tabular-nums">453</text>
+<path d="M200,192 h447.9 a4,4 0 0 1 4,4 v10 a4,4 0 0 1 -4,4 h-447.9 z" fill="#8f8e88"/>
+<text x="659.9" y="205" font-size="12" fill="#52514e" font-variant-numeric="tabular-nums">1.424</text>
+<text x="852" y="195" font-size="14" font-weight="600" text-anchor="end" fill="#006300">↓ 68%</text>
+<text x="28" y="259" font-size="13" fill="#0b0b0b">Traduttore</text>
+<path d="M200,236 h85.5 a4,4 0 0 1 4,4 v10 a4,4 0 0 1 -4,4 h-85.5 z" fill="#2a78d6"/>
+<text x="297.5" y="249" font-size="12" fill="#52514e" font-variant-numeric="tabular-nums">282</text>
+<path d="M200,256 h241.6 a4,4 0 0 1 4,4 v10 a4,4 0 0 1 -4,4 h-241.6 z" fill="#8f8e88"/>
+<text x="453.6" y="269" font-size="12" fill="#52514e" font-variant-numeric="tabular-nums">774</text>
+<text x="852" y="259" font-size="14" font-weight="600" text-anchor="end" fill="#006300">↓ 64%</text>
+<text x="28" y="323" font-size="13" fill="#0b0b0b">Post social</text>
+<path d="M200,300 h158.2 a4,4 0 0 1 4,4 v10 a4,4 0 0 1 -4,4 h-158.2 z" fill="#2a78d6"/>
+<text x="370.2" y="313" font-size="12" fill="#52514e" font-variant-numeric="tabular-nums">511</text>
+<path d="M200,320 h486.0 a4,4 0 0 1 4,4 v10 a4,4 0 0 1 -4,4 h-486.0 z" fill="#8f8e88"/>
+<text x="698.0" y="333" font-size="12" fill="#52514e" font-variant-numeric="tabular-nums">1.544</text>
+<text x="852" y="323" font-size="14" font-weight="600" text-anchor="end" fill="#006300">↓ 67%</text>
+<text x="28" y="387" font-size="13" fill="#0b0b0b">Fatture</text>
+<path d="M200,364 h106.1 a4,4 0 0 1 4,4 v10 a4,4 0 0 1 -4,4 h-106.1 z" fill="#2a78d6"/>
+<text x="318.1" y="377" font-size="12" fill="#52514e" font-variant-numeric="tabular-nums">347</text>
+<path d="M200,384 h224.2 a4,4 0 0 1 4,4 v10 a4,4 0 0 1 -4,4 h-224.2 z" fill="#8f8e88"/>
+<text x="436.2" y="397" font-size="12" fill="#52514e" font-variant-numeric="tabular-nums">719</text>
+<text x="852" y="387" font-size="14" font-weight="600" text-anchor="end" fill="#006300">↓ 52%</text>
+</svg>

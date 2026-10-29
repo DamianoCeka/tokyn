@@ -1,20 +1,51 @@
+<div align="center">
+
 # Tokyn
 
-**Il linguaggio per costruire agenti IA, progettato per essere scritto bene dalle IA.**
+**Il linguaggio per agenti IA che Claude scrive al posto del Python:<br>meno token, meno costi, programmi provati davvero.**
 
-Oggi il codice lo scrivono sempre più spesso Claude, GPT e gli altri modelli. Allora ho
-pensato a un linguaggio fatto apposta per loro: sintassi di Python (che conoscono già),
-pochissimi concetti, agenti e output strutturati dentro il linguaggio, ed errori che
-spiegano esattamente cosa correggere.
+[![test](https://github.com/DamianoCeka/tokyn/actions/workflows/test.yml/badge.svg)](https://github.com/DamianoCeka/tokyn/actions/workflows/test.yml)
+![Plugin per Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-2a78d6)
+![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-2a78d6)
+![Licenza MIT](https://img.shields.io/badge/licenza-MIT-2a78d6)
 
-**In Claude Code, misurato dal vivo:** chiedi un programma Python con agenti IA e Claude lo scrive in Tokyn con
-**il 69% di costo in meno** e **il 54% di token in meno**, lo prova con l'IA vera usando il tuo Claude Code (senza
-chiave API) e ti consegna il file Python. Si installa come plugin, in una sessione di Claude Code:
+</div>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/grafici/numeri-dark.svg">
+  <img alt="In Claude Code, con Opus 5.5, tre programmi Python con agenti IA: con Tokyn la sessione costa il 69% in meno ($0,61 invece di $1,99), usa il 54% di token di output in meno (6.931 invece di 14.979), dura il 24% in meno (144 s invece di 189 s) e i programmi sono stati provati con l'IA vera 3 volte su 3, contro 0 su 3 senza Tokyn." src="docs/grafici/numeri-light.svg">
+</picture>
+
+Chiedi a Claude Code un programma con agenti IA, per esempio *"scrivimi in Python un bot che smista le email
+dei clienti, usa tokyn"*. Claude lo scrive in **Tokyn**, un linguaggio con la sintassi di Python in cui agenti,
+strumenti e output strutturati fanno già parte del linguaggio: servono molte meno righe, quindi molti meno token.
+Poi lo prova con l'IA vera usando il tuo Claude Code, senza chiave API, e ti consegna il file Python.
+
+## Installa in Claude Code
+
+In una sessione di Claude Code:
 
 ```text
 /plugin marketplace add DamianoCeka/tokyn
 /plugin install tokyn@tokyn
 ```
+
+Per la Skill in inglese, che costa il 22% di token in meno, installa `tokyn-en@tokyn`. Il plugin contiene il
+compilatore: serve solo Python 3.10 o superiore (la libreria `lark`, se manca, la installa Claude).
+
+## Come si usa
+
+Chiedi il programma come faresti sempre, aggiungendo *"usa tokyn"*, oppure richiama la Skill con `/tokyn:tokyn`.
+Claude:
+
+1. **scrive il programma in Tokyn**, con circa un terzo dei token del Python;
+2. **lo controlla e lo prova gratis** con risposte finte (`--mock`), correggendo gli errori che il compilatore
+   gli spiega riga per riga;
+3. **lo prova con l'IA vera** usando il tuo Claude Code: nessuna chiave API;
+4. **ti dà il file Python**, generato dal compilatore con `tokyn build --standalone`. Quel codice non lo scrive il
+   modello, quindi non costa token, ed è un file unico che non richiede Tokyn.
+
+## Com'è un programma Tokyn
 
 ```
 type Ticket:
@@ -26,7 +57,6 @@ def cerca_faq(domanda: str) -> str:
     return read_file("faq.txt")
 
 agent Supporto:
-    model: "claude"
     instructions: "Rispondi ai clienti in italiano, in modo breve."
     tools: [cerca_faq]
     output: Ticket
@@ -37,19 +67,10 @@ main:
         print("Ti passo subito a un operatore.")
 ```
 
-Lo stesso programma in Python richiede client API, il ciclo delle chiamate agli strumenti,
-lo schema JSON, il parsing e la validazione della risposta, i retry. In Tokyn è tutto dentro `Supporto.ask(...)`.
+In Python lo stesso programma richiede il client dell'API, il ciclo delle chiamate agli strumenti, lo schema
+JSON, il parsing e la validazione della risposta, i retry. In Tokyn è tutto dentro `Supporto.ask(...)`.
 
-## Perché funziona con le IA
-
-| Principio | Cosa ho fatto |
-|---|---|
-| Sintassi che i modelli conoscono già | Parole chiave e regole di Python |
-| Pochi concetti | Un solo ciclo, un solo modo di definire e usare un agente |
-| L'IA si corregge da sola | `tokyn check --json` restituisce codice errore, riga, colonna e suggerimento |
-| Meno codice = meno errori | Agenti, strumenti, schema e validazione dell'output sono parte del linguaggio |
-
-Esempio di errore:
+Quando qualcosa non va, il compilatore dice esattamente cosa correggere, così l'IA si corregge da sola:
 
 ```
 supporto.tokyn:11:24 errore E133: lo strumento "prenota_appuntameto" non esiste
@@ -60,129 +81,111 @@ supporto.tokyn:11:24 errore E133: lo strumento "prenota_appuntameto" non esiste
 
 ## I numeri
 
-**Meno token.** Ho fatto scrivere gli stessi 5 programmi in Tokyn e in Python, sempre da Claude.
-Lasciato libero di scegliere, in Python Claude ha scritto **5.397 token**; in Tokyn **1.910**.
+**In Claude Code, dal vivo.** Tre richieste di programmi Python con agenti IA a Claude Code (Opus 5.5), ognuna in
+una sessione nuova, con il plugin Tokyn e senza. Nessuna chiave API, come succede a chi usa l'abbonamento.
 
-| | Python (quello che Claude scrive di solito) | Tokyn |
-|---|---:|---:|
-| Token di codice per 5 programmi | 5.397 | **1.910 (−65%)** |
-| Costo con Sonnet 5.5, Skill compresa | $0,054 | **$0,027 (−50%)** |
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/grafici/costo-claude-code-dark.svg">
+  <img alt="Costo della sessione per programma, con Tokyn e senza: recensioni $0,19 contro $0,66 (−72%), assistente clienti $0,24 contro $0,70 (−66%), fattura $0,19 contro $0,62 (−70%)." src="docs/grafici/costo-claude-code-light.svg">
+</picture>
 
-La Skill (3.826 token da leggere una volta; 2.976 nella versione inglese) si ripaga con il primo o il secondo programma.
-Onestamente: con un framework come Pydantic AI il Python arriva allo stesso numero di token di Tokyn.
-Metodo completo, tutti i programmi e i limiti in [`bench/`](bench).
+| Programma | Costo con / senza Tokyn | Token di output con / senza | Provato con l'IA vera |
+|---|---:|---:|---|
+| Recensioni | $0,19 / $0,66 | 2.058 / 4.676 | con Tokyn sì, senza no |
+| Assistente clienti | $0,24 / $0,70 | 2.881 / 5.701 | con Tokyn sì, senza no |
+| Fattura | $0,19 / $0,62 | 1.992 / 4.602 | con Tokyn sì, senza no |
 
-**L'IA lo sa scrivere.** Ho dato solo la specifica a Claude Sonnet e Claude Haiku e ho chiesto 5 programmi
-a ciascuno. Risultato: **10 su 10 corretti al primo tentativo**. Poi, con la sola Skill, Opus, Sonnet e Haiku
-hanno scritto altri 80 programmi in quattro tornate, anche con la Skill in inglese: **80 su 80 corretti al primo
-tentativo**. Dettagli in [`eval/`](eval).
+Senza Tokyn Claude ha scritto un Python corretto ma non ha potuto provarlo: senza chiave API il programma si ferma
+all'autenticazione. Metodo, sorgenti e limiti in [`bench/claude-code/`](bench/claude-code).
 
-**In Claude Code, dal vivo.** Ho chiesto a Claude Code (Opus 5.5) tre programmi Python con agenti IA, con il
-plugin Tokyn e senza. Con Tokyn ha speso **il 69% in meno** ($0,61 contro $1,99), con **il 54% di token di output in
-meno**, ci ha messo il 24% di tempo in meno e **ha provato davvero tutti e tre i programmi** con il Claude Code
-dell'utente; senza Tokyn non ha potuto provarne nessuno, perché mancava una chiave API. Dettagli in
-[`bench/claude-code/`](bench/claude-code).
+**Il codice.** Gli stessi 5 programmi scritti da Claude in Tokyn e nel Python che scrive di solito:
+**1.910 token contro 5.397 (−65%)**.
 
-## Usarlo in Claude Code
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/grafici/token-codice-dark.svg">
+  <img alt="Token del codice per programma, Tokyn contro Python: email 317 contro 936, prenotazioni 453 contro 1.424, traduttore 282 contro 774, post social 511 contro 1.544, fatture 347 contro 719." src="docs/grafici/token-codice-light.svg">
+</picture>
 
-Il modo principale per usare Tokyn è come **plugin di Claude Code**. In una sessione di Claude Code:
+Per onestà: con un framework come Pydantic AI il Python arriva più o meno agli stessi token di Tokyn. Il vantaggio
+di Tokyn resta negli errori pensati per far correggere l'IA da sola, nella prova con il tuo Claude Code e nel
+fatto che non dipende da quanto il modello ricorda l'API di un framework. Dettagli in [`bench/`](bench).
 
-```text
-/plugin marketplace add DamianoCeka/tokyn
-/plugin install tokyn@tokyn
-```
+**L'IA lo sa scrivere.** Leggendo solo la Skill, Opus, Sonnet e Haiku hanno scritto 80 programmi in quattro
+tornate, in italiano e in inglese: **80 su 80 corretti al primo tentativo**. Dettagli in [`eval/`](eval).
 
-(`tokyn-en@tokyn` per la versione in inglese della Skill, che costa il 22% di token in meno.)
-
-Poi chiedi quello che ti serve, per esempio *"scrivimi in Python un bot che smista le email dei clienti, usa tokyn"*
-(o richiama la Skill con `/tokyn:tokyn`). Claude:
-
-1. scrive il programma in Tokyn, con circa un terzo dei token del Python;
-2. lo controlla e lo prova gratis con risposte finte (`--mock`), correggendo gli errori che il compilatore gli spiega;
-3. lo prova con l'IA vera **usando il tuo Claude Code**: non serve nessuna chiave API;
-4. se vuoi Python, genera con `tokyn build --standalone` un file Python unico. Quel codice lo produce il
-   compilatore, non il modello, quindi non costa token.
-
-Il plugin contiene il compilatore: serve solo Python 3.10 o superiore con la libreria `lark` (Claude la installa da
-solo se manca).
-
-### Chi risponde agli agenti
+## Chi risponde agli agenti
 
 Quando il programma gira, ogni `Agente.ask(...)` è una domanda a Claude. Tokyn sceglie da solo chi risponde:
 
-- **Claude Code** (se non c'è una chiave API e il comando `claude` è installato): usa il tuo account, ogni domanda
-  è una chiamata `claude -p`. È il modo per provare i programmi mentre li sviluppi.
-- **API di Anthropic** (se c'è `ANTHROPIC_API_KEY`): per i programmi che girano da soli, per esempio su un server.
-  Qui il runtime usa caching, output strutturati e Batch API per spendere meno.
+- **Il tuo Claude Code**, se non c'è una chiave API: ogni domanda è una chiamata `claude -p` con il tuo account.
+  È il modo per provare i programmi mentre li sviluppi.
+- **L'API di Anthropic**, se c'è `ANTHROPIC_API_KEY`: per i programmi che girano da soli, per esempio su un server.
+  Qui il runtime spende meno da solo, con prompt caching, output strutturati nativi, `Agente.ask_all(testi)` sulla
+  Batch API a metà prezzo ed `effort: "low"` negli agenti che classificano o estraggono.
 
-Si può forzare la scelta con `tokyn run file.tokyn --backend claude-code` (o `api`).
+Si può forzare la scelta con `tokyn run file.tokyn --backend claude-code` (o `api`), e `--usage` mostra alla fine
+i token spesi.
 
-### Senza Claude Code
+## Il linguaggio in breve
+
+- **`agent`**: modello, istruzioni, strumenti, memoria, output strutturato, `effort`. Si usa con `Agente.ask(testo)`
+  o, per tanti testi, `Agente.ask_all(testi)`.
+- **`def`**: funzioni normali, che diventano strumenti quando le metti nei `tools` di un agente; gli argomenti che
+  arrivano dall'IA vengono controllati con i tipi.
+- **`type`**: dati strutturati, anche annidati, con valori ammessi (`"a" | "b"`) e descrizioni per l'IA.
+- **Agenti come strumenti**: un agente può delegare a un altro.
+- **Python ovunque**: `import` di qualsiasi libreria, slice, f-string, metodi di testi, liste e dizionari.
+- **Valori di riserva al posto di `try`**: `read_file(p, "")`, `http_get(url, "")` e `to_number(testo, 0)` non
+  fermano il programma se il file manca, la rete cade o il numero non è valido.
+- **Errori pensati per l'IA**: alla riga del file `.tokyn`, con la correzione; se un modello scrive per abitudine
+  una comprehension, `a if c else b` o `is None`, il compilatore dice cosa scrivere al loro posto.
+
+La specifica completa è in [`tokyn/SPEC.md`](tokyn/SPEC.md), gli esempi in [`examples/`](examples).
+
+## Da terminale
 
 ```bash
 pip install git+https://github.com/DamianoCeka/tokyn
 ```
 
-Serve Python 3.10 o superiore. Gli zip della Skill per Claude (`python scripts/build_skill.py` crea
-`dist/tokyn-skill.zip` e `dist/tokyn-skill-en.zip`) si caricano nelle impostazioni delle Skill.
-
-## Uso
-
 ```bash
-tokyn new primo              # crea primo.tokyn
-tokyn check primo.tokyn      # controlla e spiega gli errori
-tokyn run primo.tokyn --mock # prova senza chiamare l'IA (gratis)
-tokyn run primo.tokyn        # esegue davvero (con Claude Code oppure con ANTHROPIC_API_KEY)
-tokyn build primo.tokyn      # genera il Python equivalente
-tokyn build primo.tokyn --standalone  # ...in un file unico che non richiede Tokyn
-tokyn spec                   # stampa la specifica
+tokyn new primo                       # crea primo.tokyn
+tokyn check primo.tokyn               # controlla e spiega gli errori
+tokyn run primo.tokyn --mock          # prova senza chiamare l'IA (gratis)
+tokyn run primo.tokyn --usage         # esegue davvero (Claude Code o ANTHROPIC_API_KEY)
+tokyn build primo.tokyn --standalone  # genera un file Python che non richiede Tokyn
+tokyn spec                            # stampa la specifica
 ```
 
-## Cosa c'è nel linguaggio
-
-- **`agent`**: modello, istruzioni, strumenti, memoria, output strutturato. Si usa con `Agente.ask(testo)`.
-- **`def`**: normali funzioni, che diventano strumenti quando le metti nei `tools` di un agente. I parametri arrivati dall'IA vengono validati con i tipi.
-- **`type`**: dati strutturati, anche annidati, con valori ammessi (`"a" | "b"`) e descrizioni per l'IA.
-- **Agenti come strumenti**: un agente può delegare a un altro.
-- **Python ovunque**: `import` di qualsiasi libreria Python.
-- **Slice** di testi e liste: `testo[:200]`, `lista[-3:]`.
-- **Valori di riserva al posto di `try`**: `read_file(p, "")` e `http_get(url, "")` non fermano il programma se il file manca o la rete cade; `to_number(testo, 0)` converte anche `"4,50"`.
-
-## Meno costi anche quando il programma gira
-
-Il runtime usa da solo le funzioni dell'API di Claude che fanno risparmiare:
-
-- **Prompt caching**: istruzioni e strumenti di ogni agente restano in cache tra una chiamata e l'altra.
-- **Output strutturati nativi**: la risposta arriva già nel formato del `type`, senza giri in più.
-- **Batch API**: `Agente.ask_all(testi)` risponde a una lista di testi a metà prezzo.
-- **`effort: "low"`** negli agenti che classificano o estraggono, per spendere meno token di ragionamento.
-- `tokyn run file.tokyn --usage` mostra quanti token sono stati spesi e quanti letti dalla cache.
-- **Errori a runtime** riportati alla riga del file `.tokyn`, non del Python generato.
-- **Errori mirati per le abitudini di Python**: se un modello scrive una comprehension, `a if c else b`, `is None` o `a, b = ...`, il checker dice esattamente cosa scrivere al loro posto.
-
-La specifica completa è in [`tokyn/SPEC.md`](tokyn/SPEC.md). Gli esempi sono in [`examples/`](examples).
+Per Claude sul web c'è anche la Skill in zip: `python scripts/build_skill.py` crea `dist/tokyn-skill.zip` e
+`dist/tokyn-skill-en.zip`, da caricare nelle impostazioni delle Skill.
 
 ## Come funziona
 
 ```
-file.tokyn → parser (Lark) → checker (tipi, nomi, agenti) → generatore → Python → runtime
+file.tokyn → parser (Lark) → checker (tipi, nomi, agenti) → generatore → Python → runtime (API o Claude Code)
 ```
 
 - `tokyn/grammar.lark`: la grammatica
 - `tokyn/checker.py`: i controlli e i messaggi d'errore
 - `tokyn/codegen.py`: la traduzione in Python
-- `tokyn/runtime.py`: agenti, ciclo degli strumenti, validazione, funzioni di base
+- `tokyn/runtime.py`: agenti, ciclo degli strumenti, validazione, API di Anthropic e Claude Code
+- `plugins/`: i plugin per Claude Code; `scripts/build_skill.py` ci copia il compilatore
+
+I grafici di questa pagina si rigenerano dai dati con `python scripts/make_charts.py`.
 
 ## Stato e prossimi passi
 
-È la **v0.1**, un prototipo funzionante. Cosa voglio aggiungere:
+È un prototipo che funziona, con 105 test e prove dal vivo in Claude Code.
 
-- [ ] Server MCP con `check`, `run` e la specifica, così qualsiasi agente di coding può usarlo
-- [ ] Estensione VS Code (colori ed errori in tempo reale)
-- [ ] Benchmark più ampio: più compiti, altri modelli, token spesi in sessioni reali con correzioni
-- [ ] Altri provider oltre ad Anthropic
-- [ ] Chiamate in parallelo tra agenti
+- [x] Plugin per Claude Code, in italiano e in inglese
+- [x] Agenti che rispondono con il tuo Claude Code, senza chiave API
+- [ ] Benchmark più ampio: più sessioni in Claude Code, più compiti, altri modelli
+- [ ] Prove dal vivo con l'API di Anthropic (pronte in `tests/test_live.py`, serve una chiave)
 - [ ] Messaggi d'errore anche in inglese
+- [ ] Chiamate in parallelo tra agenti
+- [ ] Altri provider oltre ad Anthropic
+- [ ] Estensione VS Code (colori ed errori in tempo reale)
 
 ## Licenza
 
