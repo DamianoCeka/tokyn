@@ -1,4 +1,4 @@
-"""Parser di Itsme con messaggi d'errore di sintassi comprensibili."""
+"""Parser di Tokyn con messaggi d'errore di sintassi comprensibili."""
 
 from __future__ import annotations
 
@@ -14,10 +14,10 @@ from lark.exceptions import (
 )
 from lark.indenter import DedentError, Indenter
 
-from .errors import Diagnostic, ItsmeError
+from .errors import Diagnostic, TokynError
 
 
-class ItsmeIndenter(Indenter):
+class TokynIndenter(Indenter):
     NL_type = "_NL"
     OPEN_PAREN_types = ["LPAR", "LSQB", "LBRACE"]
     CLOSE_PAREN_types = ["RPAR", "RSQB", "RBRACE"]
@@ -32,16 +32,16 @@ def _parser() -> Lark:
     return Lark(
         grammar,
         parser="lalr",
-        postlex=ItsmeIndenter(),
+        postlex=TokynIndenter(),
         propagate_positions=True,
         maybe_placeholders=True,
         start=["start", "expr"],
     )
 
 
-# Costrutti Python che Itsme non ha, con l'alternativa da usare.
+# Costrutti Python che Tokyn non ha, con l'alternativa da usare.
 UNSUPPORTED = {
-    "while": "Itsme ha un solo ciclo: usa `for i in range(n):` oppure `for x in lista:`.",
+    "while": "Tokyn ha un solo ciclo: usa `for i in range(n):` oppure `for x in lista:`.",
     "class": "Per i dati usa `type Nome:` con i campi; per l'IA usa `agent Nome:`.",
     "lambda": "Definisci una funzione con `def`.",
     "try": "In v0.1 non c'è try/except: il runtime gestisce i retry delle chiamate IA e mostra errori chiari.",
@@ -108,7 +108,7 @@ def _syntax_diagnostic(err: UnexpectedInput, source: str) -> Diagnostic:
         if ch == "\t":
             hint = "Usa spazi per l'indentazione (4 per livello)."
         elif ch in "@$`;":
-            hint = f"Il carattere '{ch}' non fa parte di Itsme."
+            hint = f"Il carattere '{ch}' non fa parte di Tokyn."
         return Diagnostic("E001", f"carattere non valido '{ch}'", line, column, 1, hint)
 
     if isinstance(err, UnexpectedToken):
@@ -219,7 +219,7 @@ def _unclosed_bracket(source: str, line: int, column: int) -> str:
 
 
 def _unsupported_scan(source: str) -> list[Diagnostic]:
-    """Trova costrutti Python non presenti in Itsme prima del parsing."""
+    """Trova costrutti Python non presenti in Tokyn prima del parsing."""
     import re
 
     found = []
@@ -231,12 +231,12 @@ def _unsupported_scan(source: str) -> list[Diagnostic]:
         word = m.group(1) if m else ""
         if word in UNSUPPORTED and word not in ("lambda", "await"):
             col = len(raw) - len(stripped) + 1
-            found.append(Diagnostic("E002", f"`{word}` non esiste in Itsme", i, col, len(word), UNSUPPORTED[word]))
+            found.append(Diagnostic("E002", f"`{word}` non esiste in Tokyn", i, col, len(word), UNSUPPORTED[word]))
             continue
         for kw in ("lambda", "await"):
             m2 = re.search(rf"\b{kw}\b(?!\s*[=.(\[,)])", raw)
             if m2 and not _inside_string(raw, m2.start()):
-                found.append(Diagnostic("E002", f"`{kw}` non esiste in Itsme", i, m2.start() + 1, len(kw), UNSUPPORTED[kw]))
+                found.append(Diagnostic("E002", f"`{kw}` non esiste in Tokyn", i, m2.start() + 1, len(kw), UNSUPPORTED[kw]))
     return found
 
 
@@ -253,19 +253,19 @@ def _inside_string(raw: str, pos: int) -> bool:
     return quote is not None
 
 
-def parse(source: str, filename: str = "<itsme>") -> Tree:
+def parse(source: str, filename: str = "<tokyn>") -> Tree:
     if not source.endswith("\n"):
         source += "\n"
     unsupported = _unsupported_scan(source)
     if unsupported:
-        raise ItsmeError(unsupported, source, filename)
+        raise TokynError(unsupported, source, filename)
     try:
         return _parser().parse(source, start="start")
     except UnexpectedInput as err:
-        raise ItsmeError([_syntax_diagnostic(err, source)], source, filename) from None
+        raise TokynError([_syntax_diagnostic(err, source)], source, filename) from None
     except DedentError as err:
         line = _dedent_line(str(err), source)
-        raise ItsmeError(
+        raise TokynError(
             [Diagnostic("E009", "indentazione non coerente", line, 1, 1,
                         "Ogni livello di blocco deve avere la stessa indentazione (4 spazi). Non mescolare tab e spazi.")],
             source, filename,

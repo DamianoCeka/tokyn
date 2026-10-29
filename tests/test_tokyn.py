@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from itsme.compiler import check_source, compile_source, run_source
+from tokyn.compiler import check_source, compile_source, run_source
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -15,7 +15,7 @@ def codes(source):
 
 
 def run(source, capsys, mock=True):
-    rc = run_source(source, "test.itsme", mock=mock)
+    rc = run_source(source, "test.tokyn", mock=mock)
     out = capsys.readouterr()
     return rc, out.out, out.err
 
@@ -23,7 +23,7 @@ def run(source, capsys, mock=True):
 # ------------------------------------------------------------ programmi validi
 
 def test_examples_are_valid():
-    for path in sorted((ROOT / "examples").glob("*.itsme")):
+    for path in sorted((ROOT / "examples").glob("*.tokyn")):
         result = check_source(path.read_text(encoding="utf-8"), str(path))
         assert result.ok, f"{path.name}: {[d.to_dict() for d in result.diagnostics]}"
 
@@ -184,16 +184,16 @@ def test_runtime_error_maps_to_source_line(capsys):
     src = 'main:\n    x = [1, 2]\n    print(x[5])\n'
     rc, _, err = run(src, capsys)
     assert rc == 1
-    assert "test.itsme:3" in err and "posizione fuori dalla lista" in err
+    assert "test.tokyn:3" in err and "posizione fuori dalla lista" in err
 
 
 def test_missing_api_key(capsys, monkeypatch):
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-    monkeypatch.delenv("ITSME_MOCK", raising=False)
-    import itsme.runtime as rt
+    monkeypatch.delenv("TOKYN_MOCK", raising=False)
+    import tokyn.runtime as rt
     monkeypatch.setattr(rt, "_CLIENT", None)
     src = 'agent A:\n    instructions: "i"\nmain:\n    print(A.ask("x"))\n'
-    rc = run_source(src, "test.itsme", mock=False)
+    rc = run_source(src, "test.tokyn", mock=False)
     err = capsys.readouterr().err
     assert rc == 1 and "ANTHROPIC_API_KEY" in err and "--mock" in err
 
@@ -218,7 +218,7 @@ agent A:
     compiled = compile_source(src)
     ns = {"__name__": "x"}
     exec(compiled.python, ns)
-    import itsme.runtime as rt
+    import tokyn.runtime as rt
     schema = rt._tool_schema(ns["cerca"])
     assert schema["input_schema"]["properties"]["limite"] == {"type": "integer"}
     assert rt._call_tool(ns["cerca"], {"q": "pane", "limite": 3}) == '[{"nome": "pane", "prezzo": 1.5}]'
@@ -249,7 +249,7 @@ class _FakeClient:
 
 
 def test_agent_loop_with_fake_api(monkeypatch):
-    import itsme.runtime as rt
+    import tokyn.runtime as rt
     src = '''
 type Meteo:
     citta: str
@@ -268,7 +268,7 @@ agent A:
     exec(compile_source(src).python, ns)
     fake = _FakeClient()
     monkeypatch.setattr(rt, "_CLIENT", fake)
-    monkeypatch.delenv("ITSME_MOCK", raising=False)
+    monkeypatch.delenv("TOKYN_MOCK", raising=False)
     result = ns["A"].ask("Che tempo fa a Padova?")
     assert (result.citta, result.gradi) == ("Padova", 18)
     # lo strumento è stato eseguito e il risultato è tornato all'IA
@@ -282,9 +282,9 @@ agent A:
 
 
 def test_cli_check_json(tmp_path):
-    f = tmp_path / "a.itsme"
+    f = tmp_path / "a.tokyn"
     f.write_text("main:\n    print(x)\n")
-    r = subprocess.run([sys.executable, "-m", "itsme", "check", "--json", str(f)],
+    r = subprocess.run([sys.executable, "-m", "tokyn", "check", "--json", str(f)],
                        capture_output=True, text=True, cwd=ROOT)
     assert r.returncode == 1
     assert '"code": "E160"' in r.stdout

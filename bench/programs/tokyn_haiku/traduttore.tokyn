@@ -1,0 +1,16 @@
+type Traduzione:
+    inglese: str "traduzione in inglese della frase"
+    francese: str "traduzione in francese della frase"
+
+agent Traduttore:
+    model: "claude"
+    instructions: "Traduci la frase italiana ricevuta in inglese e in francese. Rispondi solo con i campi richiesti."
+    output: Traduzione
+
+main:
+    frasi = ["Il gatto dorme sul divano.", "Domani andremo al mare con gli amici.", "Il treno per Milano parte alle otto.", "Ho bisogno di un caffè prima di lavorare."]
+    print("Italiano".ljust(42) + " | " + "Inglese".ljust(42) + " | " + "Francese")
+    print("=" * 110)
+    for frase in frasi:
+        t = Traduttore.ask(frase)
+        print(frase.ljust(42) + " | " + t.inglese.ljust(42) + " | " + t.francese)

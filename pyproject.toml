@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "itsme-lang"
+name = "tokyn"
 version = "0.1.0"
-description = "Itsme: il linguaggio per costruire agenti IA, progettato per essere scritto bene dalle IA."
+description = "Tokyn: il linguaggio per costruire agenti IA, progettato per essere scritto bene dalle IA."
 readme = "README.md"
 license = "MIT"
 authors = [{ name = "Damiano Ceka" }]
@@ -17,13 +17,13 @@ keywords = ["ai", "agents", "llm", "language", "claude"]
 dev = ["pytest>=8"]
 
 [project.scripts]
-itsme = "itsme.cli:main"
+tokyn = "tokyn.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/DamianoCeka/itsme-lang"
+Homepage = "https://github.com/DamianoCeka/tokyn"
 
 [tool.setuptools]
-packages = ["itsme"]
+packages = ["tokyn"]
 
 [tool.setuptools.package-data]
-itsme = ["grammar.lark", "SPEC.md"]
+tokyn = ["grammar.lark", "SPEC.md"]

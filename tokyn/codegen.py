@@ -1,4 +1,4 @@
-"""Traduce un programma Itsme già controllato in codice Python."""
+"""Traduce un programma Tokyn già controllato in codice Python."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ class CodeGen:
         self.prog = prog
         self.filename = filename
         self.lines: list[str] = []
-        self.linemap: dict[int, int] = {}  # riga python -> riga itsme
+        self.linemap: dict[int, int] = {}  # riga python -> riga tokyn
 
     def emit(self, text: str, indent: int = 0, src_line: int | None = None):
         self.lines.append("    " * indent + text)
@@ -28,10 +28,10 @@ class CodeGen:
 
     # ------------------------------------------------------------ programma
     def generate(self) -> tuple[str, dict[int, int]]:
-        self.emit(f"# Generato da Itsme {__version__} a partire da {self.filename}.")
-        self.emit("# Non modificare questo file: modifica il sorgente .itsme e ricompila.")
-        self.emit("from itsme import runtime as __rt")
-        self.emit("from itsme.runtime import " + ", ".join(RUNTIME_BUILTINS))
+        self.emit(f"# Generato da Tokyn {__version__} a partire da {self.filename}.")
+        self.emit("# Non modificare questo file: modifica il sorgente .tokyn e ricompila.")
+        self.emit("from tokyn import runtime as __rt")
+        self.emit("from tokyn.runtime import " + ", ".join(RUNTIME_BUILTINS))
         nodes = [c for c in self.tree.children if isinstance(c, Tree)]
 
         for n in nodes:
@@ -62,14 +62,14 @@ class CodeGen:
                 self.gen_agent(n)
 
         main = self.prog.main
-        self.emit("def __itsme_main__():", src_line=main.meta.line if main is not None else None)
+        self.emit("def __tokyn_main__():", src_line=main.meta.line if main is not None else None)
         if main is not None:
             self.gen_suite(main.children[0], 1)
         else:
             self.emit("pass", 1)
         self.emit("")
         self.emit("if __name__ == \"__main__\":")
-        self.emit("__rt.run_main(__itsme_main__)", 1)
+        self.emit("__rt.run_main(__tokyn_main__)", 1)
         return "\n".join(self.lines) + "\n", self.linemap
 
     # ------------------------------------------------------------ dichiarazioni

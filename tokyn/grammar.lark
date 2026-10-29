@@ -1,4 +1,4 @@
-// Grammatica di Itsme v0.1
+// Grammatica di Tokyn v0.1
 // Sintassi in stile Python: indentazione significativa, parole chiave inglesi.
 
 start: (_NL | toplevel)*

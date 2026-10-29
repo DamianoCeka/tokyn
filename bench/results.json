@@ -1,0 +1,140 @@
+{
+  "tasks": {
+    "email": {
+      "tokyn_sonnet": {
+        "tokens": 317,
+        "lines": 23
+      },
+      "tokyn_haiku": {
+        "tokens": 331,
+        "lines": 22
+      },
+      "python_sdk": {
+        "tokens": 804,
+        "lines": 61
+      },
+      "python_pydantic_ai": {
+        "tokens": 302,
+        "lines": 19
+      },
+      "python_libero": {
+        "tokens": 936,
+        "lines": 69
+      }
+    },
+    "ristorante": {
+      "tokyn_sonnet": {
+        "tokens": 453,
+        "lines": 27
+      },
+      "tokyn_haiku": {
+        "tokens": 442,
+        "lines": 26
+      },
+      "python_sdk": {
+        "tokens": 1005,
+        "lines": 82
+      },
+      "python_pydantic_ai": {
+        "tokens": 426,
+        "lines": 30
+      },
+      "python_libero": {
+        "tokens": 1424,
+        "lines": 113
+      }
+    },
+    "traduttore": {
+      "tokyn_sonnet": {
+        "tokens": 282,
+        "lines": 23
+      },
+      "tokyn_haiku": {
+        "tokens": 259,
+        "lines": 14
+      },
+      "python_sdk": {
+        "tokens": 994,
+        "lines": 79
+      },
+      "python_pydantic_ai": {
+        "tokens": 331,
+        "lines": 26
+      },
+      "python_libero": {
+        "tokens": 774,
+        "lines": 59
+      }
+    },
+    "social": {
+      "tokyn_sonnet": {
+        "tokens": 511,
+        "lines": 35
+      },
+      "tokyn_haiku": {
+        "tokens": 507,
+        "lines": 31
+      },
+      "python_sdk": {
+        "tokens": 1442,
+        "lines": 116
+      },
+      "python_pydantic_ai": {
+        "tokens": 532,
+        "lines": 32
+      },
+      "python_libero": {
+        "tokens": 1544,
+        "lines": 120
+      }
+    },
+    "fatture": {
+      "tokyn_sonnet": {
+        "tokens": 347,
+        "lines": 25
+      },
+      "tokyn_haiku": {
+        "tokens": 368,
+        "lines": 25
+      },
+      "python_sdk": {
+        "tokens": 963,
+        "lines": 76
+      },
+      "python_pydantic_ai": {
+        "tokens": 341,
+        "lines": 23
+      },
+      "python_libero": {
+        "tokens": 719,
+        "lines": 61
+      }
+    }
+  },
+  "totals": {
+    "tokyn_sonnet": {
+      "tokens": 1910,
+      "lines": 133
+    },
+    "tokyn_haiku": {
+      "tokens": 1907,
+      "lines": 118
+    },
+    "python_sdk": {
+      "tokens": 5208,
+      "lines": 414
+    },
+    "python_pydantic_ai": {
+      "tokens": 1932,
+      "lines": 130
+    },
+    "python_libero": {
+      "tokens": 5397,
+      "lines": 422
+    }
+  },
+  "fixed": {
+    "SKILL.md": 1015,
+    "SPEC.md": 2722
+  }
+}

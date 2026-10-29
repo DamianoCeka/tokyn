@@ -1,21 +1,21 @@
-# Test: un'IA sa scrivere Itsme leggendo solo la specifica?
+# Test: un'IA sa scrivere Tokyn leggendo solo la specifica?
 
 È la domanda più importante per questo linguaggio, quindi l'ho misurata.
 
 ## Come ho fatto
 
 - Due modelli: **Claude Sonnet** e **Claude Haiku** (il più piccolo).
-- Ognuno aveva a disposizione **solo** [`SPEC.md`](../itsme/SPEC.md): niente esempi del repository, niente web, niente compilatore per provare.
+- Ognuno aveva a disposizione **solo** [`SPEC.md`](../tokyn/SPEC.md): niente esempi del repository, niente web, niente compilatore per provare.
 - Stessi 5 compiti per entrambi, scritti in un solo tentativo:
-  1. `email.itsme`: classifica email con output strutturato, ordina per priorità, salva in JSON
-  2. `ristorante.itsme`: assistente prenotazioni con memoria, due strumenti e un ciclo di al massimo 20 turni che termina con "esci"
-  3. `traduttore.itsme`: traduzione in inglese e francese con output strutturato e tabella
-  4. `social.itsme`: coordinatore con due sotto-agenti più un revisore con verdetto strutturato
-  5. `fatture.itsme`: estrazione di una fattura con tipi annidati (`list[Riga]`) e ricalcolo del totale
+  1. `email.tokyn`: classifica email con output strutturato, ordina per priorità, salva in JSON
+  2. `ristorante.tokyn`: assistente prenotazioni con memoria, due strumenti e un ciclo di al massimo 20 turni che termina con "esci"
+  3. `traduttore.tokyn`: traduzione in inglese e francese con output strutturato e tabella
+  4. `social.tokyn`: coordinatore con due sotto-agenti più un revisore con verdetto strutturato
+  5. `fatture.tokyn`: estrazione di una fattura con tipi annidati (`list[Riga]`) e ricalcolo del totale
 
 ## Risultati (v0.1, 28 ottobre 2026)
 
-| Modello | `itsme check` al primo tentativo | Eseguiti con `--mock` |
+| Modello | `tokyn check` al primo tentativo | Eseguiti con `--mock` |
 |---|---|---|
 | Sonnet | 5/5 ✓ | 5/5 ✓ |
 | Haiku | 5/5 ✓ | 5/5 ✓ |

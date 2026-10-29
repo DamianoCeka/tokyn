@@ -1,16 +1,16 @@
-# Itsme v0.1 — Specifica
+# Tokyn v0.1 — Specifica
 
-Itsme è un linguaggio per costruire **agenti IA**. Ha la sintassi di Python, ma con
+Tokyn è un linguaggio per costruire **agenti IA**. Ha la sintassi di Python, ma con
 agenti, strumenti e output strutturati già dentro il linguaggio. Viene tradotto in
 Python, quindi può usare qualsiasi libreria Python.
 
-File: `.itsme` · Indentazione: 4 spazi · Commenti: `#`
+File: `.tokyn` · Indentazione: 4 spazi · Commenti: `#`
 
 ## Regole d'oro
 
 1. Parole chiave in inglese, come Python: `def`, `if`, `elif`, `else`, `for`, `in`, `return`, `and`, `or`, `not`, `True`, `False`, `None`.
 2. **Un solo modo per fare ogni cosa.** Un solo ciclo (`for`), un solo modo di definire un agente, un solo modo di chiamarlo (`Agente.ask(testo)`).
-3. Prima di eseguire, controlla sempre con `itsme check file.itsme` e correggi tutti gli errori segnalati.
+3. Prima di eseguire, controlla sempre con `tokyn check file.tokyn` e correggi tutti gli errori segnalati.
 
 ## Struttura di un file
 
@@ -105,7 +105,7 @@ Come in Python:
 - Stringhe `"..."`, `'...'`, `"""..."""` e f-string `f"Ciao {nome}"`
 - Metodi di stringhe, liste e dizionari di Python: `.upper()`, `.split()`, `.append()`, `.get()`, `.items()`…
 
-Non esistono in Itsme (il checker lo segnala e dice cosa usare): `while`, `class`, `lambda`,
+Non esistono in Tokyn (il checker lo segnala e dice cosa usare): `while`, `class`, `lambda`,
 `try`/`except`, `with`, `async`/`await`, `yield`, `global`, `match`.
 
 ## Funzioni già presenti
@@ -156,19 +156,19 @@ main:
 
 | Comando | Cosa fa |
 |---|---|
-| `itsme check file.itsme` | controlla il file e mostra gli errori con il suggerimento per correggerli |
-| `itsme check --json file.itsme` | stessa cosa in JSON (per IA e strumenti) |
-| `itsme run file.itsme` | esegue (serve `ANTHROPIC_API_KEY`) |
-| `itsme run file.itsme --mock` | esegue con risposte finte, senza chiamare l'IA |
-| `itsme build file.itsme` | genera il file Python equivalente |
-| `itsme spec` | stampa questa specifica |
-| `itsme new nome` | crea un file di partenza |
+| `tokyn check file.tokyn` | controlla il file e mostra gli errori con il suggerimento per correggerli |
+| `tokyn check --json file.tokyn` | stessa cosa in JSON (per IA e strumenti) |
+| `tokyn run file.tokyn` | esegue (serve `ANTHROPIC_API_KEY`) |
+| `tokyn run file.tokyn --mock` | esegue con risposte finte, senza chiamare l'IA |
+| `tokyn build file.tokyn` | genera il file Python equivalente |
+| `tokyn spec` | stampa questa specifica |
+| `tokyn new nome` | crea un file di partenza |
 
 ## Codici di errore principali
 
 | Codice | Significato |
 |---|---|
-| E002 | costrutto Python che Itsme non ha (`while`, `class`…) |
+| E002 | costrutto Python che Tokyn non ha (`while`, `class`…) |
 | E003 / E004 / E005 / E009 | manca `:` / manca il blocco indentato / indentazione sbagliata |
 | E101 | nome definito due volte |
 | E110 | tipo sconosciuto |

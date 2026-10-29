@@ -1,4 +1,4 @@
-"""API di alto livello: controlla, compila ed esegue programmi Itsme."""
+"""API di alto livello: controlla, compila ed esegue programmi Tokyn."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from dataclasses import dataclass
 
 from .checker import check
 from .codegen import generate
-from .errors import Diagnostic, ItsmeError, ItsmeRuntimeError
+from .errors import Diagnostic, TokynError, TokynRuntimeError
 from .parser import parse
 
 
@@ -33,35 +33,35 @@ class Compiled:
     filename: str
 
 
-def check_source(source: str, filename: str = "<itsme>") -> CheckResult:
+def check_source(source: str, filename: str = "<tokyn>") -> CheckResult:
     try:
         tree = parse(source, filename)
-    except ItsmeError as err:
+    except TokynError as err:
         return CheckResult(err.diagnostics, source, filename)
     _prog, diags = check(tree)
     return CheckResult(diags, source, filename)
 
 
-def compile_source(source: str, filename: str = "<itsme>") -> Compiled:
+def compile_source(source: str, filename: str = "<tokyn>") -> Compiled:
     tree = parse(source, filename)
     prog, diags = check(tree)
     if any(d.severity == "errore" for d in diags):
-        raise ItsmeError(diags, source, filename)
+        raise TokynError(diags, source, filename)
     code, linemap = generate(tree, prog, os.path.basename(filename))
     return Compiled(code, linemap, diags, source, filename)
 
 
-def run_source(source: str, filename: str = "<itsme>", mock: bool = False) -> int:
+def run_source(source: str, filename: str = "<tokyn>", mock: bool = False) -> int:
     """Esegue un programma. Restituisce il codice di uscita."""
     compiled = compile_source(source, filename)
     if mock:
-        os.environ["ITSME_MOCK"] = "1"
-    pseudo = f"<itsme:{filename}>"
-    namespace = {"__name__": "__itsme__", "__file__": filename}
+        os.environ["TOKYN_MOCK"] = "1"
+    pseudo = f"<tokyn:{filename}>"
+    namespace = {"__name__": "__tokyn__", "__file__": filename}
     try:
         code = compile(compiled.python, pseudo, "exec")
         exec(code, namespace)
-        namespace["__itsme_main__"]()
+        namespace["__tokyn_main__"]()
         return 0
     except KeyboardInterrupt:
         print("\ninterrotto.", file=sys.stderr)
@@ -86,7 +86,7 @@ def _source_line(err: BaseException, compiled: Compiled, pseudo: str) -> int:
 
 
 def translate_exception(err: BaseException) -> tuple[str, str]:
-    if isinstance(err, ItsmeRuntimeError):
+    if isinstance(err, TokynRuntimeError):
         return err.message, err.hint
     if isinstance(err, KeyError):
         return f"la chiave {err.args[0]!r} non esiste nel dizionario", "Controlla il nome della chiave, oppure usa d.get(chiave)."

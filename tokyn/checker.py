@@ -1,4 +1,4 @@
-"""Controlli statici di Itsme.
+"""Controlli statici di Tokyn.
 
 Obiettivo: trovare prima dell'esecuzione tutti gli errori che un'IA (o una persona)
 fa più spesso, e spiegare esattamente come correggerli.
@@ -209,7 +209,7 @@ class Checker:
                        "Ogni funzione, agente, type e costante deve avere un nome diverso.")
             return False
         if name in BUILTINS and kind[0] != "module":
-            self.error("E102", f'"{name}" è il nome di una funzione già presente in Itsme', name_tok,
+            self.error("E102", f'"{name}" è il nome di una funzione già presente in Tokyn', name_tok,
                        "Scegli un altro nome.")
             return False
         self.global_names[name] = kind
@@ -520,7 +520,7 @@ class Checker:
                     self.error("E141", f'"{name}" è {kind}: non puoi usarlo come variabile', name_tok, "Scegli un altro nome.")
                     return
             if name in BUILTINS and not scope.has_local(name):
-                self.error("E141", f'"{name}" è una funzione di Itsme: non puoi usarlo come variabile', name_tok, "Scegli un altro nome.")
+                self.error("E141", f'"{name}" è una funzione di Tokyn: non puoi usarlo come variabile', name_tok, "Scegli un altro nome.")
                 return
             if augmented:
                 if scope.lookup(name) is None:
@@ -580,9 +580,9 @@ class Checker:
         candidates = scope.visible_names()
         hint = did_you_mean(name, candidates)
         if name in ("true", "false", "null", "none", "nil"):
-            hint = "In Itsme si scrive True, False e None con l'iniziale maiuscola."
+            hint = "In Tokyn si scrive True, False e None con l'iniziale maiuscola."
         elif name in ("self", "this"):
-            hint = "Itsme non ha classi: usa le variabili direttamente."
+            hint = "Tokyn non ha classi: usa le variabili direttamente."
         self.error("E160", f'il nome "{name}" non è definito', name_tok, hint)
         return ANY
 

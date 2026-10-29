@@ -1,4 +1,4 @@
-"""Errori di Itsme: pensati per essere letti e corretti da persone e da IA."""
+"""Errori di Tokyn: pensati per essere letti e corretti da persone e da IA."""
 
 from __future__ import annotations
 
@@ -28,17 +28,17 @@ class Diagnostic:
         }
 
 
-class ItsmeError(Exception):
+class TokynError(Exception):
     """Uno o più errori di compilazione."""
 
-    def __init__(self, diagnostics: list[Diagnostic], source: str = "", filename: str = "<itsme>"):
+    def __init__(self, diagnostics: list[Diagnostic], source: str = "", filename: str = "<tokyn>"):
         self.diagnostics = diagnostics
         self.source = source
         self.filename = filename
         super().__init__(format_diagnostics(diagnostics, source, filename))
 
 
-class ItsmeRuntimeError(Exception):
+class TokynRuntimeError(Exception):
     """Errore durante l'esecuzione, già tradotto in un messaggio chiaro."""
 
     def __init__(self, message: str, line: int = 0, hint: str = ""):

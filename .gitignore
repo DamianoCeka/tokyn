@@ -8,3 +8,4 @@ dist/
 examples/*.py
 negative.json
 appuntamenti.txt
+dist/

@@ -1,0 +1,28 @@
+type Voce:
+    descrizione: str "descrizione della riga"
+    quantita: int "quantità acquistata"
+    prezzo_unitario: float "prezzo unitario della riga"
+
+type Fattura:
+    fornitore: str "nome del fornitore"
+    numero: str "numero della fattura"
+    voci: list[Voce] "tutte le righe della fattura"
+
+agent Estrattore:
+    model: "claude"
+    instructions: "Estrai dalla fattura il nome del fornitore, il numero di fattura e tutte le righe con descrizione, quantità e prezzo unitario."
+    output: Fattura
+
+main:
+    testo = read_file("fattura.txt")
+    fattura = Estrattore.ask(testo)
+    print(f"Fornitore: {fattura.fornitore}")
+    print(f"Fattura n. {fattura.numero}")
+    totale = 0.0
+    for voce in fattura.voci:
+        if voce.quantita == 0:
+            print(f"ATTENZIONE: quantità zero per '{voce.descrizione}'")
+        riga = voce.quantita * voce.prezzo_unitario
+        totale += riga
+        print(f"{voce.descrizione}: {voce.quantita} x {voce.prezzo_unitario} = {round(riga, 2)}")
+    print(f"Totale: {round(totale, 2)}")

@@ -1,4 +1,4 @@
-"""Runtime di Itsme: tipi strutturati, strumenti, agenti e funzioni di base.
+"""Runtime di Tokyn: tipi strutturati, strumenti, agenti e funzioni di base.
 
 Il codice Python generato dal compilatore importa questo modulo.
 """
@@ -12,7 +12,7 @@ import textwrap
 import time as _time
 import urllib.request as _urlreq
 
-from .errors import ItsmeRuntimeError
+from .errors import TokynRuntimeError
 
 DEFAULT_MODELS = {
     "claude": "claude-sonnet-5-5",
@@ -75,7 +75,7 @@ def json_schema(spec: _Spec, description: str | None = None) -> dict:
     elif k == "enum":
         s = {"type": "string", "enum": list(spec.arg)}
     elif k == "ref":
-        s = _TYPES[spec.arg].__itsme_schema__()
+        s = _TYPES[spec.arg].__tokyn_schema__()
     else:
         s = {}
     if description:
@@ -128,8 +128,8 @@ def convert(value, spec: _Spec, where: str = "valore"):
 
 def to_plain(value):
     """Converte record e liste in dati JSON."""
-    if hasattr(value, "__itsme_fields__"):
-        return {k: to_plain(getattr(value, k)) for k in value.__itsme_fields__}
+    if hasattr(value, "__tokyn_fields__"):
+        return {k: to_plain(getattr(value, k)) for k in value.__tokyn_fields__}
     if isinstance(value, list):
         return [to_plain(v) for v in value]
     if isinstance(value, dict):
@@ -138,20 +138,20 @@ def to_plain(value):
 
 
 def make_type(name: str, fields: dict) -> type:
-    """Crea la classe Python per un `type` di Itsme. fields: nome -> (spec, descrizione)."""
+    """Crea la classe Python per un `type` di Tokyn. fields: nome -> (spec, descrizione)."""
 
     def __init__(self, **kwargs):
         for fname, (spec, _d) in fields.items():
             if fname not in kwargs:
-                raise ItsmeRuntimeError(f'manca il campo "{fname}" per creare {name}')
+                raise TokynRuntimeError(f'manca il campo "{fname}" per creare {name}')
             object.__setattr__(self, fname, convert(kwargs.pop(fname), spec, f"{name}.{fname}"))
         if kwargs:
             extra = ", ".join(kwargs)
-            raise ItsmeRuntimeError(f"{name} non ha i campi: {extra}")
+            raise TokynRuntimeError(f"{name} non ha i campi: {extra}")
 
     def __setattr__(self, key, value):
         if key not in fields:
-            raise ItsmeRuntimeError(f'{name} non ha il campo "{key}"')
+            raise TokynRuntimeError(f'{name} non ha il campo "{key}"')
         object.__setattr__(self, key, convert(value, fields[key][0], f"{name}.{key}"))
 
     def __repr__(self):
@@ -174,7 +174,7 @@ def make_type(name: str, fields: dict) -> type:
         return obj
 
     @classmethod
-    def __itsme_schema__(cls):
+    def __tokyn_schema__(cls):
         return {
             "type": "object",
             "properties": {k: json_schema(s, d) for k, (s, d) in fields.items()},
@@ -190,9 +190,9 @@ def make_type(name: str, fields: dict) -> type:
         "__eq__": __eq__,
         "__hash__": None,
         "_from_dict": _from_dict,
-        "__itsme_schema__": __itsme_schema__,
-        "__itsme_fields__": tuple(fields),
-        "__itsme_specs__": {k: s for k, (s, _d) in fields.items()},
+        "__tokyn_schema__": __tokyn_schema__,
+        "__tokyn_fields__": tuple(fields),
+        "__tokyn_specs__": {k: s for k, (s, _d) in fields.items()},
         "to_dict": lambda self: to_plain(self),
     })
     _TYPES[name] = cls
@@ -206,7 +206,7 @@ def tool(name: str, description: str | None, params: dict, returns: _Spec):
     """Decoratore applicato a ogni `def`: la rende usabile come strumento da un agente."""
 
     def deco(fn):
-        fn.__itsme_tool__ = {
+        fn.__tokyn_tool__ = {
             "name": name,
             "description": description or name,
             "params": params,
@@ -228,7 +228,7 @@ def _tool_schema(obj) -> dict:
                 "required": ["richiesta"],
             },
         }
-    meta = obj.__itsme_tool__
+    meta = obj.__tokyn_tool__
     return {
         "name": meta["name"],
         "description": meta["description"],
@@ -244,7 +244,7 @@ def _call_tool(obj, args: dict):
     if isinstance(obj, Agent):
         result = obj.ask(str(args.get("richiesta", "")))
     else:
-        meta = obj.__itsme_tool__
+        meta = obj.__tokyn_tool__
         converted = {}
         for p, spec in meta["params"].items():
             if p in args:
@@ -267,7 +267,7 @@ class Agent:
         self.memory = memory
         self.max_steps = max_steps
         self._history: list[dict] = []
-        self._tools_by_name = {(t.name if isinstance(t, Agent) else t.__itsme_tool__["name"]): t for t in self.tools}
+        self._tools_by_name = {(t.name if isinstance(t, Agent) else t.__tokyn_tool__["name"]): t for t in self.tools}
 
     def __repr__(self):
         return f"<agent {self.name}>"
@@ -306,7 +306,7 @@ class Agent:
             tools.append({
                 "name": FINAL_TOOL,
                 "description": "Consegna la risposta finale nel formato richiesto.",
-                "input_schema": self.output.__itsme_schema__(),
+                "input_schema": self.output.__tokyn_schema__(),
             })
         messages = list(self._history) + [{"role": "user", "content": text}]
         for _step in range(self.max_steps):
@@ -347,14 +347,14 @@ class Agent:
                                     "content": f"Errore: {err}"})
             messages.append({"role": "user", "content": results})
 
-        raise ItsmeRuntimeError(
+        raise TokynRuntimeError(
             f"l'agente {self.name} non ha finito entro {self.max_steps} passaggi",
             hint="Aumenta max_steps nell'agente o rendi le instructions più precise.",
         )
 
 
 def _use_mock(model) -> bool:
-    return model == "mock" or os.environ.get("ITSME_MOCK") == "1"
+    return model == "mock" or os.environ.get("TOKYN_MOCK") == "1"
 
 
 _CLIENT = None
@@ -365,14 +365,14 @@ def _client():
     if _CLIENT is not None:
         return _CLIENT
     if not os.environ.get("ANTHROPIC_API_KEY"):
-        raise ItsmeRuntimeError(
+        raise TokynRuntimeError(
             "manca la chiave ANTHROPIC_API_KEY",
-            hint="Impostala come variabile d'ambiente, oppure prova il programma senza IA con: itsme run file.itsme --mock",
+            hint="Impostala come variabile d'ambiente, oppure prova il programma senza IA con: tokyn run file.tokyn --mock",
         )
     try:
         import anthropic
     except ImportError:
-        raise ItsmeRuntimeError("manca il pacchetto anthropic", hint="Installa con: pip install anthropic") from None
+        raise TokynRuntimeError("manca il pacchetto anthropic", hint="Installa con: pip install anthropic") from None
     _CLIENT = anthropic.Anthropic()
     return _CLIENT
 
@@ -387,11 +387,11 @@ def _with_retry(fn, agent_name, attempts=3):
             retryable = name in ("RateLimitError", "APIConnectionError", "APITimeoutError", "InternalServerError", "OverloadedError")
             if not retryable or i == attempts - 1:
                 if name == "AuthenticationError":
-                    raise ItsmeRuntimeError("la chiave ANTHROPIC_API_KEY non è valida") from None
+                    raise TokynRuntimeError("la chiave ANTHROPIC_API_KEY non è valida") from None
                 if name == "NotFoundError":
-                    raise ItsmeRuntimeError(f"modello non trovato per l'agente {agent_name}",
+                    raise TokynRuntimeError(f"modello non trovato per l'agente {agent_name}",
                                             hint='Usa model: "claude", "claude-opus" o "claude-haiku".') from None
-                raise ItsmeRuntimeError(f"chiamata all'IA fallita per l'agente {agent_name}: {err}") from None
+                raise TokynRuntimeError(f"chiamata all'IA fallita per l'agente {agent_name}: {err}") from None
             _time.sleep(delay)
             delay *= 2
 
@@ -417,7 +417,7 @@ def _example(spec: _Spec, field: str = ""):
         return [_example(spec.arg, field)]
     if k == "ref":
         cls = _TYPES[spec.arg]
-        return {f: _example(cls.__itsme_specs__[f], f) for f in cls.__itsme_fields__}
+        return {f: _example(cls.__tokyn_specs__[f], f) for f in cls.__tokyn_fields__}
     return None
 
 
@@ -425,7 +425,7 @@ def _mock_answer(agent: Agent, text: str):
     """Risposta finta e prevedibile: permette di provare un programma senza API key."""
     if agent.output is not None:
         cls = agent.output
-        data = {f: _example(cls.__itsme_specs__[f], f) for f in cls.__itsme_fields__}
+        data = {f: _example(cls.__tokyn_specs__[f], f) for f in cls.__tokyn_fields__}
         value = cls._from_dict(data)
         return value, _json.dumps(data, ensure_ascii=False)
     short = text if len(text) <= 60 else text[:57] + "..."
@@ -441,7 +441,7 @@ def read_file(path):
         with open(path, encoding="utf-8") as f:
             return f.read()
     except FileNotFoundError:
-        raise ItsmeRuntimeError(f'il file "{path}" non esiste') from None
+        raise TokynRuntimeError(f'il file "{path}" non esiste') from None
 
 
 def write_file(path, text):
@@ -455,7 +455,7 @@ def append_file(path, text):
 
 
 def http_get(url):
-    req = _urlreq.Request(str(url), headers={"User-Agent": "itsme/0.1"})
+    req = _urlreq.Request(str(url), headers={"User-Agent": "tokyn/0.1"})
     with _urlreq.urlopen(req, timeout=30) as r:
         return r.read().decode("utf-8", errors="replace")
 
@@ -463,7 +463,7 @@ def http_get(url):
 def http_post(url, data):
     body = data if isinstance(data, str) else _json.dumps(to_plain(data))
     req = _urlreq.Request(str(url), data=body.encode("utf-8"), method="POST",
-                          headers={"User-Agent": "itsme/0.1", "Content-Type": "application/json"})
+                          headers={"User-Agent": "tokyn/0.1", "Content-Type": "application/json"})
     with _urlreq.urlopen(req, timeout=30) as r:
         return r.read().decode("utf-8", errors="replace")
 
@@ -472,7 +472,7 @@ def json_parse(text):
     try:
         return _json.loads(text)
     except _json.JSONDecodeError as err:
-        raise ItsmeRuntimeError(f"il testo non è JSON valido ({err.msg}, riga {err.lineno})") from None
+        raise TokynRuntimeError(f"il testo non è JSON valido ({err.msg}, riga {err.lineno})") from None
 
 
 def json_dump(value):
@@ -482,7 +482,7 @@ def json_dump(value):
 def env(name, default=None):
     value = os.environ.get(name, default)
     if value is None:
-        raise ItsmeRuntimeError(f'la variabile d\'ambiente "{name}" non è impostata',
+        raise TokynRuntimeError(f'la variabile d\'ambiente "{name}" non è impostata',
                                 hint=f'Impostala, oppure dai un valore di riserva: env("{name}", "...")')
     return value
 

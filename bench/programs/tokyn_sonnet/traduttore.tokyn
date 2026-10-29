@@ -1,0 +1,26 @@
+type Traduzione:
+    originale: str "la frase italiana originale"
+    inglese: str "traduzione in inglese"
+    francese: str "traduzione in francese"
+
+agent Traduttore:
+    model: "claude-haiku"
+    instructions: "Traduci la frase italiana in inglese e in francese. Restituisci anche la frase originale."
+    output: Traduzione
+
+main:
+    frasi = [
+        "Buongiorno, come stai?",
+        "Il treno parte tra dieci minuti.",
+        "Vorrei un caffe senza zucchero.",
+        "Domani andiamo al mare con gli amici."
+    ]
+    risultati = []
+    for frase in frasi:
+        t = Traduttore.ask(frase)
+        risultati.append(t)
+
+    print("ITALIANO".ljust(40) + "INGLESE".ljust(40) + "FRANCESE")
+    print("-" * 110)
+    for t in risultati:
+        print(t.originale.ljust(40) + t.inglese.ljust(40) + t.francese)

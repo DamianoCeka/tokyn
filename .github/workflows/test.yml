@@ -17,4 +17,4 @@ jobs:
           python-version: ${{ matrix.python }}
       - run: pip install -e ".[dev]"
       - run: pytest -q
-      - run: itsme check examples/*.itsme
+      - run: tokyn check examples/*.tokyn

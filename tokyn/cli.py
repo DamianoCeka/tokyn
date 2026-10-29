@@ -1,4 +1,4 @@
-"""Riga di comando: itsme check | build | run | spec | new."""
+"""Riga di comando: tokyn check | build | run | spec | new."""
 
 from __future__ import annotations
 
@@ -8,9 +8,9 @@ from pathlib import Path
 
 from . import __version__
 from .compiler import check_source, compile_source, run_source
-from .errors import ItsmeError, diagnostics_json, format_diagnostics
+from .errors import TokynError, diagnostics_json, format_diagnostics
 
-TEMPLATE = '''# {name}.itsme — creato con `itsme new`
+TEMPLATE = '''# {name}.tokyn — creato con `tokyn new`
 
 agent Assistente:
     model: "claude"
@@ -49,7 +49,7 @@ def cmd_build(args) -> int:
     source = _read(args.file)
     try:
         compiled = compile_source(source, args.file)
-    except ItsmeError as err:
+    except TokynError as err:
         print(err, file=sys.stderr)
         return 1
     out = args.output or str(Path(args.file).with_suffix(".py"))
@@ -62,7 +62,7 @@ def cmd_run(args) -> int:
     source = _read(args.file)
     try:
         return run_source(source, args.file, mock=args.mock)
-    except ItsmeError as err:
+    except TokynError as err:
         print(err, file=sys.stderr)
         return 1
 
@@ -73,18 +73,18 @@ def cmd_spec(args) -> int:
 
 
 def cmd_new(args) -> int:
-    path = Path(args.name if args.name.endswith(".itsme") else args.name + ".itsme")
+    path = Path(args.name if args.name.endswith(".tokyn") else args.name + ".tokyn")
     if path.exists():
         print(f'errore: "{path}" esiste già', file=sys.stderr)
         return 1
     path.write_text(TEMPLATE.format(name=path.stem), encoding="utf-8")
-    print(f"creato {path}. Provalo con: itsme run {path} --mock")
+    print(f"creato {path}. Provalo con: tokyn run {path} --mock")
     return 0
 
 
 def main(argv=None) -> int:
-    parser = argparse.ArgumentParser(prog="itsme", description="Itsme: il linguaggio per agenti IA.")
-    parser.add_argument("--version", action="version", version=f"itsme {__version__}")
+    parser = argparse.ArgumentParser(prog="tokyn", description="Tokyn: il linguaggio per agenti IA.")
+    parser.add_argument("--version", action="version", version=f"tokyn {__version__}")
     sub = parser.add_subparsers(dest="command", required=True)
 
     p = sub.add_parser("check", help="controlla uno o più file e mostra gli errori")

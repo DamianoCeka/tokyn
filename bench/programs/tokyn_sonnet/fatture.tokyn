@@ -1,0 +1,28 @@
+type Riga:
+    descrizione: str "descrizione della voce"
+    quantita: float "quantita acquistata"
+    prezzo_unitario: float "prezzo unitario in euro"
+
+type Fattura:
+    fornitore: str "nome del fornitore"
+    numero: str "numero della fattura"
+    righe: list[Riga] "elenco delle voci della fattura"
+
+agent Estrattore:
+    model: "claude-haiku"
+    instructions: "Estrai dal testo della fattura il fornitore, il numero e tutte le righe (descrizione, quantita, prezzo unitario)."
+    output: Fattura
+
+main:
+    testo = read_file("fattura.txt")
+    f = Estrattore.ask(testo)
+    print(f"Fornitore: {f.fornitore}")
+    print(f"Fattura n. {f.numero}")
+    totale = 0.0
+    for r in f.righe:
+        importo = r.quantita * r.prezzo_unitario
+        totale += importo
+        print(f"{r.descrizione}: {r.quantita} x {r.prezzo_unitario} = {importo}")
+        if r.quantita == 0:
+            print(f"ATTENZIONE: quantita zero per '{r.descrizione}'")
+    print(f"Totale ricalcolato: {round(totale, 2)}")

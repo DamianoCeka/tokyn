@@ -1,0 +1,24 @@
+type Classificazione:
+    categoria: "lavoro" | "personale" | "spam" "categoria dell'email"
+    priorita: int "da 1 (bassa) a 5 (alta)"
+    riassunto: str "riassunto dell'email in una sola riga"
+
+agent Classificatore:
+    model: "claude"
+    instructions: "Classifica l'email ricevuta: categoria, priorità da 1 a 5 e un riassunto in una riga, in italiano."
+    output: Classificazione
+
+main:
+    righe = read_file("emails.txt").split("\n")
+    risultati = []
+    for riga in righe:
+        if not riga.strip():
+            continue
+        c = Classificatore.ask(riga)
+        risultati.append({"email": riga, "categoria": c.categoria, "priorita": c.priorita, "riassunto": c.riassunto})
+    print("Email non spam, dalla priorità più alta alla più bassa:")
+    for p in range(5, 0, -1):
+        for r in risultati:
+            if r["categoria"] != "spam" and r["priorita"] == p:
+                print(f"[{p}] {r['categoria']} - {r['riassunto']}")
+    write_file("riepilogo.json", json_dump(risultati))
