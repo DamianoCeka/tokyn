@@ -274,6 +274,14 @@ Un'estensione per VS Code con i colori di Tokyn e gli stessi errori che oggi gui
 </tr>
 </table>
 
+## Lavora con me
+
+Ti serve un'automazione con l'IA su misura: un assistente per i clienti, lo smistamento di email o ticket,
+l'estrazione di dati da fatture e documenti, un bot sui tuoi dati? La costruisco con Claude, Tokyn e Python.
+Scrivimi a **damiano.ceka83@gmail.com** con due righe su quello che ti serve.
+
+Se Tokyn ti fa risparmiare, puoi anche [sostenerne lo sviluppo](https://github.com/sponsors/DamianoCeka).
+
 ## Licenza
 
 MIT. Tokyn è scritto da Damiano Ceka con molto aiuto di Claude, che ha scritto buona parte del codice.

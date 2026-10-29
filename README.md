@@ -269,6 +269,14 @@ A VS Code extension with Tokyn's colors and the same errors that guide Claude to
 </tr>
 </table>
 
+## Work with me
+
+Need an AI automation built for your business: a support assistant, email or ticket triage, data extraction from
+invoices and documents, a bot on your own data? I build them with Claude, Tokyn and plain Python.
+Write to **damiano.ceka83@gmail.com** with a few lines about what you need.
+
+If Tokyn saves you money, you can also [sponsor its development](https://github.com/sponsors/DamianoCeka).
+
 ## License
 
 MIT. Tokyn is written by Damiano Ceka.
