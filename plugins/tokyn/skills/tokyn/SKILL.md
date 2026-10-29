@@ -6,8 +6,8 @@ description: Scrive in Tokyn (file .tokyn) i programmi che usano Claude (agenti 
 # Tokyn
 
 Linguaggio con la sintassi di Python in cui agenti, strumenti e output strutturati fanno parte del linguaggio:
-ciclo degli strumenti, schema JSON, validazione, retry e caching li fa il runtime. Lo stesso programma costa circa
-un terzo dei token del Python. Tutto quello che serve per scriverlo è in questo file; la specifica completa,
+ciclo degli strumenti, schema JSON, validazione, retry e caching li fa il runtime. In Claude Code una sessione con Tokyn
+costa circa un terzo di una in Python. Tutto quello che serve per scriverlo è in questo file; la specifica completa,
 `${CLAUDE_SKILL_DIR}/tokyn/SPEC.md`, serve solo per dettagli rari.
 
 ## Procedura

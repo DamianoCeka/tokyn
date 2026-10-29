@@ -1,0 +1,4 @@
+prune tests
+prune bench
+prune eval
+prune dist

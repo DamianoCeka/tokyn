@@ -1,5 +1,8 @@
 # Prova in Claude Code: con Tokyn e senza
 
+> **Prima prova, tenuta come storia:** 3 compiti, una sessione ciascuno. Quella completa (15 compiti, 3 condizioni,
+> 3 ripetizioni, Opus e Sonnet, test nascosti, protocollo pubblicato prima) è in [`v2/`](v2).
+
 La domanda: se in Claude Code chiedi un programma Python con agenti IA, quanto costa farlo scrivere a Claude
 in Tokyn (con il plugin) invece che direttamente in Python?
 
