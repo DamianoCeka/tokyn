@@ -130,8 +130,8 @@ main:                                          # entry point, only one
 - In mock: texts `"example <field>"`, numbers 1 and 1.0, empty dicts, lists of 2 items; `"a" | "b"` values and
   bools change at every `ask` of that agent and from one item to the next (starting from the first value and True).
   Without `output` the answer is `"[mock Name] answer to: ..."`.
-- With Claude Code (no API key) `ask_all` sends the requests one at a time, because the Batch API needs the key,
-  and `max_steps` does not apply.
+- With Claude Code (no API key) `ask_all` sends 4 requests at once (`TOKYN_PARALLELO`), because the Batch API needs
+  the key, and `max_steps` does not apply.
 - `Agent.ask_all(texts)` gives the same answers as a loop of `ask`, in the same order, but through the Batch API:
   half price, slower (usually minutes, at most 24 hours), no `memory`. Use it for bulk jobs (classifying 100 emails);
   for a few texts, or when you need them right away, use a loop of `ask`. In mock it is instant. If a text gets no

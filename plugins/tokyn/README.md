@@ -176,7 +176,7 @@ Se c'è `ANTHROPIC_API_KEY`, Tokyn usa l'API. Puoi anche scegliere tu con `--bac
   esempio `printf 'ciao\nesci\n' | python …/tokyn_cli.py run file.tokyn --mock`.
 - **`ask_all` impiega minuti.** Usa la Batch API: costa la metà, ma di solito ci vogliono minuti e al massimo 24
   ore. Per pochi testi, o se ti servono subito le risposte, usa un ciclo di `ask`. Con Claude Code, `ask_all` invia
-  i testi uno alla volta.
+  4 testi alla volta (`TOKYN_PARALLELO` cambia il numero).
 - **Messaggi in inglese.** Questo plugin scrive i messaggi in italiano, a meno che non sia impostato
   `TOKYN_LANG=en`: togli la variabile, oppure imposta `TOKYN_LANG=it`.
 

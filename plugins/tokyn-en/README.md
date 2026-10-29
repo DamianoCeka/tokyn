@@ -175,8 +175,8 @@ When `ANTHROPIC_API_KEY` is set, Tokyn uses the API. You can also choose with `-
 - **"input() got no line".** The program reads from the keyboard: pass the answers one per line, for example
   `printf 'hello\nquit\n' | python …/tokyn_cli.py run file.tokyn --mock`.
 - **`ask_all` takes minutes.** It uses the Batch API: half price, but usually minutes and at most 24 hours. For a
-  few texts, or when you need the answers right away, use a loop of `ask`. Through Claude Code, `ask_all` sends the
-  texts one at a time.
+  few texts, or when you need the answers right away, use a loop of `ask`. Through Claude Code, `ask_all` sends
+  4 texts at a time (`TOKYN_PARALLELO` changes the number).
 - **Messages in Italian.** This plugin prints messages in English unless `TOKYN_LANG=it` is set; unset it, or set
   `TOKYN_LANG=en`.
 

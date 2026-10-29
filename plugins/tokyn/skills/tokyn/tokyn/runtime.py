@@ -38,6 +38,7 @@ MAX_TOKENS = 16000  # il thinking è sempre attivo sui modelli attuali e conta n
 # Se l'IA rifiuta una richiesta, l'API la riprova da sola su un altro modello (Claude API; Haiku non lo prevede).
 FALLBACK_MODELS = {"claude-sonnet-5-5", "claude-opus-5-5", "claude-opus-5", "claude-fable-5", "claude-fable-5-1"}
 FALLBACK_BETA = "server-side-fallback-2026-07-01"
+PARALLELO = 4  # richieste insieme in ask_all senza la Batch API (Claude Code, altri fornitori); TOKYN_PARALLELO la cambia
 
 _TYPES: dict[str, type] = {}
 
@@ -342,7 +343,7 @@ class Agent:
         """Come un ciclo di ask, ma con la Batch API: costa la metà e restituisce le risposte nello stesso ordine.
 
         È più lento (di solito minuti) e non usa la memoria: ogni testo è una richiesta a sé.
-        Con gli altri fornitori (e con Claude Code) è un ciclo di ask senza memoria.
+        Con gli altri fornitori (e con Claude Code) sono ask senza memoria, fino a TOKYN_PARALLELO insieme (default 4).
         """
         if isinstance(texts, (str, dict)) or not hasattr(texts, "__iter__"):
             raise TokynRuntimeError(tr(f"{self.name}.ask_all vuole una lista di testi", f"{self.name}.ask_all takes a list of texts"),
@@ -350,11 +351,17 @@ class Agent:
         texts = [str(t) for t in texts]
         if _use_mock(self.model):
             return [_mock_answer(self, t)[0] for t in texts]
-        if _fornitore(self.model):  # gli altri fornitori non hanno la Batch API di Anthropic: una richiesta alla volta
-            return [_chiedi_chat(self, t, [])[0] for t in texts]
-        if _backend() == "claude-code":  # la Batch API c'è solo con la chiave: una richiesta alla volta
-            return [_claude_code_ask(self, t, [])[0] for t in texts]
-        return self._run_batch(texts) if texts else []
+        nome = _fornitore(self.model)
+        if not texts:  # nessuna richiesta: niente da controllare, come prima
+            return []
+        if nome:  # gli altri fornitori non hanno la Batch API di Anthropic: richieste normali, alcune insieme
+            _indirizzo_e_chiave(self, nome)  # un errore di configurazione si dice subito, non una volta per testo
+            return _in_parallelo(self, texts, lambda t: _chiedi_chat(self, t, [])[0])
+        if _backend() == "claude-code":  # la Batch API c'è solo con la chiave: richieste normali, alcune insieme
+            if self.tools:
+                _comando_ponte()
+            return _in_parallelo(self, texts, lambda t: _claude_code_ask(self, t, [])[0])
+        return self._run_batch(texts)
 
     def _system(self, final_tool=None):
         """Le istruzioni per l'IA; final_tool dice se l'output arriva con lo strumento `rispondi` (di solito si sa da solo)."""
@@ -513,13 +520,91 @@ class Agent:
         for cid in pending:
             failures[cid] = self._too_many_steps()
         if failures:
-            first = min(failures, key=int)
-            raise TokynRuntimeError(tr(
-                f"{self.name}.ask_all: {len(failures)} testi su {len(texts)} senza risposta; il primo è testi[{first}] "
-                f"({texts[int(first)][:40]!r}): {failures[first].message}",
-                f"{self.name}.ask_all: {len(failures)} of {len(texts)} texts got no answer; the first is texts[{first}] "
-                f"({texts[int(first)][:40]!r}): {failures[first].message}"), hint=failures[first].hint)
+            raise _errore_ask_all(self, texts, {int(cid): err for cid, err in failures.items()})
         return [answers[str(i)] for i in range(len(texts))]
+
+
+def _errore_ask_all(agent, texts, failures):
+    """L'errore di ask_all quando dei testi restano senza risposta (failures: indice -> TokynRuntimeError)."""
+    first = min(failures)
+    err = failures[first]
+    others = sorted(failures)[:10]
+    more = ", …" if len(failures) > len(others) else ""
+    elenco_it = ", ".join(f"testi[{i}]" for i in others) + more
+    elenco_en = ", ".join(f"texts[{i}]" for i in others) + more
+    many = len(failures) > 1
+    return TokynRuntimeError(tr(
+        f"{agent.name}.ask_all: {len(failures)} testi su {len(texts)} senza risposta; il primo è testi[{first}] "
+        f"({texts[first][:40]!r}): {err.message}" + (f" (senza risposta: {elenco_it})" if many else ""),
+        f"{agent.name}.ask_all: {len(failures)} of {len(texts)} texts got no answer; the first is texts[{first}] "
+        f"({texts[first][:40]!r}): {err.message}" + (f" (no answer: {elenco_en})" if many else "")), hint=err.hint)
+
+
+def _parallelo() -> int:
+    """Quante richieste di ask_all insieme, senza la Batch API: TOKYN_PARALLELO (un intero da 1 in su), di solito 4."""
+    valore = os.environ.get("TOKYN_PARALLELO", "").strip()
+    if not valore:
+        return PARALLELO
+    try:
+        n = int(valore)
+    except ValueError:
+        n = 0
+    if n < 1:
+        raise TokynRuntimeError(tr(f'TOKYN_PARALLELO deve essere un numero intero da 1 in su, non "{valore}"',
+                                   f'TOKYN_PARALLELO must be a whole number from 1 up, not "{valore}"'),
+                                hint=tr(f"Scrivi per esempio TOKYN_PARALLELO=8, oppure toglila per usare {PARALLELO}.",
+                                        f"Write for example TOKYN_PARALLELO=8, or unset it to use {PARALLELO}."))
+    return n
+
+
+def _in_parallelo(agent, texts, chiedi):
+    """ask_all senza la Batch API: fino a TOKYN_PARALLELO richieste insieme, risposte nell'ordine dei testi.
+
+    Ogni richiesta va fino in fondo anche se un'altra fallisce; alla fine un solo errore dice quali testi sono
+    rimasti senza risposta. I thread sono daemon: con Ctrl-C il programma si ferma senza aspettarli, e le richieste
+    non ancora partite non partono più."""
+    n = min(_parallelo(), len(texts))
+    answers, failures = {}, {}
+    indici = iter(range(len(texts)))
+    lock = threading.Lock()
+    stop = threading.Event()
+
+    def worker():
+        while not stop.is_set():
+            with lock:
+                i = next(indici, None)
+            if i is None:
+                return
+            try:
+                answers[i] = chiedi(texts[i])
+            except Exception as err:  # si raccoglie: le altre richieste continuano
+                failures[i] = err
+            except BaseException as err:  # SystemExit o Ctrl-C in una richiesta: niente richieste nuove, poi esce com'è
+                failures[i] = err
+                stop.set()
+                return
+
+    if n <= 1:
+        worker()
+    else:
+        threads = [threading.Thread(target=worker, name=f"tokyn-ask_all-{k}", daemon=True) for k in range(n)]
+        for t in threads:
+            t.start()
+        try:
+            for t in threads:
+                t.join()
+        except BaseException:  # Ctrl-C: niente richieste nuove
+            stop.set()
+            raise
+    fermi = [i for i in sorted(failures) if not isinstance(failures[i], Exception)]
+    if fermi:  # in un thread SystemExit si perderebbe: esce qui, come nel ciclo di ask
+        raise failures[fermi[0]]
+    bugs = [i for i in sorted(failures) if not isinstance(failures[i], TokynRuntimeError)]
+    if bugs:  # un errore inatteso (non di Tokyn) esce com'è, con il suo traceback, come nel ciclo di ask
+        raise failures[bugs[0]]
+    if failures:
+        raise _errore_ask_all(agent, texts, failures)
+    return [answers[i] for i in range(len(texts))]
 
 
 def _plain(block):
@@ -546,21 +631,21 @@ def _wait_batch(client, batch, agent_name):
 
 _USAGE = {"chiamate": 0, "chiamate_batch": 0, "chiamate_claude_code": 0, "costo_claude_code": 0.0, "fallback": 0,
           "input": 0, "output": 0, "cache_lette": 0, "cache_scritte": 0}
+_USAGE_LOCK = threading.Lock()  # ask_all fa più richieste insieme: i contatori si aggiornano uno alla volta
 
 
 def _count_usage(response, batch=False):
-    _USAGE["chiamate_batch" if batch else "chiamate"] += 1
     usage = getattr(response, "usage", None)
-    if usage is None:
-        return
     # con un fallback lato server ogni tentativo si paga: usage.iterations li elenca tutti
-    parts = getattr(usage, "iterations", None) or [usage]
-    _USAGE["fallback"] += sum(1 for p in parts if getattr(p, "type", "") == "fallback_message")
-    for part in parts:
-        _USAGE["input"] += getattr(part, "input_tokens", 0) or 0
-        _USAGE["output"] += getattr(part, "output_tokens", 0) or 0
-        _USAGE["cache_lette"] += getattr(part, "cache_read_input_tokens", 0) or 0
-        _USAGE["cache_scritte"] += getattr(part, "cache_creation_input_tokens", 0) or 0
+    parts = [] if usage is None else getattr(usage, "iterations", None) or [usage]
+    with _USAGE_LOCK:
+        _USAGE["chiamate_batch" if batch else "chiamate"] += 1
+        _USAGE["fallback"] += sum(1 for p in parts if getattr(p, "type", "") == "fallback_message")
+        for part in parts:
+            _USAGE["input"] += getattr(part, "input_tokens", 0) or 0
+            _USAGE["output"] += getattr(part, "output_tokens", 0) or 0
+            _USAGE["cache_lette"] += getattr(part, "cache_read_input_tokens", 0) or 0
+            _USAGE["cache_scritte"] += getattr(part, "cache_creation_input_tokens", 0) or 0
 
 
 def usage_report() -> str:
@@ -614,6 +699,7 @@ def _comando_ponte() -> list:
 
 
 _AVVISO_CLAUDE_CODE = []
+_AVVISO_LOCK = threading.Lock()
 
 
 def _backend() -> str:
@@ -627,7 +713,9 @@ def _backend() -> str:
         return "api"
     if not shutil.which("claude"):
         return "api"
-    if not _AVVISO_CLAUDE_CODE:
+    with _AVVISO_LOCK:  # una volta sola anche con più richieste insieme
+        if _AVVISO_CLAUDE_CODE:
+            return "claude-code"
         _AVVISO_CLAUDE_CODE.append(True)
         print(tr("Tokyn: senza chiave API gli agenti rispondono con il tuo Claude Code e usano il tuo abbonamento. Va bene "
                  "per provare i tuoi programmi; un prodotto o un programma usato da altre persone deve usare una chiave "
@@ -744,12 +832,13 @@ def _claude_code_ask(agent, text, history):
 
 def _count_claude_code(result):
     usage = result.get("usage") or {}
-    _USAGE["chiamate_claude_code"] += 1
-    _USAGE["input"] += usage.get("input_tokens") or 0
-    _USAGE["output"] += usage.get("output_tokens") or 0
-    _USAGE["cache_lette"] += usage.get("cache_read_input_tokens") or 0
-    _USAGE["cache_scritte"] += usage.get("cache_creation_input_tokens") or 0
-    _USAGE["costo_claude_code"] += result.get("total_cost_usd") or 0
+    with _USAGE_LOCK:
+        _USAGE["chiamate_claude_code"] += 1
+        _USAGE["input"] += usage.get("input_tokens") or 0
+        _USAGE["output"] += usage.get("output_tokens") or 0
+        _USAGE["cache_lette"] += usage.get("cache_read_input_tokens") or 0
+        _USAGE["cache_scritte"] += usage.get("cache_creation_input_tokens") or 0
+        _USAGE["costo_claude_code"] += result.get("total_cost_usd") or 0
 
 
 def _use_mock(model) -> bool:
@@ -757,12 +846,18 @@ def _use_mock(model) -> bool:
 
 
 _CLIENT = None
+_CLIENT_LOCK = threading.Lock()
 
 
 def _client():
-    global _CLIENT
     if _CLIENT is not None:
         return _CLIENT
+    with _CLIENT_LOCK:  # un solo client anche se più thread lo chiedono insieme (es. agenti usati come strumenti)
+        return _CLIENT if _CLIENT is not None else _new_client()
+
+
+def _new_client():
+    global _CLIENT
     if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")):
         raise TokynRuntimeError(
             tr("manca la chiave ANTHROPIC_API_KEY", "ANTHROPIC_API_KEY is not set"),
@@ -1253,10 +1348,7 @@ def _da_ricordare(msg, nome, text):
 
 
 def _conta_uso_chat(nome, usage):
-    _USAGE["chiamate"] += 1
-    _USO_FORNITORI[nome] = _USO_FORNITORI.get(nome, 0) + 1
-    if not isinstance(usage, dict):
-        return
+    usage = usage if isinstance(usage, dict) else {}
     details = usage.get("prompt_tokens_details")
     details = details if isinstance(details, dict) else {}
 
@@ -1264,10 +1356,13 @@ def _conta_uso_chat(nome, usage):
         return value if isinstance(value, int) and not isinstance(value, bool) and value > 0 else 0
 
     read = num(details.get("cached_tokens")) or num(usage.get("prompt_cache_hit_tokens"))  # il secondo è di DeepSeek
-    _USAGE["input"] += max(0, num(usage.get("prompt_tokens")) - read)  # come con Claude: senza i token dalla cache
-    _USAGE["output"] += num(usage.get("completion_tokens"))
-    _USAGE["cache_lette"] += read
-    _USAGE["cache_scritte"] += num(details.get("cache_write_tokens"))
+    with _USAGE_LOCK:
+        _USAGE["chiamate"] += 1
+        _USO_FORNITORI[nome] = _USO_FORNITORI.get(nome, 0) + 1
+        _USAGE["input"] += max(0, num(usage.get("prompt_tokens")) - read)  # come con Claude: senza i token dalla cache
+        _USAGE["output"] += num(usage.get("completion_tokens"))
+        _USAGE["cache_lette"] += read
+        _USAGE["cache_scritte"] += num(details.get("cache_write_tokens"))
 
 
 # ======================================================================= mock
