@@ -1,0 +1,23 @@
+{
+  "decisioni": [
+    "Partecipare alla fiera di Bologna con lo stand piccolo.",
+    "La newsletter uscirà ogni due settimane invece che ogni mese."
+  ],
+  "azioni": [
+    {
+      "cosa": "Prenotare lo stand per la fiera di Bologna",
+      "chi": "Paolo",
+      "entro": "2026-10-30"
+    },
+    {
+      "cosa": "Preparare il calendario dei temi della newsletter",
+      "chi": "Chiara",
+      "entro": "2026-11-06"
+    },
+    {
+      "cosa": "Far stampare i volantini per lo stand",
+      "chi": "Roberto",
+      "entro": "2026-11-16"
+    }
+  ]
+}

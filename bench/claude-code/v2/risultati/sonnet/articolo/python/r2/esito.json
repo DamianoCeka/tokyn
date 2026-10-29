@@ -1,0 +1,72 @@
+{
+ "prova": "sonnet/articolo/python/r2",
+ "cartella": "c87e90baa0",
+ "modello": "sonnet",
+ "compito": "articolo",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.3180008000000001,
+ "costo_usd_telemetria": 0.318001,
+ "token_output": 5086,
+ "token_input": 16,
+ "token_cache_scritti": 57550,
+ "token_cache_letti": 369088,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 10,
+ "secondi": 51.0,
+ "secondi_api": 40.7,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 92,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "lla il risultato: se i punti non sono esattamente cinque, ripete la richiesta fino a 3 volte.\n- Toglie dai citati i nomi doppi, anche quando cambiano solo le maiuscole.\n- Scrive `risultato.json` nel formato che hai indicato.\n- Prima di chiamare Claude controlla che ci siano `articolo.txt` e la chiave API, e se manca qualcosa esce con un messaggio chiaro.\n\n**Cosa ho provato**\n- Ho eseguito il programma contro un finto server locale che imitava l'API. Il primo tentativo restituiva 4 punti, il programma ha ripetuto la richiesta e al secondo ne ha avuti 5.\n- Il finto server restituiva anche \"Marco Tessari\" e \"marco tessari\" insieme, e nel file ne è rimasto uno solo.\n- `risultato.json` è uscito nel formato giusto.\n- La richiesta inviata usa il modello e le impostazioni previste. Non ho verificato che l'API vera accetti lo schema JSON così com'è.\n\n**Da fare prima di usarlo**\n1. Imposta la chiave: `export ANTHROPIC_API_KEY=...`. Serve anche `pip install anthropic`, che qui è già installato.\n2. Esegui `python programma.py` accanto ad `articolo.txt`.\n3. Controlla il primo `risultato.json`. Verifica soprattutto `citati`: ho chiesto a Claude di includere persone ed enti, e di lasciare fuori luoghi e reparti. L'articolo ha casi dubbi, per esempio \"i sindacati degli infermieri\" e l'ospedale universitario del capoluogo. Dimmi come vuoi trattarli e ritocco le istruzioni.\n\nSe un fallimento anche solo di uno dei punti sopra ti preoccupa, mandami l'esito della prima esecuzione vera e correggo.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 4,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

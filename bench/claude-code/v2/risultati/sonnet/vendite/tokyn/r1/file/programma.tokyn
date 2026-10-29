@@ -1,0 +1,65 @@
+import csv
+
+agent Analista:
+    instructions: """
+        Scrivi in italiano un breve paragrafo (3-5 frasi) per la direzione aziendale sul fatturato
+        trimestrale. Indica qual è il paese con il fatturato più alto e commenta i numeri forniti
+        (confronto tra paesi, peso sul totale, clienti migliori). Usa solo i dati ricevuti, scrivi
+        gli importi in formato italiano (es. 15.230,50 euro) e rispondi solo con il paragrafo.
+    """
+    effort: "low"
+
+def leggi(percorso: str) -> list:
+    testo = read_file(percorso).lstrip("﻿")
+    return list(csv.DictReader(testo.splitlines()))
+
+def per_importo(coppia: list) -> float:
+    return coppia[1]
+
+main:
+    clienti = leggi("clienti.csv")
+    ordini = leggi("ordini.csv")
+    paese_di = {}
+    nome_di = {}
+    fatturato = {}
+    speso = {}
+    for c in clienti:
+        cid = c["id"].strip()
+        paese_di[cid] = c["paese"]
+        nome_di[cid] = c["nome"]
+        fatturato[c["paese"]] = 0.0
+        speso[cid] = 0.0
+    for o in ordini:
+        cid = o["cliente_id"].strip()
+        if cid not in paese_di:
+            print(f"Ordine {o['id']} ignorato: cliente {cid} sconosciuto")
+            continue
+        importo = to_number(o["importo"].strip(), 0.0)
+        fatturato[paese_di[cid]] += importo
+        speso[cid] += importo
+
+    coppie_paesi = []
+    for p, v in fatturato.items():
+        coppie_paesi.append([p, v])
+    paesi = sorted(coppie_paesi, key=per_importo, reverse=True)
+    fatt_arrotondato = {}
+    for p, v in paesi:
+        fatt_arrotondato[p] = round(v, 2)
+    coppie_clienti = []
+    for cid, v in speso.items():
+        coppie_clienti.append([nome_di[cid], v])
+    ordinati = sorted(coppie_clienti, key=per_importo, reverse=True)
+    migliori = []
+    for nome, v in ordinati[:3]:
+        migliori.append(nome)
+
+    dati = "Fatturato per paese (euro): " + json_dump(fatt_arrotondato)
+    dati += "\nPaese con il fatturato più alto: " + paesi[0][0]
+    dati += "\nMigliori clienti per spesa (euro): "
+    for nome, v in ordinati[:3]:
+        dati += f"\n- {nome}: {round(v, 2)}"
+    riassunto = Analista.ask(dati)
+
+    risultato = {"fatturato_per_paese": fatt_arrotondato, "migliori_clienti": migliori, "riassunto": riassunto}
+    write_file("risultato.json", json_dump(risultato))
+    print(json_dump(risultato))

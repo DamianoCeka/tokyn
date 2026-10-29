@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/recensioni/agent-sdk/r2",
+ "cartella": "f6ca4c9096",
+ "modello": "sonnet",
+ "compito": "recensioni",
+ "condizione": "agent-sdk",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2555133,
+ "costo_usd_telemetria": 0.255513,
+ "token_output": 2740,
+ "token_input": 8,
+ "token_cache_scritti": 53827,
+ "token_cache_letti": 127893,
+ "prove_del_programma": {
+  "costo_usd": 0.044073,
+  "token_output": 531,
+  "chiamate": 6,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 7,
+ "secondi": 49.1,
+ "secondi_api": 38.9,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 3,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 69,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "recensioni nello stesso ordine del file e media 3.0.\n\n| Recensione | Sentimento | Voto |\n|---|---|---|\n| Prodotto fantastico, arrivato in un giorno. | positivo | 5 |\n| Si è rotto dopo una settimana, deluso. | negativo | 1 |\n| Nella media, niente di speciale. | neutro | 3 |\n| Ottimo rapporto qualità prezzo, lo consiglio a tutti. | positivo | 5 |\n| La batteria dura pochissimo e l'assistenza non risponde. | negativo | 1 |\n| Fa quello che promette, né più né meno. | neutro | 3 |\n\nCome funziona:\n- **Una chiamata per recensione:** ogni recensione ha la sua chiamata a Claude tramite `claude-agent-sdk`, senza strumenti. Fino a 4 chiamate girano in parallelo.\n- **Risposta controllata:** la risposta deve rispettare uno schema (sentimento tra i tre valori, voto intero da 1 a 5). Il programma controlla anche lui il valore ricevuto e, se la risposta non è valida o c'è un errore, riprova fino a 3 volte. Se continua a fallire, si ferma con un errore invece di scrivere un risultato incompleto.\n- **Media:** la calcola il programma in Python sui voti, non Claude. È arrotondata a 2 decimali.\n- **Righe vuote:** vengono ignorate.\n- **Testo delle recensioni:** viene trattato come dato da analizzare, quindi eventuali istruzioni scritte dentro una recensione vengono ignorate.\n\nNon ho impostato il modello, quindi usa quello predefinito della tua installazione di Claude Code. Se vuoi un modello preciso, aggiungi `model=\"...\"` in `ClaudeAgentOptions`.\n\nIl file è `/srv/progetti/f6ca4c9096/programma.py`.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 recensioni nell'ordine del file: True",
+   "sentimenti giusti: 6 su 6",
+   "voti interi da 1 a 5 e coerenti col sentimento: True ([5.0, 1.0, 3.0, 5.0, 1.0, 3.0])",
+   "media giusta dei voti: True (3.0)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.041225,
+   "token_output": 855,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

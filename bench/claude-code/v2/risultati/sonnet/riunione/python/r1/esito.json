@@ -1,0 +1,72 @@
+{
+ "prova": "sonnet/riunione/python/r1",
+ "cartella": "4af717630f",
+ "modello": "sonnet",
+ "compito": "riunione",
+ "condizione": "python",
+ "ripetizione": 1,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.2757363,
+ "costo_usd_telemetria": 0.275736,
+ "token_output": 3993,
+ "token_input": 10,
+ "token_cache_scritti": 54326,
+ "token_cache_letti": 184823,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 8,
+ "secondi": 36.5,
+ "secondi_api": 29.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 92,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "(\"imposta ANTHROPIC_API_KEY\") invece di un traceback.\n- Ho provato il resto con una risposta di Claude simulata. La richiesta viene costruita con i parametri giusti, il JSON viene letto e controllato, e `risultato.json` ha il formato che volevi. Ho cancellato quel file di prova, quindi non c'è un `risultato.json` nella cartella.\n- Non ho verificato che Claude estragga le decisioni e le azioni giuste dal tuo `verbale.txt`.\n\n**Come funziona**\n- Legge `verbale.txt` dalla cartella corrente e manda la trascrizione a Claude, con il modello `claude-opus-5-5`.\n- Chiede la risposta direttamente nello schema `decisioni` / `azioni` (`cosa`, `chi`, `entro`). Se una scadenza non è nel formato AAAA-MM-GG, il programma si ferma con un errore.\n- Se una scadenza non è indicata nel verbale, `entro` vale `null` invece di essere inventata.\n\n**Come provarlo**\n```\nexport ANTHROPIC_API_KEY=sk-ant-...\npython programma.py\n```\nNel tuo verbale mi aspetto 3 decisioni (fiera di Bologna con lo stand piccolo, newsletter ogni due settimane, e così via) e 3 azioni: Paolo il 2026-10-30, Chiara il 2026-11-06 e Roberto il 2026-11-16. Se mi dai una chiave, o la imposti tu, lo lancio io e ti dico il risultato reale.\n\n**Cose da sapere**\n- Non ho attivato il rimando automatico a un altro modello quando Claude rifiuta una richiesta. In quel caso il programma si ferma con un errore e non scrive nulla.\n- Il pacchetto `anthropic` è già installato qui (versione 2.3.0). Su un'altra macchina serve `pip install anthropic`.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 6,
+  "dettagli": [
+   "risultato.json mancante o non è un oggetto JSON"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

@@ -1,0 +1,13 @@
+{
+  "fatturato_per_paese": {
+    "Italia": 10819.15,
+    "Svizzera": 8592.5,
+    "Austria": 2695.4
+  },
+  "migliori_clienti": [
+    "Alpenhof Hotel AG",
+    "Caseificio Valtellina Spa",
+    "Verdi, Neri & C. Sas"
+  ],
+  "riassunto": "Nel trimestre il paese con il fatturato più alto è l'Italia, con 10.819,15 euro, seguita dalla Svizzera con 8.592,50 euro e, a distanza, dall'Austria con 2.695,40 euro. Il fatturato complessivo dei tre paesi è di 22.107,05 euro, e l'Italia ne rappresenta quasi la metà. Il cliente che ha speso di più è Alpenhof Hotel AG con 6.786,30 euro, seguito da Caseificio Valtellina Spa con 5.706,75 euro e da Verdi, Neri & C. Sas con 3.156,60 euro. Questi tre clienti insieme valgono 15.649,65 euro, circa il 70% del totale, quindi il fatturato dipende in larga parte da pochi clienti."
+}

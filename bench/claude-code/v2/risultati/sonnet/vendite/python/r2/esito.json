@@ -1,0 +1,76 @@
+{
+ "prova": "sonnet/vendite/python/r2",
+ "cartella": "be733b5211",
+ "modello": "sonnet",
+ "compito": "vendite",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.30741859999999993,
+ "costo_usd_telemetria": 0.307419,
+ "token_output": 5283,
+ "token_input": 14,
+ "token_cache_scritti": 55940,
+ "token_cache_letti": 308006,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 11,
+ "secondi": 58.7,
+ "secondi_api": 50.3,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 6,
+  "Read": 1,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 87,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "ina Spa\", \"Verdi, Neri & C. Sas\"\n- **Nomi con la virgola:** \"Verdi, Neri & C. Sas\" è gestito correttamente.\n- **Chiamata a Claude:** l'ho provata solo contro un server locale finto. Il programma ha inviato una richiesta ben formata e ha scritto la risposta finta in `risultato.json`. Non ho quindi visto il testo vero del paragrafo.\n- **Senza chiave:** il programma scrive comunque `risultato.json` con i numeri e `\"riassunto\": \"\"`, stampa l'errore e termina con codice 1.\n\nHo cancellato il `risultato.json` di prova, perciò nella cartella ci sono solo i due CSV e il programma.\n\n**Come usarlo**\n```\nexport ANTHROPIC_API_KEY=...\npython programma.py\n```\nServe il pacchetto `anthropic`, che qui è già installato.\n\n**Scelte che ho fatto**\n- **Importi:** li somma con `Decimal`, così non ci sono errori di arrotondamento sui centesimi.\n- **Modello:** usa `claude-opus-5-5` con effort basso, che per un paragrafo breve basta. Ho attivato anche il fallback lato server, nel caso il modello rifiuti la richiesta.\n- **Riassunto:** il prompt contiene i numeri già calcolati, in formato italiano (10.819,15), e chiede di non inventare cause o confronti.\n- **Ordini di clienti non presenti in `clienti.csv`:** vengono ignorati con un avviso su stderr.\n- **Importo non numerico:** il programma si ferma con un messaggio d'errore.\n- **Parità:** a parità di importo vince il nome in ordine alfabetico, così il risultato è sempre lo stesso.\n\nAlla prima esecuzione con la tua chiave controlla il testo del riassunto.",
+ "controllo": {
+  "ok": false,
+  "punti": 3,
+  "massimo": 4,
+  "dettagli": [
+   "fatturato_per_paese con i 4 paesi e gli importi giusti: True ({'Germania': 27143.37, 'Italia': 21476.62, 'Francia': 20713.08, 'Spagna': 7420.85})",
+   "fatturati arrotondati al centesimo: True",
+   "migliori_clienti giusti e in ordine: True (['Dupont Équipements SARL', 'Müller Werkzeuge GmbH', 'Ferretti Arredamenti Srl'])",
+   "riassunto di testo che nomina la Germania: False (0 caratteri)"
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}

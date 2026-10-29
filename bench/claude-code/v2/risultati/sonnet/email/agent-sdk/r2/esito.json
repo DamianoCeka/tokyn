@@ -1,0 +1,82 @@
+{
+ "prova": "sonnet/email/agent-sdk/r2",
+ "cartella": "388874de90",
+ "modello": "sonnet",
+ "compito": "email",
+ "condizione": "agent-sdk",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.26382120000000003,
+ "costo_usd_telemetria": 0.263821,
+ "token_output": 2953,
+ "token_input": 10,
+ "token_cache_scritti": 53971,
+ "token_cache_letti": 183872,
+ "prove_del_programma": {
+  "costo_usd": 0.057209,
+  "token_output": 1458,
+  "chiamate": 5,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 8,
+ "secondi": 38.1,
+ "secondi_api": 25.6,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4,
+  "Write": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 77,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "risultato.json"
+ ],
+ "risposta_finale": "`programma.py` è pronto e l'ho provato sulle 5 email che hai in `email/`. Il programma ha funzionato al primo colpo e ci ha messo circa 8 secondi.\n\nLe classificazioni mi sembrano giuste:\n\n| File | Categoria | Urgente |\n|---|---|---|\n| `msg_001.txt` | ordine | no |\n| `msg_002.txt` | reclamo | sì (regalo per domani, risposta richiesta entro oggi) |\n| `msg_003.txt` | informazioni | no |\n| `msg_004.txt` | spam | no |\n| `msg_005.txt` | reclamo | no (la cliente dice che non è urgente) |\n\nOgni riassunto è una sola frase in italiano. Alcuni sono un po' lunghi, soprattutto quello di `msg_002.txt`. Se li vuoi più corti, basta cambiare il prompt.\n\nLo avvii con `python programma.py` dalla cartella che contiene `email/`. Scrive `risultato.json` con un elemento per email, in ordine di nome file, nel formato che hai indicato.\n\n- **Modello:** non ho impostato nessun modello, quindi usa quello predefinito del Claude Agent SDK.\n- **Sicurezza:** Claude non ha strumenti attivi e il testo di ogni email viene trattato come dato da classificare, non come istruzioni. Un'email che dicesse \"ignora le regole\" non cambia il risultato.\n- **Errori:** ogni email viene riprovata fino a 3 volte. Se una continua a fallire, il programma si ferma con un errore e non scrive un `risultato.json` incompleto. Se `email/` non contiene file `.txt`, esce con un messaggio.\n\nIl file `risultato.json` generato dalla prova è rimasto nella cartella, accanto a `programma.py`.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 email in ordine di nome del file: True (['msg_201.txt', 'msg_202.txt', 'msg_203.txt', 'msg_204.txt', 'msg_205.txt', 'msg_206.txt'])",
+   "categorie ammesse e giuste: True (6 su 6: ['ordine', 'reclamo', 'informazioni', 'spam', 'ordine', 'reclamo'])",
+   "urgente booleano e giusto: True (6 su 6: [False, True, False, False, True, False])",
+   "riassunti brevi e sull'argomento: True (brevi: True, sull'argomento: 6 su 6)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.061456,
+   "token_output": 1903,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

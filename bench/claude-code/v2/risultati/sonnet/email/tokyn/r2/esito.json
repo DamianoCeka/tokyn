@@ -1,0 +1,81 @@
+{
+ "prova": "sonnet/email/tokyn/r2",
+ "cartella": "4c2b227cda",
+ "modello": "sonnet",
+ "compito": "email",
+ "condizione": "tokyn",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-sonnet-5-5",
+ "plugin": [
+  "tokyn",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.0768785,
+ "costo_usd_telemetria": 0.076879,
+ "token_output": 1642,
+ "token_input": 10,
+ "token_cache_scritti": 13380,
+ "token_cache_letti": 69185,
+ "prove_del_programma": {
+  "costo_usd": 0.001834,
+  "token_output": 1777,
+  "chiamate": 10,
+  "modelli": [
+   "claude-haiku-5-5"
+  ]
+ },
+ "turni": 7,
+ "secondi": 58.3,
+ "secondi_api": 17.4,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 4
+ },
+ "skill": [
+  "tokyn:tokyn"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 826,
+ "righe_tokyn": 24,
+ "tokyn_nel_progetto": true,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": true,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py",
+  "programma.tokyn",
+  "risultato.json"
+ ],
+ "risposta_finale": "`programma.py` è pronto e l'ho provato con risposte vere di Claude sulle 5 email che hai. Si avvia con `python programma.py` dalla cartella che contiene `email/` e scrive `risultato.json`, con un elemento per email in ordine di nome file.\n\nRisultato sulle tue email:\n\n| File | Categoria | Urgente |\n|---|---|---|\n| `msg_001.txt` | ordine | no |\n| `msg_002.txt` | reclamo | sì |\n| `msg_003.txt` | informazioni | no |\n| `msg_004.txt` | spam | no |\n| `msg_005.txt` | reclamo | no |\n\nHo controllato soprattutto le urgenze. La `msg_002` ha il regalo per domani e la richiesta di risposta entro oggi, quindi è urgente. La `msg_005` dice espressamente \"non è urgente\".\n\nI riassunti sono una frase sola, ma alcuni sono lunghi. Il programma usa il modello `claude-haiku`. Se li vuoi più brevi, si cambia nelle istruzioni dell'agente.\n\n- **Chiave API:** nella prova non avevo `ANTHROPIC_API_KEY`, quindi le risposte sono passate dal tuo Claude Code. Per usare il programma da solo, o per altre persone, serve la chiave API di Anthropic. Con la chiave il file funziona senza modifiche.\n- **Sorgente Tokyn:** `programma.py` è generato dal sorgente `programma.tokyn`, che ho lasciato nella cartella. Per cambiare qualcosa conviene modificare quel file e rigenerare il Python.\n\nI file sono in `/srv/progetti/4c2b227cda`:\n- `programma.py`\n- `programma.tokyn`\n- `risultato.json`",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "6 email in ordine di nome del file: True (['msg_201.txt', 'msg_202.txt', 'msg_203.txt', 'msg_204.txt', 'msg_205.txt', 'msg_206.txt'])",
+   "categorie ammesse e giuste: True (6 su 6: ['ordine', 'reclamo', 'informazioni', 'spam', 'ordine', 'reclamo'])",
+   "urgente booleano e giusto: True (6 su 6: [False, True, False, False, True, False])",
+   "riassunti brevi e sull'argomento: True (brevi: True, sull'argomento: 6 su 6)"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.001554,
+   "token_output": 1173,
+   "chiamate": 6,
+   "modelli": [
+    "claude-haiku-5-5"
+   ]
+  }
+ }
+}

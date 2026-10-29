@@ -1,0 +1,31 @@
+import os
+
+type Risposta:
+    risposta: str "risposta breve e precisa, in italiano, basata solo sui documenti"
+    fonte: str "nome esatto del file (es. ferie.txt) da cui viene la risposta, oppure nessuno se non c'è"
+
+agent Assistente:
+    model: "claude-haiku"
+    effort: "low"
+    instructions: """
+        Rispondi alle domande dei colleghi usando SOLO i documenti aziendali forniti nel messaggio,
+        che sono nel formato "=== FILE: nome.txt ===" seguito dal contenuto.
+        Indica come fonte il nome esatto del file da cui viene la risposta.
+        Se la risposta non è nei documenti, scrivi "Informazione non presente nei documenti" e fonte "nessuno".
+    """
+    output: Risposta
+
+main:
+    docs = ""
+    for nome in sorted(os.listdir("docs")):
+        if nome.endswith(".txt"):
+            docs += "=== FILE: " + nome + " ===\n" + read_file("docs/" + nome) + "\n\n"
+    risultati = []
+    for riga in read_file("domande.txt").split("\n"):
+        domanda = riga.strip()
+        if domanda == "":
+            continue
+        r = Assistente.ask(docs + "DOMANDA: " + domanda)
+        risultati.append({"domanda": domanda, "risposta": r.risposta, "fonte": r.fonte})
+    write_file("risultato.json", json_dump(risultati))
+    print(f"{len(risultati)} domande risposte, scritto risultato.json")
