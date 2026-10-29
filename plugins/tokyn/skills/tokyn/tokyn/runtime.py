@@ -592,43 +592,25 @@ def usage_report() -> str:
 
 CLAUDE_CODE_MODELS = {"claude": "sonnet", "claude-sonnet": "sonnet", "claude-opus": "opus", "claude-haiku": "haiku"}
 
-# Server MCP minimo, senza dipendenze, avviato da Claude Code: legge le richieste JSON-RPC da stdin.
-_BRIDGE = r"""
-import json, socket, sys
-
-cfg = json.load(open(sys.argv[1], encoding="utf-8"))
-
-
-def reply(rid, result=None, error=None):
-    msg = {"jsonrpc": "2.0", "id": rid}
-    msg.update({"error": error} if error else {"result": result})
-    sys.stdout.write(json.dumps(msg) + "\n")
-    sys.stdout.flush()
+# Il ponte MCP è un file vero del pacchetto, ponte_mcp.py, che Claude Code avvia con Python. Nei programmi autonomi
+# (tokyn build --standalone) il ponte è incluso nel programma, che qui imposta il comando per avviarlo:
+# [python, programma.py, "--tokyn-ponte"]. Al comando si aggiunge il percorso di tools.json.
+_PONTE: list | None = None
 
 
-for line in sys.stdin:
-    if not line.strip():
-        continue
-    req = json.loads(line)
-    rid, method = req.get("id"), req.get("method")
-    if rid is None:
-        continue
-    if method == "initialize":
-        version = req.get("params", {}).get("protocolVersion", "2025-06-18")
-        reply(rid, {"protocolVersion": version, "capabilities": {"tools": {}},
-                    "serverInfo": {"name": "tokyn", "version": "1"}})
-    elif method == "tools/list":
-        reply(rid, {"tools": cfg["tools"]})
-    elif method == "tools/call":
-        with socket.create_connection(("127.0.0.1", cfg["port"])) as conn:
-            conn.sendall((json.dumps({"token": cfg["token"], "call": req["params"]}) + "\n").encode("utf-8"))
-            answer = json.loads(conn.makefile(encoding="utf-8").readline())
-        reply(rid, {"content": [{"type": "text", "text": answer["text"]}], "isError": answer["error"]})
-    elif method == "ping":
-        reply(rid, {})
-    else:
-        reply(rid, error={"code": -32601, "message": "metodo sconosciuto: " + str(method)})
-"""
+def _comando_ponte() -> list:
+    if _PONTE is not None:
+        return list(_PONTE)
+    qui = globals().get("__file__")  # manca quando il runtime è incluso in un programma autonomo
+    percorso = os.path.join(os.path.dirname(os.path.abspath(qui)), "ponte_mcp.py") if qui else ""
+    if not os.path.isfile(percorso):
+        raise TokynRuntimeError(tr("manca il ponte MCP di Tokyn (ponte_mcp.py) che serve agli strumenti con Claude Code",
+                                   "Tokyn's MCP bridge (ponte_mcp.py), needed for tools with Claude Code, is missing"),
+                                hint=tr("Reinstalla Tokyn (un programma autonomo va avviato dal suo file .py), "
+                                        "oppure imposta ANTHROPIC_API_KEY per usare l'API.",
+                                        "Reinstall Tokyn (run a standalone program from its .py file), "
+                                        "or set ANTHROPIC_API_KEY to use the API."))
+    return [sys.executable, percorso]
 
 
 _AVVISO_CLAUDE_CODE = []
@@ -708,19 +690,16 @@ def _claude_code_ask(agent, text, history):
     server = workdir = None
     try:
         if agent.tools:
+            ponte = _comando_ponte()
             server = _ToolServer(agent)
+            # solo dati: gli strumenti, la porta e il token per il ponte (il codice del ponte è già un file)
             workdir = tempfile.mkdtemp(prefix="tokyn-")
-            files = {
-                "bridge.py": _BRIDGE,
-                "tools.json": _json.dumps({"port": server.port, "token": server.token, "tools": [
+            tools_path = os.path.join(workdir, "tools.json")
+            with open(tools_path, "w", encoding="utf-8") as f:
+                f.write(_json.dumps({"port": server.port, "token": server.token, "tools": [
                     {"name": s["name"], "description": s["description"], "inputSchema": s["input_schema"]}
-                    for s in (_tool_schema(t) for t in agent.tools)]}),
-            }
-            for name, content in files.items():
-                with open(os.path.join(workdir, name), "w", encoding="utf-8") as f:
-                    f.write(content)
-            mcp = {"mcpServers": {"tokyn": {"command": sys.executable, "args": [
-                os.path.join(workdir, "bridge.py"), os.path.join(workdir, "tools.json")]}}}
+                    for s in (_tool_schema(t) for t in agent.tools)]}))
+            mcp = {"mcpServers": {"tokyn": {"command": ponte[0], "args": ponte[1:] + [tools_path]}}}
             cmd += ["--mcp-config", _json.dumps(mcp), "--allowedTools", "mcp__tokyn"]
         try:
             proc = subprocess.run(cmd, capture_output=True, text=True, timeout=900)

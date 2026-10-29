@@ -17,6 +17,8 @@ RUNTIME_BUILTINS = [
     "json_parse", "json_dump", "env", "now", "sleep", "to_number",
 ]
 
+PONTE_ARG = "--tokyn-ponte"  # con questo argomento un programma autonomo fa da ponte MCP per Claude Code
+
 
 def standalone_runtime() -> str:
     """Il sorgente del runtime senza import relativi, da includere in un file autonomo."""
@@ -24,6 +26,8 @@ def standalone_runtime() -> str:
     src = src.replace("from .errors import TokynRuntimeError\n", inspect.getsource(TokynRuntimeError), 1)
     # la lingua dei messaggi: nel file autonomo decidono TOKYN_LANG e la lingua del sistema
     src = src.replace("from .lingua import tr\n", (Path(__file__).parent / "lingua.py").read_text(encoding="utf-8"), 1)
+    # il ponte MCP per Claude Code: il programma autonomo fa da ponte se avviato con --tokyn-ponte (vedi CodeGen)
+    src += "\n\n" + (Path(__file__).parent / "ponte_mcp.py").read_text(encoding="utf-8")
     if "from ." in src or "'''" in src:
         raise ValueError("runtime.py non si può includere: contiene import relativi o '''")
     return src
@@ -57,6 +61,11 @@ class CodeGen:
             self.emit("import types as __types")
             self.emit("__rt = __types.ModuleType('tokyn_runtime')")
             self.emit(f"exec(compile(r'''{standalone_runtime()}''', 'tokyn_runtime', 'exec'), __rt.__dict__)")
+            # Claude Code avvia questo stesso file come ponte MCP per gli strumenti: python programma.py --tokyn-ponte tools.json
+            self.emit(f"if __name__ == \"__main__\" and __rt.sys.argv[1:2] == [{PONTE_ARG!r}]:")
+            self.emit("raise SystemExit(__rt.servi_ponte(__rt.sys.argv[2]))", 1)
+            self.emit("if \"__file__\" in globals():")
+            self.emit(f"__rt._PONTE = [__rt.sys.executable, __rt.os.path.abspath(__file__), {PONTE_ARG!r}]", 1)
             self.emit(", ".join(RUNTIME_BUILTINS) + " = " + ", ".join(f"__rt.{b}" for b in RUNTIME_BUILTINS))
         else:
             self.emit("from tokyn import runtime as __rt")
