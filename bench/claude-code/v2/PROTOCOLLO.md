@@ -136,8 +136,12 @@ Lo script è [`analizza.py`](analizza.py).
 - Altri cambiamenti fatti a Tokyn prima delle prove, non dovuti alla pilota ma a una revisione delle regole di
   Anthropic: il runtime avvisa una volta quando gli agenti usano Claude Code invece della chiave API; la Skill descrive
   in modo più preciso quando usarla e ricorda che Claude Code serve a provare i programmi.
-- Il plugin misurato viene dal commit passato a `esegui.py --commit`, scritto in `risultati/versioni.json`. Le
-  modifiche fatte a Tokyn mentre le prove girano (per esempio i messaggi in inglese) non entrano nelle prove.
+- Il plugin misurato viene dal commit passato a `esegui.py --commit`, scritto in `risultati/versioni.json`: è il
+  commit `8d83509`, lo stesso delle prove pilota. Le modifiche fatte a Tokyn mentre le prove girano (per esempio i
+  messaggi in inglese) non entrano nelle prove.
+- Le prove pilota sono state 48 sessioni con Sonnet: 3 sul compito `recensioni` e poi una per condizione su tutti i 15
+  compiti. Tutti i programmi eseguibili hanno superato il controllo, tranne uno di Tokyn in `magazzino`, che ha
+  sbagliato davvero: ha dato i pezzi mancanti per prodotto ma non il totale richiesto.
 
 ## Limiti noti
 

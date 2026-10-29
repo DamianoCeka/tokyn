@@ -15,7 +15,7 @@ all'IA dei programmi che Claude prova, quelle del controllo) mandano costi e tok
 ricevitore locale. Si tengono solo quei numeri: nessun dato dell'account finisce nei risultati.
 
 Ogni prova finisce in risultati/<modello>/<compito>/<condizione>/r<n>/: esito.json (misure e controllo),
-sessione.jsonl (la sessione completa di Claude Code) e file/ (i file scritti da Claude).
+sessione.jsonl.gz (la sessione completa di Claude Code) e file/ (i file scritti da Claude).
 """
 
 import argparse
@@ -321,7 +321,8 @@ def prova(tel, lavoro: Path, plugin: Path, modello: str, compito: str, condizion
     time.sleep(6)  # ultime metriche dei processi appena chiusi
 
     dest.mkdir(parents=True, exist_ok=True)
-    (dest / "sessione.jsonl").write_text(uscita, encoding="utf-8")
+    with gzip.open(dest / "sessione.jsonl.gz", "wt", encoding="utf-8") as f:
+        f.write(uscita)
     init, fine, chiamate, risultati = leggi_sessione(uscita.splitlines())
     testo_fine = json.dumps(fine, ensure_ascii=False) + stderr[-2000:]
     infrastruttura = not scaduta and (not fine or (fine.get("is_error") and
