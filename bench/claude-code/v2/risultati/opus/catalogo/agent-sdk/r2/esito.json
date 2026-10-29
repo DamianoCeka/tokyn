@@ -1,0 +1,83 @@
+{
+ "prova": "opus/catalogo/agent-sdk/r2",
+ "cartella": "cda50ad0a3",
+ "modello": "opus",
+ "compito": "catalogo",
+ "condizione": "agent-sdk",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.7669672,
+ "costo_usd_telemetria": 0.766967,
+ "token_output": 8425,
+ "token_input": 20,
+ "token_cache_scritti": 62100,
+ "token_cache_letti": 507936,
+ "prove_del_programma": {
+  "costo_usd": 0.044791,
+  "token_output": 1460,
+  "chiamate": 6,
+  "modelli": [
+   "claude-haiku-5-5",
+   "claude-opus-5-5"
+  ]
+ },
+ "turni": 14,
+ "secondi": 101.6,
+ "secondi_api": 72.5,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 7,
+  "Write": 1,
+  "Edit": 3
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 130,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": true,
+ "usa_sdk_anthropic": false,
+ "generato_da_tokyn": false,
+ "provato_da_claude": true,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "catalogo_en.csv",
+  "programma.py"
+ ],
+ "risposta_finale": "ione, numero di righe e ordine siano gli stessi. Per tradurre tutte e 6 le descrizioni ci sono voluti circa 5 secondi.\n\n**Come funziona**\n- Usa `claude-agent-sdk` con il modello `claude-opus-5-5`, senza strumenti, perché a Claude serve solo tradurre.\n- Manda le descrizioni a gruppi di 25 e chiede le risposte in un formato strutturato. Prima di scrivere il file controlla che ogni descrizione abbia la sua traduzione e che nessuna sia vuota.\n- Se una richiesta fallisce riprova fino a 3 volte. Se continua a fallire si ferma con un errore e non scrive un file a metà.\n- Nel file cambia solo il campo descrizione: il resto di ogni riga resta esattamente com'era.\n\n**Problemi trovati durante le prove e già corretti**\nHo provato anche un catalogo di test con casi più difficili. Le prime versioni avevano due difetti:\n1. Un nome con le virgolette (`Set \"Bistrot\"`) veniva riscritto come `\"Set \"\"Bistrot\"\"\"`.\n2. I fine riga di Windows (`\\r\\n`) diventavano `\\n`.\n\nAdesso tutti e due restano identici all'originale. Nella stessa prova funzionano anche questi casi:\n- una descrizione che contiene un punto e virgola esce correttamente tra virgolette;\n- una descrizione vuota resta vuota;\n- il BOM UTF-8 all'inizio del file viene mantenuto.\n\n**Una cosa da decidere**\nIn due esecuzioni diverse lo zaino è uscito una volta \"30-**litre**\" (inglese britannico) e una volta \"30-**liter**\" (americano). Se volete testi sempre coerenti, ditemi quale variante preferite e la aggiungo alle istruzioni nel programma.",
+ "controllo": {
+  "ok": true,
+  "punti": 4,
+  "massimo": 4,
+  "dettagli": [
+   "intestazione codice;nome;descrizione;prezzo: True (['codice', 'nome', 'descrizione', 'prezzo'])",
+   "5 prodotti con 4 colonne e codici nell'ordine del file: True (5 righe)",
+   "codice, nome e prezzo identici: True",
+   "descrizioni tradotte in inglese: 5 su 5"
+  ],
+  "eseguibile": true,
+  "errore": null,
+  "costo_ia": {
+   "costo_usd": 0.010465,
+   "token_output": 231,
+   "chiamate": 1,
+   "modelli": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+   ]
+  }
+ }
+}

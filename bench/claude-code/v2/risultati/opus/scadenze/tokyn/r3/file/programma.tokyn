@@ -1,0 +1,70 @@
+import sys
+import csv
+import io
+import re
+from datetime import date
+
+GIORNI = 30
+
+type Email:
+    oggetto: str "oggetto dell'email, breve, con il servizio e la data di scadenza scritta per esteso (es. 12 novembre)"
+    testo: str "corpo dell'email, che inizia con 'Gentile <cliente>,' e termina con i saluti"
+
+agent Redattore:
+    instructions: """
+        Scrivi in italiano email di promemoria per contratti in scadenza.
+        Rivolgiti al cliente per nome ("Gentile <cliente>,"), cita esattamente il servizio in scadenza
+        e la data di scadenza scritta per esteso. Invita a contattarci per il rinnovo.
+        Tono cortese e professionale, al massimo 120 parole. Non inventare prezzi, condizioni o nomi di persone;
+        firma come "Il nostro team".
+    """
+    output: Email
+    effort: "low"
+
+def data_valida(testo: str) -> bool:
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", testo):
+        return False
+    a = int(testo[:4])
+    m = int(testo[5:7])
+    g = int(testo[8:])
+    if m < 1 or m > 12 or g < 1:
+        return False
+    giorni_mese = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    if m == 2 and not (a % 4 == 0 and (a % 100 != 0 or a % 400 == 0)):
+        return g <= 28
+    return g <= giorni_mese[m - 1]
+
+def per_scadenza(c: dict) -> str:
+    return c["scadenza"]
+
+main:
+    if len(sys.argv) != 2 or not data_valida(sys.argv[1]):
+        print("Uso: python programma.py AAAA-MM-GG")
+        sys.exit(1)
+    riferimento = date.fromisoformat(sys.argv[1])
+    testo_csv = read_file("contratti.csv")
+    if testo_csv.startswith("﻿"):
+        testo_csv = testo_csv[1:]
+    in_scadenza = []
+    for riga in csv.DictReader(io.StringIO(testo_csv)):
+        scadenza = (riga.get("scadenza") or "").strip()
+        if not data_valida(scadenza):
+            if any(riga.values()):
+                print(f"Riga ignorata, scadenza non valida: {riga}")
+            continue
+        giorni = (date.fromisoformat(scadenza) - riferimento).days
+        if 0 <= giorni <= GIORNI:
+            in_scadenza.append({
+                "cliente": (riga.get("cliente") or "").strip(),
+                "servizio": (riga.get("servizio") or "").strip(),
+                "scadenza": scadenza,
+                "giorni_mancanti": giorni,
+            })
+    in_scadenza = sorted(in_scadenza, key=per_scadenza)
+    for c in in_scadenza:
+        e = Redattore.ask(f"Cliente: {c['cliente']}\nServizio: {c['servizio']}\nScadenza: {c['scadenza']}\nGiorni mancanti: {c['giorni_mancanti']}")
+        c["oggetto"] = e.oggetto
+        c["testo"] = e.testo
+        print(f"{c['scadenza']}  {c['cliente']} - {c['servizio']}")
+    write_file("risultato.json", json_dump({"in_scadenza": in_scadenza}))
+    print(f"{len(in_scadenza)} contratti in scadenza scritti in risultato.json")

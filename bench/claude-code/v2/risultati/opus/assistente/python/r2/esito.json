@@ -1,0 +1,80 @@
+{
+ "prova": "opus/assistente/python/r2",
+ "cartella": "761e2e879a",
+ "modello": "opus",
+ "compito": "assistente",
+ "condizione": "python",
+ "ripetizione": 2,
+ "completata": true,
+ "infrastruttura": false,
+ "scaduta": false,
+ "modello_usato": "claude-opus-5-5",
+ "plugin": [
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-plugin-authoring"
+ ],
+ "impronta_plugin": "e1d24cd12f1df588",
+ "costo_usd": 0.758633,
+ "costo_usd_telemetria": 0.758633,
+ "token_output": 7455,
+ "token_input": 22,
+ "token_cache_scritti": 62125,
+ "token_cache_letti": 562225,
+ "prove_del_programma": {
+  "costo_usd": 0,
+  "token_output": 0,
+  "chiamate": 0,
+  "modelli": []
+ },
+ "turni": 14,
+ "secondi": 85.0,
+ "secondi_api": 69.2,
+ "errore_sessione": false,
+ "fine": "success",
+ "strumenti": {
+  "Skill": 1,
+  "Bash": 5,
+  "Grep": 2,
+  "Read": 1,
+  "Write": 2,
+  "Edit": 1
+ },
+ "skill": [
+  "claude-api"
+ ],
+ "programma_consegnato": true,
+ "righe_programma": 82,
+ "righe_tokyn": 0,
+ "tokyn_nel_progetto": false,
+ "usa_agent_sdk": false,
+ "usa_sdk_anthropic": true,
+ "generato_da_tokyn": false,
+ "provato_da_claude": false,
+ "letto_benchmark": false,
+ "file_scritti": [
+  "programma.py"
+ ],
+ "risposta_finale": "e mancano le credenziali, se manca `faq.txt` o se l'API restituisce un errore, stampa un messaggio chiaro invece di un traceback. Se il servizio non è temporaneamente disponibile, il cliente può riprovare.\n- Ho attivato il \"fallback\" automatico: se Claude rifiutasse una richiesta, l'API la ripassa da sola a un altro modello. Con domande da negozio è improbabile che serva, ma si può togliere se preferisci.\n\n**Cosa ho verificato davvero**\n- **Credenziali mancanti:** il programma esce con un messaggio chiaro.\n- **`faq.txt` assente:** il programma esce con un messaggio chiaro.\n- **Server finto in locale al posto dell'API:** ho controllato che\n  - una risposta venga stampata per ogni messaggio;\n  - le righe vuote siano saltate;\n  - con `ESCI` termini senza leggere le righe successive;\n  - termini anche quando l'input finisce;\n  - le FAQ arrivino a Claude;\n  - dal secondo messaggio in poi venga inviata anche la conversazione precedente.\n\n**Per fare la prova vera**, imposta la chiave e lancia questa conversazione di esempio. Controlla il nome ricordato, la spedizione a 12 € per la Germania, il \"no\" al contrassegno e il \"non è nelle FAQ\" per il negozio fisico:\n\n```\nexport ANTHROPIC_API_KEY=...\nprintf '%s\\n' \"Mi chiamo Marco e abito in Germania.\" \"Quanto mi costa la spedizione?\" \"Posso pagare in contrassegno?\" \"Avete un negozio fisico a Milano?\" \"Come mi chiamo?\" \"esci\" | python programma.py\n```\n\nSe mi dai accesso a una chiave in questo ambiente, la eseguo io e ti riporto le risposte.",
+ "controllo": {
+  "ok": false,
+  "punti": 0,
+  "massimo": 5,
+  "dettagli": [
+   "spedizione 6,90 euro: False",
+   "codice sconto CIAONESPOLO: False",
+   "reso entro 45 giorni: False",
+   "si ricorda il nome Giulia: False",
+   "termina su esci (codice 1) senza rispondere dopo: False",
+   "output (ultimi 1500 caratteri): "
+  ],
+  "eseguibile": false,
+  "errore": "serve ANTHROPIC_API_KEY",
+  "costo_ia": {
+   "costo_usd": 0,
+   "token_output": 0,
+   "chiamate": 0,
+   "modelli": []
+  }
+ }
+}
