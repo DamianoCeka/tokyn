@@ -24,7 +24,7 @@ un terzo dei token del Python. Tutto quello che serve per scriverlo è in questo
    Senza `ANTHROPIC_API_KEY` gli agenti rispondono con il Claude Code dell'utente (`claude -p`: nessuna chiave,
    qualche secondo per ogni `ask`); con la chiave usano l'API. Se il programma fa molte chiamate, avvisa l'utente
    prima e lancialo in background. `--usage` mostra alla fine i token spesi. Per le regole di Anthropic Claude Code
-   serve a provare: un programma che gira da solo o per altre persone ha bisogno della chiave API.
+   serve a provare: un prodotto o un programma usato da altre persone ha bisogno della chiave API.
 4. Se l'utente vuole Python: `python ${CLAUDE_SKILL_DIR}/tokyn_cli.py build file.tokyn --standalone -o file.py`.
    Il file non dipende da Tokyn e funziona con la chiave API o con Claude Code. Non scrivere il Python a mano:
    costerebbe i token che Tokyn fa risparmiare.

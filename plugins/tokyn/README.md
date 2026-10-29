@@ -7,7 +7,8 @@ uno di questi programmi, Claude scrive molto meno codice, e spende meno token, c
 
 Questo plugin aggiunge una Skill, `tokyn`, insieme al compilatore di Tokyn. Con la Skill Claude scrive il programma
 in Tokyn, lo controlla, lo prova e, se vuoi Python, ti consegna il file Python generato dal compilatore. I messaggi
-del compilatore sono in italiano; il plugin [`tokyn-en`](../tokyn-en) è la stessa Skill in inglese.
+del compilatore sono in italiano; il plugin
+[`tokyn-en`](https://github.com/DamianoCeka/tokyn/tree/main/plugins/tokyn-en) è la stessa Skill in inglese.
 
 ## Quando usarlo
 
@@ -22,8 +23,8 @@ Non usarlo per programmi senza IA, quando vuoi un framework preciso (l'SDK di An
 codice va in un progetto scritto in un linguaggio diverso da Python: Tokyn compila solo in Python.
 
 Claude usa la Skill da solo quando chiedi un programma che usa Claude o agenti IA, quando nomini Tokyn o quando nel
-progetto ci sono già file `.tokyn`; per esserne sicuro aggiungi "usa tokyn" alla richiesta. Puoi anche richiamarla
-con `/tokyn:tokyn`.
+progetto ci sono già file `.tokyn`; per chiederla esplicitamente aggiungi "usa tokyn" alla richiesta. Puoi anche
+richiamarla con `/tokyn:tokyn`.
 
 ## Installazione
 
@@ -88,9 +89,10 @@ In una sessione di Claude Code:
 ## Cosa esegue e cosa invia questo plugin
 
 **Cosa contiene.** Le istruzioni della Skill (`SKILL.md`), il compilatore e il runtime di Tokyn come sorgenti
-Python (`skills/tokyn/tokyn/`), un lanciatore (`skills/tokyn/tokyn_cli.py`), una copia non modificata di lark 1.3.1
-(`skills/tokyn/vendor/lark/`, usata solo se lark non è installato), la licenza e l'icona. Non ci sono hook, server
-MCP, comandi, agenti o programmi binari: installare il plugin o aprire una sessione non esegue nulla.
+Python, con la specifica del linguaggio (`skills/tokyn/tokyn/`), un lanciatore (`skills/tokyn/tokyn_cli.py`), una
+copia non modificata di lark 1.3.1 (`skills/tokyn/vendor/lark/`, usata solo se lark non è installato), la licenza e
+l'icona. Non ci sono hook, server MCP, comandi, agenti o programmi binari: installare il plugin o aprire una
+sessione non esegue nulla.
 
 **Cosa esegue.** Claude avvia il lanciatore con il suo strumento Bash (`python …/tokyn_cli.py check`, `run` o
 `build`), quindi ogni comando passa dai permessi che hai impostato in Claude Code. `check` e `build` leggono solo il
@@ -120,23 +122,26 @@ installa mai pacchetti.
 
 ## Login di Claude Code o chiave API
 
-Le [condizioni di Anthropic per Claude Code](https://code.claude.com/docs/en/legal-and-compliance) dicono che
-l'accesso con un abbonamento Claude serve all'uso normale di Claude Code, mentre chi sviluppa prodotti o servizi,
-compresi i programmi che servono altre persone, deve usare una chiave API della
-[Claude Console](https://platform.claude.com/).
+La [pagina legale di Claude Code](https://code.claude.com/docs/en/legal-and-compliance) dice che l'accesso con un
+abbonamento Claude serve all'uso normale di Claude Code, e che chi sviluppa prodotti o servizi che usano Claude
+dovrebbe usare una chiave API della [Claude Console](https://platform.claude.com/) o di un fornitore cloud
+supportato. Anthropic non permette di far passare dalle credenziali di un piano Free, Pro o Max le richieste fatte
+per conto di altre persone, e i limiti d'uso dei piani Pro e Max presuppongono un uso normale e individuale.
 
 In pratica:
 
 - **Provare i tuoi programmi con il tuo Claude Code mentre li sviluppi va bene.**
-- **Un programma che gira da solo** (su un server, come lavoro pianificato) **o per altre persone** (un bot, un
-  servizio web) **deve usare `ANTHROPIC_API_KEY`.** Non mettere online un programma che risponde con il login del
-  tuo Claude Code.
+- **Un prodotto, o un programma usato da altre persone** (un bot, un servizio web), **deve usare
+  `ANTHROPIC_API_KEY`**: Anthropic non permette di farlo passare dal tuo abbonamento.
+- **Per un programma tuo che gira da solo** (su un server, come lavoro pianificato) consigliamo comunque la chiave
+  API: i limiti dei piani sono pensati per un uso normale e individuale di Claude Code.
 
 Quando Tokyn sceglie da solo Claude Code, perché manca la chiave API, stampa una volta questo avviso:
 
 ```text
-Tokyn: senza chiave API gli agenti rispondono con il tuo Claude Code. Va bene per provare il programma; se deve
-girare da solo o per altre persone serve una chiave dell'API di Anthropic (https://code.claude.com/docs/en/legal-and-compliance).
+Tokyn: senza chiave API gli agenti rispondono con il tuo Claude Code e usano il tuo abbonamento. Va bene per provare
+i tuoi programmi; un prodotto o un programma usato da altre persone deve usare una chiave dell'API di Anthropic
+(https://code.claude.com/docs/en/legal-and-compliance).
 ```
 
 Se c'è `ANTHROPIC_API_KEY`, Tokyn usa l'API. Puoi anche scegliere tu con `--backend api` o `--backend claude-code`
@@ -150,7 +155,8 @@ Se c'è `ANTHROPIC_API_KEY`, Tokyn usa l'API. Puoi anche scegliere tu con `--bac
   hai scelto `--backend api`). Imposta la chiave, oppure installa Claude Code e fai il login, oppure prova il
   programma con `--mock`.
 - **"Claude Code non ha risposto per l'agente …".** Apri `claude` una volta e completa il login, poi riprova.
-- **"manca il pacchetto anthropic".** Serve solo con la chiave API: `pip install "anthropic>=0.108"`.
+- **"manca il pacchetto anthropic" o "è troppo vecchio".** Serve solo con la chiave API:
+  `pip install -U "anthropic>=0.108"`.
 - **"l'agente … non ha finito entro 10 passaggi".** All'agente servivano più chiamate agli strumenti: aumenta
   `max_steps` nell'agente o rendi più precise le sue instructions.
 - **"input() non ha ricevuto una riga".** Il programma legge dalla tastiera: passa le risposte una per riga, per
@@ -163,9 +169,10 @@ Se c'è `ANTHROPIC_API_KEY`, Tokyn usa l'API. Puoi anche scegliere tu con `--bac
 
 ## Licenza e link
 
-Tokyn è distribuito con [licenza MIT](LICENSE). La copia di lark in `skills/tokyn/vendor/lark/` mantiene la sua
-licenza MIT.
+Tokyn è distribuito con [licenza MIT](https://github.com/DamianoCeka/tokyn/blob/main/LICENSE). La copia di lark
+in `skills/tokyn/vendor/lark/` mantiene la sua licenza MIT.
 
 - Codice sorgente e documentazione: <https://github.com/DamianoCeka/tokyn>
-- Specifica completa del linguaggio: [`skills/tokyn/tokyn/SPEC.md`](skills/tokyn/tokyn/SPEC.md)
+- Specifica completa del linguaggio, anche in questo plugin in `skills/tokyn/tokyn/SPEC.md`:
+  <https://github.com/DamianoCeka/tokyn/blob/main/tokyn/SPEC.md>
 - Problemi e domande: <https://github.com/DamianoCeka/tokyn/issues>

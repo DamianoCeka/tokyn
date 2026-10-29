@@ -378,6 +378,21 @@ def test_missing_api_key(capsys, monkeypatch):
     assert rc == 1 and "ANTHROPIC_API_KEY" in err and "--mock" in err
 
 
+def test_old_anthropic_sdk_is_reported(monkeypatch):
+    """Prima della 0.108 l'SDK non accetta `fallbacks`: meglio dirlo subito che fallire a ogni chiamata."""
+    import types
+    import tokyn.runtime as rt
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "k")
+    monkeypatch.setenv("TOKYN_LANG", "en")
+    monkeypatch.setattr(rt, "_CLIENT", None)
+    monkeypatch.setitem(sys.modules, "anthropic", types.SimpleNamespace(__version__="0.107.1", Anthropic=object))
+    with pytest.raises(rt.TokynRuntimeError) as err:
+        rt._client()
+    assert "too old (0.107.1)" in err.value.message and 'anthropic>=0.108' in err.value.hint
+    assert [rt._sdk_too_old(v) for v in ("0.40.0", "0.108.0", "0.125.0", "1.0.0", "2.3.0", "", "dev")] == \
+        [True, False, False, False, False, False, False]
+
+
 # ------------------------------------------------------------ strumenti e schema
 
 def test_tool_schema_and_validation():

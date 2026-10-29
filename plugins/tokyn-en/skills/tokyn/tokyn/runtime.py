@@ -620,8 +620,8 @@ _AVVISO_CLAUDE_CODE = []
 
 def _backend() -> str:
     """Chi risponde agli agenti: l'API se c'è la chiave, altrimenti Claude Code se è installato. Se Claude Code è
-    scelto da solo (non con TOKYN_BACKEND), avvisa una volta: per le regole di Anthropic l'abbonamento serve a usare
-    Claude Code di persona, quindi va bene per provare un programma, non per farlo girare da solo o per altri."""
+    scelto da solo (non con TOKYN_BACKEND), avvisa una volta: per le regole di Anthropic l'abbonamento serve all'uso
+    normale e personale di Claude Code, quindi va bene per provare i propri programmi, non per prodotti o per altri."""
     choice = os.environ.get("TOKYN_BACKEND", "").strip().lower()
     if choice in ("api", "claude-code"):
         return choice
@@ -631,12 +631,12 @@ def _backend() -> str:
         return "api"
     if not _AVVISO_CLAUDE_CODE:
         _AVVISO_CLAUDE_CODE.append(True)
-        print(tr("Tokyn: senza chiave API gli agenti rispondono con il tuo Claude Code. Va bene per provare il programma; "
-                 "se deve girare da solo o per altre persone serve una chiave dell'API di Anthropic "
-                 "(https://code.claude.com/docs/en/legal-and-compliance).",
-                 "Tokyn: without an API key the agents answer through your Claude Code. That is fine for trying the program; "
-                 "if it has to run on its own or for other people, it needs an Anthropic API key "
-                 "(https://code.claude.com/docs/en/legal-and-compliance)."), file=sys.stderr)
+        print(tr("Tokyn: senza chiave API gli agenti rispondono con il tuo Claude Code e usano il tuo abbonamento. Va bene "
+                 "per provare i tuoi programmi; un prodotto o un programma usato da altre persone deve usare una chiave "
+                 "dell'API di Anthropic (https://code.claude.com/docs/en/legal-and-compliance).",
+                 "Tokyn: without an API key the agents answer through your Claude Code and use your subscription. That is "
+                 "fine for trying your own programs; a product, or a program other people use, must use an Anthropic API "
+                 "key (https://code.claude.com/docs/en/legal-and-compliance)."), file=sys.stderr)
     return "claude-code"
 
 
@@ -781,8 +781,23 @@ def _client():
     except ImportError:
         raise TokynRuntimeError(tr("manca il pacchetto anthropic", "the anthropic package is missing"),
                                 hint=tr("Installa con: pip install anthropic", "Install it with: pip install anthropic")) from None
+    version = getattr(anthropic, "__version__", "")
+    if _sdk_too_old(version):  # prima della 0.108 l'SDK rifiuta `fallbacks` con un TypeError a ogni chiamata
+        raise TokynRuntimeError(tr(f"il pacchetto anthropic è troppo vecchio ({version}): Tokyn vuole la 0.108 o successiva",
+                                   f"the anthropic package is too old ({version}): Tokyn needs 0.108 or newer"),
+                                hint=tr('Aggiornalo con: pip install -U "anthropic>=0.108"',
+                                        'Upgrade it with: pip install -U "anthropic>=0.108"'))
     _CLIENT = anthropic.Anthropic()
     return _CLIENT
+
+
+def _sdk_too_old(version: str) -> bool:
+    """True per le versioni dell'SDK anthropic precedenti alla 0.108 (la minima in pyproject.toml)."""
+    try:
+        major, minor = (int(p) for p in str(version).split(".")[:2])
+    except ValueError:  # versione mancante o non numerica: si prova lo stesso
+        return False
+    return (major, minor) < (0, 108)
 
 
 _FALLBACKS = {"attivi": True}

@@ -25,7 +25,7 @@ one comes with the fix (`→`).
    Without `ANTHROPIC_API_KEY` the agents answer through the user's Claude Code (`claude -p`: no key, a few
    seconds per `ask`); with the key they use the API. If the program makes many calls, tell the user first and run
    it in the background. `--usage` prints the tokens spent at the end. Under Anthropic's rules Claude Code is for
-   trying programs: a program that runs on its own or for other people needs an API key.
+   trying programs: a product, or a program other people use, needs an API key.
 4. If the user wants Python: `python ${CLAUDE_SKILL_DIR}/tokyn_cli.py build file.tokyn --standalone -o file.py`.
    The file does not depend on Tokyn and works with the API key or with Claude Code. Do not write the Python by
    hand: it would cost the tokens Tokyn saves.
