@@ -1,0 +1,24 @@
+# meteo.tokyn: chatbot con memoria e uno strumento per il meteo
+
+def meteo(citta: str) -> str:
+    """Restituisce il meteo attuale della città indicata, per esempio Roma o Milano."""
+    return http_get("https://wttr.in/" + citta + "?format=3", "meteo non disponibile")
+
+agent Meteorologo:
+    instructions: """
+        Sei un assistente in italiano che risponde a domande sul meteo.
+        Per sapere il tempo di una città usa lo strumento meteo.
+        Ricorda il contesto della conversazione.
+    """
+    tools: [meteo]
+    memory: True
+
+main:
+    print("Chatbot del meteo. Scrivi 'ciao' per uscire.")
+    for turno in range(15):
+        testo = input("Tu: ")
+        if testo.strip().lower() == "ciao":
+            break
+        risposta = Meteorologo.ask(testo)
+        print(f"Bot: {risposta}")
+    print("Arrivederci!")

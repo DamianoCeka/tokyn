@@ -1,0 +1,48 @@
+LETTERE = ["A", "B", "C", "D"]
+
+type Domanda:
+    testo: str "testo della domanda"
+    opzioni: list[str] "esattamente 4 opzioni di risposta"
+    corretta: int "indice da 0 a 3 dell'opzione giusta"
+
+type Quiz:
+    domande: list[Domanda] "esattamente 5 domande"
+
+agent Autore:
+    instructions: """
+        Crei quiz a scelta multipla in italiano sull'argomento indicato:
+        5 domande, ognuna con 4 opzioni e una sola risposta giusta.
+        Varia la posizione della risposta giusta tra le domande.
+    """
+    output: Quiz
+
+main:
+    argomento = input("Argomento del quiz: ")
+    quiz = Autore.ask(f"Argomento: {argomento}")
+    domande = []
+    for d in quiz.domande:
+        if 2 <= len(d.opzioni) <= 4 and 0 <= d.corretta < len(d.opzioni):
+            domande.append(d)
+    domande = domande[:5]
+    if len(domande) == 0:
+        print("Non sono riuscito a generare il quiz.")
+        return
+    punti = 0
+    for n, d in enumerate(domande):
+        print(f"\nDomanda {n + 1}: {d.testo}")
+        valide = LETTERE[:len(d.opzioni)]
+        for i, opzione in enumerate(d.opzioni):
+            print(f"  {LETTERE[i]}) {opzione}")
+        risposta = ""
+        for tentativo in range(3):
+            risposta = input(f"Risposta ({'/'.join(valide)}): ").strip().upper()
+            if risposta in valide:
+                break
+            print("Risposta non valida.")
+        giusta = LETTERE[d.corretta]
+        if risposta == giusta:
+            print("Giusto!")
+            punti += 1
+        else:
+            print(f"Sbagliato: la risposta giusta era {giusta}) {d.opzioni[d.corretta]}")
+    print(f"\nPunteggio finale: {punti}/{len(domande)}")

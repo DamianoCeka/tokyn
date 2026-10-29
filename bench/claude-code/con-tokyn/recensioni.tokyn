@@ -1,0 +1,25 @@
+type Giudizio:
+    sentimento: "positiva" | "neutra" | "negativa"
+    voto: int "voto da 1 (pessimo) a 5 (ottimo)"
+
+agent Analista:
+    model: "claude-haiku"
+    instructions: "Analizza la recensione di un cliente: indica se è positiva, neutra o negativa e dai un voto da 1 a 5."
+    output: Giudizio
+    effort: "low"
+
+main:
+    righe = []
+    for riga in read_file("recensioni.txt").splitlines():
+        if riga.strip() != "":
+            righe.append(riga.strip())
+    if len(righe) == 0:
+        print("Nessuna recensione trovata.")
+        return
+    totale = 0
+    for r in righe:
+        g = Analista.ask(r)
+        voto = min(max(g.voto, 1), 5)
+        totale += voto
+        print(f"[{g.sentimento}] {voto}/5 - {r}")
+    print(f"\nMedia dei voti: {totale / len(righe):.2f} su {len(righe)} recensioni")

@@ -18,12 +18,15 @@ Un file contiene, in qualunque ordine:
 
 | Costrutto | A cosa serve |
 |---|---|
-| `import x` / `from x import y` | usare una libreria Python |
+| `import x` / `from x import y as z` | usare una libreria Python |
 | `NOME = valore` | costante globale (non si può modificare dopo) |
 | `type Nome:` | dati strutturati |
 | `def nome(...):` | funzione; può essere usata come strumento da un agente |
 | `agent Nome:` | un agente IA |
 | `main:` | il punto di partenza del programma (uno solo) |
+
+Le costanti e i valori predefiniti dei parametri si calcolano subito, dall'alto in basso:
+possono usare solo costanti e funzioni scritte prima di loro (come in Python).
 
 ## Agenti
 
@@ -45,10 +48,15 @@ Campi (si scrivono con `:`, mai con `=`):
 | `output` | no | nome di un `type`: l'agente risponde con dati strutturati |
 | `memory` | no (default `False`) | `True` per ricordare la conversazione tra una `ask` e l'altra |
 | `max_steps` | no (default `10`) | numero massimo di passaggi per ogni `ask` |
+| `effort` | no | quanto ragiona l'IA: `"low"`, `"medium"`, `"high"`, `"xhigh"`, `"max"`. `"low"` costa meno: va bene per classificare ed estrarre |
 
 Un agente si usa **solo** così:
 
 - `Agente.ask(testo)` → restituisce la risposta. È un `str`, oppure un valore del `type` indicato in `output`.
+- `Agente.ask_all(testi)` → una lista di risposte, nello stesso ordine dei testi: come un ciclo di `ask`, ma con la
+  Batch API di Anthropic, che costa la metà. È più lento (di solito minuti, al massimo 24 ore) e non usa la memoria:
+  adatto ai lavori in blocco, non alle chat. Un testo rifiutato o con un errore nel batch viene riprovato con una
+  chiamata normale; se resta senza risposta, il programma si ferma dicendo quale.
 - `Agente.reset()` → cancella la memoria.
 
 Durante `ask` il runtime gestisce da solo il ciclo delle chiamate agli strumenti,
@@ -96,17 +104,23 @@ type Ticket:
 
 Come in Python:
 
-- `x = valore`, `x += 1`, `x -= 1`, `x *= 2`, `x /= 2`
+- `x = valore`, `x += 1`, `x -= 1`, `x *= 2`, `x /= 2`, `x //= 2`, `x %= 2`; anche su `d["k"]`, `lista[i]`, `t.campo`
 - `if` / `elif` / `else`
 - `for x in lista:`, `for i in range(n):`, `for k, v in dizionario.items():`, `break`, `continue`
 - `return`, `pass`
-- Operatori: `+ - * / // %`, `== != < > <= >=`, `in`, `not in`, `and`, `or`, `not`
+- Numeri: `3`, `2.5`, `1_000`, `1e-9`
+- Operatori: `+ - * / // % **`, `== != < > <= >=` (anche concatenati: `0 <= x < 3`), `in`, `not in`, `and`, `or`, `not`
 - Liste `[1, 2]`, dizionari `{"a": 1}`, indici `x[0]`, attributi `x.y`, chiamate `f(a, b=1)`
-- Stringhe `"..."`, `'...'`, `"""..."""` e f-string `f"Ciao {nome}"`
+- Slice di testi e liste: `testo[:200]`, `lista[1:]`, `lista[-3:]`, `testo[::-1]`
+- Stringhe `"..."`, `'...'`, `"""..."""`, `r"\d+"` e f-string `f"Ciao {nome}"`
 - Metodi di stringhe, liste e dizionari di Python: `.upper()`, `.split()`, `.append()`, `.get()`, `.items()`…
 
 Non esistono in Tokyn (il checker lo segnala e dice cosa usare): `while`, `class`, `lambda`,
-`try`/`except`, `with`, `async`/`await`, `yield`, `global`, `match`.
+`try`/`except`, `with`, `async`/`await`, `yield`, `global`, `match`, le comprehension
+`[x for x in ...]` (usa `for` con `.append()`), `a if c else b` (usa `if`/`else`),
+`is` (usa `==` e `!=`), tuple e set (usa liste), `a, b = ...` e `return a, b` (usa una lista),
+`del` (usa `.pop()`), `raise` e `assert` (usa `if` e `return`), `def` dentro altre funzioni.
+Al posto di `try`/`except`, `read_file`, `http_get`, `http_post` e `json_parse` accettano un valore di riserva (`default`).
 
 ## Funzioni già presenti
 
@@ -115,12 +129,13 @@ Non esistono in Tokyn (il checker lo segnala e dice cosa usare): `while`, `class
 
 | Funzione | Cosa fa |
 |---|---|
-| `read_file(percorso)` | legge un file di testo |
+| `read_file(percorso, default)` | legge un file di testo; se non esiste restituisce `default` (senza `default` si ferma con un errore) |
 | `write_file(percorso, testo)` | scrive (sovrascrive) un file |
 | `append_file(percorso, testo)` | aggiunge in fondo a un file |
-| `http_get(url)` | scarica una pagina e restituisce il testo |
-| `http_post(url, dati)` | invia dati JSON e restituisce la risposta |
-| `json_parse(testo)` | da testo JSON a liste/dizionari |
+| `http_get(url, default)` | scarica una pagina e restituisce il testo; se la rete fallisce restituisce `default` |
+| `http_post(url, dati, default)` | invia dati JSON e restituisce la risposta; se fallisce restituisce `default` |
+| `json_parse(testo, default)` | da testo JSON a liste/dizionari; se non è JSON valido restituisce `default` |
+| `to_number(testo, default)` | da testo a `int` o `float` (`"42"`, `"4,50"`, `"1.234,56"`); se non è un numero restituisce `default` |
 | `json_dump(valore)` | da valore (anche `type`) a testo JSON |
 | `env(nome, default)` | legge una variabile d'ambiente |
 | `now()` | data e ora attuali, es. `"2026-10-28T14:30:00"` |
@@ -158,9 +173,12 @@ main:
 |---|---|
 | `tokyn check file.tokyn` | controlla il file e mostra gli errori con il suggerimento per correggerli |
 | `tokyn check --json file.tokyn` | stessa cosa in JSON (per IA e strumenti) |
-| `tokyn run file.tokyn` | esegue (serve `ANTHROPIC_API_KEY`) |
+| `tokyn run file.tokyn` | esegue: gli agenti rispondono con l'API se c'è `ANTHROPIC_API_KEY`, altrimenti con Claude Code (`claude -p`, l'account di chi lo usa) |
+| `tokyn run file.tokyn --backend claude-code` | sceglie chi risponde agli agenti (`claude-code` o `api`) |
 | `tokyn run file.tokyn --mock` | esegue con risposte finte, senza chiamare l'IA |
+| `tokyn run file.tokyn --usage` | alla fine mostra i token spesi e quelli letti dalla cache |
 | `tokyn build file.tokyn` | genera il file Python equivalente |
+| `tokyn build file.tokyn --standalone` | genera un file Python autonomo (serve solo `anthropic`) |
 | `tokyn spec` | stampa questa specifica |
 | `tokyn new nome` | crea un file di partenza |
 
@@ -168,14 +186,18 @@ main:
 
 | Codice | Significato |
 |---|---|
-| E002 | costrutto Python che Tokyn non ha (`while`, `class`…) |
+| E002 | costrutto Python che Tokyn non ha (`while`, `class`, comprehension…) |
 | E003 / E004 / E005 / E009 | manca `:` / manca il blocco indentato / indentazione sbagliata |
 | E101 | nome definito due volte |
 | E110 | tipo sconosciuto |
+| E115 | `type` ricorsivo (contiene se stesso, anche tramite altri `type`) |
 | E121 / E122 | strumento senza tipi dei parametri / senza descrizione |
 | E130–E139 | campo dell'agente sbagliato, mancante o con un valore non valido |
+| E144 | agenti che si delegano a vicenda |
+| E145 | valore di `effort` non valido |
 | E142 | si tenta di modificare una costante |
 | E160 / E161 | nome non definito / variabile usata prima di assegnarla |
+| E162 | costante o valore predefinito che usa qualcosa scritto più sotto |
 | E170 | metodo inesistente su un agente (esistono solo `.ask` e `.reset`) |
 | E171 | campo inesistente in un `type` |
 | E175 | metodo inesistente su testo, lista o dizionario |

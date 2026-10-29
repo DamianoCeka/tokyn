@@ -45,6 +45,7 @@ class TokynRuntimeError(Exception):
         self.message = message
         self.line = line
         self.hint = hint
+        self.bad_request = False  # l'API ha rifiutato i parametri della richiesta (errore 400)
         super().__init__(message)
 
 

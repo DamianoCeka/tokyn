@@ -1,0 +1,22 @@
+def weather(city: str) -> str:
+    """Gets the current weather of a city (for example "Rome" or "New York"). Returns a short text."""
+    return http_get("https://wttr.in/" + city.strip().replace(" ", "+") + "?format=3", "weather not available")
+
+agent Assistant:
+    instructions: """
+        You are a friendly chatbot. Chat with the user and remember what was said before.
+        When the user asks about the weather of a city, use the weather tool and report its answer.
+        If the tool answers "weather not available", say so honestly and do not invent data.
+    """
+    tools: [weather]
+    memory: True
+    max_steps: 10
+
+main:
+    print("Chatbot ready. Write 'bye' to quit.")
+    for turn in range(15):
+        text = input("You: ")
+        if text.strip().lower() == "bye":
+            break
+        print("Bot: " + Assistant.ask(text))
+    print("Conversation ended.")

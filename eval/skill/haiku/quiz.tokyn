@@ -1,0 +1,33 @@
+# quiz.tokyn: quiz a scelta multipla generato dall'IA
+
+type Domanda:
+    testo: str "testo della domanda"
+    opzioni: list[str] "esattamente 4 possibili risposte"
+    corretta: int "indice della risposta giusta, da 0 a 3"
+
+type Quiz:
+    domande: list[Domanda] "esattamente 5 domande"
+
+agent Autore:
+    instructions: """
+        Crea un quiz in italiano sull'argomento che ricevi: 5 domande a scelta
+        multipla, ognuna con 4 opzioni e una sola risposta giusta. L'indice della
+        risposta giusta va da 0 a 3.
+    """
+    output: Quiz
+
+main:
+    argomento = input("Argomento del quiz: ")
+    quiz = Autore.ask("Argomento: " + argomento)
+    punteggio = 0
+    for i, d in enumerate(quiz.domande):
+        print(f"\nDomanda {i + 1}: {d.testo}")
+        for j, opzione in enumerate(d.opzioni):
+            print(f"  {j + 1}. {opzione}")
+        risposta = input("La tua risposta (1-4): ").strip()
+        if risposta.isdigit() and int(risposta) - 1 == d.corretta:
+            punteggio += 1
+            print("Giusto!")
+        else:
+            print(f"Sbagliato. La risposta giusta era {d.corretta + 1}.")
+    print(f"Punteggio finale: {punteggio}/{len(quiz.domande)}")

@@ -1,0 +1,46 @@
+def carica(percorso):
+    prodotti = []
+    righe = read_file(percorso).strip().splitlines()
+    for riga in righe[1:]:
+        parti = riga.split(";")
+        if len(parti) < 3:
+            continue
+        prezzo = parti[1].strip().replace(",", ".")
+        if not prezzo.replace(".", "", 1).isdigit():
+            continue
+        prodotti.append({
+            "nome": parti[0].strip(),
+            "prezzo": float(prezzo),
+            "categoria": parti[2].strip()
+        })
+    return prodotti
+
+def elenco_categorie(prodotti):
+    categorie = []
+    for p in prodotti:
+        if p["categoria"] not in categorie:
+            categorie.append(p["categoria"])
+    return ", ".join(categorie)
+
+PRODOTTI = carica("prodotti.csv")
+ISTRUZIONI = "Sei il commesso di un negozio e rispondi in italiano alle domande sul catalogo. Usa sempre lo strumento cerca per conoscere prodotti e prezzi; non inventare prodotti. Categorie disponibili: " + elenco_categorie(PRODOTTI)
+
+def cerca(categoria: str, prezzo_max: float) -> str:
+    """Cerca nel catalogo i prodotti di una categoria con prezzo minore o uguale a prezzo_max (euro). categoria vuota = tutte le categorie; prezzo_max molto alto (es. 1000000) = nessun limite."""
+    trovati = []
+    for p in PRODOTTI:
+        if categoria.strip() != "" and p["categoria"].lower() != categoria.strip().lower():
+            continue
+        if p["prezzo"] <= prezzo_max:
+            trovati.append(p)
+    if len(trovati) == 0:
+        return "Nessun prodotto trovato."
+    return json_dump(trovati)
+
+agent Commesso:
+    instructions: ISTRUZIONI
+    tools: [cerca]
+
+main:
+    domanda = input("Domanda sul catalogo: ")
+    print(Commesso.ask(domanda))

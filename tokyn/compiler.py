@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import sys
 import traceback
+import warnings
 from dataclasses import dataclass
 
 from .checker import check
@@ -42,12 +43,12 @@ def check_source(source: str, filename: str = "<tokyn>") -> CheckResult:
     return CheckResult(diags, source, filename)
 
 
-def compile_source(source: str, filename: str = "<tokyn>") -> Compiled:
+def compile_source(source: str, filename: str = "<tokyn>", standalone: bool = False) -> Compiled:
     tree = parse(source, filename)
     prog, diags = check(tree)
     if any(d.severity == "errore" for d in diags):
         raise TokynError(diags, source, filename)
-    code, linemap = generate(tree, prog, os.path.basename(filename))
+    code, linemap = generate(tree, prog, os.path.basename(filename), standalone)
     return Compiled(code, linemap, diags, source, filename)
 
 
@@ -59,7 +60,9 @@ def run_source(source: str, filename: str = "<tokyn>", mock: bool = False) -> in
     pseudo = f"<tokyn:{filename}>"
     namespace = {"__name__": "__tokyn__", "__file__": filename}
     try:
-        code = compile(compiled.python, pseudo, "exec")
+        with warnings.catch_warnings():  # es. "\d" in una stringa: niente avvisi di Python sul codice generato
+            warnings.simplefilter("ignore", SyntaxWarning)
+            code = compile(compiled.python, pseudo, "exec")
         exec(code, namespace)
         namespace["__tokyn_main__"]()
         return 0
@@ -92,6 +95,10 @@ def translate_exception(err: BaseException) -> tuple[str, str]:
         return f"la chiave {err.args[0]!r} non esiste nel dizionario", "Controlla il nome della chiave, oppure usa d.get(chiave)."
     if isinstance(err, IndexError):
         return "posizione fuori dalla lista", "Controlla la lunghezza con len(lista) prima di leggere un elemento."
+    if isinstance(err, EOFError):
+        return ("input() non ha ricevuto una riga: l'input è finito",
+                "Passa una riga per ogni input() che il programma chiede, compresa quella che lo fa terminare, es.: "
+                "printf 'ciao\\nesci\\n' | tokyn run file.tokyn --mock")
     if isinstance(err, ZeroDivisionError):
         return "divisione per zero", ""
     if isinstance(err, FileNotFoundError):

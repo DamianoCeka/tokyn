@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from functools import lru_cache
 from pathlib import Path
 
@@ -52,6 +53,10 @@ UNSUPPORTED = {
     "yield": "Restituisci una lista con `return`.",
     "global": "Le variabili globali sono costanti: definiscile in cima al file.",
     "match": "Usa `if` / `elif` / `else`.",
+    "nonlocal": "Le variabili di una funzione restano locali: restituisci il valore con `return`.",
+    "del": "Usa `d.pop(chiave)` per un dizionario e `lista.pop(i)` per una lista.",
+    "raise": "Non si sollevano errori: in uno strumento restituisci un messaggio di errore come testo (l'IA lo legge), altrove stampalo e usa `return`.",
+    "assert": "Usa `if condizione:` con un messaggio e `return`.",
 }
 
 TOKEN_LABELS = {
@@ -121,6 +126,10 @@ def _syntax_diagnostic(err: UnexpectedInput, source: str) -> Diagnostic:
 
         src_lines = source.splitlines()
 
+        line_text = src_lines[line - 1] if 1 <= line <= len(src_lines) else ""
+        idiom = _python_idiom(tok, expected, line_text)
+        if idiom:
+            return Diagnostic("E002", idiom[0], line, column, length, idiom[1])
         if "COLON" in expected and tok.type == "_NL":
             return Diagnostic("E003", "manca ':' alla fine della riga", line, column, 1,
                               "Le righe con def, if, elif, else, for, agent, type e main finiscono con ':'.")
@@ -151,6 +160,36 @@ def _syntax_diagnostic(err: UnexpectedInput, source: str) -> Diagnostic:
                           "Controlla parentesi e stringhe non chiuse.")
 
     return Diagnostic("E000", f"errore di sintassi: {err}", line, column, 1)
+
+
+def _python_idiom(tok: Token, expected: set, line_text: str) -> tuple[str, str] | None:
+    """Riconosce i costrutti Python più comuni che Tokyn non ha e dice cosa scrivere al loro posto."""
+    if re.search(r'(?<!\w)f"[^"\n]*\{[^}\n]*"', line_text) or re.search(r"(?<!\w)f'[^'\n]*\{[^}\n]*'", line_text):
+        return ("dentro una f-string non si possono usare le stesse virgolette della f-string",
+                "Usa le virgolette dell'altro tipo dentro le graffe, es. f\"{d['chiave']}\".")
+    if expected == {"_NL"} and re.match(r"\s*(if|elif|else|for)\b[^#]*:\s*[^\s#]", line_text):
+        return ("il blocco va sulla riga dopo i ':'", "Vai a capo dopo ':' e indenta il blocco di 4 spazi.")
+    if tok.type == "NUMBER" and {"STRING", "NAME"} <= expected:
+        return ("le scelte con `|` possono essere solo testi tra virgolette",
+                'Usa "1" | "2" | "3", oppure int con i limiti nella descrizione: priorita: int "da 1 a 3".')
+    if tok.type == "FOR":
+        return ("le comprehension `[... for x in ...]` non esistono in Tokyn",
+                "Usa un ciclo: risultato = [], poi `for x in lista:` e dentro `risultato.append(...)`.")
+    if tok.type == "IF" and not expected <= {"COLON", "_NL"}:
+        return ("l'espressione `a if condizione else b` non esiste in Tokyn",
+                "Scrivi un if/else su più righe che assegna la variabile in entrambi i rami.")
+    if tok.type == "NAME" and str(tok) == "is":
+        return ("`is` non esiste in Tokyn", "Usa == e !=, es. `if x == None:` oppure `if x != None:`.")
+    if tok.type == "COMMA" and "EQUAL" in expected:
+        return ("l'assegnazione multipla `a, b = ...` non esiste in Tokyn",
+                "Assegna una variabile alla volta, es. `r = f()`, poi `a = r[0]` e `b = r[1]`.")
+    if tok.type == "COMMA" and expected == {"COLON"}:
+        return ("i set `{a, b}` non esistono in Tokyn", "Usa una lista: `[a, b]` (per togliere i doppioni controlla con `in`).")
+    if tok.type == "COMMA" and expected == {"RPAR"}:
+        return ("le tuple `(a, b)` non esistono in Tokyn", "Usa una lista: `[a, b]`.")
+    if tok.type == "COMMA" and line_text.lstrip().startswith("return "):
+        return ("una funzione restituisce un solo valore", "Per restituirne più di uno usa una lista: `return [a, b]`.")
+    return None
 
 
 def _code_lines(src_lines):
@@ -218,14 +257,53 @@ def _unclosed_bracket(source: str, line: int, column: int) -> str:
     return f"'{pairs[stack[-1]]}'" if stack else ""
 
 
+def _lines_inside_strings(source: str) -> set[int]:
+    """Righe che iniziano dentro una stringa tra virgolette triple: sono testo, non codice."""
+    inside, line, i, quote = set(), 1, 0, None
+    while i < len(source):
+        c = source[i]
+        if c == "\n":
+            line += 1
+            if quote in ('"""', "'''"):
+                inside.add(line)
+            elif quote:  # una stringa normale finisce con la riga
+                quote = None
+            i += 1
+            continue
+        if quote:
+            if c == "\\" and source[i + 1:i + 2] != "\n":
+                i += 2
+                continue
+            if source.startswith(quote, i):
+                i += len(quote)
+                quote = None
+                continue
+        elif c == "#":
+            while i < len(source) and source[i] != "\n":
+                i += 1
+            continue
+        elif source.startswith('"""', i) or source.startswith("'''", i):
+            quote = source[i:i + 3]
+            i += 3
+            continue
+        elif c in "\"'":
+            quote = c
+        i += 1
+    return inside
+
+
 def _unsupported_scan(source: str) -> list[Diagnostic]:
     """Trova costrutti Python non presenti in Tokyn prima del parsing."""
-    import re
-
     found = []
+    text_lines = _lines_inside_strings(source)
     for i, raw in enumerate(source.splitlines(), 1):
         stripped = raw.lstrip()
-        if not stripped or stripped.startswith("#"):
+        if i in text_lines or not stripped or stripped.startswith("#"):
+            continue
+        if stripped.startswith("def ") and raw[:1] in (" ", "\t"):
+            col = len(raw) - len(stripped) + 1
+            found.append(Diagnostic("E002", "una `def` dentro un'altra funzione o dentro main non esiste in Tokyn", i, col, 3,
+                                    "Definisci la funzione al livello del file, senza indentazione."))
             continue
         m = re.match(r"(\w+)\b(?!\s*[=.(\[,)])", stripped)
         word = m.group(1) if m else ""

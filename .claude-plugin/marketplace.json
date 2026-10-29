@@ -1,0 +1,17 @@
+{
+  "name": "tokyn",
+  "description": "Tokyn: il linguaggio per agenti IA che Claude scrive con molti meno token del Python.",
+  "owner": { "name": "Damiano Ceka" },
+  "plugins": [
+    {
+      "name": "tokyn",
+      "source": "./plugins/tokyn",
+      "description": "Claude scrive in Tokyn i programmi con agenti IA (meno token), li prova con il tuo Claude Code e, se serve, ti dà il Python."
+    },
+    {
+      "name": "tokyn-en",
+      "source": "./plugins/tokyn-en",
+      "description": "English version: Claude writes AI-agent programs in Tokyn (fewer tokens), runs them with your Claude Code and can hand you the Python."
+    }
+  ]
+}

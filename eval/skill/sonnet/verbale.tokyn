@@ -1,0 +1,57 @@
+type Azione:
+    chi: str "persona responsabile dell'azione"
+    cosa: str "cosa deve essere fatto"
+    scadenza: str "scadenza come espressa nel testo; stringa vuota se non indicata"
+
+type Verbale:
+    riassunto: str "riassunto della riunione in 3-6 frasi"
+    decisioni: list[str] "decisioni prese, una per elemento"
+    azioni: list[Azione] "azioni assegnate"
+
+agent Verbalizzatore:
+    instructions: """
+        Ricevi la trascrizione di una riunione in italiano.
+        Estrai un riassunto breve, le decisioni prese e le azioni da svolgere.
+        Per ogni azione indica chi la deve fare, cosa e la scadenza (stringa vuota se non è detta).
+        Non inventare nulla che non sia nel testo.
+    """
+    output: Verbale
+
+def cella(s: str) -> str:
+    return s.replace("|", "/").replace("\n", " ").strip()
+
+main:
+    testo = read_file("trascrizione.txt", "")
+    if testo.strip() == "":
+        print("File trascrizione.txt non trovato. Incolla il testo e termina con una riga che contiene solo FINE.")
+        righe_in = []
+        for i in range(100000):
+            riga = input()
+            if riga.strip() == "FINE":
+                break
+            righe_in.append(riga)
+        testo = "\n".join(righe_in)
+    if testo.strip() == "":
+        print("Nessun testo da elaborare.")
+        return
+    v = Verbalizzatore.ask(testo)
+    md = ["# Verbale della riunione", "", "## Riassunto", "", v.riassunto, "", "## Decisioni", ""]
+    if len(v.decisioni) == 0:
+        md.append("- Nessuna decisione registrata")
+    for d in v.decisioni:
+        md.append("- " + d)
+    md.append("")
+    md.append("## Azioni")
+    md.append("")
+    if len(v.azioni) == 0:
+        md.append("Nessuna azione assegnata.")
+    else:
+        md.append("| Chi | Cosa | Scadenza |")
+        md.append("|---|---|---|")
+        for a in v.azioni:
+            scad = cella(a.scadenza)
+            if scad == "":
+                scad = "non indicata"
+            md.append(f"| {cella(a.chi)} | {cella(a.cosa)} | {scad} |")
+    write_file("verbale.md", "\n".join(md) + "\n")
+    print("Scritto verbale.md")

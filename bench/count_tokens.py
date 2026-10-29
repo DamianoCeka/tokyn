@@ -57,7 +57,8 @@ def main():
             "lines": sum(results["tasks"][t][name]["lines"] for t in TASKS),
         }
     repo = ROOT.parent
-    results["fixed"]["SKILL.md"] = count((repo / "skill/tokyn/SKILL.md").read_text(encoding="utf-8"))
+    results["fixed"]["SKILL.md"] = count((repo / "plugins/tokyn/skills/tokyn/SKILL.md").read_text(encoding="utf-8"))
+    results["fixed"]["SKILL.md (inglese)"] = count((repo / "plugins/tokyn-en/skills/tokyn/SKILL.md").read_text(encoding="utf-8"))
     results["fixed"]["SPEC.md"] = count((repo / "tokyn/SPEC.md").read_text(encoding="utf-8"))
 
     header = f"{'compito':<12}" + "".join(f"{n:>20}" for n in SETS)
@@ -66,7 +67,9 @@ def main():
         print(f"{task:<12}" + "".join(f"{results['tasks'][task][n]['tokens']:>20}" for n in SETS))
     print(f"{'TOTALE':<12}" + "".join(f"{results['totals'][n]['tokens']:>20}" for n in SETS))
     print("\nrighe:      " + "".join(f"{results['totals'][n]['lines']:>20}" for n in SETS))
-    print(f"\ncosto fisso della Skill (lettura): SKILL.md {results['fixed']['SKILL.md']}, SPEC.md {results['fixed']['SPEC.md']} token")
+    print(f"\ncosto fisso della Skill (lettura): SKILL.md {results['fixed']['SKILL.md']} token, "
+          f"in inglese {results['fixed']['SKILL.md (inglese)']} "
+          f"(SPEC.md {results['fixed']['SPEC.md']}, letta solo per dettagli rari)")
     if args.json:
         Path(args.json).write_text(json.dumps(results, indent=2), encoding="utf-8")
 

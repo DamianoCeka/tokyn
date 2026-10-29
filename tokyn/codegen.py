@@ -2,36 +2,59 @@
 
 from __future__ import annotations
 
+import inspect
+from pathlib import Path
+
 from lark import Token, Tree
 
 from . import __version__
 from .checker import BUILTINS, PREC, Program, string_value
+from .errors import TokynRuntimeError
 
 RUNTIME_BUILTINS = [
     "read_file", "write_file", "append_file", "http_get", "http_post",
-    "json_parse", "json_dump", "env", "now", "sleep",
+    "json_parse", "json_dump", "env", "now", "sleep", "to_number",
 ]
 
 
+def standalone_runtime() -> str:
+    """Il sorgente del runtime senza import relativi, da includere in un file autonomo."""
+    src = (Path(__file__).parent / "runtime.py").read_text(encoding="utf-8")
+    src = src.replace("from .errors import TokynRuntimeError\n", inspect.getsource(TokynRuntimeError), 1)
+    if "from ." in src or "'''" in src:
+        raise ValueError("runtime.py non si può includere: contiene import relativi o '''")
+    return src
+
+
 class CodeGen:
-    def __init__(self, tree: Tree, prog: Program, filename: str):
+    def __init__(self, tree: Tree, prog: Program, filename: str, standalone: bool = False):
         self.tree = tree
         self.prog = prog
         self.filename = filename
+        self.standalone = standalone
         self.lines: list[str] = []
+        self.py_line = 0  # ultima riga python scritta (un testo può contenere più righe)
         self.linemap: dict[int, int] = {}  # riga python -> riga tokyn
 
     def emit(self, text: str, indent: int = 0, src_line: int | None = None):
         self.lines.append("    " * indent + text)
         if src_line:
-            self.linemap[len(self.lines)] = src_line
+            self.linemap[self.py_line + 1] = src_line
+        self.py_line += text.count("\n") + 1
 
     # ------------------------------------------------------------ programma
     def generate(self) -> tuple[str, dict[int, int]]:
         self.emit(f"# Generato da Tokyn {__version__} a partire da {self.filename}.")
         self.emit("# Non modificare questo file: modifica il sorgente .tokyn e ricompila.")
-        self.emit("from tokyn import runtime as __rt")
-        self.emit("from tokyn.runtime import " + ", ".join(RUNTIME_BUILTINS))
+        if self.standalone:
+            self.emit("# File autonomo: il runtime di Tokyn è incluso qui sotto, serve solo `pip install anthropic`.")
+            self.emit("import types as __types")
+            self.emit("__rt = __types.ModuleType('tokyn_runtime')")
+            self.emit(f"exec(compile(r'''{standalone_runtime()}''', 'tokyn_runtime', 'exec'), __rt.__dict__)")
+            self.emit(", ".join(RUNTIME_BUILTINS) + " = " + ", ".join(f"__rt.{b}" for b in RUNTIME_BUILTINS))
+        else:
+            self.emit("from tokyn import runtime as __rt")
+            self.emit("from tokyn.runtime import " + ", ".join(RUNTIME_BUILTINS))
         nodes = [c for c in self.tree.children if isinstance(c, Tree)]
 
         for n in nodes:
@@ -42,24 +65,23 @@ class CodeGen:
             elif n.data == "import_from":
                 dotted, *names = n.children
                 mod = ".".join(str(t) for t in dotted.children)
-                self.emit(f"from {mod} import {', '.join(str(x) for x in names)}", src_line=n.meta.line)
+                items = [str(a) + (f" as {b}" if b is not None else "") for a, b in (x.children for x in names)]
+                self.emit(f"from {mod} import {', '.join(items)}", src_line=n.meta.line)
         self.emit("")
 
         for n in nodes:
             if n.data == "type_def":
                 self.gen_type(n)
+        # costanti e funzioni nell'ordine del file, come in Python (il checker lo verifica)
         for n in nodes:
             if n.data == "def_stmt":
                 self.gen_def(n)
-        for n in nodes:
-            if n.data == "const_def":
+            elif n.data == "const_def":
                 name, value = n.children
                 self.emit(f"{name} = {self.expr(value)}", src_line=n.meta.line)
-        if any(n.data == "const_def" for n in nodes):
-            self.emit("")
-        for n in nodes:
-            if n.data == "agent_def":
-                self.gen_agent(n)
+                self.emit("")
+        for name in self.agent_order():
+            self.gen_agent(self.prog.agents[name].node)
 
         main = self.prog.main
         self.emit("def __tokyn_main__():", src_line=main.meta.line if main is not None else None)
@@ -114,11 +136,28 @@ class CodeGen:
         self.gen_suite(suite, 1)
         self.emit("")
 
+    def agent_order(self) -> list[str]:
+        """Ogni agente dopo quelli a cui delega, così esistono già quando viene creato."""
+        order: list[str] = []
+        seen: set[str] = set()
+
+        def visit(name):
+            if name in seen:
+                return
+            seen.add(name)  # prima delle dipendenze: un ciclo (segnalato dal checker) non va in loop
+            for dep in self.prog.agents[name].agent_tools:
+                visit(dep)
+            order.append(name)
+
+        for name in self.prog.agents:
+            visit(name)
+        return order
+
     def gen_agent(self, n: Tree):
         name = str(n.children[0])
         fields = {str(af.children[0]): af.children[1] for af in n.children[1:]}
         parts = [f"name={name!r}"]
-        for key in ("model", "instructions", "tools", "output", "memory", "max_steps"):
+        for key in ("model", "instructions", "tools", "output", "memory", "max_steps", "effort"):
             if key in fields:
                 parts.append(f"{key}={self.expr(fields[key])}")
         self.emit(f"{name} = __rt.Agent(", src_line=n.meta.line)
@@ -242,8 +281,13 @@ class CodeGen:
             return f"{self.wrap(c[0], 8)}.{c[1]}"
         if k == "getitem":
             return f"{self.wrap(c[0], 8)}[{self.expr(c[1])}]"
+        if k == "slice":
+            lo, hi, step = (self.expr(x) if x is not None else "" for x in c[1:])
+            return f"{self.wrap(c[0], 8)}[{lo}:{hi}" + (f":{step}]" if step else "]")
+        if k == "pow":
+            return f"{self.wrap(c[0], 8)} ** {self.wrap(c[2], 7)}"
         raise ValueError(f"espressione sconosciuta: {k}")
 
 
-def generate(tree: Tree, prog: Program, filename: str) -> tuple[str, dict[int, int]]:
-    return CodeGen(tree, prog, filename).generate()
+def generate(tree: Tree, prog: Program, filename: str, standalone: bool = False) -> tuple[str, dict[int, int]]:
+    return CodeGen(tree, prog, filename, standalone).generate()

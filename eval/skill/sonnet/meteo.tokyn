@@ -1,0 +1,23 @@
+def meteo(citta: str) -> str:
+    """Restituisce il meteo attuale della città indicata (una riga di testo)."""
+    return http_get("https://wttr.in/" + citta.strip().replace(" ", "+") + "?format=3", "meteo non disponibile")
+
+agent Assistente:
+    instructions: """
+        Sei un assistente cordiale che chiacchiera in italiano e ricorda la conversazione.
+        Quando l'utente chiede il meteo di una città, usa lo strumento meteo e riporta il risultato.
+        Se lo strumento risponde "meteo non disponibile", dillo onestamente senza inventare il tempo.
+    """
+    tools: [meteo]
+    memory: True
+    max_steps: 10
+
+main:
+    print("Chatbot meteo. Scrivi 'ciao' per uscire.")
+    for turno in range(15):
+        testo = input("Tu: ")
+        if testo.strip().lower() == "ciao":
+            print("Ciao!")
+            return
+        print("Bot: " + Assistente.ask(testo))
+    print("Raggiunto il limite di 15 turni.")

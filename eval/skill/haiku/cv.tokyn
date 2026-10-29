@@ -1,0 +1,42 @@
+# cv.tokyn: valuta i curriculum in cvs/ rispetto all'annuncio
+
+import os
+
+type Candidato:
+    nome: str "nome e cognome della persona"
+    anni_esperienza: int "anni totali di esperienza lavorativa"
+    competenze: list[str] "competenze tecniche principali, una per voce"
+    voto: int "voto da 1 a 10: quanto il profilo corrisponde all'annuncio"
+
+agent Valutatore:
+    instructions: """
+        Leggi l'annuncio di lavoro e il curriculum che ricevi. Estrai dal
+        curriculum nome, anni di esperienza e competenze. Assegna un voto da 1
+        a 10 in base a quanto il profilo corrisponde all'annuncio.
+    """
+    output: Candidato
+
+def per_voto(c: Candidato) -> int:
+    return c.voto
+
+main:
+    annuncio = read_file("annuncio.txt")
+    file_cv = []
+    for nome_file in sorted(os.listdir("cvs")):
+        if nome_file.endswith(".txt"):
+            file_cv.append(nome_file)
+    candidati = []
+    for nome_file in file_cv:
+        testo = read_file("cvs/" + nome_file)
+        c = Valutatore.ask(f"ANNUNCIO:\n{annuncio}\n\nCURRICULUM:\n{testo}")
+        candidati.append(c)
+    classifica = sorted(candidati, key=per_voto, reverse=True)
+    print("Classifica (primi 5):")
+    for i, c in enumerate(classifica[:5]):
+        print(f"{i + 1}. {c.nome}: voto {c.voto}/10, {c.anni_esperienza} anni")
+    righe = ["nome;anni_esperienza;competenze;voto"]
+    for c in classifica:
+        comp = " / ".join(c.competenze)
+        righe.append(c.nome + ";" + str(c.anni_esperienza) + ";" + comp + ";" + str(c.voto))
+    write_file("candidati.csv", "\n".join(righe) + "\n")
+    print("Salvati in candidati.csv: " + str(len(classifica)) + " candidati")

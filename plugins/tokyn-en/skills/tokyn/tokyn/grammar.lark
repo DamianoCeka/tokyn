@@ -1,0 +1,133 @@
+// Grammatica di Tokyn v0.1
+// Sintassi in stile Python: indentazione significativa, parole chiave inglesi.
+
+start: (_NL | toplevel)*
+
+?toplevel: import_stmt
+         | def_stmt
+         | agent_def
+         | type_def
+         | main_def
+         | const_def
+
+// ---------- import (interoperabilità con Python) ----------
+import_stmt: "import" dotted_name ["as" NAME] _NL               -> import_plain
+           | "from" dotted_name "import" import_name ("," import_name)* _NL  -> import_from
+dotted_name: NAME ("." NAME)*
+import_name: NAME ["as" NAME]
+
+const_def: NAME "=" expr _NL
+
+// ---------- funzioni (sono anche gli strumenti degli agenti) ----------
+def_stmt: "def" NAME "(" [params] ")" ["->" type_expr] ":" suite
+params: param ("," param)* [","]
+param: NAME [":" type_expr] ["=" expr]
+
+// ---------- tipi strutturati ----------
+type_def: "type" NAME ":" _NL _INDENT field_decl+ _DEDENT
+field_decl: NAME ":" type_expr [STRING] _NL
+
+type_expr: type_atom ("|" type_atom)*
+type_atom: NAME ["[" type_expr "]"]   -> type_name
+         | STRING                     -> type_literal
+
+// ---------- agenti ----------
+agent_def: "agent" NAME ":" _NL _INDENT agent_field+ _DEDENT
+agent_field: NAME ":" expr _NL
+
+// ---------- punto di ingresso ----------
+main_def: "main" ":" suite
+
+// ---------- istruzioni ----------
+suite: _NL _INDENT stmt+ _DEDENT
+
+?stmt: simple_stmt
+     | if_stmt
+     | for_stmt
+
+?simple_stmt: assign _NL
+            | aug_assign _NL
+            | return_stmt _NL
+            | expr_stmt _NL
+            | pass_stmt _NL
+            | break_stmt _NL
+            | continue_stmt _NL
+
+// il bersaglio dell'assegnazione viene validato dal checker
+assign: expr "=" expr
+aug_assign: expr AUGOP expr
+AUGOP.2: "+=" | "-=" | "*=" | "/=" | "//=" | "%="
+
+return_stmt: "return" [expr]
+expr_stmt: expr
+pass_stmt: "pass"
+break_stmt: "break"
+continue_stmt: "continue"
+
+if_stmt: "if" expr ":" suite elif_clause* [else_clause]
+elif_clause: "elif" expr ":" suite
+else_clause: "else" ":" suite
+
+for_stmt: "for" for_target "in" expr ":" suite
+for_target: NAME ("," NAME)*
+
+// ---------- espressioni ----------
+?expr: or_expr
+
+?or_expr: and_expr ("or" and_expr)+            -> or_
+        | and_expr
+?and_expr: not_expr ("and" not_expr)+          -> and_
+         | not_expr
+?not_expr: "not" not_expr                      -> not_
+         | comparison
+?comparison: arith (comp_op arith)*
+!comp_op: "==" | "!=" | "<" | ">" | "<=" | ">=" | "in" | "not" "in"
+
+?arith: term (ADDOP term)*
+?term: factor (MULOP factor)*
+?factor: ADDOP factor                          -> unary
+       | power
+?power: atom_expr POW factor                   -> pow
+      | atom_expr
+
+ADDOP: "+" | "-"
+MULOP: "*" | "/" | "//" | "%"
+POW.2: "**"
+
+?atom_expr: atom_expr "(" [args] ")"            -> call
+          | atom_expr "." NAME                  -> getattr
+          | atom_expr "[" expr "]"              -> getitem
+          | atom_expr "[" [expr] ":" [expr] [":" [expr]] "]" -> slice
+          | atom
+
+?atom: NAME                                     -> name
+     | NUMBER                                   -> number
+     | STRING                                   -> string
+     | FSTRING                                  -> fstring
+     | "True"                                   -> true
+     | "False"                                  -> false
+     | "None"                                   -> none
+     | "[" [expr ("," expr)* [","]] "]"         -> list
+     | "{" [dict_item ("," dict_item)* [","]] "}" -> dict
+     | "(" expr ")"
+
+dict_item: expr ":" expr
+
+args: arg ("," arg)* [","]
+?arg: expr
+    | NAME "=" expr                             -> kwarg
+
+// ---------- terminali ----------
+NAME: /[^\W\d]\w*/
+NUMBER: /\d+(_\d+)*(\.\d+(_\d+)*)?([eE][+-]?\d+)?/
+
+STRING: /[rR]?("""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*')/
+FSTRING: /f("""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*')/
+
+COMMENT: /#[^\n]*/
+_NL: ( /\r?\n[\t ]*/ | COMMENT )+
+
+%ignore /[\t \f]+/
+%ignore /\\[\t \f]*\r?\n/
+%ignore COMMENT
+%declare _INDENT _DEDENT

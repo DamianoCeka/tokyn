@@ -12,8 +12,9 @@ start: (_NL | toplevel)*
 
 // ---------- import (interoperabilità con Python) ----------
 import_stmt: "import" dotted_name ["as" NAME] _NL               -> import_plain
-           | "from" dotted_name "import" NAME ("," NAME)* _NL  -> import_from
+           | "from" dotted_name "import" import_name ("," import_name)* _NL  -> import_from
 dotted_name: NAME ("." NAME)*
+import_name: NAME ["as" NAME]
 
 const_def: NAME "=" expr _NL
 
@@ -55,7 +56,7 @@ suite: _NL _INDENT stmt+ _DEDENT
 // il bersaglio dell'assegnazione viene validato dal checker
 assign: expr "=" expr
 aug_assign: expr AUGOP expr
-AUGOP: "+=" | "-=" | "*=" | "/="
+AUGOP.2: "+=" | "-=" | "*=" | "/=" | "//=" | "%="
 
 return_stmt: "return" [expr]
 expr_stmt: expr
@@ -85,14 +86,18 @@ for_target: NAME ("," NAME)*
 ?arith: term (ADDOP term)*
 ?term: factor (MULOP factor)*
 ?factor: ADDOP factor                          -> unary
-       | atom_expr
+       | power
+?power: atom_expr POW factor                   -> pow
+      | atom_expr
 
 ADDOP: "+" | "-"
 MULOP: "*" | "/" | "//" | "%"
+POW.2: "**"
 
 ?atom_expr: atom_expr "(" [args] ")"            -> call
           | atom_expr "." NAME                  -> getattr
           | atom_expr "[" expr "]"              -> getitem
+          | atom_expr "[" [expr] ":" [expr] [":" [expr]] "]" -> slice
           | atom
 
 ?atom: NAME                                     -> name
@@ -114,9 +119,9 @@ args: arg ("," arg)* [","]
 
 // ---------- terminali ----------
 NAME: /[^\W\d]\w*/
-NUMBER: /\d+(\.\d+)?/
+NUMBER: /\d+(_\d+)*(\.\d+(_\d+)*)?([eE][+-]?\d+)?/
 
-STRING: /("""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*')/
+STRING: /[rR]?("""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*')/
 FSTRING: /f("""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*')/
 
 COMMENT: /#[^\n]*/

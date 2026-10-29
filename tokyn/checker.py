@@ -6,7 +6,9 @@ fa più spesso, e spiegare esattamente come correggerli.
 
 from __future__ import annotations
 
+import ast
 import re
+import warnings
 from dataclasses import dataclass, field
 
 from lark import Token, Tree
@@ -38,9 +40,11 @@ AGENT_FIELDS = {
     "output": "nome di un `type`: l'agente risponde con dati strutturati invece che testo",
     "memory": "True per ricordare la conversazione tra una ask e l'altra",
     "max_steps": "numero massimo di passaggi (chiamate a strumenti) per ogni ask",
+    "effort": "quanto ragiona l'IA: \"low\", \"medium\", \"high\", \"xhigh\" o \"max\"",
 }
 
-AGENT_METHODS = {"ask": (1, 1), "reset": (0, 0)}
+AGENT_METHODS = {"ask": (1, 1), "ask_all": (1, 1), "reset": (0, 0)}
+EFFORTS = ("low", "medium", "high", "xhigh", "max")
 
 # nome -> (min argomenti posizionali, max o None, tipo restituito)
 BUILTINS = {
@@ -65,12 +69,13 @@ BUILTINS = {
     "any": (1, 1, BOOL),
     "all": (1, 1, BOOL),
     "input": (0, 1, STR),
-    "read_file": (1, 1, STR),
+    "read_file": (1, 2, STR),
     "write_file": (2, 2, NONE),
     "append_file": (2, 2, NONE),
-    "http_get": (1, 1, STR),
-    "http_post": (2, 2, STR),
-    "json_parse": (1, 1, ANY),
+    "http_get": (1, 2, STR),
+    "http_post": (2, 3, STR),
+    "json_parse": (1, 2, ANY),
+    "to_number": (1, 2, ANY),
     "json_dump": (1, 1, STR),
     "env": (1, 2, STR),
     "now": (0, 0, STR),
@@ -81,7 +86,7 @@ STR_METHODS = {m for m in dir(str) if not m.startswith("_")}
 LIST_METHODS = {m for m in dir(list) if not m.startswith("_")}
 DICT_METHODS = {m for m in dir(dict) if not m.startswith("_")}
 
-PREC = {"or_": 1, "and_": 2, "not_": 3, "comparison": 4, "arith": 5, "term": 6, "unary": 7}
+PREC = {"or_": 1, "and_": 2, "not_": 3, "comparison": 4, "arith": 5, "term": 6, "unary": 7, "pow": 7.5}
 
 
 def type_name(t) -> str:
@@ -128,6 +133,7 @@ class AgentInfo:
     node: Tree
     line: int
     fields: dict = field(default_factory=dict)
+    agent_tools: list = field(default_factory=list)  # altri agenti a cui delega
 
 
 @dataclass
@@ -164,11 +170,21 @@ def pos(node) -> tuple[int, int, int]:
     return 0, 0, 1
 
 
+def type_name_token(tree: Tree, type_name: str):
+    """Il nome di un type nella sua definizione, per posizionare l'errore."""
+    for node in tree.children:
+        if isinstance(node, Tree) and node.data == "type_def" and str(node.children[0]) == type_name:
+            return node.children[0]
+    return None
+
+
 def string_value(tok: Token) -> str:
-    s = str(tok)
-    if s[:3] in ('"""', "'''"):
-        return s[3:-3]
-    return bytes(s[1:-1], "utf-8").decode("unicode_escape", errors="ignore") if "\\" in s else s[1:-1]
+    try:
+        with warnings.catch_warnings():  # es. "\d" in una descrizione: resta com'è, senza avvisi di Python
+            warnings.simplefilter("ignore")
+            return ast.literal_eval(str(tok))
+    except (ValueError, SyntaxError):
+        return str(tok).strip("\"'")
 
 
 # ---------------------------------------------------------------- checker
@@ -195,6 +211,7 @@ class Checker:
         self.collect()
         self.check_types()
         self.check_agents()
+        self.check_agent_cycles()
         self.check_funcs()
         self.check_consts()
         self.check_main()
@@ -227,7 +244,8 @@ class Checker:
                 if self.declare(name_tok, ("module",)):
                     self.prog.imports[str(name_tok)] = node
             elif kind == "import_from":
-                for tok in node.children[1:]:
+                for imp in node.children[1:]:
+                    tok = imp.children[1] if imp.children[1] is not None else imp.children[0]
                     if self.declare(tok, ANY):
                         self.prog.imports[str(tok)] = node
             elif kind == "type_def":
@@ -307,6 +325,25 @@ class Checker:
                     self.error("E114", f'il campo "{fname}" è ripetuto', fname)
                     continue
                 info.fields[str(fname)] = self.resolve_type(texpr)
+        self.check_recursive_types()
+
+    def check_recursive_types(self):
+        def refs(t):
+            if t[0] == "record":
+                return {t[1]}
+            return refs(t[1]) if t[0] == "list" else set()
+
+        def reaches(start, target, seen):
+            for t in self.prog.types[start].fields.values():
+                for name in refs(t):
+                    if name == target or (name not in seen and reaches(name, target, seen | {name})):
+                        return True
+            return False
+
+        for name, info in self.prog.types.items():
+            if reaches(name, name, {name}):
+                self.error("E115", f'il type "{name}" contiene se stesso, anche passando da altri type', type_name_token(self.tree, name),
+                           "I type non possono essere ricorsivi: collega gli elementi con un nome o un id (str), oppure usa dict.")
 
     # ------------------------------------------------------------ funzioni
     def read_signature(self, info: FuncInfo):
@@ -341,6 +378,11 @@ class Checker:
                 resolved.append((pname, t, has_default))
                 scope.define(pname, t)
             info.params = resolved
+            defaults = Scope(self, kind="default")
+            defaults.before_line = info.line
+            for p in (params.children if params is not None else []):
+                if p is not None and p.children[2] is not None:
+                    self.infer(p.children[2], defaults)
             if name in self.prog.tool_funcs:
                 if not info.docstring:
                     self.error("E122", f'la funzione "{name}" è uno strumento di un agente ma non ha descrizione', name_tok,
@@ -354,10 +396,38 @@ class Checker:
             scope.collect_assigned(suite)
             self.check_block(suite, scope, in_loop=False)
 
+    def check_agent_cycles(self):
+        state = {}
+
+        def visit(name, path):
+            state[name] = "aperto"
+            for dep in self.prog.agents[name].agent_tools:
+                if state.get(dep) == "aperto":
+                    cycle = path[path.index(dep):] + [name, dep]
+                    self.error("E144", "gli agenti si delegano a vicenda: " + " → ".join(cycle),
+                               self.prog.agents[name].node.children[0],
+                               "Un agente non può delegare a chi delega (anche indirettamente) a lui: togline uno dai tools.")
+                elif dep not in state:
+                    visit(dep, path + [name])
+            state[name] = "chiuso"
+
+        for name in self.prog.agents:
+            if name not in state:
+                visit(name, [])
+
+    def definition_line(self, name):
+        """Riga in cui è definita una costante o una funzione (contano solo queste per l'ordine)."""
+        if name in self.prog.consts:
+            return self.prog.consts[name].meta.line
+        if name in self.prog.funcs:
+            return self.prog.funcs[name].line
+        return None
+
     # ------------------------------------------------------------ costanti
     def check_consts(self):
         scope = Scope(self, kind="const")
         for name, node in self.prog.consts.items():
+            scope.before_line = node.meta.line
             t = self.infer(node.children[1], scope)
             self.global_names[name] = t
 
@@ -401,7 +471,7 @@ class Checker:
                         elif tname in self.prog.funcs:
                             self.prog.tool_funcs.add(tname)
                         elif tname in self.prog.agents:
-                            pass
+                            info.agent_tools.append(tname)
                         else:
                             self.error("E133", f'lo strumento "{tname}" non esiste', item,
                                        did_you_mean(tname, available, "Strumenti disponibili")
@@ -429,6 +499,12 @@ class Checker:
                 tok, value = fields["max_steps"]
                 if not (isinstance(value, Tree) and value.data == "number" and "." not in str(value.children[0])):
                     self.error("E136", "max_steps deve essere un numero intero", value, "Esempio: max_steps: 8")
+
+            if "effort" in fields:
+                tok, value = fields["effort"]
+                if not (isinstance(value, Tree) and value.data == "string" and string_value(value.children[0]) in EFFORTS):
+                    self.error("E145", "effort deve essere uno tra " + ", ".join(f'"{e}"' for e in EFFORTS), value,
+                               'Esempio: effort: "low" per classificare o estrarre (costa meno).')
 
             const_scope = Scope(self, kind="agent")
             for fname in ("model", "instructions"):
@@ -569,6 +645,7 @@ class Checker:
         name = str(name_tok)
         t = scope.lookup(name)
         if t is not None:
+            self.check_order(name_tok, scope)
             if scope.kind == "const" and t[0] == "agent":
                 self.error("E191", "le costanti non possono usare agenti", name_tok,
                            "Usa l'agente dentro main o dentro una funzione.")
@@ -586,8 +663,16 @@ class Checker:
         self.error("E160", f'il nome "{name}" non è definito', name_tok, hint)
         return ANY
 
+    def check_order(self, name_tok, scope):
+        """Costanti e valori predefiniti si calcolano subito: possono usare solo ciò che è scritto prima."""
+        name = str(name_tok)
+        line = self.definition_line(name) if scope.before_line and not scope.has_local(name) else None
+        if line and line > scope.before_line:
+            self.error("E162", f'"{name}" è definita più sotto (riga {line}): qui si può usare solo ciò che è scritto prima',
+                       name_tok, f"Sposta la definizione di {name} sopra la riga {scope.before_line}.")
+
     def infer_number(self, node, scope):
-        return FLOAT if "." in str(node.children[0]) else INT
+        return FLOAT if any(c in str(node.children[0]) for c in ".eE") else INT
 
     def infer_string(self, node, scope):
         return STR
@@ -707,6 +792,25 @@ class Checker:
                        f"Esempio: valore.campo invece di valore[\"campo\"]")
         return ANY
 
+    def infer_pow(self, node, scope):
+        types = [self.infer(c, scope) for c in node.children if isinstance(c, Tree)]
+        if all(t in (INT, FLOAT) for t in types):
+            return FLOAT if FLOAT in types else INT
+        return ANY
+
+    def infer_slice(self, node, scope):
+        obj = self.infer(node.children[0], scope)
+        for bound in node.children[1:]:
+            if bound is not None and self.infer(bound, scope) not in (INT, ANY):
+                self.error("E176", "gli estremi di una slice devono essere numeri interi", bound,
+                           "Esempio: testo[:200], lista[1:], lista[-3:]")
+        if obj[0] == "list" or obj == STR:
+            return obj
+        if obj[0] == "record":
+            self.error("E172", "i campi di un type si leggono con il punto, non con [ ]", node,
+                       f"Esempio: valore.campo invece di valore[\"campo\"]")
+        return ANY
+
     def infer_getattr(self, node, scope):
         obj_node, attr = node.children
         obj = self.infer(obj_node, scope)
@@ -718,7 +822,8 @@ class Checker:
                 return STR
             if a not in AGENT_METHODS:
                 self.error("E170", f'gli agenti non hanno ".{a}"', attr,
-                           "Un agente ha solo .ask(testo), che restituisce la risposta, e .reset(), che cancella la memoria.")
+                           "Un agente ha solo .ask(testo), che restituisce la risposta, .ask_all(testi), che risponde a una lista "
+                           "a metà prezzo, e .reset(), che cancella la memoria.")
             return ANY
         if obj[0] == "typeobj":
             self.error("E173", f'"{obj[1]}" è un type: per crearne uno usa {obj[1]}(campo=valore, ...)', attr)
@@ -741,31 +846,34 @@ class Checker:
         kwargs = [a for a in arg_list if isinstance(a, Tree) and a.data == "kwarg"]
 
         def infer_args():
-            for a in positional:
-                self.infer(a, scope)
+            types = [self.infer(a, scope) for a in positional]
             for k in kwargs:
                 self.infer(k.children[1], scope)
+            return types
 
         # metodo di un agente: Agente.ask(...)
         if isinstance(callee, Tree) and callee.data == "getattr":
             obj = self.infer(callee.children[0], scope)
             method = str(callee.children[1])
             if obj[0] == "agent":
-                infer_args()
+                arg_types = infer_args()
+                if method == "ask_all" and arg_types and arg_types[0][0] in ("str", "int", "float", "bool", "dict", "record"):
+                    self.error("E186", f".ask_all() vuole una lista di testi, non {type_name(arg_types[0])}", positional[0],
+                               f"Per un testo solo usa {obj[1]}.ask(testo).")
                 if method not in AGENT_METHODS:
                     self.error("E170", f'gli agenti non hanno ".{method}"', callee.children[1],
-                               "Un agente ha solo .ask(testo) e .reset().")
+                               "Un agente ha solo .ask(testo), .ask_all(lista_di_testi) e .reset().")
                     return ANY
                 lo, hi = AGENT_METHODS[method]
                 if kwargs or not (lo <= len(positional) <= hi):
-                    expected = "un solo argomento: il testo da chiedere" if method == "ask" else "nessun argomento"
+                    expected = {"ask": "un solo argomento: il testo da chiedere",
+                                "ask_all": "un solo argomento: la lista dei testi"}.get(method, "nessun argomento")
                     self.error("E186", f".{method}() vuole {expected}", node,
-                               f'Esempio: {obj[1]}.ask("...")' if method == "ask" else "")
-                if method == "ask":
+                               {"ask": f'Esempio: {obj[1]}.ask("...")', "ask_all": f"Esempio: {obj[1]}.ask_all(testi)"}.get(method, ""))
+                if method in ("ask", "ask_all"):
                     agent = self.prog.agents.get(obj[1])
-                    if agent is not None and agent.output:
-                        return ("record", agent.output)
-                    return STR
+                    answer = ("record", agent.output) if agent is not None and agent.output else STR
+                    return answer if method == "ask" else LIST(answer)
                 return NONE
             # altri metodi: controlla l'attributo come getattr
             self.infer_getattr(callee, scope) if obj[0] in ("record", "typeobj", "func") or obj in (STR, DICT) or obj[0] in ("list", "enum") else None
@@ -775,6 +883,8 @@ class Checker:
         if isinstance(callee, Tree) and callee.data == "name":
             name = str(callee.children[0])
             t = scope.lookup(name)
+            if t is not None:
+                self.check_order(callee.children[0], scope)
             if t is None:
                 self.infer_name(callee, scope)
                 infer_args()
@@ -856,6 +966,7 @@ class Scope:
         self.func = func
         self.locals: dict[str, tuple] = {}
         self.pending: set[str] = set()
+        self.before_line: int | None = None  # costanti e valori predefiniti: solo nomi definiti prima
 
     def define(self, name, t, tok=None):
         self.locals[name] = t
