@@ -1,0 +1,20 @@
+{
+  "in_scadenza": [
+    {
+      "cliente": "Studio Dentistico Moretti",
+      "servizio": "Backup in cloud",
+      "scadenza": "2026-12-01",
+      "giorni_mancanti": 0,
+      "oggetto": "Promemoria: il servizio Backup in cloud scade il 1º dicembre 2026",
+      "testo": "Gentile Studio Dentistico Moretti,\n\ndesideriamo ricordarLe che il servizio \"Backup in cloud\" è in scadenza il 1º dicembre 2026.\n\nPer garantire la continuità del servizio e la tutela dei Suoi dati, La invitiamo a contattarci per rinnovare il contratto. Saremo lieti di assisterLa in ogni fase del rinnovo e di rispondere a qualsiasi Sua domanda.\n\nLa ringraziamo per la fiducia che continua a riporre in noi.\n\nCordiali saluti"
+    },
+    {
+      "cliente": "Pasticceria Lombardi",
+      "servizio": "Noleggio registratore di cassa",
+      "scadenza": "2026-12-09",
+      "giorni_mancanti": 8,
+      "oggetto": "Promemoria: Noleggio registratore di cassa in scadenza il 9 dicembre 2026",
+      "testo": "Gentile Pasticceria Lombardi,\n\ndesideriamo ricordarLe che il contratto relativo al servizio \"Noleggio registratore di cassa\" è in scadenza il 9 dicembre 2026, tra 8 giorni.\n\nPer garantire la continuità del servizio ed evitare interruzioni nella Sua attività quotidiana, La invitiamo a contattarci al più presto per procedere con il rinnovo del contratto.\n\nRestiamo a Sua completa disposizione per qualsiasi chiarimento o informazione.\n\nCordiali saluti"
+    }
+  ]
+}

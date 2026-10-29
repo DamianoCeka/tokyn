@@ -1,0 +1,33 @@
+import os
+
+type Smistamento:
+    categoria: "ordine" | "reclamo" | "informazioni" | "spam"
+    urgente: bool "vero se il cliente ha una scadenza vicina, un problema grave o chiede una risposta immediata"
+    riassunto: str "una sola frase breve in italiano, al massimo 25 parole"
+
+agent Smistatore:
+    model: "claude-haiku"
+    effort: "low"
+    instructions: """
+        Smisti le email arrivate all'indirizzo di un negozio.
+        Per ogni email indica la categoria, se è urgente e un riassunto di una sola frase in italiano.
+        Le email spam non sono mai urgenti.
+    """
+    output: Smistamento
+
+type Voce:
+    file: str
+    categoria: str
+    urgente: bool
+    riassunto: str
+
+main:
+    risultato = []
+    for nome in sorted(os.listdir("email")):
+        if not nome.endswith(".txt"):
+            continue
+        s = Smistatore.ask(read_file("email/" + nome))
+        risultato.append(Voce(file=nome, categoria=s.categoria, urgente=s.urgente, riassunto=s.riassunto))
+        print(f"{nome}: {s.categoria}")
+    write_file("risultato.json", json_dump(risultato))
+    print(f"Smistate {len(risultato)} email in risultato.json")
