@@ -1,9 +1,10 @@
 """Controllo di `spese`: 8 movimenti nascosti di esercenti inconfondibili (2 spesa alimentare, 2 trasporti, 2 casa,
 1 svago, 1 altro), tutti uscite; la somma dei due trasporti fatta con i float dà -51.800000000000004.
 
-Passa se risultato.json ha i movimenti nell'ordine del file con data e descrizione come nel file e l'importo numerico
-giusto (col segno); le categorie sono tutte tra le cinque ammesse e almeno 7 su 8 sono giuste; e i totali sono numeri
-arrotondati al centesimo, uguali alla somma degli importi del file per le categorie che il programma ha assegnato (una
+Passa se risultato.json ha i movimenti nell'ordine del file con data identica al file, descrizione uguale (maiuscole e
+spazi ignorati) e l'importo giusto col segno, scritto come numero JSON; le categorie sono tutte tra le cinque ammesse
+(maiuscole e accenti ignorati) e almeno 7 su 8 sono giuste; e i totali sono numeri JSON arrotondati al centesimo (-51.8
+va bene, -51.800000000000004 no), uguali alla somma degli importi del file per le categorie che il programma ha assegnato (una
 categoria senza movimenti può mancare o valere 0). Con le categorie giuste i totali sono: spesa alimentare -85.50,
 trasporti -51.80, casa -728.45, svago -19.00, altro -12.80.
 """
@@ -31,8 +32,11 @@ punti = 0
 
 
 def importo(valore):
-    """Un importo scritto come numero JSON (non come testo), o None."""
-    return Decimal(str(valore)) if isinstance(valore, (int, float)) and not isinstance(valore, bool) else None
+    """Un importo scritto come numero JSON finito (non come testo), o None."""
+    if not isinstance(valore, (int, float)) or isinstance(valore, bool):
+        return None
+    d = Decimal(str(valore))
+    return d if d.is_finite() else None
 
 
 ordine = len(movimenti) == 8 and all(

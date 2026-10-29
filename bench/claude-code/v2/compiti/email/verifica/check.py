@@ -1,15 +1,13 @@
 """Controllo di `email`: 6 email nascoste dalla categoria e urgenza chiare (2 ordini, 2 reclami, 1 informazioni, 1 spam;
 urgenti solo un reclamo e un ordine).
 
-Prima di eseguire toglie la cartella email/ lasciata nella cartella del programma, così ci sono solo le email nascoste.
+esegui() toglie la cartella email/ di prova (è in dati/), così il programma vede solo le email nascoste.
 Passa se risultato.json è una lista con le 6 email in ordine di nome del file (chiave "file"), almeno 5 categorie
 giuste e tutte tra le quattro ammesse, "urgente" booleano e giusto in almeno 5 casi, e un riassunto breve (10-350
-caratteri) per ogni email, che in almeno 5 casi nomina l'argomento dell'email.
+caratteri) per ogni email, che in almeno 5 casi nomina l'argomento dell'email. 4 punti; ok solo con 4 su 4.
 """
 
-import shutil
 import sys
-import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
@@ -17,22 +15,16 @@ from comune import esegui, esito, norm
 
 QUI = Path(__file__).resolve().parent
 ATTESI = [  # file, categoria, urgente, parole di cui il riassunto ne deve contenere almeno una
-    ("msg_201.txt", "ordine", False, ["caffe"]),
-    ("msg_202.txt", "reclamo", True, ["lavatric", "acqua", "allag"]),
-    ("msg_203.txt", "informazioni", False, ["bologna", "negozio", "punto vendita"]),
+    ("msg_201.txt", "ordine", False, ["caffe", "arabica", "macin"]),
+    ("msg_202.txt", "reclamo", True, ["lavatric", "acqua", "allag", "perdit"]),
+    ("msg_203.txt", "informazioni", False, ["bologna", "negozio", "punto vendita", "fisic"]),
     ("msg_204.txt", "spam", False, ["follower", "instagram", "social"]),
-    ("msg_205.txt", "ordine", True, ["bombonier", "matrimonio"]),
-    ("msg_206.txt", "reclamo", False, ["imball", "scatol", "pacc"]),
+    ("msg_205.txt", "ordine", True, ["bombonier", "matrimonio", "nozze"]),
+    ("msg_206.txt", "reclamo", False, ["imball", "scatol", "pacc", "schiacciat", "danneggiat"]),
 ]
 CATEGORIE = {"ordine", "reclamo", "informazioni", "spam"}
 
-# Copia del programma senza la cartella email/ di prova: esegui() aggiunge i file nascosti ma non toglie quelli che ci sono.
-programma = Path(tempfile.mkdtemp(prefix="programma-"))
-shutil.copytree(sys.argv[1], programma, dirs_exist_ok=True,
-                ignore=shutil.ignore_patterns("__pycache__", ".venv", "venv", "node_modules"))
-shutil.rmtree(programma / "email", ignore_errors=True)
-
-ex = esegui(programma, QUI / "nascosti")
+ex = esegui(sys.argv[1], QUI / "nascosti")
 dati = ex.json("risultato.json")
 dettagli = []
 if not isinstance(dati, list):

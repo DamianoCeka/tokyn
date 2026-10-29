@@ -2,10 +2,11 @@
 esplicita (giorno, mese e anno) e alcune chiacchiere che non sono decisioni.
 
 Passa se risultato.json ha `decisioni` (lista di stringhe) con entrambe le decisioni (il lancio dell'app slitta al 24
-novembre, o di due settimane; da dicembre il budget pubblicitario passa dai giornali ai social) e nessuna delle chiacchiere (macchinetta
-del caffè, partita), e `azioni` con esattamente 3 oggetti {cosa, chi, entro}: Marco, bug del pagamento, 2026-11-13;
-Sara, risposte per il supporto, 2026-11-18; Davide, piano delle campagne social, 2026-11-30. Le date devono essere
-esattamente AAAA-MM-GG; chi e cosa si confrontano senza badare a maiuscole, accenti e parole in più.
+novembre, o di due settimane; da dicembre il budget pubblicitario passa dai giornali ai social) e nessuna delle
+chiacchiere (macchinetta del caffè, partita), e `azioni` con esattamente 3 oggetti {cosa, chi, entro}: Marco, bug del
+pagamento, 2026-11-13; Sara, risposte per il supporto, 2026-11-18; Davide, piano delle campagne social, 2026-11-30. Le
+date devono essere esattamente AAAA-MM-GG; chi e cosa si confrontano senza badare a maiuscole, accenti e parole in più.
+Punti parziali anche con una struttura sbagliata; ok solo a 6 su 6.
 """
 
 import re
@@ -38,7 +39,7 @@ struttura = (isinstance(decisioni, list) and all(isinstance(d, str) for d in dec
 punti += struttura
 dettagli.append(f"decisioni lista di stringhe e azioni lista di {{cosa, chi, entro}} stringhe: {struttura}"
                 + ("" if struttura else f" (risultato.json: {str(dati)[:400]})"))
-# Il resto si valuta anche se la struttura è sbagliata (punti parziali); i valori che non sono testo contano come vuoti.
+# Il resto si valuta anche con la struttura sbagliata (punti parziali); i valori non di testo contano come vuoti.
 testo = lambda v: v if isinstance(v, str) else ""
 decisioni = [d for d in decisioni if isinstance(d, str)] if isinstance(decisioni, list) else []
 lista_azioni = azioni if isinstance(azioni, list) else []

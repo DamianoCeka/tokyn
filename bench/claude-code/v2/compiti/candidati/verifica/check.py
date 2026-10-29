@@ -3,7 +3,7 @@ requisiti, gallo_andrea.txt è un cuoco senza nessun requisito, colombo_luca.txt
 parte (il loro ordine reciproco non conta).
 
 Passa se risultato.json ha in "candidati" i 4 curriculum, ognuno una volta, con file (nome senza cartella), punteggio
-intero da 1 a 10 e motivazione non vuota; la lista è in ordine di punteggio decrescente; "migliore" è
+intero da 1 a 10 (8, 8.0 o "8") e motivazione non vuota; la lista è in ordine di punteggio decrescente; "migliore" è
 ferrari_giulia.txt, con un punteggio più alto di tutti gli altri; e gallo_andrea.txt ha un punteggio più basso di tutti
 gli altri. Maiuscole e spazi ai lati del nome del file sono ignorati.
 """
@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
-from comune import esegui, esito
+from comune import esegui, esito, numero
 
 QUI = Path(__file__).resolve().parent
 MIGLIORE, PEGGIORE = "ferrari_giulia.txt", "gallo_andrea.txt"
@@ -32,8 +32,9 @@ def nome(valore):
 
 
 def punteggio(c):
-    v = c.get("punteggio") if isinstance(c, dict) else None
-    ok = isinstance(v, (int, float)) and not isinstance(v, bool) and v == int(v) and 1 <= v <= 10
+    """Il punteggio come intero da 1 a 10 (anche scritto 8.0 o "8"), o None."""
+    v = numero(c.get("punteggio")) if isinstance(c, dict) else None
+    ok = v is not None and 1 <= v <= 10 and v == int(v)
     return int(v) if ok else None
 
 

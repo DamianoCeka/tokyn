@@ -6,7 +6,7 @@ Scrivimi un programma Python che usa Claude per assegnare a ogni movimento una c
 
 Il programma deve stare in un solo file, `programma.py`, e si avvia con `python programma.py` dalla cartella in cui
 c'è `movimenti.csv`. Deve scrivere il risultato in `risultato.json`, con i movimenti nello stesso ordine del file, data
-e descrizione come nel file, l'importo come numero e i totali arrotondati al centesimo:
+e descrizione come nel file, l'importo come numero e i totali come numeri arrotondati al centesimo:
 
 ```json
 {

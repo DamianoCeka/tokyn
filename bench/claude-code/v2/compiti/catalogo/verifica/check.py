@@ -24,7 +24,8 @@ INGLESE = {
     "LN-220": [r"sheet|linen|bedding", r"cotton", r"\bwhite\b"],
     "BK-305": [r"bicycle|bike|cycle", r"basket", r"\bbell\b"],
     "OL-412": [r"\bolive\b", r"\boil\b", r"organic", r"bottle"],
-    "OR-518": [r"clock", r"\bwall\b", r"silen|quiet|noiseless|tick", r"lumin|glow|illuminat|fluoresc|phosphoresc|\blight"],
+    "OR-518": [r"clock", r"\bwall\b", r"silen|quiet|noiseless|tick",
+               r"lumin|glow|illuminat|fluoresc|phosphoresc|\blight"],
 }
 ITALIANO = {
     "CF-101": ["caffettiera", "alluminio", "tazze", "fornelli", "adatta"],

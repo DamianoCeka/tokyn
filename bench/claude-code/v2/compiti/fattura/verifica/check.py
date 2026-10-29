@@ -1,7 +1,8 @@
 """Controllo di `fattura`: una fattura nascosta di 5 righe (somma vera 439,60 €) che dichiara un totale di 440,60 €.
 
 Passa se risultato.json ha il fornitore (Marchetti), la data 2026-02-18, le 5 righe nell'ordine della fattura con
-quantità e prezzi unitari giusti, totale_dichiarato 440,60, totale_calcolato 439,60 e totale_corretto false (booleano).
+quantità e prezzi unitari giusti, totale_dichiarato 440,60, totale_calcolato 439,60 e totale_corretto false (booleano). Importi con tolleranza di mezzo
+centesimo, anche come testo ("439,60"). 6 punti, uno per requisito; ok solo con 6 su 6.
 """
 
 import sys

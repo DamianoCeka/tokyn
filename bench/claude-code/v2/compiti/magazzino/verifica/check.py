@@ -5,7 +5,8 @@ e il silicone (6 su 20); da ordinare 46 pezzi (32 + 14).
 
 Passa se risultato.json è una lista di 4 elementi con le domande nell'ordine del file e se ogni risposta contiene il
 numero esatto (scritto in qualsiasi formato: 2623.3, 2623,30, 2.623,30, 2,623.30, 2 623,30) o, per la terza domanda,
-nomina i due articoli sotto scorta e nessuno degli altri quattro.
+nomina i due articoli sotto scorta e nessuno degli altri quattro come sotto scorta: un altro articolo può comparire solo
+in una frase che dice che è sopra la scorta (per esempio "trapano e guanti sono sopra la scorta minima").
 """
 
 import re
@@ -23,7 +24,9 @@ ALTRI = ["trapano", "martell", "guanti", "livella"]
 
 def interpreta(tok):
     """I valori che un numero scritto può voler dire (1.234 può essere 1234 o 1,234)."""
-    t = re.sub(r"[\s  ']", "", tok)
+    t = re.sub(r"[\s\xa0\u202f']", "", tok).strip(".,")
+    if not re.fullmatch(r"\d[\d.,]*", t):
+        return set()
     if "." in t and "," in t:
         dec = "." if t.rfind(".") > t.rfind(",") else ","
         mil = "," if dec == "." else "."
@@ -44,8 +47,9 @@ def interpreta(tok):
 
 def numeri(testo):
     valori = set()
-    for tok in re.findall(r"\d[\d.,'   ]*\d|\d", str(testo)):
-        for parte in [tok, *re.split(r"[\s  ]+", tok)]:
+    for tok in re.findall(r"\d[\d.,'\xa0\u202f ]*\d|\d", str(testo)):
+        # il gruppo intero ("2 623,30") e i pezzi separati da spazi, virgola + spazio o punto + spazio ("8, 6")
+        for parte in [tok, *re.split(r"[.,]?[\s\xa0\u202f]+", tok)]:
             valori |= interpreta(parte)
     return valori
 
@@ -78,7 +82,9 @@ dettagli.append(f"valore totale 2623,30: {ok2} ({risposte[1][:150]!r})")
 
 r3 = norm(risposte[2])
 nominati = [p for p in SOTTO if p in r3]
-intrusi = [p for p in ALTRI if p in r3]
+# un altro articolo nominato va bene solo in una frase che dice che è sopra la scorta
+SOPRA = r"sopra|oltre|superior|non (e|sono) sotto|in regola|\bsufficient|\badeguat"
+intrusi = [p for p in ALTRI if any(p in f and not re.search(SOPRA, f) for f in re.split(r"[.;!?\n]|\bmentre\b|\binvece\b", r3))]
 ok3 = len(nominati) == 2 and not intrusi
 punti += ok3
 dettagli.append(f"sotto scorta nastro e silicone, nessun altro: {ok3} (nominati {nominati}, di troppo {intrusi})")

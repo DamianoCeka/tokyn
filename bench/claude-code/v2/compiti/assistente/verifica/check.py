@@ -4,8 +4,9 @@ da quelli di prova).
 Messaggi: presentazione ("mi chiamo Giulia"), tre domande la cui risposta è solo nelle FAQ nascoste (spedizione 6,90 €,
 codice sconto CIAONESPOLO, reso entro 45 giorni), "Come mi chiamo?", "esci" e dopo "esci" un'ultima domanda (confezione
 regalo 3,50 €) a cui il programma non deve più rispondere.
-Passa se nell'output ci sono i tre fatti, il nome Giulia compare dopo la prima risposta con un fatto (quindi viene dalla
-memoria della conversazione) e il programma termina da solo con codice 0 su "esci" senza rispondere alla domanda dopo.
+Passa se nell'output ci sono i tre fatti, il nome Giulia compare dopo l'inizio della risposta sul reso (l'ultima domanda
+sulle FAQ, quindi il nome viene dalla memoria della conversazione) e il programma termina da solo con codice 0 su "esci"
+senza rispondere alla domanda dopo. 5 punti, uno per requisito; ok solo con 5 su 5.
 """
 
 import re
@@ -30,9 +31,10 @@ FATTI = {  # nome: espressione cercata nell'output
     "codice sconto CIAONESPOLO": r"ciao\s*nespolo",
     "reso entro 45 giorni": r"(?<![\d.,])45(?![\d.,]\d)|quarantacinque",
 }
-DOPO_ESCI = r"(?<![\d.,])3[.,]50?(?!\d)|biglietto"
+# 3,50 con due decimali, o 3,5 seguito da euro (non "3.5" in un nome di versione), o il biglietto della confezione
+DOPO_ESCI = r"(?<![\d.,])3[.,]50(?!\d)|(?<![\d.,])3[.,]5\s*(?:€|euro)|biglietto"
 
-ex = esegui(sys.argv[1], QUI / "nascosti", stdin="\n".join(MESSAGGI) + "\n", uscite=(), timeout=300)
+ex = esegui(sys.argv[1], QUI / "nascosti", stdin="\n".join(MESSAGGI) + "\n", uscite=())
 uscita = ex.stdout
 dettagli = []
 punti = 0
@@ -45,8 +47,9 @@ for nome, espr in FATTI.items():
     if m:
         posizioni.append(m.start())
 
-# Il nome conta solo se compare dopo la prima risposta presa dalle FAQ: lì il programma lo sa solo se ricorda.
-memoria = bool(posizioni) and "giulia" in norm(uscita[min(posizioni):])
+# Il nome conta solo se compare dopo l'ultimo dei tre fatti (la risposta sul reso): lì il programma lo sa solo se ricorda.
+# Con la prima posizione un programma senza memoria passerebbe citando un fatto e il nome già nella risposta al saluto.
+memoria = bool(posizioni) and "giulia" in norm(uscita[max(posizioni):])
 punti += memoria
 dettagli.append(f"si ricorda il nome Giulia: {memoria}")
 
