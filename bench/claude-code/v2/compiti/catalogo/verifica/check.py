@@ -21,14 +21,14 @@ INTESTAZIONE = ["codice", "nome", "descrizione", "prezzo"]
 # Per ogni prodotto: gruppi di parole inglesi (ne serve almeno una per gruppo) e parole italiane che devono sparire.
 INGLESE = {
     "CF-101": [r"coffee|moka|espresso", r"alumin", r"\bsix\b|\b6\b", r"\bgas\b"],
-    "LN-220": [r"sheet|linen", r"cotton", r"\bwhite\b"],
+    "LN-220": [r"sheet|linen|bedding", r"cotton", r"\bwhite\b"],
     "BK-305": [r"bicycle|bike|cycle", r"basket", r"\bbell\b"],
     "OL-412": [r"\bolive\b", r"\boil\b", r"organic", r"bottle"],
     "OR-518": [r"clock", r"\bwall\b", r"silen|quiet|noiseless|tick", r"lumin|glow|illuminat|fluoresc|phosphoresc|\blight"],
 }
 ITALIANO = {
     "CF-101": ["caffettiera", "alluminio", "tazze", "fornelli", "adatta"],
-    "LN-220": ["lenzuola", "matrimoniali", "cotone", "colore", "bianco"],
+    "LN-220": ["lenzuolo", "matrimoniale", "cotone", "colore", "bianco"],
     "BK-305": ["bicicletta", "citta", "cestino", "vimini", "campanello"],
     "OL-412": ["olio", "extravergine", "oliva", "biologico", "bottiglia", "litro"],
     "OR-518": ["orologio", "parete", "silenzioso", "lancette", "luminose"],

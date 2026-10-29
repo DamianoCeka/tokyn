@@ -36,9 +36,13 @@ struttura = (isinstance(decisioni, list) and all(isinstance(d, str) for d in dec
              and all(isinstance(a, dict) and all(isinstance(a.get(k), str) for k in ("cosa", "chi", "entro"))
                      for a in azioni))
 punti += struttura
-dettagli.append(f"decisioni lista di stringhe e azioni lista di {{cosa, chi, entro}} stringhe: {struttura}")
-if not struttura:
-    esito(False, punti, 6, dettagli + [f"risultato.json: {str(dati)[:400]}"], ex)
+dettagli.append(f"decisioni lista di stringhe e azioni lista di {{cosa, chi, entro}} stringhe: {struttura}"
+                + ("" if struttura else f" (risultato.json: {str(dati)[:400]})"))
+# Il resto si valuta anche se la struttura è sbagliata (punti parziali); i valori che non sono testo contano come vuoti.
+testo = lambda v: v if isinstance(v, str) else ""
+decisioni = [d for d in decisioni if isinstance(d, str)] if isinstance(decisioni, list) else []
+lista_azioni = azioni if isinstance(azioni, list) else []
+azioni = [a for a in lista_azioni if isinstance(a, dict)]
 
 testi = [norm(d) for d in decisioni]
 trovate = [nome for nome, regole in DECISIONI.items() if any(all(re.search(r, t) for r in regole) for t in testi)]
@@ -49,13 +53,13 @@ dettagli.append(f"le 2 decisioni e nessuna chiacchiera: {dec_ok} (trovate: {trov
                 f"scritte: {decisioni})")
 
 for nome, data, regola in AZIONI:
-    mie = [a for a in azioni if nome in norm(a["chi"])]
-    giusta = any(a["entro"].strip() == data and re.search(regola, norm(a["cosa"])) for a in mie)
+    mie = [a for a in azioni if nome in norm(testo(a.get("chi")))]
+    giusta = any(testo(a.get("entro")).strip() == data and re.search(regola, norm(testo(a.get("cosa")))) for a in mie)
     punti += giusta
     dettagli.append(f"azione di {nome.capitalize()} entro {data}: {giusta} ({mie})")
 
-numero_ok = len(azioni) == 3
+numero_ok = len(lista_azioni) == 3
 punti += numero_ok
-dettagli.append(f"esattamente 3 azioni: {numero_ok} ({len(azioni)})")
+dettagli.append(f"esattamente 3 azioni: {numero_ok} ({len(lista_azioni)})")
 
 esito(punti == 6, punti, 6, dettagli, ex)

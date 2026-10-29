@@ -2,8 +2,8 @@
 solo file.
 
 Passa se risultato.json è una lista di 4 oggetti {domanda, risposta, fonte} nell'ordine di domande.txt e per ogni
-domanda la risposta contiene il dato giusto (0,42 euro al km; 90 giorni; 2 giorni; le 11) e la fonte è esattamente il
-nome del file giusto, senza cartella (maiuscole e spazi ai lati ignorati).
+domanda la risposta contiene il dato giusto (0,42 euro o 42 centesimi al km; 90 giorni; 2 giorni; le 11) e la fonte
+è esattamente il nome del file giusto, senza cartella (maiuscole e spazi ai lati ignorati).
 """
 
 import re
@@ -37,7 +37,7 @@ for i, (r, (dato, fonte)) in enumerate(zip(dati, ATTESE), 1):
     if not isinstance(r, dict):
         dettagli.append(f"domanda {i}: elemento non valido ({r})")
         continue
-    risposta_ok = bool(re.search(dato, norm(r.get("risposta", ""))))
+    risposta_ok = isinstance(r.get("risposta"), str) and bool(re.search(dato, norm(r["risposta"])))
     fonte_ok = isinstance(r.get("fonte"), str) and r["fonte"].strip().lower() == fonte
     punti += risposta_ok and fonte_ok
     dettagli.append(f"domanda {i}: risposta giusta {risposta_ok}, fonte {fonte} {fonte_ok} "

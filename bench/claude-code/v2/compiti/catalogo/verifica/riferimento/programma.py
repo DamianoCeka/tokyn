@@ -2,7 +2,7 @@
 import csv
 TRADUZIONI = {
     "CF-101": "Aluminium coffee maker for six cups, suitable for gas stoves",
-    "LN-220": "Double bed sheet set in pure cotton, white",
+    "LN-220": "Double bed sheet in pure cotton, white",
     "BK-305": "City bicycle with wicker basket and bell",
     "OL-412": "Organic extra virgin olive oil, one-litre bottle",
     "OR-518": "Silent wall clock with luminous hands",
