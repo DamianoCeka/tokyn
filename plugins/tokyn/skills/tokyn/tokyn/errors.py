@@ -6,6 +6,8 @@ import difflib
 import json
 from dataclasses import dataclass, field
 
+from .lingua import tr
+
 
 @dataclass
 class Diagnostic:
@@ -20,7 +22,7 @@ class Diagnostic:
     def to_dict(self) -> dict:
         return {
             "code": self.code,
-            "severity": self.severity,
+            "severity": gravita(self.severity),
             "line": self.line,
             "column": self.column,
             "message": self.message,
@@ -49,6 +51,11 @@ class TokynRuntimeError(Exception):
         super().__init__(message)
 
 
+def gravita(severity: str) -> str:
+    """La gravità come si mostra: "errore" e "avviso" restano tali nel codice, in inglese diventano error e warning."""
+    return tr(severity, {"errore": "error", "avviso": "warning"}.get(severity, severity))
+
+
 def suggest(name: str, candidates) -> str | None:
     """Restituisce il candidato più simile, se abbastanza vicino."""
     matches = difflib.get_close_matches(name, list(candidates), n=1, cutoff=0.6)
@@ -60,7 +67,7 @@ def did_you_mean(name: str, candidates, label: str = "") -> str:
     best = suggest(name, candidates)
     parts = []
     if best:
-        parts.append(f'Forse intendevi "{best}"?')
+        parts.append(tr(f'Forse intendevi "{best}"?', f'Did you mean "{best}"?'))
     if candidates and label:
         shown = ", ".join(candidates[:12])
         if len(candidates) > 12:
@@ -73,7 +80,7 @@ def format_diagnostics(diagnostics: list[Diagnostic], source: str, filename: str
     lines = source.splitlines()
     out = []
     for d in diagnostics:
-        out.append(f"{filename}:{d.line}:{d.column} {d.severity} {d.code}: {d.message}")
+        out.append(f"{filename}:{d.line}:{d.column} {gravita(d.severity)} {d.code}: {d.message}")
         if 1 <= d.line <= len(lines):
             src = lines[d.line - 1].rstrip()
             gutter = f"{d.line:>4} | "
@@ -86,9 +93,10 @@ def format_diagnostics(diagnostics: list[Diagnostic], source: str, filename: str
         out.append("")
     errors = sum(1 for d in diagnostics if d.severity == "errore")
     warnings = len(diagnostics) - errors
-    summary = f"{errors} errori" if errors != 1 else "1 errore"
+    summary = tr(f"{errors} errori" if errors != 1 else "1 errore", f"{errors} errors" if errors != 1 else "1 error")
     if warnings:
-        summary += f", {warnings} avvisi" if warnings != 1 else ", 1 avviso"
+        summary += tr(f", {warnings} avvisi" if warnings != 1 else ", 1 avviso",
+                      f", {warnings} warnings" if warnings != 1 else ", 1 warning")
     out.append(summary)
     return "\n".join(out)
 

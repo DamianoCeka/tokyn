@@ -20,6 +20,7 @@ import time as _time
 import urllib.request as _urlreq
 
 from .errors import TokynRuntimeError
+from .lingua import tr
 
 DEFAULT_MODELS = {
     "claude": "claude-sonnet-5-5",
@@ -95,45 +96,48 @@ def json_schema(spec: _Spec, description: str | None = None) -> dict:
     return s
 
 
-def convert(value, spec: _Spec, where: str = "valore"):
+def convert(value, spec: _Spec, where: str | None = None):
     """Valida e converte un valore (es. arrivato dall'IA) secondo il tipo dichiarato."""
+    where = tr("valore", "value") if where is None else where
     k = spec.kind
     if k == "any":
         return value
     if k == "str":
         if not isinstance(value, str):
-            raise ValueError(f"{where}: atteso un testo, ricevuto {value!r}")
+            raise ValueError(tr(f"{where}: atteso un testo, ricevuto {value!r}", f"{where}: expected a text, got {value!r}"))
         return value
     if k == "int":
         if isinstance(value, bool) or not isinstance(value, (int, float)) or int(value) != value:
-            raise ValueError(f"{where}: atteso un numero intero, ricevuto {value!r}")
+            raise ValueError(tr(f"{where}: atteso un numero intero, ricevuto {value!r}", f"{where}: expected a whole number, got {value!r}"))
         return int(value)
     if k == "float":
         if isinstance(value, bool) or not isinstance(value, (int, float)):
-            raise ValueError(f"{where}: atteso un numero, ricevuto {value!r}")
+            raise ValueError(tr(f"{where}: atteso un numero, ricevuto {value!r}", f"{where}: expected a number, got {value!r}"))
         return float(value)
     if k == "bool":
         if not isinstance(value, bool):
-            raise ValueError(f"{where}: atteso True/False, ricevuto {value!r}")
+            raise ValueError(tr(f"{where}: atteso True/False, ricevuto {value!r}", f"{where}: expected True/False, got {value!r}"))
         return value
     if k == "dict":
         if not isinstance(value, dict):
-            raise ValueError(f"{where}: atteso un oggetto, ricevuto {value!r}")
+            raise ValueError(tr(f"{where}: atteso un oggetto, ricevuto {value!r}", f"{where}: expected an object, got {value!r}"))
         return value
     if k == "enum":
         if value not in spec.arg:
-            raise ValueError(f"{where}: {value!r} non è tra i valori possibili {list(spec.arg)}")
+            raise ValueError(tr(f"{where}: {value!r} non è tra i valori possibili {list(spec.arg)}",
+                                f"{where}: {value!r} is not one of the possible values {list(spec.arg)}"))
         return value
     if k == "list":
         if not isinstance(value, list):
-            raise ValueError(f"{where}: attesa una lista, ricevuto {value!r}")
+            raise ValueError(tr(f"{where}: attesa una lista, ricevuto {value!r}", f"{where}: expected a list, got {value!r}"))
         return [convert(v, spec.arg, f"{where}[{i}]") for i, v in enumerate(value)]
     if k == "ref":
         cls = _TYPES[spec.arg]
         if isinstance(value, cls):
             return value
         if not isinstance(value, dict):
-            raise ValueError(f"{where}: atteso un oggetto {spec.arg}, ricevuto {value!r}")
+            raise ValueError(tr(f"{where}: atteso un oggetto {spec.arg}, ricevuto {value!r}",
+                                f"{where}: expected a {spec.arg} object, got {value!r}"))
         return cls._from_dict(value, where)
     return value
 
@@ -155,15 +159,15 @@ def make_type(name: str, fields: dict) -> type:
     def __init__(self, **kwargs):
         for fname, (spec, _d) in fields.items():
             if fname not in kwargs:
-                raise TokynRuntimeError(f'manca il campo "{fname}" per creare {name}')
+                raise TokynRuntimeError(tr(f'manca il campo "{fname}" per creare {name}', f'missing field "{fname}" to create {name}'))
             object.__setattr__(self, fname, convert(kwargs.pop(fname), spec, f"{name}.{fname}"))
         if kwargs:
             extra = ", ".join(kwargs)
-            raise TokynRuntimeError(f"{name} non ha i campi: {extra}")
+            raise TokynRuntimeError(tr(f"{name} non ha i campi: {extra}", f"{name} has no fields: {extra}"))
 
     def __setattr__(self, key, value):
         if key not in fields:
-            raise TokynRuntimeError(f'{name} non ha il campo "{key}"')
+            raise TokynRuntimeError(tr(f'{name} non ha il campo "{key}"', f'{name} has no field "{key}"'))
         object.__setattr__(self, key, convert(value, fields[key][0], f"{name}.{key}"))
 
     def __repr__(self):
@@ -177,11 +181,11 @@ def make_type(name: str, fields: dict) -> type:
     def _from_dict(cls, data: dict, where: str = name):
         unknown = [k for k in data if k not in fields]
         if unknown:
-            raise ValueError(f"{where}: campi sconosciuti {unknown}")
+            raise ValueError(tr(f"{where}: campi sconosciuti {unknown}", f"{where}: unknown fields {unknown}"))
         obj = cls.__new__(cls)
         for fname, (spec, _d) in fields.items():
             if fname not in data:
-                raise ValueError(f'{where}: manca il campo "{fname}"')
+                raise ValueError(tr(f'{where}: manca il campo "{fname}"', f'{where}: missing field "{fname}"'))
             object.__setattr__(obj, fname, convert(data[fname], spec, f"{where}.{fname}"))
         return obj
 
@@ -333,8 +337,8 @@ class Agent:
         È più lento (di solito minuti) e non usa la memoria: ogni testo è una richiesta a sé.
         """
         if isinstance(texts, (str, dict)) or not hasattr(texts, "__iter__"):
-            raise TokynRuntimeError(f"{self.name}.ask_all vuole una lista di testi",
-                                    hint=f"Per un testo solo usa {self.name}.ask(testo).")
+            raise TokynRuntimeError(tr(f"{self.name}.ask_all vuole una lista di testi", f"{self.name}.ask_all takes a list of texts"),
+                                    hint=tr(f"Per un testo solo usa {self.name}.ask(testo).", f"For a single text use {self.name}.ask(text)."))
         texts = [str(t) for t in texts]
         if _use_mock(self.model):
             return [_mock_answer(self, t)[0] for t in texts]
@@ -388,17 +392,22 @@ class Agent:
             details = getattr(response, "stop_details", None)
             category = getattr(details, "category", None) if details else None
             raise TokynRuntimeError(
-                f"l'IA ha rifiutato la richiesta dell'agente {self.name}" + (f" (categoria: {category})" if category else ""),
-                hint="Riformula le instructions o il testo della richiesta.")
+                tr(f"l'IA ha rifiutato la richiesta dell'agente {self.name}", f"the AI refused the request of agent {self.name}")
+                + (tr(f" (categoria: {category})", f" (category: {category})") if category else ""),
+                hint=tr("Riformula le instructions o il testo della richiesta.", "Rephrase the instructions or the text of the request."))
         stop = getattr(response, "stop_reason", None)
         if stop == "model_context_window_exceeded":
-            raise TokynRuntimeError(f"la conversazione dell'agente {self.name} non sta più nel contesto del modello",
-                                    hint="Usa Agente.reset() più spesso, memory: False o testi più corti.")
+            raise TokynRuntimeError(tr(f"la conversazione dell'agente {self.name} non sta più nel contesto del modello",
+                                       f"the conversation of agent {self.name} no longer fits in the model's context"),
+                                    hint=tr("Usa Agente.reset() più spesso, memory: False o testi più corti.",
+                                            "Use Agent.reset() more often, memory: False or shorter texts."))
         if stop == "max_tokens":  # anche gli strumenti avrebbero un input troncato: non si eseguono
             thinking_only = not any(getattr(b, "type", "") in ("text", "tool_use") for b in response.content)
             raise TokynRuntimeError(
-                f"la risposta dell'agente {self.name} è stata interrotta perché troppo lunga",
-                hint="Usa un effort più basso." if thinking_only else "Chiedi nelle instructions una risposta più breve.")
+                tr(f"la risposta dell'agente {self.name} è stata interrotta perché troppo lunga",
+                   f"the answer of agent {self.name} was cut off because it was too long"),
+                hint=tr("Usa un effort più basso.", "Use a lower effort.") if thinking_only
+                else tr("Chiedi nelle instructions una risposta più breve.", "Ask for a shorter answer in the instructions."))
         messages.append({"role": "assistant", "content": [_plain(b) for b in response.content]})
         uses = [b for b in response.content if getattr(b, "type", "") == "tool_use"]
         texts = "".join(b.text for b in response.content if getattr(b, "type", "") == "text").strip()
@@ -442,8 +451,10 @@ class Agent:
 
     def _too_many_steps(self):
         return TokynRuntimeError(
-            f"l'agente {self.name} non ha finito entro {self.max_steps} passaggi",
-            hint="Aumenta max_steps nell'agente o rendi le instructions più precise.",
+            tr(f"l'agente {self.name} non ha finito entro {self.max_steps} passaggi",
+               f"agent {self.name} did not finish within {self.max_steps} steps"),
+            hint=tr("Aumenta max_steps nell'agente o rendi le instructions più precise.",
+                    "Raise max_steps in the agent or make the instructions more precise."),
         )
 
     def _run(self, messages, steps_done=0):
@@ -490,9 +501,11 @@ class Agent:
             failures[cid] = self._too_many_steps()
         if failures:
             first = min(failures, key=int)
-            raise TokynRuntimeError(
+            raise TokynRuntimeError(tr(
                 f"{self.name}.ask_all: {len(failures)} testi su {len(texts)} senza risposta; il primo è testi[{first}] "
-                f"({texts[int(first)][:40]!r}): {failures[first].message}", hint=failures[first].hint)
+                f"({texts[int(first)][:40]!r}): {failures[first].message}",
+                f"{self.name}.ask_all: {len(failures)} of {len(texts)} texts got no answer; the first is texts[{first}] "
+                f"({texts[int(first)][:40]!r}): {failures[first].message}"), hint=failures[first].hint)
         return [answers[str(i)] for i in range(len(texts))]
 
 
@@ -509,7 +522,8 @@ def _wait_batch(client, batch, agent_name):
         done = counts.succeeded + counts.errored + counts.canceled + counts.expired
         total = done + counts.processing
         if done != reported:
-            print(f"[tokyn] {agent_name}.ask_all: {done}/{total} risposte pronte…", file=sys.stderr, flush=True)
+            print(tr(f"[tokyn] {agent_name}.ask_all: {done}/{total} risposte pronte…",
+                     f"[tokyn] {agent_name}.ask_all: {done}/{total} answers ready…"), file=sys.stderr, flush=True)
             reported = done
         _time.sleep(delay)
         delay = min(delay * 1.5, 60.0)
@@ -538,13 +552,18 @@ def _count_usage(response, batch=False):
 
 def usage_report() -> str:
     u = _USAGE
-    report = (f"token: {u['input']} in ingresso, {u['output']} in uscita, {u['cache_lette']} letti dalla cache, "
-              f"{u['cache_scritte']} scritti in cache ({u['chiamate']} chiamate, {u['chiamate_batch']} nella Batch API a metà prezzo)")
+    report = tr(f"token: {u['input']} in ingresso, {u['output']} in uscita, {u['cache_lette']} letti dalla cache, "
+                f"{u['cache_scritte']} scritti in cache ({u['chiamate']} chiamate, {u['chiamate_batch']} nella Batch API a metà prezzo)",
+                f"tokens: {u['input']} input, {u['output']} output, {u['cache_lette']} read from the cache, "
+                f"{u['cache_scritte']} written to the cache ({u['chiamate']} calls, {u['chiamate_batch']} in the Batch API at half price)")
     if u["fallback"]:
-        report += f"; {u['fallback']} risposte da un modello di riserva dopo un rifiuto"
+        report += tr(f"; {u['fallback']} risposte da un modello di riserva dopo un rifiuto",
+                     f"; {u['fallback']} answers from a fallback model after a refusal")
     if u["chiamate_claude_code"]:
-        report += (f"; {u['chiamate_claude_code']} tramite Claude Code "
-                   f"(valore indicativo a prezzi API: ${u['costo_claude_code']:.4f})")
+        report += tr(f"; {u['chiamate_claude_code']} tramite Claude Code "
+                     f"(valore indicativo a prezzi API: ${u['costo_claude_code']:.4f})",
+                     f"; {u['chiamate_claude_code']} through Claude Code "
+                     f"(rough value at API prices: ${u['costo_claude_code']:.4f})")
     return report
 
 
@@ -611,9 +630,12 @@ def _backend() -> str:
         return "api"
     if not _AVVISO_CLAUDE_CODE:
         _AVVISO_CLAUDE_CODE.append(True)
-        print("Tokyn: senza chiave API gli agenti rispondono con il tuo Claude Code. Va bene per provare il programma; "
-              "se deve girare da solo o per altre persone serve una chiave dell'API di Anthropic "
-              "(https://code.claude.com/docs/en/legal-and-compliance).", file=sys.stderr)
+        print(tr("Tokyn: senza chiave API gli agenti rispondono con il tuo Claude Code. Va bene per provare il programma; "
+                 "se deve girare da solo o per altre persone serve una chiave dell'API di Anthropic "
+                 "(https://code.claude.com/docs/en/legal-and-compliance).",
+                 "Tokyn: without an API key the agents answer through your Claude Code. That is fine for trying the program; "
+                 "if it has to run on its own or for other people, it needs an Anthropic API key "
+                 "(https://code.claude.com/docs/en/legal-and-compliance)."), file=sys.stderr)
     return "claude-code"
 
 
@@ -686,10 +708,13 @@ def _claude_code_ask(agent, text, history):
         try:
             proc = subprocess.run(cmd, capture_output=True, text=True, timeout=900)
         except FileNotFoundError:
-            raise TokynRuntimeError("Claude Code non è installato (manca il comando `claude`)",
-                                    hint="Installa Claude Code, oppure imposta ANTHROPIC_API_KEY per usare l'API.") from None
+            raise TokynRuntimeError(tr("Claude Code non è installato (manca il comando `claude`)",
+                                       "Claude Code is not installed (the `claude` command is missing)"),
+                                    hint=tr("Installa Claude Code, oppure imposta ANTHROPIC_API_KEY per usare l'API.",
+                                            "Install Claude Code, or set ANTHROPIC_API_KEY to use the API.")) from None
         except subprocess.TimeoutExpired:
-            raise TokynRuntimeError(f"Claude Code non ha risposto entro 15 minuti per l'agente {agent.name}") from None
+            raise TokynRuntimeError(tr(f"Claude Code non ha risposto entro 15 minuti per l'agente {agent.name}",
+                                       f"Claude Code did not answer within 15 minutes for agent {agent.name}")) from None
     finally:
         if server is not None:
             server.close()
@@ -699,12 +724,15 @@ def _claude_code_ask(agent, text, history):
         result = _json.loads(proc.stdout)
     except ValueError:
         detail = (proc.stderr or proc.stdout).strip()[:300]
-        raise TokynRuntimeError(f"Claude Code non ha risposto per l'agente {agent.name}: {detail}",
-                                hint="Controlla di aver fatto il login: apri `claude` una volta e segui le istruzioni.") from None
+        raise TokynRuntimeError(tr(f"Claude Code non ha risposto per l'agente {agent.name}: {detail}",
+                                   f"Claude Code did not answer for agent {agent.name}: {detail}"),
+                                hint=tr("Controlla di aver fatto il login: apri `claude` una volta e segui le istruzioni.",
+                                        "Check that you are logged in: open `claude` once and follow the instructions.")) from None
     _count_claude_code(result)
     if result.get("is_error") or result.get("subtype") != "success" or result.get("stop_reason") == "refusal":
-        raise TokynRuntimeError(f"Claude Code ha dato un errore per l'agente {agent.name}: "
-                                f"{result.get('result') or result.get('subtype')}")
+        raise TokynRuntimeError(tr(f"Claude Code ha dato un errore per l'agente {agent.name}: ",
+                                   f"Claude Code returned an error for agent {agent.name}: ")
+                                + f"{result.get('result') or result.get('subtype')}")
     if agent.output is None:
         answer = (result.get("result") or "").strip()
         return answer, answer
@@ -714,7 +742,8 @@ def _claude_code_ask(agent, text, history):
             data = _json.loads(result.get("result") or "")
         return agent.output._from_dict(data, agent.output.__name__), _json.dumps(data, ensure_ascii=False)
     except ValueError as err:
-        raise TokynRuntimeError(f"la risposta dell'agente {agent.name} non è nel formato richiesto: {err}") from None
+        raise TokynRuntimeError(tr(f"la risposta dell'agente {agent.name} non è nel formato richiesto: {err}",
+                                   f"the answer of agent {agent.name} is not in the requested format: {err}")) from None
 
 
 def _count_claude_code(result):
@@ -740,14 +769,17 @@ def _client():
         return _CLIENT
     if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")):
         raise TokynRuntimeError(
-            "manca la chiave ANTHROPIC_API_KEY",
-            hint="Impostala come variabile d'ambiente, oppure installa Claude Code (Tokyn lo usa da solo quando manca "
-                 "la chiave), oppure prova il programma senza IA con: tokyn run file.tokyn --mock",
+            tr("manca la chiave ANTHROPIC_API_KEY", "ANTHROPIC_API_KEY is not set"),
+            hint=tr("Impostala come variabile d'ambiente, oppure installa Claude Code (Tokyn lo usa da solo quando manca "
+                    "la chiave), oppure prova il programma senza IA con: tokyn run file.tokyn --mock",
+                    "Set it as an environment variable, or install Claude Code (Tokyn uses it on its own when the key "
+                    "is missing), or try the program without AI with: tokyn run file.tokyn --mock"),
         )
     try:
         import anthropic
     except ImportError:
-        raise TokynRuntimeError("manca il pacchetto anthropic", hint="Installa con: pip install anthropic") from None
+        raise TokynRuntimeError(tr("manca il pacchetto anthropic", "the anthropic package is missing"),
+                                hint=tr("Installa con: pip install anthropic", "Install it with: pip install anthropic")) from None
     _CLIENT = anthropic.Anthropic()
     return _CLIENT
 
@@ -780,11 +812,13 @@ def _with_retry(fn, agent_name, attempts=3):
                          or (getattr(err, "status_code", 0) or 0) >= 500)
             if not retryable or i == attempts - 1:
                 if name == "AuthenticationError":
-                    raise TokynRuntimeError("la chiave ANTHROPIC_API_KEY non è valida") from None
+                    raise TokynRuntimeError(tr("la chiave ANTHROPIC_API_KEY non è valida", "ANTHROPIC_API_KEY is not valid")) from None
                 if name == "NotFoundError":
-                    raise TokynRuntimeError(f"modello non trovato per l'agente {agent_name}",
-                                            hint='Usa model: "claude", "claude-opus" o "claude-haiku".') from None
-                failure = TokynRuntimeError(f"chiamata all'IA fallita per l'agente {agent_name}: {err}")
+                    raise TokynRuntimeError(tr(f"modello non trovato per l'agente {agent_name}", f"model not found for agent {agent_name}"),
+                                            hint=tr('Usa model: "claude", "claude-opus" o "claude-haiku".',
+                                                    'Use model: "claude", "claude-opus" or "claude-haiku".')) from None
+                failure = TokynRuntimeError(tr(f"chiamata all'IA fallita per l'agente {agent_name}: {err}",
+                                               f"AI call failed for agent {agent_name}: {err}"))
                 failure.bad_request = name == "BadRequestError"
                 raise failure from None
             _time.sleep(delay)
@@ -844,8 +878,10 @@ def read_file(path, default=_NO_DEFAULT):
     except (OSError, ValueError) as err:  # file mancante, cartella, permessi, testo non UTF-8
         if default is not _NO_DEFAULT:
             return default
-        message = f'il file "{path}" non esiste' if isinstance(err, FileNotFoundError) else f'impossibile leggere "{path}": {err}'
-        raise TokynRuntimeError(message, hint=f'Se può mancare, dai un valore di riserva: read_file("{path}", "")') from None
+        message = (tr(f'il file "{path}" non esiste', f'the file "{path}" does not exist') if isinstance(err, FileNotFoundError)
+                   else tr(f'impossibile leggere "{path}": {err}', f'cannot read "{path}": {err}'))
+        raise TokynRuntimeError(message, hint=tr(f'Se può mancare, dai un valore di riserva: read_file("{path}", "")',
+                                                 f'If it can be missing, give a fallback value: read_file("{path}", "")')) from None
 
 
 def write_file(path, text):
@@ -870,8 +906,9 @@ def _http(call, url, default, body=None):
         if default is not _NO_DEFAULT:
             return default
         reason = getattr(err, "reason", None) or err
-        raise TokynRuntimeError(f"{call} fallita per {url}: {reason}",
-                                hint=f"Se può fallire, dai un valore di riserva come ultimo argomento: {call}(..., \"\")") from None
+        raise TokynRuntimeError(tr(f"{call} fallita per {url}: {reason}", f"{call} failed for {url}: {reason}"),
+                                hint=tr(f"Se può fallire, dai un valore di riserva come ultimo argomento: {call}(..., \"\")",
+                                        f"If it can fail, give a fallback value as the last argument: {call}(..., \"\")")) from None
 
 
 def http_get(url, default=_NO_DEFAULT):
@@ -889,9 +926,10 @@ def json_parse(text, default=_NO_DEFAULT):
     except (ValueError, TypeError) as err:
         if default is not _NO_DEFAULT:
             return default
-        detail = f"{err.msg}, riga {err.lineno}" if isinstance(err, _json.JSONDecodeError) else str(err)
-        raise TokynRuntimeError(f"il testo non è JSON valido ({detail})",
-                                hint="Se può non esserlo, dai un valore di riserva: json_parse(testo, {})") from None
+        detail = tr(f"{err.msg}, riga {err.lineno}", f"{err.msg}, line {err.lineno}") if isinstance(err, _json.JSONDecodeError) else str(err)
+        raise TokynRuntimeError(tr(f"il testo non è JSON valido ({detail})", f"the text is not valid JSON ({detail})"),
+                                hint=tr("Se può non esserlo, dai un valore di riserva: json_parse(testo, {})",
+                                        "If it may not be, give a fallback value: json_parse(text, {})")) from None
 
 
 def to_number(text, default=_NO_DEFAULT):
@@ -917,8 +955,9 @@ def to_number(text, default=_NO_DEFAULT):
         pass
     if default is not _NO_DEFAULT:
         return default
-    raise TokynRuntimeError(f"{text!r} non è un numero",
-                            hint="Se può non esserlo, dai un valore di riserva: to_number(testo, 0)")
+    raise TokynRuntimeError(tr(f"{text!r} non è un numero", f"{text!r} is not a number"),
+                            hint=tr("Se può non esserlo, dai un valore di riserva: to_number(testo, 0)",
+                                    "If it may not be, give a fallback value: to_number(text, 0)"))
 
 
 def json_dump(value):
@@ -928,8 +967,9 @@ def json_dump(value):
 def env(name, default=_NO_DEFAULT):
     value = os.environ.get(name, default)
     if value is _NO_DEFAULT:
-        raise TokynRuntimeError(f'la variabile d\'ambiente "{name}" non è impostata',
-                                hint=f'Impostala, oppure dai un valore di riserva: env("{name}", "...")')
+        raise TokynRuntimeError(tr(f'la variabile d\'ambiente "{name}" non è impostata', f'the environment variable "{name}" is not set'),
+                                hint=tr(f'Impostala, oppure dai un valore di riserva: env("{name}", "...")',
+                                        f'Set it, or give a fallback value: env("{name}", "...")'))
     return value
 
 

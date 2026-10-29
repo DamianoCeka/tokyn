@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PLUGINS = {"it": ROOT / "plugins" / "tokyn", "en": ROOT / "plugins" / "tokyn-en"}
 ZIPS = {"it": ROOT / "dist" / "tokyn-skill.zip", "en": ROOT / "dist" / "tokyn-skill-en.zip"}
 LAUNCHER = PLUGINS["it"] / "skills" / "tokyn" / "tokyn_cli.py"  # l'originale sta nel plugin italiano
+LAUNCHER_LANG = 'LINGUA = "it"'  # la riga del lanciatore con la lingua dei messaggi del plugin
 
 
 def skill_dir(lang: str) -> Path:
@@ -31,13 +32,24 @@ def copies(lang: str) -> dict:
     return files
 
 
+def content(lang: str, src: Path) -> bytes:
+    """Il contenuto copiato: uguale al sorgente, ma il lanciatore parla la lingua del plugin."""
+    data = src.read_bytes()
+    if src == LAUNCHER:
+        line = LAUNCHER_LANG.encode()
+        if data.count(line) != 1:
+            sys.exit(f"{LAUNCHER.relative_to(ROOT)} deve contenere una sola volta la riga {LAUNCHER_LANG}")
+        data = data.replace(line, f'LINGUA = "{lang}"'.encode())
+    return data
+
+
 def outdated() -> list:
     stale = []
     for lang in PLUGINS:
         wanted = copies(lang)
         for rel, src in wanted.items():
             dest = skill_dir(lang) / rel
-            if not dest.exists() or dest.read_bytes() != src.read_bytes():
+            if not dest.exists() or dest.read_bytes() != content(lang, src):
                 stale.append(str(dest.relative_to(ROOT)))
         package = skill_dir(lang) / "tokyn"
         extra = [p for p in package.glob("*") if p.is_file() and f"tokyn/{p.name}" not in wanted] if package.exists() else []
@@ -53,7 +65,7 @@ def sync():
             if old.is_file():
                 old.unlink()
         for rel, src in copies(lang).items():
-            (skill_dir(lang) / rel).write_bytes(src.read_bytes())
+            (skill_dir(lang) / rel).write_bytes(content(lang, src))
 
 
 def build_zip(out: Path, lang: str = "it"):

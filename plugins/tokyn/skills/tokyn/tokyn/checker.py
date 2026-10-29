@@ -14,6 +14,7 @@ from dataclasses import dataclass, field
 from lark import Token, Tree
 
 from .errors import Diagnostic, did_you_mean, suggest
+from .lingua import tr
 from .parser import parse_expr
 
 # ---------------------------------------------------------------- tipi statici
@@ -100,7 +101,7 @@ def type_name(t) -> str:
     if kind == "agent":
         return f"agent {t[1]}"
     if kind == "func":
-        return f"funzione {t[1]}"
+        return tr(f"funzione {t[1]}", f"function {t[1]}")
     if kind == "typeobj":
         return f"type {t[1]}"
     return kind
@@ -222,12 +223,14 @@ class Checker:
     def declare(self, name_tok: Token, kind: tuple):
         name = str(name_tok)
         if name in self.global_names:
-            self.error("E101", f'"{name}" è già definito', name_tok,
-                       "Ogni funzione, agente, type e costante deve avere un nome diverso.")
+            self.error("E101", tr(f'"{name}" è già definito', f'"{name}" is already defined'), name_tok,
+                       tr("Ogni funzione, agente, type e costante deve avere un nome diverso.",
+                          "Every function, agent, type and constant needs a different name."))
             return False
         if name in BUILTINS and kind[0] != "module":
-            self.error("E102", f'"{name}" è il nome di una funzione già presente in Tokyn', name_tok,
-                       "Scegli un altro nome.")
+            self.error("E102", tr(f'"{name}" è il nome di una funzione già presente in Tokyn',
+                                  f'"{name}" is the name of a function built into Tokyn'), name_tok,
+                       tr("Scegli un altro nome.", "Choose another name."))
             return False
         self.global_names[name] = kind
         return True
@@ -268,7 +271,8 @@ class Checker:
                 mains.append(node)
 
         if len(mains) > 1:
-            self.error("E103", "c'è più di un blocco main", mains[1], "Un file può avere un solo `main:`.")
+            self.error("E103", tr("c'è più di un blocco main", "there is more than one main block"), mains[1],
+                       tr("Un file può avere un solo `main:`.", "A file can have only one `main:`."))
         if mains:
             self.prog.main = mains[0]
 
@@ -283,14 +287,16 @@ class Checker:
             values = []
             for atom in atoms:
                 if atom.data != "type_literal":
-                    self.error("E111", "un'unione con '|' può contenere solo stringhe tra virgolette", atom,
-                               'Esempio: categoria: "tecnico" | "commerciale" | "altro"')
+                    self.error("E111", tr("un'unione con '|' può contenere solo stringhe tra virgolette",
+                                          "a union with '|' can only contain quoted strings"), atom,
+                               tr('Esempio: categoria: "tecnico" | "commerciale" | "altro"',
+                                  'Example: category: "technical" | "sales" | "other"'))
                     return ANY
                 values.append(string_value(atom.children[0]))
             if not allow_literals:
                 return STR
             if len(set(values)) != len(values):
-                self.error("E112", "valori ripetuti nell'unione", texpr)
+                self.error("E112", tr("valori ripetuti nell'unione", "repeated values in the union"), texpr)
             return ("enum", tuple(values))
 
         name_tok, inner = atoms[0].children
@@ -300,16 +306,17 @@ class Checker:
                 return LIST()
             return LIST(self.resolve_type(inner))
         if inner is not None:
-            self.error("E113", f"solo list accetta un tipo tra [ ], non {name}", atoms[0], "Esempio: list[str]")
+            self.error("E113", tr(f"solo list accetta un tipo tra [ ], non {name}", f"only list takes a type in [ ], not {name}"),
+                       atoms[0], tr("Esempio: list[str]", "Example: list[str]"))
         if name in PRIMITIVES:
             return PRIMITIVES[name]
         if name in self.prog.types:
             return ("record", name)
         known = list(PRIMITIVES) + ["list"] + list(self.prog.types)
-        hint = did_you_mean(name, known, "Tipi disponibili")
+        hint = did_you_mean(name, known, tr("Tipi disponibili", "Available types"))
         if name in ("string", "integer", "number", "boolean", "String", "Int", "Bool"):
-            hint = f"{hint}. I tipi base sono str, int, float, bool."
-        self.error("E110", f'tipo "{name}" sconosciuto', name_tok, hint)
+            hint = tr(f"{hint}. I tipi base sono str, int, float, bool.", f"{hint}. The basic types are str, int, float, bool.")
+        self.error("E110", tr(f'tipo "{name}" sconosciuto', f'unknown type "{name}"'), name_tok, hint)
         return ANY
 
     def check_types(self):
@@ -322,7 +329,7 @@ class Checker:
             for fd in node.children[1:]:
                 fname, texpr, _desc = fd.children
                 if str(fname) in info.fields:
-                    self.error("E114", f'il campo "{fname}" è ripetuto', fname)
+                    self.error("E114", tr(f'il campo "{fname}" è ripetuto', f'the field "{fname}" is repeated'), fname)
                     continue
                 info.fields[str(fname)] = self.resolve_type(texpr)
         self.check_recursive_types()
@@ -342,8 +349,11 @@ class Checker:
 
         for name, info in self.prog.types.items():
             if reaches(name, name, {name}):
-                self.error("E115", f'il type "{name}" contiene se stesso, anche passando da altri type', type_name_token(self.tree, name),
-                           "I type non possono essere ricorsivi: collega gli elementi con un nome o un id (str), oppure usa dict.")
+                self.error("E115", tr(f'il type "{name}" contiene se stesso, anche passando da altri type',
+                                      f'the type "{name}" contains itself, directly or through other types'),
+                           type_name_token(self.tree, name),
+                           tr("I type non possono essere ricorsivi: collega gli elementi con un nome o un id (str), oppure usa dict.",
+                              "Types cannot be recursive: link the items by a name or an id (str), or use dict."))
 
     # ------------------------------------------------------------ funzioni
     def read_signature(self, info: FuncInfo):
@@ -356,10 +366,11 @@ class Checker:
                     continue
                 pname, ptype, pdefault = p.children
                 if str(pname) in seen:
-                    self.error("E120", f'parametro "{pname}" ripetuto', pname)
+                    self.error("E120", tr(f'parametro "{pname}" ripetuto', f'repeated parameter "{pname}"'), pname)
                 seen.add(str(pname))
                 if pdefault is None and default_seen:
-                    self.error("E123", "i parametri senza valore predefinito vanno prima di quelli con valore predefinito", pname)
+                    self.error("E123", tr("i parametri senza valore predefinito vanno prima di quelli con valore predefinito",
+                                          "parameters without a default value go before those with one"), pname)
                 default_seen = default_seen or pdefault is not None
                 info.params.append((str(pname), ptype, pdefault is not None))
         info.returns = self.resolve_type(ret) if ret is not None else ANY
@@ -385,14 +396,18 @@ class Checker:
                     self.infer(p.children[2], defaults)
             if name in self.prog.tool_funcs:
                 if not info.docstring:
-                    self.error("E122", f'la funzione "{name}" è uno strumento di un agente ma non ha descrizione', name_tok,
-                               'Aggiungi come prima riga del corpo una stringa che spiega cosa fa, es. """Cerca un cliente per email."""')
+                    self.error("E122", tr(f'la funzione "{name}" è uno strumento di un agente ma non ha descrizione',
+                                          f'the function "{name}" is an agent tool but has no description'), name_tok,
+                               tr('Aggiungi come prima riga del corpo una stringa che spiega cosa fa, es. """Cerca un cliente per email."""',
+                                  'Add as the first line of the body a string that says what it does, e.g. """Finds a customer by email."""'))
                 missing = [p for p, t, _ in resolved if t == ANY]
                 if params is not None:
                     for p in params.children:
                         if p is not None and p.children[1] is None:
-                            self.error("E121", f'il parametro "{p.children[0]}" di "{name}" non ha un tipo', p.children[0],
-                                       "Gli strumenti degli agenti devono dichiarare il tipo di ogni parametro, es. email: str")
+                            self.error("E121", tr(f'il parametro "{p.children[0]}" di "{name}" non ha un tipo',
+                                                  f'the parameter "{p.children[0]}" of "{name}" has no type'), p.children[0],
+                                       tr("Gli strumenti degli agenti devono dichiarare il tipo di ogni parametro, es. email: str",
+                                          "Agent tools must declare the type of every parameter, e.g. email: str"))
             scope.collect_assigned(suite)
             self.check_block(suite, scope, in_loop=False)
 
@@ -404,9 +419,11 @@ class Checker:
             for dep in self.prog.agents[name].agent_tools:
                 if state.get(dep) == "aperto":
                     cycle = path[path.index(dep):] + [name, dep]
-                    self.error("E144", "gli agenti si delegano a vicenda: " + " → ".join(cycle),
+                    self.error("E144", tr("gli agenti si delegano a vicenda: ", "the agents delegate to each other: ") + " → ".join(cycle),
                                self.prog.agents[name].node.children[0],
-                               "Un agente non può delegare a chi delega (anche indirettamente) a lui: togline uno dai tools.")
+                               tr("Un agente non può delegare a chi delega (anche indirettamente) a lui: togline uno dai tools.",
+                                  "An agent cannot delegate to an agent that delegates (even indirectly) back to it: "
+                                  "remove one of them from tools."))
                 elif dep not in state:
                     visit(dep, path + [name])
             state[name] = "chiuso"
@@ -440,86 +457,97 @@ class Checker:
                 fname_tok, value = af.children
                 fname = str(fname_tok)
                 if fname not in AGENT_FIELDS:
-                    self.error("E130", f'"{fname}" non è un campo valido per un agente', fname_tok,
-                               did_you_mean(fname, AGENT_FIELDS, "Campi validi"))
+                    self.error("E130", tr(f'"{fname}" non è un campo valido per un agente', f'"{fname}" is not a valid agent field'),
+                               fname_tok, did_you_mean(fname, AGENT_FIELDS, tr("Campi validi", "Valid fields")))
                     continue
                 if fname in fields:
-                    self.error("E137", f'il campo "{fname}" è ripetuto', fname_tok)
+                    self.error("E137", tr(f'il campo "{fname}" è ripetuto', f'the field "{fname}" is repeated'), fname_tok)
                     continue
                 fields[fname] = (fname_tok, value)
             info.fields = fields
 
             if "instructions" not in fields:
-                self.error("E131", f'l\'agente "{name}" non ha instructions', node.children[0],
-                           'Aggiungi una riga come: instructions: "Sei un assistente che..."')
+                self.error("E131", tr(f'l\'agente "{name}" non ha instructions', f'the agent "{name}" has no instructions'),
+                           node.children[0],
+                           tr('Aggiungi una riga come: instructions: "Sei un assistente che..."',
+                              'Add a line like: instructions: "You are an assistant that..."'))
 
             if "tools" in fields:
                 tok, value = fields["tools"]
                 if not (isinstance(value, Tree) and value.data == "list"):
-                    self.error("E132", "tools deve essere una lista di nomi", value, "Esempio: tools: [cerca_faq, prenota]")
+                    self.error("E132", tr("tools deve essere una lista di nomi", "tools must be a list of names"), value,
+                               tr("Esempio: tools: [cerca_faq, prenota]", "Example: tools: [search_faq, book]"))
                 else:
                     available = [n for n in self.prog.funcs] + [a for a in self.prog.agents if a != name]
                     for item in value.children:
                         if item is None:
                             continue
                         if not (isinstance(item, Tree) and item.data == "name"):
-                            self.error("E132", "ogni elemento di tools deve essere il nome di una funzione o di un agente", item)
+                            self.error("E132", tr("ogni elemento di tools deve essere il nome di una funzione o di un agente",
+                                                  "every item in tools must be the name of a function or an agent"), item)
                             continue
                         tname = str(item.children[0])
                         if tname == name:
-                            self.error("E138", "un agente non può usare se stesso come strumento", item)
+                            self.error("E138", tr("un agente non può usare se stesso come strumento",
+                                                  "an agent cannot use itself as a tool"), item)
                         elif tname in self.prog.funcs:
                             self.prog.tool_funcs.add(tname)
                         elif tname in self.prog.agents:
                             info.agent_tools.append(tname)
                         else:
-                            self.error("E133", f'lo strumento "{tname}" non esiste', item,
-                                       did_you_mean(tname, available, "Strumenti disponibili")
-                                       or "Definisci una funzione con `def` e mettila nella lista.")
+                            self.error("E133", tr(f'lo strumento "{tname}" non esiste', f'the tool "{tname}" does not exist'), item,
+                                       did_you_mean(tname, available, tr("Strumenti disponibili", "Available tools"))
+                                       or tr("Definisci una funzione con `def` e mettila nella lista.",
+                                             "Define a function with `def` and put it in the list."))
 
             if "output" in fields:
                 tok, value = fields["output"]
                 if not (isinstance(value, Tree) and value.data == "name"):
-                    self.error("E134", "output deve essere il nome di un type", value, "Esempio: output: Ticket")
+                    self.error("E134", tr("output deve essere il nome di un type", "output must be the name of a type"), value,
+                               tr("Esempio: output: Ticket", "Example: output: Ticket"))
                 else:
                     oname = str(value.children[0])
                     if oname in self.prog.types:
                         info.output = oname
                     else:
-                        self.error("E134", f'il type "{oname}" non esiste', value,
-                                   did_you_mean(oname, self.prog.types, "Type definiti")
-                                   or f"Definiscilo con `type {oname}:` e i suoi campi.")
+                        self.error("E134", tr(f'il type "{oname}" non esiste', f'the type "{oname}" does not exist'), value,
+                                   did_you_mean(oname, self.prog.types, tr("Type definiti", "Defined types"))
+                                   or tr(f"Definiscilo con `type {oname}:` e i suoi campi.", f"Define it with `type {oname}:` and its fields."))
 
             if "memory" in fields:
                 tok, value = fields["memory"]
                 if not (isinstance(value, Tree) and value.data in ("true", "false")):
-                    self.error("E135", "memory deve essere True o False", value)
+                    self.error("E135", tr("memory deve essere True o False", "memory must be True or False"), value)
 
             if "max_steps" in fields:
                 tok, value = fields["max_steps"]
                 if not (isinstance(value, Tree) and value.data == "number" and "." not in str(value.children[0])):
-                    self.error("E136", "max_steps deve essere un numero intero", value, "Esempio: max_steps: 8")
+                    self.error("E136", tr("max_steps deve essere un numero intero", "max_steps must be a whole number"), value,
+                               tr("Esempio: max_steps: 8", "Example: max_steps: 8"))
 
             if "effort" in fields:
                 tok, value = fields["effort"]
                 if not (isinstance(value, Tree) and value.data == "string" and string_value(value.children[0]) in EFFORTS):
-                    self.error("E145", "effort deve essere uno tra " + ", ".join(f'"{e}"' for e in EFFORTS), value,
-                               'Esempio: effort: "low" per classificare o estrarre (costa meno).')
+                    self.error("E145", tr("effort deve essere uno tra ", "effort must be one of ") + ", ".join(f'"{e}"' for e in EFFORTS),
+                               value, tr('Esempio: effort: "low" per classificare o estrarre (costa meno).',
+                                         'Example: effort: "low" to classify or extract (it costs less).'))
 
             const_scope = Scope(self, kind="agent")
             for fname in ("model", "instructions"):
                 if fname in fields:
                     t = self.infer(fields[fname][1], const_scope)
                     if t not in (STR, ANY):
-                        self.error("E139", f"{fname} deve essere un testo", fields[fname][1],
-                                   'Usa una stringa tra virgolette, es. model: "claude"')
+                        self.error("E139", tr(f"{fname} deve essere un testo", f"{fname} must be a text"), fields[fname][1],
+                                   tr('Usa una stringa tra virgolette, es. model: "claude"', 'Use a quoted string, e.g. model: "claude"'))
 
     # ------------------------------------------------------------ main
     def check_main(self):
         if self.prog.main is None:
             first = next((c for c in self.tree.children if isinstance(c, Tree)), None)
-            self.diags.append(Diagnostic("W001", "il file non ha un blocco main: eseguendolo non succede niente",
-                                         1, 1, 1, "Aggiungi in fondo: main:\n    ...", severity="avviso"))
+            self.diags.append(Diagnostic("W001", tr("il file non ha un blocco main: eseguendolo non succede niente",
+                                                    "the file has no main block: running it does nothing"),
+                                         1, 1, 1, tr("Aggiungi in fondo: main:\n    ...", "Add at the end: main:\n    ..."),
+                                         severity="avviso"))
             return
         suite = self.prog.main.children[0]
         scope = Scope(self, kind="main")
@@ -552,7 +580,7 @@ class Checker:
         elif kind in ("break_stmt", "continue_stmt"):
             if not in_loop:
                 word = "break" if kind == "break_stmt" else "continue"
-                self.error("E150", f"`{word}` si può usare solo dentro un ciclo for", stmt)
+                self.error("E150", tr(f"`{word}` si può usare solo dentro un ciclo for", f"`{word}` can only be used inside a for loop"), stmt)
         elif kind == "if_stmt":
             cond, suite, *rest = stmt.children
             self.infer(cond, scope)
@@ -571,8 +599,10 @@ class Checker:
             names = target.children
             elem = it[1] if it[0] == "list" else ANY
             if it[0] in ("record", "agent", "func", "typeobj") or it in (INT, FLOAT, BOOL, NONE):
-                self.error("E151", f"non si può fare un ciclo su un valore di tipo {type_name(it)}", iterable,
-                           "Per ripetere n volte usa `for i in range(n):`." if it in (INT, FLOAT) else "")
+                self.error("E151", tr(f"non si può fare un ciclo su un valore di tipo {type_name(it)}",
+                                      f"cannot loop over a value of type {type_name(it)}"), iterable,
+                           tr("Per ripetere n volte usa `for i in range(n):`.", "To repeat n times use `for i in range(n):`.")
+                           if it in (INT, FLOAT) else "")
             if it == STR:
                 elem = STR
             for n in names:
@@ -588,20 +618,26 @@ class Checker:
             g = self.global_names.get(name)
             if g is not None and scope.kind in ("def", "main") and not scope.has_local(name):
                 if name in self.prog.consts:
-                    self.error("E142", f'"{name}" è una costante e non si può modificare', name_tok,
-                               "Usa un'altra variabile, es. " + f"{name.lower()}_nuovo = ...")
+                    self.error("E142", tr(f'"{name}" è una costante e non si può modificare', f'"{name}" is a constant and cannot be changed'),
+                               name_tok, tr("Usa un'altra variabile, es. " + f"{name.lower()}_nuovo = ...",
+                                            f"Use another variable, e.g. {name.lower()}_new = ..."))
                     return
-                kind = {"agent": "un agente", "func": "una funzione", "typeobj": "un type", "module": "un modulo importato"}.get(g[0])
+                kind = tr({"agent": "un agente", "func": "una funzione", "typeobj": "un type", "module": "un modulo importato"},
+                          {"agent": "an agent", "func": "a function", "typeobj": "a type", "module": "an imported module"}).get(g[0])
                 if kind:
-                    self.error("E141", f'"{name}" è {kind}: non puoi usarlo come variabile', name_tok, "Scegli un altro nome.")
+                    self.error("E141", tr(f'"{name}" è {kind}: non puoi usarlo come variabile', f'"{name}" is {kind}: you cannot use it as a variable'),
+                               name_tok, tr("Scegli un altro nome.", "Choose another name."))
                     return
             if name in BUILTINS and not scope.has_local(name):
-                self.error("E141", f'"{name}" è una funzione di Tokyn: non puoi usarlo come variabile', name_tok, "Scegli un altro nome.")
+                self.error("E141", tr(f'"{name}" è una funzione di Tokyn: non puoi usarlo come variabile',
+                                      f'"{name}" is a Tokyn function: you cannot use it as a variable'),
+                           name_tok, tr("Scegli un altro nome.", "Choose another name."))
                 return
             if augmented:
                 if scope.lookup(name) is None:
-                    self.error("E160", f'la variabile "{name}" non è definita', name_tok,
-                               f"Prima di usare {name} += ... assegnale un valore, es. {name} = 0")
+                    self.error("E160", tr(f'la variabile "{name}" non è definita', f'the variable "{name}" is not defined'), name_tok,
+                               tr(f"Prima di usare {name} += ... assegnale un valore, es. {name} = 0",
+                                  f"Before using {name} += ... give it a value, e.g. {name} = 0"))
                 return
             scope.define(name, value_type, name_tok)
         elif isinstance(target, Tree) and target.data in ("getattr", "getitem"):
@@ -609,20 +645,22 @@ class Checker:
             if target.data == "getattr" and obj_t[0] == "record":
                 self.check_field(obj_t[1], target.children[1])
             elif target.data == "getattr" and obj_t[0] == "agent":
-                self.error("E170", "non si possono modificare i campi di un agente durante l'esecuzione", target)
+                self.error("E170", tr("non si possono modificare i campi di un agente durante l'esecuzione",
+                                      "an agent's fields cannot be changed while the program runs"), target)
             elif target.data == "getitem":
                 self.infer(target.children[1], scope)
         else:
-            self.error("E140", "a sinistra di '=' ci vuole un nome di variabile", target,
-                       "Esempio: risultato = Agente.ask(testo). Per confrontare usa '=='.")
+            self.error("E140", tr("a sinistra di '=' ci vuole un nome di variabile", "the left side of '=' must be a variable name"), target,
+                       tr("Esempio: risultato = Agente.ask(testo). Per confrontare usa '=='.",
+                          "Example: result = Agent.ask(text). To compare use '=='."))
 
     # ------------------------------------------------------------ espressioni
     def check_field(self, record_name, attr_tok):
         info = self.prog.types[record_name]
         fname = str(attr_tok)
         if fname not in info.fields:
-            self.error("E171", f'il type "{record_name}" non ha il campo "{fname}"', attr_tok,
-                       did_you_mean(fname, info.fields, "Campi"))
+            self.error("E171", tr(f'il type "{record_name}" non ha il campo "{fname}"', f'the type "{record_name}" has no field "{fname}"'),
+                       attr_tok, did_you_mean(fname, info.fields, tr("Campi", "Fields")))
             return ANY
         return info.fields[fname]
 
@@ -647,20 +685,22 @@ class Checker:
         if t is not None:
             self.check_order(name_tok, scope)
             if scope.kind == "const" and t[0] == "agent":
-                self.error("E191", "le costanti non possono usare agenti", name_tok,
-                           "Usa l'agente dentro main o dentro una funzione.")
+                self.error("E191", tr("le costanti non possono usare agenti", "constants cannot use agents"), name_tok,
+                           tr("Usa l'agente dentro main o dentro una funzione.", "Use the agent inside main or inside a function."))
             return t
         if scope.assigned_later(name):
-            self.error("E161", f'la variabile "{name}" è usata prima di ricevere un valore', name_tok,
-                       f"Assegna {name} = ... prima di questa riga.")
+            self.error("E161", tr(f'la variabile "{name}" è usata prima di ricevere un valore',
+                                  f'the variable "{name}" is used before it gets a value'), name_tok,
+                       tr(f"Assegna {name} = ... prima di questa riga.", f"Assign {name} = ... before this line."))
             return ANY
         candidates = scope.visible_names()
         hint = did_you_mean(name, candidates)
         if name in ("true", "false", "null", "none", "nil"):
-            hint = "In Tokyn si scrive True, False e None con l'iniziale maiuscola."
+            hint = tr("In Tokyn si scrive True, False e None con l'iniziale maiuscola.",
+                      "In Tokyn True, False and None are written with a capital letter.")
         elif name in ("self", "this"):
-            hint = "Tokyn non ha classi: usa le variabili direttamente."
-        self.error("E160", f'il nome "{name}" non è definito', name_tok, hint)
+            hint = tr("Tokyn non ha classi: usa le variabili direttamente.", "Tokyn has no classes: use the variables directly.")
+        self.error("E160", tr(f'il nome "{name}" non è definito', f'the name "{name}" is not defined'), name_tok, hint)
         return ANY
 
     def check_order(self, name_tok, scope):
@@ -668,8 +708,10 @@ class Checker:
         name = str(name_tok)
         line = self.definition_line(name) if scope.before_line and not scope.has_local(name) else None
         if line and line > scope.before_line:
-            self.error("E162", f'"{name}" è definita più sotto (riga {line}): qui si può usare solo ciò che è scritto prima',
-                       name_tok, f"Sposta la definizione di {name} sopra la riga {scope.before_line}.")
+            self.error("E162", tr(f'"{name}" è definita più sotto (riga {line}): qui si può usare solo ciò che è scritto prima',
+                                  f'"{name}" is defined further down (line {line}): here you can only use what is written before'),
+                       name_tok, tr(f"Sposta la definizione di {name} sopra la riga {scope.before_line}.",
+                                    f"Move the definition of {name} above line {scope.before_line}."))
 
     def infer_number(self, node, scope):
         return FLOAT if any(c in str(node.children[0]) for c in ".eE") else INT
@@ -693,13 +735,16 @@ class Checker:
         for offset, inner in _fstring_parts(body):
             text = inner.strip()
             if not text:
-                self.diags.append(Diagnostic("E192", "graffe vuote {} nella f-string", tok.line, tok.column + body_start + offset, 2,
-                                             "Metti un'espressione tra le graffe oppure scrivi {{ }} per una graffa letterale."))
+                self.diags.append(Diagnostic("E192", tr("graffe vuote {} nella f-string", "empty braces {} in the f-string"),
+                                             tok.line, tok.column + body_start + offset, 2,
+                                             tr("Metti un'espressione tra le graffe oppure scrivi {{ }} per una graffa letterale.",
+                                                "Put an expression between the braces, or write {{ }} for a literal brace.")))
                 continue
             try:
                 sub = parse_expr(text)
             except Exception:
-                self.diags.append(Diagnostic("E193", f"espressione non valida nella f-string: {{{text}}}",
+                self.diags.append(Diagnostic("E193", tr(f"espressione non valida nella f-string: {{{text}}}",
+                                                        f"invalid expression in the f-string: {{{text}}}"),
                                              tok.line, tok.column + body_start + offset, len(text) + 2))
                 continue
             _shift_positions(sub, tok.line, tok.column + body_start + offset + 1 + (len(inner) - len(inner.lstrip())))
@@ -743,8 +788,9 @@ class Checker:
         if all(t in (INT, FLOAT) for t in types):
             return FLOAT if FLOAT in types else INT
         if any(t == STR for t in types) and any(t in (INT, FLOAT) for t in types):
-            self.error("E194", "non si può sommare un testo con un numero", node,
-                       "Converti il numero con str(...) oppure usa una f-string: f\"totale: {n}\"")
+            self.error("E194", tr("non si può sommare un testo con un numero", "cannot add a text and a number"), node,
+                       tr("Converti il numero con str(...) oppure usa una f-string: f\"totale: {n}\"",
+                          "Convert the number with str(...) or use an f-string: f\"total: {n}\""))
         return ANY
 
     def infer_term(self, node, scope):
@@ -777,8 +823,10 @@ class Checker:
             value = string_value(other.children[0])
             if value not in t[1]:
                 best = suggest(value, t[1])
-                hint = (f'Forse intendevi "{best}"? ' if best else "") + "Valori possibili: " + ", ".join(f'"{v}"' for v in t[1])
-                self.error("E190", f'"{value}" non è uno dei valori possibili', other, hint)
+                hint = ((tr(f'Forse intendevi "{best}"? ', f'Did you mean "{best}"? ') if best else "")
+                        + tr("Valori possibili: ", "Possible values: ") + ", ".join(f'"{v}"' for v in t[1]))
+                self.error("E190", tr(f'"{value}" non è uno dei valori possibili', f'"{value}" is not one of the possible values'),
+                           other, hint)
 
     def infer_getitem(self, node, scope):
         obj = self.infer(node.children[0], scope)
@@ -788,8 +836,8 @@ class Checker:
         if obj == STR:
             return STR
         if obj[0] == "record":
-            self.error("E172", "i campi di un type si leggono con il punto, non con [ ]", node,
-                       f"Esempio: valore.campo invece di valore[\"campo\"]")
+            self.error("E172", tr("i campi di un type si leggono con il punto, non con [ ]", "the fields of a type are read with a dot, not with [ ]"),
+                       node, tr(f"Esempio: valore.campo invece di valore[\"campo\"]", "Example: value.field instead of value[\"field\"]"))
         return ANY
 
     def infer_pow(self, node, scope):
@@ -802,13 +850,13 @@ class Checker:
         obj = self.infer(node.children[0], scope)
         for bound in node.children[1:]:
             if bound is not None and self.infer(bound, scope) not in (INT, ANY):
-                self.error("E176", "gli estremi di una slice devono essere numeri interi", bound,
-                           "Esempio: testo[:200], lista[1:], lista[-3:]")
+                self.error("E176", tr("gli estremi di una slice devono essere numeri interi", "the bounds of a slice must be whole numbers"),
+                           bound, tr("Esempio: testo[:200], lista[1:], lista[-3:]", "Example: text[:200], items[1:], items[-3:]"))
         if obj[0] == "list" or obj == STR:
             return obj
         if obj[0] == "record":
-            self.error("E172", "i campi di un type si leggono con il punto, non con [ ]", node,
-                       f"Esempio: valore.campo invece di valore[\"campo\"]")
+            self.error("E172", tr("i campi di un type si leggono con il punto, non con [ ]", "the fields of a type are read with a dot, not with [ ]"),
+                       node, tr(f"Esempio: valore.campo invece di valore[\"campo\"]", "Example: value.field instead of value[\"field\"]"))
         return ANY
 
     def infer_getattr(self, node, scope):
@@ -821,21 +869,26 @@ class Checker:
             if a == "name":
                 return STR
             if a not in AGENT_METHODS:
-                self.error("E170", f'gli agenti non hanno ".{a}"', attr,
-                           "Un agente ha solo .ask(testo), che restituisce la risposta, .ask_all(testi), che risponde a una lista "
-                           "a metà prezzo, e .reset(), che cancella la memoria.")
+                self.error("E170", tr(f'gli agenti non hanno ".{a}"', f'agents have no ".{a}"'), attr,
+                           tr("Un agente ha solo .ask(testo), che restituisce la risposta, .ask_all(testi), che risponde a una lista "
+                              "a metà prezzo, e .reset(), che cancella la memoria.",
+                              "An agent has only .ask(text), which returns the answer, .ask_all(texts), which answers a list "
+                              "at half price, and .reset(), which clears the memory."))
             return ANY
         if obj[0] == "typeobj":
-            self.error("E173", f'"{obj[1]}" è un type: per crearne uno usa {obj[1]}(campo=valore, ...)', attr)
+            self.error("E173", tr(f'"{obj[1]}" è un type: per crearne uno usa {obj[1]}(campo=valore, ...)',
+                                  f'"{obj[1]}" is a type: to create one use {obj[1]}(field=value, ...)'), attr)
             return ANY
         if obj[0] == "func":
-            self.error("E174", f'"{obj[1]}" è una funzione: va chiamata con le parentesi', attr)
+            self.error("E174", tr(f'"{obj[1]}" è una funzione: va chiamata con le parentesi',
+                                  f'"{obj[1]}" is a function: call it with parentheses'), attr)
             return ANY
         method_sets = {STR: STR_METHODS, DICT: DICT_METHODS}
         if obj in method_sets or obj[0] == "list" or obj[0] == "enum":
             methods = LIST_METHODS if obj[0] == "list" else method_sets.get(obj, STR_METHODS)
             if a not in methods:
-                self.error("E175", f'il tipo {type_name(obj)} non ha ".{a}"', attr, did_you_mean(a, methods))
+                self.error("E175", tr(f'il tipo {type_name(obj)} non ha ".{a}"', f'the type {type_name(obj)} has no ".{a}"'),
+                           attr, did_you_mean(a, methods))
             return ANY
         return ANY
 
@@ -858,18 +911,23 @@ class Checker:
             if obj[0] == "agent":
                 arg_types = infer_args()
                 if method == "ask_all" and arg_types and arg_types[0][0] in ("str", "int", "float", "bool", "dict", "record"):
-                    self.error("E186", f".ask_all() vuole una lista di testi, non {type_name(arg_types[0])}", positional[0],
-                               f"Per un testo solo usa {obj[1]}.ask(testo).")
+                    self.error("E186", tr(f".ask_all() vuole una lista di testi, non {type_name(arg_types[0])}",
+                                          f".ask_all() takes a list of texts, not {type_name(arg_types[0])}"), positional[0],
+                               tr(f"Per un testo solo usa {obj[1]}.ask(testo).", f"For a single text use {obj[1]}.ask(text)."))
                 if method not in AGENT_METHODS:
-                    self.error("E170", f'gli agenti non hanno ".{method}"', callee.children[1],
-                               "Un agente ha solo .ask(testo), .ask_all(lista_di_testi) e .reset().")
+                    self.error("E170", tr(f'gli agenti non hanno ".{method}"', f'agents have no ".{method}"'), callee.children[1],
+                               tr("Un agente ha solo .ask(testo), .ask_all(lista_di_testi) e .reset().",
+                                  "An agent has only .ask(text), .ask_all(list_of_texts) and .reset()."))
                     return ANY
                 lo, hi = AGENT_METHODS[method]
                 if kwargs or not (lo <= len(positional) <= hi):
-                    expected = {"ask": "un solo argomento: il testo da chiedere",
-                                "ask_all": "un solo argomento: la lista dei testi"}.get(method, "nessun argomento")
-                    self.error("E186", f".{method}() vuole {expected}", node,
-                               {"ask": f'Esempio: {obj[1]}.ask("...")', "ask_all": f"Esempio: {obj[1]}.ask_all(testi)"}.get(method, ""))
+                    expected = tr({"ask": "un solo argomento: il testo da chiedere",
+                                   "ask_all": "un solo argomento: la lista dei testi"}.get(method, "nessun argomento"),
+                                  {"ask": "a single argument: the text to ask",
+                                   "ask_all": "a single argument: the list of texts"}.get(method, "no arguments"))
+                    self.error("E186", tr(f".{method}() vuole {expected}", f".{method}() takes {expected}"), node,
+                               tr({"ask": f'Esempio: {obj[1]}.ask("...")', "ask_all": f"Esempio: {obj[1]}.ask_all(testi)"}.get(method, ""),
+                                  {"ask": f'Example: {obj[1]}.ask("...")', "ask_all": f"Example: {obj[1]}.ask_all(texts)"}.get(method, "")))
                 if method in ("ask", "ask_all"):
                     agent = self.prog.agents.get(obj[1])
                     answer = ("record", agent.output) if agent is not None and agent.output else STR
@@ -891,7 +949,8 @@ class Checker:
                 return ANY
             infer_args()
             if t[0] == "agent":
-                self.error("E187", f'"{name}" è un agente: si usa con {name}.ask(testo)', callee)
+                self.error("E187", tr(f'"{name}" è un agente: si usa con {name}.ask(testo)',
+                                      f'"{name}" is an agent: use it with {name}.ask(text)'), callee)
                 return ANY
             if t[0] == "typeobj":
                 return self.check_constructor(name, node, positional, kwargs, scope)
@@ -902,12 +961,13 @@ class Checker:
                 n = len(positional)
                 if n < lo or (hi is not None and n > hi):
                     if hi is None:
-                        want = f"almeno {lo}"
+                        want = tr(f"almeno {lo}", f"at least {lo}")
                     elif lo == hi:
                         want = str(lo)
                     else:
-                        want = f"da {lo} a {hi}"
-                    self.error("E180", f"{name}() vuole {want} argomenti, ne ha ricevuti {n}", node)
+                        want = tr(f"da {lo} a {hi}", f"from {lo} to {hi}")
+                    self.error("E180", tr(f"{name}() vuole {want} argomenti, ne ha ricevuti {n}",
+                                          f"{name}() takes {want} argument{'' if want == '1' else 's'}, it got {n}"), node)
                 return ret
             return ANY
 
@@ -919,40 +979,45 @@ class Checker:
         params = info.params
         names = [p[0] for p in params]
         if len(positional) > len(params):
-            self.error("E180", f'{info.name}() vuole al massimo {len(params)} argomenti, ne ha ricevuti {len(positional)}', node,
-                       f"Parametri: {', '.join(names) or 'nessuno'}")
+            self.error("E180", tr(f'{info.name}() vuole al massimo {len(params)} argomenti, ne ha ricevuti {len(positional)}',
+                                  f'{info.name}() takes at most {len(params)} argument{"" if len(params) == 1 else "s"}, '
+                                  f'it got {len(positional)}'), node,
+                       tr(f"Parametri: {', '.join(names) or 'nessuno'}", f"Parameters: {', '.join(names) or 'none'}"))
             return info.returns
         given = set(names[: len(positional)])
         for k in kwargs:
             kname = str(k.children[0])
             if kname not in names:
-                self.error("E181", f'{info.name}() non ha un parametro "{kname}"', k.children[0],
-                           did_you_mean(kname, names, "Parametri"))
+                self.error("E181", tr(f'{info.name}() non ha un parametro "{kname}"', f'{info.name}() has no parameter "{kname}"'),
+                           k.children[0], did_you_mean(kname, names, tr("Parametri", "Parameters")))
             elif kname in given:
-                self.error("E181", f'il parametro "{kname}" è passato due volte', k.children[0])
+                self.error("E181", tr(f'il parametro "{kname}" è passato due volte', f'the parameter "{kname}" is passed twice'),
+                           k.children[0])
             given.add(kname)
         missing = [p[0] for p in params if not p[2] and p[0] not in given]
         if missing:
-            self.error("E180", f"{info.name}() senza il parametro obbligatorio: {', '.join(missing)}", node)
+            self.error("E180", tr(f"{info.name}() senza il parametro obbligatorio: {', '.join(missing)}",
+                                  f"{info.name}() is missing the required parameter: {', '.join(missing)}"), node)
         return info.returns
 
     def check_constructor(self, tname, node, positional, kwargs, scope):
         info = self.prog.types[tname]
         if positional:
-            self.error("E182", f"per creare un {tname} indica il nome di ogni campo", node,
-                       f"Esempio: {tname}(" + ", ".join(f"{f}=..." for f in info.fields) + ")")
+            self.error("E182", tr(f"per creare un {tname} indica il nome di ogni campo", f"to create a {tname} give the name of every field"),
+                       node, tr(f"Esempio: {tname}(", f"Example: {tname}(") + ", ".join(f"{f}=..." for f in info.fields) + ")")
         seen = set()
         for k in kwargs:
             kname = str(k.children[0])
             if kname not in info.fields:
-                self.error("E183", f'il type "{tname}" non ha il campo "{kname}"', k.children[0],
-                           did_you_mean(kname, info.fields, "Campi"))
+                self.error("E183", tr(f'il type "{tname}" non ha il campo "{kname}"', f'the type "{tname}" has no field "{kname}"'),
+                           k.children[0], did_you_mean(kname, info.fields, tr("Campi", "Fields")))
                 continue
             seen.add(kname)
             self.check_enum_value(info.fields[kname], k.children[1])
         missing = [f for f in info.fields if f not in seen]
         if missing and not positional:
-            self.error("E184", f"mancano dei campi per creare {tname}: {', '.join(missing)}", node)
+            self.error("E184", tr(f"mancano dei campi per creare {tname}: {', '.join(missing)}",
+                                  f"missing fields to create {tname}: {', '.join(missing)}"), node)
         return ("record", tname)
 
 

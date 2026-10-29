@@ -21,6 +21,8 @@ def standalone_runtime() -> str:
     """Il sorgente del runtime senza import relativi, da includere in un file autonomo."""
     src = (Path(__file__).parent / "runtime.py").read_text(encoding="utf-8")
     src = src.replace("from .errors import TokynRuntimeError\n", inspect.getsource(TokynRuntimeError), 1)
+    # la lingua dei messaggi: nel file autonomo decidono TOKYN_LANG e la lingua del sistema
+    src = src.replace("from .lingua import tr\n", (Path(__file__).parent / "lingua.py").read_text(encoding="utf-8"), 1)
     if "from ." in src or "'''" in src:
         raise ValueError("runtime.py non si può includere: contiene import relativi o '''")
     return src

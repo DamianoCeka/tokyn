@@ -16,6 +16,7 @@ from lark.exceptions import (
 from lark.indenter import DedentError, Indenter
 
 from .errors import Diagnostic, TokynError
+from .lingua import tr
 
 
 class TokynIndenter(Indenter):
@@ -40,23 +41,33 @@ def _parser() -> Lark:
     )
 
 
-# Costrutti Python che Tokyn non ha, con l'alternativa da usare.
+# Costrutti Python che Tokyn non ha, con l'alternativa da usare (in italiano e in inglese).
 UNSUPPORTED = {
-    "while": "Tokyn ha un solo ciclo: usa `for i in range(n):` oppure `for x in lista:`.",
-    "class": "Per i dati usa `type Nome:` con i campi; per l'IA usa `agent Nome:`.",
-    "lambda": "Definisci una funzione con `def`.",
-    "try": "In v0.1 non c'è try/except: il runtime gestisce i retry delle chiamate IA e mostra errori chiari.",
-    "except": "In v0.1 non c'è try/except.",
-    "with": "In v0.1 non c'è `with`: usa read_file(percorso) e write_file(percorso, testo).",
-    "async": "Non serve async: le chiamate agli agenti sono gestite dal runtime.",
-    "await": "Non serve await: chiama direttamente `Agente.ask(testo)`.",
-    "yield": "Restituisci una lista con `return`.",
-    "global": "Le variabili globali sono costanti: definiscile in cima al file.",
-    "match": "Usa `if` / `elif` / `else`.",
-    "nonlocal": "Le variabili di una funzione restano locali: restituisci il valore con `return`.",
-    "del": "Usa `d.pop(chiave)` per un dizionario e `lista.pop(i)` per una lista.",
-    "raise": "Non si sollevano errori: in uno strumento restituisci un messaggio di errore come testo (l'IA lo legge), altrove stampalo e usa `return`.",
-    "assert": "Usa `if condizione:` con un messaggio e `return`.",
+    "while": ("Tokyn ha un solo ciclo: usa `for i in range(n):` oppure `for x in lista:`.",
+              "Tokyn has only one loop: use `for i in range(n):` or `for x in items:`."),
+    "class": ("Per i dati usa `type Nome:` con i campi; per l'IA usa `agent Nome:`.",
+              "For data use `type Name:` with its fields; for AI use `agent Name:`."),
+    "lambda": ("Definisci una funzione con `def`.", "Define a function with `def`."),
+    "try": ("In v0.1 non c'è try/except: il runtime gestisce i retry delle chiamate IA e mostra errori chiari.",
+            "v0.1 has no try/except: the runtime retries the AI calls and shows clear errors."),
+    "except": ("In v0.1 non c'è try/except.", "v0.1 has no try/except."),
+    "with": ("In v0.1 non c'è `with`: usa read_file(percorso) e write_file(percorso, testo).",
+             "v0.1 has no `with`: use read_file(path) and write_file(path, text)."),
+    "async": ("Non serve async: le chiamate agli agenti sono gestite dal runtime.",
+              "No need for async: the runtime handles the calls to agents."),
+    "await": ("Non serve await: chiama direttamente `Agente.ask(testo)`.",
+              "No need for await: call `Agent.ask(text)` directly."),
+    "yield": ("Restituisci una lista con `return`.", "Return a list with `return`."),
+    "global": ("Le variabili globali sono costanti: definiscile in cima al file.",
+               "Global variables are constants: define them at the top of the file."),
+    "match": ("Usa `if` / `elif` / `else`.", "Use `if` / `elif` / `else`."),
+    "nonlocal": ("Le variabili di una funzione restano locali: restituisci il valore con `return`.",
+                 "A function's variables stay local: return the value with `return`."),
+    "del": ("Usa `d.pop(chiave)` per un dizionario e `lista.pop(i)` per una lista.",
+            "Use `d.pop(key)` for a dict and `items.pop(i)` for a list."),
+    "raise": ("Non si sollevano errori: in uno strumento restituisci un messaggio di errore come testo (l'IA lo legge), altrove stampalo e usa `return`.",
+              "There are no exceptions to raise: in a tool return an error message as text (the AI reads it), elsewhere print it and use `return`."),
+    "assert": ("Usa `if condizione:` con un messaggio e `return`.", "Use `if condition:` with a message and `return`."),
 }
 
 TOKEN_LABELS = {
@@ -70,14 +81,14 @@ TOKEN_LABELS = {
     "COMMA": "','",
     "EQUAL": "'='",
     "DOT": "'.'",
-    "NAME": "un nome",
-    "STRING": "una stringa",
-    "FSTRING": "una f-string",
-    "NUMBER": "un numero",
-    "_NL": "fine riga",
-    "_INDENT": "un blocco indentato",
-    "_DEDENT": "fine del blocco",
-    "$END": "fine del file",
+    "NAME": ("un nome", "a name"),
+    "STRING": ("una stringa", "a string"),
+    "FSTRING": ("una f-string", "an f-string"),
+    "NUMBER": ("un numero", "a number"),
+    "_NL": ("fine riga", "end of line"),
+    "_INDENT": ("un blocco indentato", "an indented block"),
+    "_DEDENT": ("fine del blocco", "end of block"),
+    "$END": ("fine del file", "end of file"),
     "MORETHAN": "'>'",
     "RARROW": "'->'",
 }
@@ -85,7 +96,8 @@ TOKEN_LABELS = {
 
 def _label(tok_type: str) -> str:
     if tok_type in TOKEN_LABELS:
-        return TOKEN_LABELS[tok_type]
+        label = TOKEN_LABELS[tok_type]
+        return tr(*label) if isinstance(label, tuple) else label
     if tok_type.isupper() and tok_type.isalpha():
         return f"'{tok_type.lower()}'"
     return tok_type
@@ -93,13 +105,13 @@ def _label(tok_type: str) -> str:
 
 def _token_text(tok: Token) -> str:
     if tok.type == "_NL":
-        return "fine riga"
+        return tr("fine riga", "end of line")
     if tok.type == "_INDENT":
-        return "indentazione"
+        return tr("indentazione", "indentation")
     if tok.type == "_DEDENT":
-        return "fine del blocco"
+        return tr("fine del blocco", "end of block")
     if tok.type == "$END":
-        return "fine del file"
+        return tr("fine del file", "end of file")
     return str(tok)
 
 
@@ -111,10 +123,10 @@ def _syntax_diagnostic(err: UnexpectedInput, source: str) -> Diagnostic:
         ch = source[err.pos_in_stream] if err.pos_in_stream < len(source) else "?"
         hint = ""
         if ch == "\t":
-            hint = "Usa spazi per l'indentazione (4 per livello)."
+            hint = tr("Usa spazi per l'indentazione (4 per livello).", "Indent with spaces (4 per level).")
         elif ch in "@$`;":
-            hint = f"Il carattere '{ch}' non fa parte di Tokyn."
-        return Diagnostic("E001", f"carattere non valido '{ch}'", line, column, 1, hint)
+            hint = tr(f"Il carattere '{ch}' non fa parte di Tokyn.", f"The character '{ch}' is not part of Tokyn.")
+        return Diagnostic("E001", tr(f"carattere non valido '{ch}'", f"invalid character '{ch}'"), line, column, 1, hint)
 
     if isinstance(err, UnexpectedToken):
         tok = err.token
@@ -131,64 +143,83 @@ def _syntax_diagnostic(err: UnexpectedInput, source: str) -> Diagnostic:
         if idiom:
             return Diagnostic("E002", idiom[0], line, column, length, idiom[1])
         if "COLON" in expected and tok.type == "_NL":
-            return Diagnostic("E003", "manca ':' alla fine della riga", line, column, 1,
-                              "Le righe con def, if, elif, else, for, agent, type e main finiscono con ':'.")
+            return Diagnostic("E003", tr("manca ':' alla fine della riga", "missing ':' at the end of the line"), line, column, 1,
+                              tr("Le righe con def, if, elif, else, for, agent, type e main finiscono con ':'.",
+                                 "Lines with def, if, elif, else, for, agent, type and main end with ':'."))
         if "_INDENT" in expected or _after_colon_without_block(src_lines, line):
-            return Diagnostic("E004", "manca il blocco indentato", line, 1, 1,
-                              "Dopo una riga che finisce con ':' serve almeno una riga indentata di 4 spazi. Se il blocco è vuoto scrivi `pass`.")
+            return Diagnostic("E004", tr("manca il blocco indentato", "missing indented block"), line, 1, 1,
+                              tr("Dopo una riga che finisce con ':' serve almeno una riga indentata di 4 spazi. Se il blocco è vuoto scrivi `pass`.",
+                                 "A line ending with ':' needs at least one line indented by 4 spaces after it. If the block is empty write `pass`."))
         if tok.type == "_INDENT":
             line = _next_code_line(src_lines, line)
-            return Diagnostic("E005", "indentazione inattesa", line, 1, 1,
-                              "Questa riga è più indentata del necessario: allineala con la riga precedente.")
+            return Diagnostic("E005", tr("indentazione inattesa", "unexpected indentation"), line, 1, 1,
+                              tr("Questa riga è più indentata del necessario: allineala con la riga precedente.",
+                                 "This line is indented more than needed: align it with the previous line."))
         if tok.type == "EQUAL" and "COLON" in expected:
-            return Diagnostic("E006", "nei blocchi agent e type si usa ':' e non '='", line, column, 1,
-                              "Esempio: `instructions: \"...\"`.")
+            return Diagnostic("E006", tr("nei blocchi agent e type si usa ':' e non '='", "agent and type blocks use ':', not '='"),
+                              line, column, 1, tr("Esempio: `instructions: \"...\"`.", "Example: `instructions: \"...\"`."))
         if tok.type in ("$END", "_DEDENT", "_NL"):
             closing = _unclosed_bracket(source, line, column)
-            hint = f"Manca {closing} per chiudere la parentesi aperta." if closing else ""
-            return Diagnostic("E007", f"la riga finisce in modo incompleto (trovato: {text})", line, column, 1, hint)
+            hint = tr(f"Manca {closing} per chiudere la parentesi aperta.", f"Missing {closing} to close the open bracket.") if closing else ""
+            return Diagnostic("E007", tr(f"la riga finisce in modo incompleto (trovato: {text})", f"incomplete line (found: {text})"),
+                              line, column, 1, hint)
 
         labels = sorted({_label(e) for e in expected if not e.startswith("__")})
         shown = ", ".join(labels[:8]) + (", …" if len(labels) > 8 else "")
-        hint = f"Qui mi aspettavo: {shown}." if labels else ""
+        hint = tr(f"Qui mi aspettavo: {shown}.", f"Expected here: {shown}.") if labels else ""
         if tok.type == "STRING" and "COMMA" in expected:
-            hint = "Forse manca una ',' tra due elementi."
-        return Diagnostic("E008", f"simbolo inatteso `{text}`", line, column, length, hint)
+            hint = tr("Forse manca una ',' tra due elementi.", "Maybe a ',' is missing between two items.")
+        return Diagnostic("E008", tr(f"simbolo inatteso `{text}`", f"unexpected symbol `{text}`"), line, column, length, hint)
 
     if isinstance(err, UnexpectedEOF):
-        return Diagnostic("E007", "il file finisce in modo incompleto", line, column, 1,
-                          "Controlla parentesi e stringhe non chiuse.")
+        return Diagnostic("E007", tr("il file finisce in modo incompleto", "the file ends before it is complete"), line, column, 1,
+                          tr("Controlla parentesi e stringhe non chiuse.", "Check for unclosed brackets and strings."))
 
-    return Diagnostic("E000", f"errore di sintassi: {err}", line, column, 1)
+    return Diagnostic("E000", tr(f"errore di sintassi: {err}", f"syntax error: {err}"), line, column, 1)
 
 
 def _python_idiom(tok: Token, expected: set, line_text: str) -> tuple[str, str] | None:
     """Riconosce i costrutti Python più comuni che Tokyn non ha e dice cosa scrivere al loro posto."""
     if re.search(r'(?<!\w)f"[^"\n]*\{[^}\n]*"', line_text) or re.search(r"(?<!\w)f'[^'\n]*\{[^}\n]*'", line_text):
-        return ("dentro una f-string non si possono usare le stesse virgolette della f-string",
-                "Usa le virgolette dell'altro tipo dentro le graffe, es. f\"{d['chiave']}\".")
+        return (tr("dentro una f-string non si possono usare le stesse virgolette della f-string",
+                   "inside an f-string you cannot use the same quotes as the f-string"),
+                tr("Usa le virgolette dell'altro tipo dentro le graffe, es. f\"{d['chiave']}\".",
+                   "Use the other kind of quotes inside the braces, e.g. f\"{d['key']}\"."))
     if expected == {"_NL"} and re.match(r"\s*(if|elif|else|for)\b[^#]*:\s*[^\s#]", line_text):
-        return ("il blocco va sulla riga dopo i ':'", "Vai a capo dopo ':' e indenta il blocco di 4 spazi.")
+        return (tr("il blocco va sulla riga dopo i ':'", "the block goes on the line after ':'"),
+                tr("Vai a capo dopo ':' e indenta il blocco di 4 spazi.", "Start a new line after ':' and indent the block by 4 spaces."))
     if tok.type == "NUMBER" and {"STRING", "NAME"} <= expected:
-        return ("le scelte con `|` possono essere solo testi tra virgolette",
-                'Usa "1" | "2" | "3", oppure int con i limiti nella descrizione: priorita: int "da 1 a 3".')
+        return (tr("le scelte con `|` possono essere solo testi tra virgolette", "choices with `|` can only be quoted texts"),
+                tr('Usa "1" | "2" | "3", oppure int con i limiti nella descrizione: priorita: int "da 1 a 3".',
+                   'Use "1" | "2" | "3", or int with the limits in the description: priority: int "from 1 to 3".'))
     if tok.type == "FOR":
-        return ("le comprehension `[... for x in ...]` non esistono in Tokyn",
-                "Usa un ciclo: risultato = [], poi `for x in lista:` e dentro `risultato.append(...)`.")
+        return (tr("le comprehension `[... for x in ...]` non esistono in Tokyn",
+                   "comprehensions `[... for x in ...]` do not exist in Tokyn"),
+                tr("Usa un ciclo: risultato = [], poi `for x in lista:` e dentro `risultato.append(...)`.",
+                   "Use a loop: result = [], then `for x in items:` and inside it `result.append(...)`."))
     if tok.type == "IF" and not expected <= {"COLON", "_NL"}:
-        return ("l'espressione `a if condizione else b` non esiste in Tokyn",
-                "Scrivi un if/else su più righe che assegna la variabile in entrambi i rami.")
+        return (tr("l'espressione `a if condizione else b` non esiste in Tokyn",
+                   "the expression `a if condition else b` does not exist in Tokyn"),
+                tr("Scrivi un if/else su più righe che assegna la variabile in entrambi i rami.",
+                   "Write an if/else on several lines that assigns the variable in both branches."))
     if tok.type == "NAME" and str(tok) == "is":
-        return ("`is` non esiste in Tokyn", "Usa == e !=, es. `if x == None:` oppure `if x != None:`.")
+        return (tr("`is` non esiste in Tokyn", "`is` does not exist in Tokyn"),
+                tr("Usa == e !=, es. `if x == None:` oppure `if x != None:`.", "Use == and !=, e.g. `if x == None:` or `if x != None:`."))
     if tok.type == "COMMA" and "EQUAL" in expected:
-        return ("l'assegnazione multipla `a, b = ...` non esiste in Tokyn",
-                "Assegna una variabile alla volta, es. `r = f()`, poi `a = r[0]` e `b = r[1]`.")
+        return (tr("l'assegnazione multipla `a, b = ...` non esiste in Tokyn",
+                   "multiple assignment `a, b = ...` does not exist in Tokyn"),
+                tr("Assegna una variabile alla volta, es. `r = f()`, poi `a = r[0]` e `b = r[1]`.",
+                   "Assign one variable at a time, e.g. `r = f()`, then `a = r[0]` and `b = r[1]`."))
     if tok.type == "COMMA" and expected == {"COLON"}:
-        return ("i set `{a, b}` non esistono in Tokyn", "Usa una lista: `[a, b]` (per togliere i doppioni controlla con `in`).")
+        return (tr("i set `{a, b}` non esistono in Tokyn", "sets `{a, b}` do not exist in Tokyn"),
+                tr("Usa una lista: `[a, b]` (per togliere i doppioni controlla con `in`).",
+                   "Use a list: `[a, b]` (to skip duplicates check with `in`)."))
     if tok.type == "COMMA" and expected == {"RPAR"}:
-        return ("le tuple `(a, b)` non esistono in Tokyn", "Usa una lista: `[a, b]`.")
+        return (tr("le tuple `(a, b)` non esistono in Tokyn", "tuples `(a, b)` do not exist in Tokyn"),
+                tr("Usa una lista: `[a, b]`.", "Use a list: `[a, b]`."))
     if tok.type == "COMMA" and line_text.lstrip().startswith("return "):
-        return ("una funzione restituisce un solo valore", "Per restituirne più di uno usa una lista: `return [a, b]`.")
+        return (tr("una funzione restituisce un solo valore", "a function returns a single value"),
+                tr("Per restituirne più di uno usa una lista: `return [a, b]`.", "To return more than one, use a list: `return [a, b]`."))
     return None
 
 
@@ -302,19 +333,23 @@ def _unsupported_scan(source: str) -> list[Diagnostic]:
             continue
         if stripped.startswith("def ") and raw[:1] in (" ", "\t"):
             col = len(raw) - len(stripped) + 1
-            found.append(Diagnostic("E002", "una `def` dentro un'altra funzione o dentro main non esiste in Tokyn", i, col, 3,
-                                    "Definisci la funzione al livello del file, senza indentazione."))
+            found.append(Diagnostic("E002", tr("una `def` dentro un'altra funzione o dentro main non esiste in Tokyn",
+                                               "a `def` inside another function or inside main does not exist in Tokyn"), i, col, 3,
+                                    tr("Definisci la funzione al livello del file, senza indentazione.",
+                                       "Define the function at file level, without indentation.")))
             continue
         m = re.match(r"(\w+)\b(?!\s*[=.(\[,)])", stripped)
         word = m.group(1) if m else ""
         if word in UNSUPPORTED and word not in ("lambda", "await"):
             col = len(raw) - len(stripped) + 1
-            found.append(Diagnostic("E002", f"`{word}` non esiste in Tokyn", i, col, len(word), UNSUPPORTED[word]))
+            found.append(Diagnostic("E002", tr(f"`{word}` non esiste in Tokyn", f"`{word}` does not exist in Tokyn"),
+                                    i, col, len(word), tr(*UNSUPPORTED[word])))
             continue
         for kw in ("lambda", "await"):
             m2 = re.search(rf"\b{kw}\b(?!\s*[=.(\[,)])", raw)
             if m2 and not _inside_string(raw, m2.start()):
-                found.append(Diagnostic("E002", f"`{kw}` non esiste in Tokyn", i, m2.start() + 1, len(kw), UNSUPPORTED[kw]))
+                found.append(Diagnostic("E002", tr(f"`{kw}` non esiste in Tokyn", f"`{kw}` does not exist in Tokyn"),
+                                        i, m2.start() + 1, len(kw), tr(*UNSUPPORTED[kw])))
     return found
 
 
@@ -344,8 +379,9 @@ def parse(source: str, filename: str = "<tokyn>") -> Tree:
     except DedentError as err:
         line = _dedent_line(str(err), source)
         raise TokynError(
-            [Diagnostic("E009", "indentazione non coerente", line, 1, 1,
-                        "Ogni livello di blocco deve avere la stessa indentazione (4 spazi). Non mescolare tab e spazi.")],
+            [Diagnostic("E009", tr("indentazione non coerente", "inconsistent indentation"), line, 1, 1,
+                        tr("Ogni livello di blocco deve avere la stessa indentazione (4 spazi). Non mescolare tab e spazi.",
+                           "Every block level must have the same indentation (4 spaces). Do not mix tabs and spaces."))],
             source, filename,
         ) from None
 
