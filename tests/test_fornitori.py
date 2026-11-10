@@ -20,13 +20,14 @@ class _FakeOpenAI:
     def __init__(self):
         self.replies = []
         self.requests = []
+        self.handler = None  # se c'è, dà la risposta in base al corpo della richiesta (le richieste possono arrivare insieme)
         fake = self
 
         class Handler(BaseHTTPRequestHandler):
             def do_POST(self):
                 body = json.loads(self.rfile.read(int(self.headers["Content-Length"])).decode("utf-8"))
                 fake.requests.append({"path": self.path, "headers": dict(self.headers), "body": body})
-                status, data, headers = fake.replies.pop(0)
+                status, data, headers = fake.handler(body) if fake.handler else fake.replies.pop(0)
                 payload = (data if isinstance(data, str) else json.dumps(data)).encode("utf-8")
                 self.send_response(status)
                 for k, v in headers.items():
@@ -192,7 +193,7 @@ def test_answer_tool_fallback_with_tools_or_free_dicts(server):
     assert "response_format" not in server.bodies()[-1]
 
 
-def test_memory_reset_and_ask_all(server):
+def test_memory_reset_and_ask_all(server, monkeypatch):
     server.reply(_chat("Piacere, Ada."), _chat("Ti chiami Ada."), _chat("Non lo so."), _chat("uno"), _chat("due"))
     ns = _agents('agent A:\n    model: "mistral:mistral-small-2603"\n    instructions: "i"\n    memory: True\n')
     a = ns["A"]
@@ -204,7 +205,8 @@ def test_memory_reset_and_ask_all(server):
     a.reset()
     a.ask("Come mi chiamo?")
     assert len(server.bodies()[2]["messages"]) == 2
-    assert a.ask_all(["a", "b"]) == ["uno", "due"]  # una richiesta alla volta, senza la memoria
+    monkeypatch.setenv("TOKYN_PARALLELO", "1")  # le risposte preparate arrivano in ordine solo una alla volta
+    assert a.ask_all(["a", "b"]) == ["uno", "due"]  # senza la memoria
     assert [len(b["messages"]) for b in server.bodies()[3:]] == [2, 2]
 
 
@@ -399,3 +401,93 @@ def test_base_url_without_scheme(server, monkeypatch):
     with pytest.raises(rt.TokynRuntimeError, match="non è un indirizzo web"):
         _agents('agent A:\n    model: "openai-compatible:m"\n    instructions: "i"\n')["A"].ask("x")
     assert server.requests == [] and server.sleeps == []
+
+
+class _Contatore:
+    """Conta le richieste in corso nello stesso momento sul finto server."""
+
+    def __init__(self):
+        self.lock = threading.Lock()
+        self.attive = 0
+        self.massimo = 0
+
+    def __enter__(self):
+        with self.lock:
+            self.attive += 1
+            self.massimo = max(self.massimo, self.attive)
+
+    def __exit__(self, *exc):
+        with self.lock:
+            self.attive -= 1
+
+
+def test_ask_all_sends_requests_in_parallel_in_order(server, monkeypatch):
+    for key in ("chiamate", "input", "output"):
+        monkeypatch.setitem(rt._USAGE, key, 0)
+    monkeypatch.setattr(rt, "_USO_FORNITORI", {})
+    contatore = _Contatore()
+
+    def handler(body):
+        text = body["messages"][-1]["content"]
+        with contatore:
+            threading.Event().wait(float(text.split()[1]))  # time.sleep qui è finto: attese diverse per ogni testo
+        return 200, _chat(f"risposta a {text}", usage={"prompt_tokens": 10, "completion_tokens": 2}), {}
+
+    server.handler = handler
+    texts = [f"t{i} {d}" for i, d in enumerate([0.5, 0.05, 0.3, 0.0, 0.2, 0.1, 0.4, 0.0])]
+    ns = _agents('agent A:\n    model: "openai:gpt-5.6-luna"\n    instructions: "i"\n')
+    assert ns["A"].ask_all(texts) == [f"risposta a {t}" for t in texts]
+    assert 2 <= contatore.massimo <= rt.PARALLELO == 4
+    assert all(len(b["messages"]) == 2 for b in server.bodies())  # senza memoria
+    assert (rt._USAGE["chiamate"], rt._USAGE["input"], rt._USAGE["output"]) == (8, 80, 16)
+    assert rt._USO_FORNITORI == {"openai": 8}
+
+    monkeypatch.setenv("TOKYN_PARALLELO", "2")
+    contatore.massimo = 0
+    assert ns["A"].ask_all(texts[:5]) == [f"risposta a {t}" for t in texts[:5]]
+    assert contatore.massimo == 2
+
+
+def test_ask_all_reports_every_failed_text(server, monkeypatch):
+    def handler(body):
+        text = body["messages"][-1]["content"]
+        if text.startswith("male"):
+            return 400, {"error": {"message": "richiesta sbagliata"}}, {}
+        return 200, _chat("ok"), {}
+
+    server.handler = handler
+    ns = _agents('agent A:\n    model: "openai:gpt-5.6-luna"\n    instructions: "i"\n')
+    texts = ["bene", "male 1", "bene", "male 3", "bene"]
+    with pytest.raises(rt.TokynRuntimeError, match=r"2 testi su 5 senza risposta; il primo è testi\[1\] \('male 1'\): "
+                                                   r"chiamata a openai fallita.*\(senza risposta: testi\[1\], testi\[3\]\)"):
+        ns["A"].ask_all(texts)
+    assert len(server.requests) == 5  # le altre richieste sono arrivate fino in fondo
+    # un errore di configurazione si dice una volta sola, prima di qualunque richiesta
+    monkeypatch.delenv("OPENAI_API_KEY")
+    with pytest.raises(rt.TokynRuntimeError, match="^manca la chiave OPENAI_API_KEY"):
+        ns["A"].ask_all(texts)
+    assert len(server.requests) == 5
+
+
+def test_ask_all_system_exit_in_a_thread_is_not_lost(server, monkeypatch):
+    # SystemExit in un thread finirebbe nel nulla (e poi un KeyError): ask_all lo fa uscire com'è
+    def chiedi(agent, text, history):
+        if text == "esci":
+            raise SystemExit(3)
+        return text.upper(), text, None
+
+    monkeypatch.setattr(rt, "_chiedi_chat", chiedi)
+    a = _agents('agent A:\n    model: "openai:gpt-5.6-luna"\n    instructions: "i"\n')["A"]
+    assert a.ask_all(["a", "b", "c"]) == ["A", "B", "C"]
+    for n in ("1", "4"):
+        monkeypatch.setenv("TOKYN_PARALLELO", n)
+        with pytest.raises(SystemExit) as err:
+            a.ask_all(["a", "esci", "c"])
+        assert err.value.code == 3
+
+
+def test_ask_all_with_no_texts_makes_no_checks(server, monkeypatch):
+    monkeypatch.delenv("OPENAI_API_KEY")
+    monkeypatch.setenv("TOKYN_PARALLELO", "0")
+    assert _agents('agent A:\n    model: "openai:gpt-5.6-luna"\n    instructions: "i"\n')["A"].ask_all([]) == []
+    assert server.requests == []

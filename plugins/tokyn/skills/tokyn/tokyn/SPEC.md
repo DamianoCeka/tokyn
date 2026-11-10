@@ -56,8 +56,8 @@ Un agente si usa **solo** così:
 - `Agente.ask_all(testi)` → una lista di risposte, nello stesso ordine dei testi: come un ciclo di `ask`, ma con la
   Batch API di Anthropic, che costa la metà. È più lento (di solito minuti, al massimo 24 ore) e non usa la memoria:
   adatto ai lavori in blocco, non alle chat. Un testo rifiutato o con un errore nel batch viene riprovato con una
-  chiamata normale; se resta senza risposta, il programma si ferma dicendo quale. Con gli altri fornitori è un
-  ciclo di `ask` (una richiesta alla volta, senza memoria).
+  chiamata normale; se resta senza risposta, il programma si ferma dicendo quale. Con Claude Code e con gli altri
+  fornitori fa richieste normali senza memoria, fino a 4 insieme (`TOKYN_PARALLELO` cambia il numero).
 - `Agente.reset()` → cancella la memoria.
 
 Durante `ask` il runtime gestisce da solo il ciclo delle chiamate agli strumenti,
@@ -90,7 +90,7 @@ agent Riassunto:
 
 - Si comportano come gli agenti Claude: istruzioni, strumenti, `max_steps`, `memory`, `reset`, output strutturati
   validati e ritentati. Dove il fornitore lo permette l'output usa uno schema rigido (`json_schema`), altrimenti
-  JSON libero o lo strumento `rispondi`. `ask_all` è un ciclo di `ask`.
+  JSON libero o lo strumento `rispondi`. `ask_all` fa fino a 4 richieste insieme.
 - `effort` diventa `reasoning_effort` solo con `openai`, `gemini`, `mistral`, `deepseek` e `groq`; altrove si ignora.
 - Senza la chiave il programma si ferma dicendo quale variabile impostare. `--mock` funziona con ogni fornitore,
   senza chiavi. `--backend` e Claude Code valgono solo per i modelli Claude.
@@ -116,6 +116,8 @@ def cerca_cliente(email: str) -> str:
 
 Gli argomenti che arrivano dall'IA vengono controllati e convertiti in base ai tipi
 dichiarati. Se lo strumento va in errore, l'errore torna all'IA, che può riprovare.
+Con `ask_all` senza Batch API (Claude Code, altri fornitori) uno strumento può girare più volte insieme, in
+thread diversi.
 
 ## Tipi
 

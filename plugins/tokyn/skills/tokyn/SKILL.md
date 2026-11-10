@@ -129,8 +129,8 @@ main:                                          # punto di partenza, uno solo
 - In mock: testi `"esempio <campo>"`, numeri 1 e 1.0, dict vuoti, liste di 2 elementi; valori `"a" | "b"` e bool
   cambiano a ogni `ask` di quell'agente e da un elemento al successivo (si parte dal primo valore e da True).
   Senza `output` la risposta è `"[mock Nome] risposta a: ..."`.
-- Con Claude Code (senza chiave API) `ask_all` fa le richieste una alla volta, perché la Batch API c'è solo con la
-  chiave, e `max_steps` non si applica.
+- Con Claude Code (senza chiave API) `ask_all` fa 4 richieste insieme (`TOKYN_PARALLELO`), perché la Batch API c'è
+  solo con la chiave, e `max_steps` non si applica.
 - `Agente.ask_all(testi)` dà le stesse risposte di un ciclo di `ask`, nello stesso ordine, ma con la Batch API:
   metà prezzo, più lento (di solito minuti, al massimo 24 ore), senza `memory`. Usalo per i lavori in blocco
   (classificare 100 email); per pochi testi o se servono subito usa un ciclo di `ask`. In mock è immediato. Se un

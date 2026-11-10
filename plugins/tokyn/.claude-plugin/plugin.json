@@ -1,7 +1,7 @@
 {
   "name": "tokyn",
   "displayName": "Tokyn",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Claude scrive in Tokyn i programmi che usano Claude (agenti, chatbot, estrazione e classificazione di testi) con meno token del Python, li controlla e li prova con il compilatore incluso (prima con risposte finte, poi con il tuo Claude Code o una chiave API) e, se vuoi Python, ti dà il file generato dal compilatore. Messaggi in italiano.",
   "author": {
     "name": "Damiano Ceka"
